@@ -1202,7 +1202,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPsMC',#'btagPerEvent2017','btagPerEvent2017Pt25','btagPerEvent2017Pt30'
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs',#'btagPerEvent2017','btagPerEvent2017Pt25','btagPerEvent2017Pt30'
                                    ],
                 },
 
@@ -6530,7 +6530,7 @@ for datatype in [ '', 'FS', 'Data' ] :
             Steps['btagPerEvent'+year+datatype+'Pt'+ptcut]['module'] = Steps['btagPerEvent'+year+datatype]['module'].replace('bTagPtCut="20"', 'bTagPtCut="'+ptcut+'"') 
 # end old style to be removed
 
-for datatype in [ 'FS', 'Data', 'MC' ] :
+for datatype in [ 'FS', 'Data' ] :
     
     Steps['btagPerEventDeepCSVWPs'+datatype] = { }
     for key in Steps['btagPerEventDeepCSVWPs']:
