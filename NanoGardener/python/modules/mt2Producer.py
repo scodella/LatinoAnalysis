@@ -177,11 +177,16 @@ class mt2Producer(Module):
             if nLooseLeptons==2 and leptons[lepLoose[0]].pdgId*leptons[lepLoose[1]].pdgId<0: return False
  
         ptmissvec3 = ROOT.TVector3()
-
-        metBranch = 'MET_T1' 
+        #print "test"
+        if 'unclust' in self.metSystematic:
+            metBranch='MET'
+        else:
+            metBranch = 'MET_T1' 
         if hasattr(event, 'METFixEE2017_pt_nom'): metBranch = 'METFixEE2017' 
         if self.metType=='puppi':  metBranch = 'PuppiMET' 
-        metSystem = '_'+self.metSystematic.replace('Smear', '') 
+        metSystem = '_'+self.metSystematic.replace('Smear' , '') 
+        if metSystem == '_jer' : metSystem = metSystem.replace('_jer'  , '')
+        if metSystem == '_jes' : metSystem = metSystem.replace('_jes'  , '')
         #print metBranch, metSystem
         
         if not hasattr(event, metBranch+'_pt'+metSystem):
@@ -195,8 +200,12 @@ class mt2Producer(Module):
         if 'Smear' in self.metSystematic:
             ptmissnom = ROOT.TVector3()
             ptmissjer = ROOT.TVector3()
-            ptmissnom.SetPtEtaPhi(getattr(event, metBranch+'_pt_nom'), 0., getattr(event, metBranch+'_phi_nom'))
-            ptmissjer.SetPtEtaPhi(getattr(event, metBranch+'_pt_jer'), 0., getattr(event, metBranch+'_phi_jer'))
+            #print metBranch, self.metSystematic
+            #exit()
+
+
+            ptmissnom.SetPtEtaPhi(getattr(event, metBranch+'_T1_pt'), 0., getattr(event, metBranch+'_T1_phi'))
+            ptmissjer.SetPtEtaPhi(getattr(event, metBranch+'_T1Smear_pt'), 0., getattr(event, metBranch+'_T1Smear_phi'))
             #ptmissvec3 = ptmissjer + (ptmissvec3 - ptmissnom)
             ptmissvec3 += ptmissjer - ptmissnom
 
