@@ -177,7 +177,7 @@ class mt2Producer(Module):
             if nLooseLeptons==2 and leptons[lepLoose[0]].pdgId*leptons[lepLoose[1]].pdgId<0: return False
  
         ptmissvec3 = ROOT.TVector3()
-        if 'unclust' in self.metSystematic:
+        if 'unclust' in self.metSystematic.lower():
             metBranch='MET'
         else:
             metBranch = 'MET_T1' 
@@ -195,7 +195,7 @@ class mt2Producer(Module):
 
         ptmissvec3.SetPtEtaPhi(getattr(event, metBranch+'_pt'+metSystem), 0., getattr(event, metBranch+'_phi'+metSystem)) 
 
-        if 'Smear' in self.metSystematic:
+        if 'Smear' in self.metSystematic and "unclust" in self.metSystematic.lower()  :
             ptmissnom = ROOT.TVector3()
             ptmissjer = ROOT.TVector3()
 
