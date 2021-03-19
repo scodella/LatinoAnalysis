@@ -6573,7 +6573,7 @@ for region in mt2CRs:
    
 # JES, JER, MET variations
 
-for treesyst in [ 'T1', 'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', 'unclustEnUp', 'jerDown', 'jerUp', 'jesTotalSmearDown', 'jesTotalSmearUp', 'unclustEnSmearDown', 'unclustEnSmearUp' ]:
+for treesyst in ['nom', 'T1', 'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', 'unclustEnUp', 'jerDown', 'jerUp', 'jesTotalSmearDown', 'jesTotalSmearUp', 'unclustEnSmearDown', 'unclustEnSmearUp' ]:
 
   treesystname = treesyst.replace('Total', '').replace('unclustEn', 'MET').upper().replace('UP', 'Up').replace('DOWN', 'Do')
   treesystname = treesystname.replace('NOM', 'Nomin').replace('T1','nomin').replace('JESSMEAR', 'SJS').replace('METSMEAR', 'SMT')
