@@ -177,19 +177,18 @@ class mt2Producer(Module):
             if nLooseLeptons==2 and leptons[lepLoose[0]].pdgId*leptons[lepLoose[1]].pdgId<0: return False
  
         ptmissvec3 = ROOT.TVector3()
-        if 'unclust' in self.metSystematic.lower():
-            metBranch='MET'
+        if 'jer' in self.metSystematic.lower() or 'smear' in self.metSystematic.lower():
+            metBranch='MET_T1Smear'
         else:
-            metBranch = 'MET_T1Smear' 
+            metBranch = 'MET_T1' 
         if hasattr(event, 'METFixEE2017_pt_nom'): metBranch = 'METFixEE2017' 
         if self.metType=='puppi':  metBranch = 'PuppiMET' 
         metSystem = '_'+self.metSystematic#.replace('Smear' , '') 
-        if metSystem == '_jer' : metSystem = metSystem.replace('_jer'  , '')
-        #if metSystem == '_jes' : metSystem = metSystem.replace('_jes'  , '')
+        if metSystem == '_jer' or metSystem=='_nom' : metSystem = ''
         
         if not hasattr(event, metBranch+'_pt'+metSystem):
             if self.metSystematic=='nom':
-                metSystem = ''
+                metBranch = 'MET'
             else:    
                 raise Exception('mt2producer ERROR: variable', metBranch+'_pt'+metSystem, 'does not exist')
 
