@@ -180,12 +180,12 @@ class mt2Producer(Module):
         if 'unclust' in self.metSystematic.lower():
             metBranch='MET'
         else:
-            metBranch = 'MET_T1' 
+            metBranch = 'MET_T1Smear' 
         if hasattr(event, 'METFixEE2017_pt_nom'): metBranch = 'METFixEE2017' 
         if self.metType=='puppi':  metBranch = 'PuppiMET' 
-        metSystem = '_'+self.metSystematic.replace('Smear' , '') 
+        metSystem = '_'+self.metSystematic#.replace('Smear' , '') 
         if metSystem == '_jer' : metSystem = metSystem.replace('_jer'  , '')
-        if metSystem == '_jes' : metSystem = metSystem.replace('_jes'  , '')
+        #if metSystem == '_jes' : metSystem = metSystem.replace('_jes'  , '')
         
         if not hasattr(event, metBranch+'_pt'+metSystem):
             if self.metSystematic=='nom':
