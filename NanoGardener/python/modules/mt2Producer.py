@@ -179,7 +179,7 @@ class mt2Producer(Module):
         ptmissvec3 = ROOT.TVector3()
         if 'unclust' in self.metSystematic:
             metBranch='MET'
-        if 'jer' in self.metSystematic or 'Smear' in self.metSystematic:
+        elif 'jer' in self.metSystematic or 'Smear' in self.metSystematic:
             metBranch='MET_T1Smear'
         else:
             metBranch = 'MET_T1' 
