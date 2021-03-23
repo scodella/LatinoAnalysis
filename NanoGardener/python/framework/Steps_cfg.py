@@ -1193,11 +1193,18 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','PrefCorrUL17','btagPerJetCSVWPs',
-                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSFSusy','puW','EmbeddingVeto',
+                     'subTargets' : ['baseW','PrefCorrUL17','btagPerJetDeepCSVWPs',
+                                     'rochesterMC','trigMC','LeptonSFSusy','puW','EmbeddingVeto',
                                      'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
                 },
 
+  'MCSusySyst2017v8' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs',#'btagPerEvent2017','btagPerEvent2017Pt25','btagPerEvent2017Pt30'
+                                   ],
+                },
 
   'FSSusyCorr2017v6loose' : {
                      'isChain'    : True  ,
@@ -3893,7 +3900,7 @@ Steps = {
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
                   'declare'    : '',
-                  'module'     : 'BTagEventWeightProducer(bTagAlgo="btagDeepB", bTagEra="RPLME_YEAR", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagPtCuts=["20", "25", "30"], dataType="mc")',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="deepcsv", bTagEra="RPLME_YEAR", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagPtCuts=["20", "25", "30"], dataType="mc")',
                 },
 
   'LeptonSF' : {
@@ -4186,7 +4193,7 @@ Steps = {
                   'do4MC'      : True ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,RPLME_YEAR)',
+                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,"RPLME_YEAR")',
                   'module'     : 'rochesterMC()',
               },
 
@@ -4195,7 +4202,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,RPLME_YEAR)',
+                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,"RPLME_YEAR")',
                   'module'     : 'rochesterDATA()',
               },
 
@@ -6566,10 +6573,10 @@ for region in mt2CRs:
    
 # JES, JER, MET variations
 
-for treesyst in [ 'nom', 'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', 'unclustEnUp', 'jerDown', 'jerUp', 'jesTotalSmearDown', 'jesTotalSmearUp', 'unclustEnSmearDown', 'unclustEnSmearUp' ]:
+for treesyst in ['nom',  'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', 'unclustEnUp', 'jerDown', 'jerUp', 'jesTotalSmearDown', 'jesTotalSmearUp', 'unclustEnSmearDown', 'unclustEnSmearUp' ]:
 
-  treesystname = treesyst.replace('Total', '').replace('unclustEn', 'MET').upper().replace('UP', 'Up').replace('DOWN', 'Do').replace('NOM', 'Nomin')
-  treesystname = treesystname.replace('JESSMEAR', 'SJS').replace('METSMEAR', 'SMT')
+  treesystname = treesyst.replace('Total', '').replace('unclustEn', 'MET').upper().replace('UP', 'Up').replace('DOWN', 'Do')
+  treesystname = treesystname.replace('NOM', 'Nomin').replace('JESSMEAR', 'SJS').replace('METSMEAR', 'SMT')
   if treesystname=='JER': treesystname = 'Smear'
   
   if treesyst in [ 'nom', 'jesTotalDown', 'jesTotalUp', 'jerDown', 'jerUp' ]:
@@ -6579,18 +6586,19 @@ for treesyst in [ 'nom', 'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', '
       Steps['PtCorr'+treesystname][key] = Steps['PtCorrReader'][key]
     Steps['PtCorr'+treesystname]['declare'] = Steps['PtCorrReader']['declare'].replace('SYSTVAR', treesyst)
     Steps['PtCorr'+treesystname]['module'] = Steps['PtCorrReader']['module'].replace('SYSTVAR', treesyst)
+    for ver_step in ['v6loose','v8']:
+      for year in [ '2016', '2017', '2018' ]:
+        for datatype in [ 'MC', 'FS' ]:
+          if (datatype =='FS' or year != '2017') and ver_step in 'v8': continue #REMOVE WHEN THREE YEARS AVAILABLE
 
-    for year in [ '2016', '2017', '2018' ]:
-      for datatype in [ 'MC', 'FS' ]:
-      
-        Steps[datatype+'Susy'+treesystname+year+'v6loose'] = { } 
-        for key in Steps[datatype+'SusySyst'+year+'v6loose']:
-          if key!='subTargets':
-            Steps[datatype+'Susy'+treesystname+year+'v6loose'][key] = Steps[datatype+'SusySyst'+year+'v6loose'][key]
-          else: 
-            Steps[datatype+'Susy'+treesystname+year+'v6loose'][key] = [ 'PtCorr'+treesystname if x=='PtCorrReader' else x for x in Steps[datatype+'SusySyst'+year+'v6loose'][key] ]
-                  
-  if treesyst!='nom': 
+          Steps[datatype+'Susy'+treesystname+year+ver_step] = { } 
+          for key in Steps[datatype+'SusySyst'+year+ver_step]:
+            if key!='subTargets':
+              Steps[datatype+'Susy'+treesystname+year+ver_step][key] = Steps[datatype+'SusySyst'+year+ver_step][key]
+            else: 
+              Steps[datatype+'Susy'+treesystname+year+ver_step][key] = [ 'PtCorr'+treesystname if x=='PtCorrReader' else x for x in Steps[datatype+'SusySyst'+year+ver_step][key] ]
+
+  if treesyst!='nom': # or treesyst!='T1': #TO BE COMPLETED WHEN MT2 PRODUCER IS UPDATED 
 
     for region in mt2regions: 
 
