@@ -744,18 +744,18 @@ Productions = {
 
 #################################### nAODv8 (UL) ##############################################
 
- 'Summer20UL16_106X_nAODv6_Full2016v8preVPF': {
+ 'Summer20UL16_106X_nAODv8_Full2016v8preVPF': {
                        'isData'  : False ,
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16_susy_106X_nAODv8.py' ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16preVPF_susy_106X_nAODv8.py' ,
                        'cmssw'   : 'Full2016v8' ,
                        'year'    : 'UL2016preVPF' ,
                        #'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
                    },
- 'Summer20UL16_106X_nAODv6_Full2016v8postVPF': {
+ 'Summer20UL16_106X_nAODv8_Full2016v8postVPF': {
                        'isData'  : False ,
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16_susy_106X_nAODv8.py' ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16postVPF_susy_106X_nAODv8.py' ,
                        'cmssw'   : 'Full2016v8' ,
                        'year'    : 'UL2016postVPF' ,
                        #'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
