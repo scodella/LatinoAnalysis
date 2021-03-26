@@ -24,11 +24,12 @@ else:
 gardening_directory = 'src/LatinoAnalysis/NanoGardener/python/framework/samples/'
 production_directory = 'src/LatinoAnalysis/NanoProducer/python/samples/'
 
-campaigns = { 'UL16APV' : { 'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODAPV', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODAPVv2', 'GEN' : 'RunIISummer*UL16*GENAPV-' },
+campaigns = { 'UL16preVPF' : { 'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODAPV', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODAPVv2', 'GEN' : 'RunIISummer*UL16*GENAPV-' },
                             'FS'   : { 'AODSIM' : '',                         'MINIAODSIM' : '',                            'NANOAODSIM' : ''                             , 'GEN' : ''                         }, },
-              'UL16'  : { 'Data' : { 'AOD'    : '21Feb2020_UL2016-',      'MINIAOD'    : '21Feb2020_UL2016-',         'NANOAOD'    : 'UL2016_MiniAODv1_NanoAODv2'                                  },
+              'UL16postVPF'  : { 
                           'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECO-', 'MINIAODSIM' : 'RunIISummer20UL16MiniAOD-', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODv2', 'GEN' : 'RunIISummer*UL16*GEN-' },    
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, },
+              'UL16'  : { 'Data' : { 'AOD'    : '21Feb2020_UL2016-',      'MINIAOD'    : '21Feb2020_UL2016-',         'NANOAOD'    : 'UL2016_MiniAODv1_NanoAODv2'  }, },
               'UL17'  : { 'Data' : { 'AOD'    : '09Aug2019_UL2017-',      'MINIAOD'    : '09Aug2019_UL2017-',         'NANOAOD'    : 'UL2017_MiniAODv1_NanoAODv2'                                  },             
                           'MC'   : { 'AODSIM' : 'RunIISummer*UL17RECO',   'MINIAODSIM' : 'RunIISummer*UL17MiniAOD',   'NANOAODSIM' : 'RunIISummer*UL17NanoAODv2',  'GEN' : 'RunIISummer*UL17*GEN'  },
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, }, 
@@ -148,8 +149,11 @@ if __name__ == '__main__':
         if opt.outputfile=='test' and ('UL' in opt.campaign or 'run2' in opt.campaign):
             opt.outputfile = opt.samplefile.replace('102X_nAODv6', '106X_nAODv8').replace('.py', '')
             opt.outputfile = opt.outputfile.replace('Summer16','Summer20UL16').replace('fall17','Summer20UL17').replace('Autumn18','Summer20UL18')
-            if 'APV' in opt.campaign:
-                opt.outputfile = opt.outputfile.replace('16', '16APV')
+            if 'preVPF' in opt.campaign:
+                opt.outputfile = opt.outputfile.replace('16', '16preVPF')
+            elif 'postVPF' in opt.campaign:
+                opt.outputfile = opt.outputfile.replace('16', '16postVPF')
+
             print opt.samplefile
         OutputSamples = { }
         print "OUTPUT FILE",opt.outputfile
