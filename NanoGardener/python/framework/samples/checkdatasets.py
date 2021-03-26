@@ -49,7 +49,9 @@ def renewSampleFile(filename):
                     continue
                 
                 if isHeader is False:
+                    if line.startswith(",,,"): continue
                     output.write(line)
+        print line
 
 #Read Csv file
 def readSampleFile(filename):
