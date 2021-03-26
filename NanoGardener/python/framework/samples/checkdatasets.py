@@ -145,6 +145,7 @@ if __name__ == '__main__':
 
         if opt.outputfile=='test' and ('UL' in opt.campaign or 'run2' in opt.campaign):
             opt.outputfile = opt.samplefile.replace('102X_nAODv6', '106X_nAODv8').replace('.py', '')
+            opt.outputfile = opt.outputfile.replace('Summer16','Summer20UL16').replace('fall17','Summer20UL17').replace('Autumn18','Summer20UL18')
             if 'APV' in opt.campaign:
                 opt.outputfile = opt.outputfile.replace('16', '16APV')
             print opt.samplefile
