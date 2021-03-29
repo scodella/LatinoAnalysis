@@ -24,23 +24,40 @@ else:
 gardening_directory = 'src/LatinoAnalysis/NanoGardener/python/framework/samples/'
 production_directory = 'src/LatinoAnalysis/NanoProducer/python/samples/'
 
-campaigns = { 'UL16APV' : { 'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODAPV', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODAPVv2', 'GEN' : 'RunIISummer*UL16*GENAPV-' },
+campaigns = { 'UL16preVPF' : { 'MC'   : { 'AODSIM' : 'RunIISummer*UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer*UL16MiniAODAPV', 'NANOAODSIM' : 'RunIISummer*UL16NanoAODAPVv2', 'GEN' : 'RunIISummer*UL16*GENAPV-' },
                             'FS'   : { 'AODSIM' : '',                         'MINIAODSIM' : '',                            'NANOAODSIM' : ''                             , 'GEN' : ''                         }, },
-              'UL16'  : { 'Data' : { 'AOD'    : '21Feb2020_UL2016-',      'MINIAOD'    : '21Feb2020_UL2016-',         'NANOAOD'    : 'UL2016_MiniAODv1_NanoAODv2'                                  },
-                          'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECO-', 'MINIAODSIM' : 'RunIISummer20UL16MiniAOD-', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODv2', 'GEN' : 'RunIISummer*UL16*GEN-' },    
+              'UL16postVPF'  : { 
+                          'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECO-', 'MINIAODSIM' : 'RunIISummer*UL16MiniAOD-', 'NANOAODSIM' : 'RunIISummer*UL16NanoAODv2', 'GEN' : 'RunIISummer*UL16*GEN-' },    
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, },
+              'UL16'  : { 'Data' : { 'AOD'    : '21Feb2020_UL2016-',      'MINIAOD'    : '21Feb2020_UL2016-',         'NANOAOD'    : 'UL2016_MiniAODv1_NanoAODv2'  }, },
               'UL17'  : { 'Data' : { 'AOD'    : '09Aug2019_UL2017-',      'MINIAOD'    : '09Aug2019_UL2017-',         'NANOAOD'    : 'UL2017_MiniAODv1_NanoAODv2'                                  },             
                           'MC'   : { 'AODSIM' : 'RunIISummer*UL17RECO',   'MINIAODSIM' : 'RunIISummer*UL17MiniAOD',   'NANOAODSIM' : 'RunIISummer*UL17NanoAODv2',  'GEN' : 'RunIISummer*UL17*GEN'  },
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, }, 
               'UL18'  : { 'Data' : { 'AOD'    : '12Nov2019_UL2018-',      'MINIAOD'    : '12Nov2019_UL2018-',         'NANOAOD'    : 'UL2018_MiniAODv1_NanoAODv2'                                  },             
-                          'MC'   : { 'AODSIM' : 'RunIISummer20UL18RECO',  'MINIAODSIM' : 'RunIISummer20UL18MiniAOD',  'NANOAODSIM' : 'RunIISummer20UL18NanoAODv2', 'GEN' : 'RunIISummer*UL18*GEN'  },
+                          'MC'   : { 'AODSIM' : 'RunIISummer*UL18RECO',  'MINIAODSIM' : 'RunIISummer*UL18MiniAOD',  'NANOAODSIM' : 'RunIISummer*UL18NanoAODv2', 'GEN' : 'RunIISummer*UL18*GEN'  },
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, }, 
             }
 
-# Main
+#Get the latest version if requested
+def renewSampleFile(filename):
+    os.system('wget --output-file="logs.txt" "https://docs.google.com/spreadsheets/d/1ABl2p2uwr2EfEbolBEVNcKb_fIXigYY9sqCRT8XIi1Q/export?format=csv&gid=1318927481" -O "downloaded_content.csv"')
+    with open("downloaded_content.csv", "r") as file_input:
+        with open(filename, "w") as output:
+            isHeader=True
+            for i,line in enumerate(file_input):
+                if 'Total' and 'Samples' in line.split(',')[0]: #More refined feature can be added, but works now
+                    isHeader=False
+                    continue
+                
+                if isHeader is False:
+                    if line.startswith(",,,"): continue
+                    output.write(line)
+        print line
+
+#Read Csv file
 def readSampleFile(filename):
     samhere=[]
-    with open("Summer20ULPlanning.csv") as f:
+    with open(filename) as f:
         for row in f:
             samhere.append(row.split(",")[0])
     return samhere
@@ -54,23 +71,27 @@ def substringinlist(sample_list,substring):
             #print "satisfies", substring, item
     return list(inlist)
 
+# Main
 if __name__ == '__main__':
 
-    csvsamples = readSampleFile("Summer20ULPlanning.csv")
     # Input parameters
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
-    parser.add_option('-d', '--directory' , dest='directory' , help='CMSSW directory', default=cmssw_directory)
-    parser.add_option('-s', '--samplefile', dest='samplefile', help='Sample file'    , default='Run2016_102X_nAODv6')
-    parser.add_option('-c', '--campaign'  , dest='campaign',   help='Campaign'       , default='UL16')
-    parser.add_option('-t', '--tier'      , dest='tier',       help='Tier'           , default='nanoAOD')
-    parser.add_option('-o', '--outputfile', dest='outputfile', help='Output file'    , default='test')
-    parser.add_option('-m', '--mute'      , dest='mute'      , help='mute'           , default=False, action='store_true')
-    parser.add_option('-l', '--list'      , dest='list'      , help='List in csv'    , default=False, action='store_true')
+    parser.add_option('-d', '--directory' , dest='directory' , help='CMSSW directory' , default=cmssw_directory)
+    parser.add_option('-s', '--samplefile', dest='samplefile', help='Sample file'     , default='Run2016_102X_nAODv6')
+    parser.add_option('-c', '--campaign'  , dest='campaign',   help='Campaign'        , default='UL16')
+    parser.add_option('-t', '--tier'      , dest='tier',       help='Tier'            , default='nanoAOD')
+    parser.add_option('-o', '--outputfile', dest='outputfile', help='Output file'     , default='test')
+    parser.add_option('-m', '--mute'      , dest='mute'      , help='mute'            , default=False, action='store_true')
+    parser.add_option('-l', '--list'      , dest='list'      , help='List in csv'     , default=False, action='store_true')
+    parser.add_option('-n', '--newcsv'    , dest='newcsv'    , help='Download new csv', default=False, action='store_true')
+    
     (opt, args) = parser.parse_args()
-
-    csvsamples = readSampleFile("Summer20ULPlanning.csv")
+    
+    csvfile = "Summer20ULPlanning.csv"
+    if opt.newcsv: renewSampleFile(csvfile)
+    csvsamples = readSampleFile(csvfile)
 
     if opt.samplefile==opt.outputfile:
         print 'Error: overwriting input file', opt.samplefile
@@ -127,8 +148,12 @@ if __name__ == '__main__':
 
         if opt.outputfile=='test' and ('UL' in opt.campaign or 'run2' in opt.campaign):
             opt.outputfile = opt.samplefile.replace('102X_nAODv6', '106X_nAODv8').replace('.py', '')
-            if 'APV' in opt.campaign:
-                opt.outputfile = opt.outputfile.replace('16', '16APV')
+            opt.outputfile = opt.outputfile.replace('Summer16','Summer20UL16').replace('fall17','Summer20UL17').replace('Autumn18','Summer20UL18')
+            if 'preVPF' in opt.campaign:
+                opt.outputfile = opt.outputfile.replace('16', '16preVPF')
+            elif 'postVPF' in opt.campaign:
+                opt.outputfile = opt.outputfile.replace('16', '16postVPF')
+
             print opt.samplefile
         OutputSamples = { }
         print "OUTPUT FILE",opt.outputfile
@@ -194,17 +219,20 @@ if __name__ == '__main__':
                 version = 0
                 saveset = ''
                 for dataset in datasetsFound:  
-                    if len(dataset.split('-v'))>1: 
-
-                        if (version < int(dataset.split('-v')[1].split('/')[0])):
+                    #print "DATASET", dataset, dataset.split('-v')
+                    if len(dataset.split('ver'))>1: ver = 'ver'
+                    else:  ver = 'v'
+                    if len(dataset.split(ver))>1: 
+                        print dataset.split(ver)[1], ver,  dataset.split(ver)[1][0]
+                        if (version < int(dataset.split(ver)[1][0])):
                             #print "new sample", dataset, version
                             saveset=dataset
-                        elif (version == int(dataset.split('-v')[1].split('/')[0])):
+                        elif (version == int(dataset.split(ver)[1][0])):
                             print "WARNING: "+ dataset+" and "+saveset+" have the same version" 
                     else: print "TRY DIFFERENT CODING" #May have to be updated in the future
                 if verbose: print 'Dataset picked for sample', process+period, 'in campaign', campaign[thistier], '-->', saveset
-                
-                status = 'NanoAODv2 ready:, ' + saveset
+                datasetFound = saveset
+                status       = 'NanoAODv2 ready:, ' + saveset
             else:   
                 if verbose: 
                     print 'Warning: no dataset found for sample', process+period, 'in tier', opt.tier, 'for campaign', campaign[thistier] 
@@ -331,7 +359,7 @@ if __name__ == '__main__':
                     print "................................\n", datasetFound
                     exit()
             
-
+            print "STATUS", status
             if len(datasetFound) == 0 : 
                 datasetFlag = ''
                 line+='#'
@@ -355,6 +383,6 @@ if __name__ == '__main__':
             OutputSamples[sampleName] = { }
             OutputSamples[sampleName][opt.tier] = datasetFound
             line+="Samples[\'"+sampleName+"\'] \t = {\'"+opt.tier+"\': \'"+datasetFound+"\'}"
-            if "#" not in line: print line
+            if "#" not in line: print "Add to line", line
             writeList.write(line)
             
