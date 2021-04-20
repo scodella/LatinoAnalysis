@@ -219,6 +219,7 @@ if __name__ == '__main__':
                 version = 0
                 saveset = ''
                 for dataset in datasetsFound:  
+                    if "FlatPU" in dataset: continue
                     #print "DATASET", dataset, dataset.split('-v')
                     if len(dataset.split('ver'))>1: ver = 'ver'
                     else:  ver = 'v'
