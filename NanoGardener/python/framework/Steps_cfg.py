@@ -1311,6 +1311,17 @@ Steps = {
                                   ],
                 },
 
+  'MCSusy2018v8' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker', 'lepSelSusy',  'JMEUncertMC' ,
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+
   'MCSusy2018FS' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
@@ -1434,6 +1445,23 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEvent2018','btagPerEvent2018Pt25','btagPerEvent2018Pt30'
+                                   ],
+                },
+
+  'MCSusyCorr2018v8' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorrUL17','btagPerJetDeepCSVWPs',
+                                     'rochesterMC','trigMC','LeptonSFSusy','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
+                },
+
+  'MCSusySyst2018v8' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs',#'btagPerEvent2017','btagPerEvent2017Pt25','btagPerEvent2017Pt30'
                                    ],
                 },
 
@@ -6589,7 +6617,7 @@ for treesyst in ['nom',  'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', '
     for ver_step in ['v6loose','v8']:
       for year in [ '2016', '2017', '2018' ]:
         for datatype in [ 'MC', 'FS' ]:
-          if (datatype =='FS' or year != '2017') and ver_step in 'v8': continue #REMOVE WHEN THREE YEARS AVAILABLE
+          if (datatype =='FS' or year != '2017' or year != '2018') and ver_step in 'v8': continue #REMOVE WHEN THREE YEARS AVAILABLE
 
           Steps[datatype+'Susy'+treesystname+year+ver_step] = { } 
           for key in Steps[datatype+'SusySyst'+year+ver_step]:
