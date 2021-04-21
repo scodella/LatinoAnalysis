@@ -1452,7 +1452,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','PrefCorrUL18','btagPerJetDeepCSVWPs',
+                     'subTargets' : ['baseW','btagPerJetDeepCSVWPs',
                                      'rochesterMC','trigMC','LeptonSFSusy','puW','EmbeddingVeto',
                                      'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
                 },
