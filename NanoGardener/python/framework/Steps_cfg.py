@@ -2053,6 +2053,18 @@ Steps = {
                 },
 
 
+  'DATASusy2018v8': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData', 'btagPerEventDeepCSVWPsData'
+                                  ],
+                },
+
+
+
   'jetSelfix': {
                   'isChain'    : True  ,
                   'do4MC'      : True ,
