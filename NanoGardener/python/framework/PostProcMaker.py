@@ -369,7 +369,6 @@ class PostProcMaker():
      stepList=[]
      stepList.append(iStep)
 
-     #print self._targetDic.keys()
      #exit()
 
      # Check pre bash command for Steps
@@ -779,7 +778,6 @@ class PostProcMaker():
 
      def addCommands(s):
        global preBash
-
        step = self._Steps[s]
        if step['isChain']:
          for subtarget in step['subTargets']:
