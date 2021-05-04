@@ -96,7 +96,7 @@ Samples["TTWJetsToQQ"] = {'nanoAOD': '/TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-ma
 
 ### W+jets
 ###Samples['WJetsToLNu']={'nanoAOD':'/WJetsToLNu_13TeV_amcatnloFXFX_pythia8/'}
-##Samples['WJetsToLNu-LO'] = {'nanoAOD' :'/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'} ##!!!!
+Samples['WJetsToLNu-LO'] = {'nanoAOD' :'/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'}
 ##Samples['WJetsToLNu_HT70_100'] = {'nanoAOD' :'/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'} ##!!!!
 ##Samples['WJetsToLNu_HT100_200'] = {'nanoAOD' :'/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'} ##!!!!
 ##Samples['WJetsToLNu_HT200_400'] = {'nanoAOD' :'/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18NanoAODv6-Nano25Oct2019_102X_upgrade2018_realistic_v20-v1/NANOAODSIM'} 
