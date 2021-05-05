@@ -105,6 +105,7 @@ Samples['WWG'] = {'nanoAOD' :'/WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8/RunIISumm
 
 ### W+Jets
 ##Samples['WJetsToLNu_ext2'] = {'nanoAOD' :'/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16NanoAODv6-PUMoriond17_Nano25Oct2019_102X_mcRun2_asymptotic_v7_ext2-v1/NANOAODSIM'}
+Samples['WJetsToLNu-LO_ext2'] = {'nanoAOD' : '/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv6-PUMoriond17_Nano25Oct2019_102X_mcRun2_asymptotic_v7_ext2-v1/NANOAODSIM'}
 
 ### HToWW/TauTau
 Samples['GluGluHToWWTo2L2NuAMCNLO_M125'] = {'nanoAOD' :'/GluGluHToWWTo2L2Nu_M125_13TeV_amcatnloFXFX_pythia8/RunIISummer16NanoAODv6-PUMoriond17_Nano25Oct2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM'} ##!!!!
