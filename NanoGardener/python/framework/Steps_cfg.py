@@ -896,7 +896,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEvent2016','btagPerEvent2016Pt25','btagPerEvent2016Pt30'
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVM',#'btagPerEvent2016','btagPerEvent2016Pt25','btagPerEvent2016Pt30'
                                    ],
                 },
 
@@ -1185,7 +1185,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEvent2017','btagPerEvent2017Pt25','btagPerEvent2017Pt30'
+                     'subTargets' : ['PtCorrReader','jetSelSusy', 'btagPerEventDeepCSVM',#'btagPerEvent2017','btagPerEvent2017Pt25','btagPerEvent2017Pt30'
                                    ],
                 },
 
@@ -1202,7 +1202,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs',#'btagPerEvent2017','btagPerEvent2017Pt25','btagPerEvent2017Pt30'
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs',
                                    ],
                 },
 
@@ -1444,7 +1444,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEvent2018','btagPerEvent2018Pt25','btagPerEvent2018Pt30'
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVM',#'btagPerEvent2018','btagPerEvent2018Pt25','btagPerEvent2018Pt30'
                                    ],
                 },
 
@@ -1461,7 +1461,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs',#'btagPerEvent2017','btagPerEvent2017Pt25','btagPerEvent2017Pt30'
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs'
                                    ],
                 },
 
@@ -3528,7 +3528,7 @@ Steps = {
                   'do4MC'      : True ,
                   'do4Data'    : False ,
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
-                  'declare'    : 'jetmetCorrectorMC2016 = createJMECorrector(isMC=True, dataYear=2016, jesUncert="Total", redojec=True)',
+                  'declare'    : 'jetmetCorrectorMC2016 = createJMECorrector(isMC=True, dataYear=2016, jesUncert="Total")',
                   'module'     : 'jetmetCorrectorMC2016()',
                  },   
  
@@ -3564,7 +3564,7 @@ Steps = {
                   'do4MC'      : True ,
                   'do4Data'    : False ,
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
-                  'declare'    : 'jetmetCorrectorMC2018 = createJMECorrector(isMC=True, dataYear=2018, jesUncert="Total", redojec=True)',
+                  'declare'    : 'jetmetCorrectorMC2018 = createJMECorrector(isMC=True, dataYear=2018, jesUncert="Total")',
                   'module'     : 'jetmetCorrectorMC2018()',
                  },   
  
@@ -3941,6 +3941,16 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
                   'declare'    : '',
                   'module'     : 'BTagEventWeightProducer(bTagAlgo="deepcsv", bTagEra="RPLME_YEAR", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagPtCuts=["20", "25", "30"], dataType="mc")',
+                },
+
+  # For v6loose beckward compatibility
+  'btagPerEventDeepCSVM': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="deepcsv", bTagEra="RPLME_YEAR", bTagWPs=["M"], bTagMethod="1c", bTagPtCuts=["20", "25", "30"], dataType="mc")',
                 },
 
   'LeptonSF' : {
