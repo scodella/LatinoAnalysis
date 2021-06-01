@@ -127,6 +127,16 @@ if __name__ == '__main__':
             print campaign_year
         if 'Run' in opt.samplefile:
             Sim = '' 
+            if "VPF" in opt.campaign: 
+                print "Data doesn't have pre/post vpf"
+                answer = raw_input("did you mean -c UL16? ").lower()
+                if "y" in answer:
+                    print "Switching to UL16"
+                    campaign_year= 'UL16'
+                else:
+                    print "Exiting..."
+                    exit()
+            print "Campaign year", campaign_year, campaigns[campaign_year].keys()
             campaign = campaigns[campaign_year]['Data']
             isData=True
         else:      
