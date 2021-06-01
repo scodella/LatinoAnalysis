@@ -426,9 +426,6 @@ class ShapeFactory:
           # for each tree!!!
           for sampleName, sample in self._samples.iteritems():
             if 'weights' in sample.keys() :
-              print "######\nTEEEST\n", type(sample ['weight']), type(sample ['weights']), type(cut), type(supercut)
-              print cut, "\nsupercut",supercut
-              #exit()
               self._filterTrees( sample ['weight'], sample ['weights'], '(' + cut + ') && (' + supercut + ')' , inputs[sampleName], cutName, sampleName)
             else :
               self._filterTrees( sample ['weight'], []                , '(' + cut + ') && (' + supercut + ')' , inputs[sampleName], cutName, sampleName)
