@@ -419,9 +419,7 @@ class ShapeFactory:
         for cutName, cut in self._cuts.iteritems():
           #print "HERE supercut = ", supercut
           print "cut = ", cutName, " :: ", cut
-          if type(cut) is dict:
-              print "Change the cut cut name to take the expresion"
-              cut = cut["expr"]
+          
           # create the list of events -> speed up!          
           # for each tree!!!
           for sampleName, sample in self._samples.iteritems():
