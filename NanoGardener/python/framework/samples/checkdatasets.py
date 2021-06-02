@@ -25,17 +25,17 @@ else:
 gardening_directory = 'src/LatinoAnalysis/NanoGardener/python/framework/samples/'
 production_directory = 'src/LatinoAnalysis/NanoProducer/python/samples/'
 
-campaigns = { 'UL16preVPF' : { 'MC'   : { 'AODSIM' : 'RunIISummer*UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer*UL16MiniAODAPV', 'NANOAODSIM' : 'RunIISummer*UL16NanoAODAPVv2', 'GEN' : 'RunIISummer*UL16*GENAPV-' },
+campaigns = { 'UL16preVPF' : { 'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODAPV', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODAPVv2', 'GEN' : 'RunIISummer20UL16*GENAPV-' },
                             'FS'   : { 'AODSIM' : '',                         'MINIAODSIM' : '',                            'NANOAODSIM' : ''                             , 'GEN' : ''                         }, },
               'UL16postVPF'  : { 
-                          'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECO-', 'MINIAODSIM' : 'RunIISummer*UL16MiniAOD-', 'NANOAODSIM' : 'RunIISummer*UL16NanoAODv2', 'GEN' : 'RunIISummer*UL16*GEN-' },    
+                          'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECO-', 'MINIAODSIM' : 'RunIISummer20UL16MiniAOD-', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODv2', 'GEN' : 'RunIISummer20UL16*GEN-' },    
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, },
               'UL16'  : { 'Data' : { 'AOD'    : '21Feb2020_UL2016-',      'MINIAOD'    : '21Feb2020_UL2016-',         'NANOAOD'    : 'UL2016_MiniAODv1_NanoAODv2'  }, },
               'UL17'  : { 'Data' : { 'AOD'    : '09Aug2019_UL2017-',      'MINIAOD'    : '09Aug2019_UL2017-',         'NANOAOD'    : 'UL2017_MiniAODv1_NanoAODv2'                                  },             
-                          'MC'   : { 'AODSIM' : 'RunIISummer*UL17RECO',   'MINIAODSIM' : 'RunIISummer*UL17MiniAOD',   'NANOAODSIM' : 'RunIISummer*UL17NanoAODv2',  'GEN' : 'RunIISummer*UL17*GEN'  },
+                          'MC'   : { 'AODSIM' : 'RunIISummer20UL17RECO',   'MINIAODSIM' : 'RunIISummer20UL17MiniAOD',   'NANOAODSIM' : 'RunIISummer20UL17NanoAODv2',  'GEN' : 'RunIISummer20UL17*GEN'  },
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, }, 
               'UL18'  : { 'Data' : { 'AOD'    : '12Nov2019_UL2018-',      'MINIAOD'    : '12Nov2019_UL2018-',         'NANOAOD'    : 'UL2018_MiniAODv1_NanoAODv2'                                  },             
-                          'MC'   : { 'AODSIM' : 'RunIISummer*UL18RECO',  'MINIAODSIM' : 'RunIISummer*UL18MiniAOD',  'NANOAODSIM' : 'RunIISummer*UL18NanoAODv2', 'GEN' : 'RunIISummer*UL18*GEN'  },
+                          'MC'   : { 'AODSIM' : 'RunIISummer20UL18RECO',  'MINIAODSIM' : 'RunIISummer20UL18MiniAOD',  'NANOAODSIM' : 'RunIISummer20UL18NanoAODv2', 'GEN' : 'RunIISummer20UL18*GEN'  },
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, }, 
             }
 
@@ -195,6 +195,7 @@ if __name__ == '__main__':
         print opt.tier, campaign_year
         thistier=opt.tier.upper()+Sim
         print "CAMPAIGN:", campaign[thistier].upper(), thistier
+        lastSampleInit = ''
         for sample in sorted (Samples.keys()):
             #print sample
             #if ("WWTo2L" not in sample): continue
@@ -483,5 +484,11 @@ if __name__ == '__main__':
                 OutputSamples[sampleName][opt.tier] = datasetFound
                 line+="Samples[\'"+sampleName+"\'] \t = {\'"+opt.tier+"\': \'"+datasetFound+"\'}"
                 if "#" not in line: print "Add to line", line
+                if sampleName[0:2]!=lastSampleInit:
+                    writeList.write('\n')
+                    lastSampleInit = sampleName[0:2]
                 writeList.write(line)
             
+        if lastSampleInit!='':
+            writeList.write('\n')
+
