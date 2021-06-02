@@ -9,6 +9,7 @@ sys.path.append('/afs/cern.ch/cms/PPD/PdmV/tools/McM/')
 from rest import McM
 
 mcm = McM(dev=True)
+mcmurl = "https#//cms-pdmv.cern.ch/mcm/requests?prepid=PREPID&page=0&shown=127"
 testcolor='95m'
 if 'pmatorra' in os.environ.get('USER'):
     cmssw_directory= '/afs/cern.ch/work/p/pmatorra/private/CMSSW_10_6_19/'
@@ -24,17 +25,17 @@ else:
 gardening_directory = 'src/LatinoAnalysis/NanoGardener/python/framework/samples/'
 production_directory = 'src/LatinoAnalysis/NanoProducer/python/samples/'
 
-campaigns = { 'UL16preVPF' : { 'MC'   : { 'AODSIM' : 'RunIISummer*UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer*UL16MiniAODAPV', 'NANOAODSIM' : 'RunIISummer*UL16NanoAODAPVv2', 'GEN' : 'RunIISummer*UL16*GENAPV-' },
+campaigns = { 'UL16preVPF' : { 'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODAPV', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODAPVv2', 'GEN' : 'RunIISummer20UL16*GENAPV-' },
                             'FS'   : { 'AODSIM' : '',                         'MINIAODSIM' : '',                            'NANOAODSIM' : ''                             , 'GEN' : ''                         }, },
               'UL16postVPF'  : { 
-                          'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECO-', 'MINIAODSIM' : 'RunIISummer*UL16MiniAOD-', 'NANOAODSIM' : 'RunIISummer*UL16NanoAODv2', 'GEN' : 'RunIISummer*UL16*GEN-' },    
+                          'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECO-', 'MINIAODSIM' : 'RunIISummer20UL16MiniAOD-', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODv2', 'GEN' : 'RunIISummer20UL16*GEN-' },    
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, },
               'UL16'  : { 'Data' : { 'AOD'    : '21Feb2020_UL2016-',      'MINIAOD'    : '21Feb2020_UL2016-',         'NANOAOD'    : 'UL2016_MiniAODv1_NanoAODv2'  }, },
               'UL17'  : { 'Data' : { 'AOD'    : '09Aug2019_UL2017-',      'MINIAOD'    : '09Aug2019_UL2017-',         'NANOAOD'    : 'UL2017_MiniAODv1_NanoAODv2'                                  },             
-                          'MC'   : { 'AODSIM' : 'RunIISummer*UL17RECO',   'MINIAODSIM' : 'RunIISummer*UL17MiniAOD',   'NANOAODSIM' : 'RunIISummer*UL17NanoAODv2',  'GEN' : 'RunIISummer*UL17*GEN'  },
+                          'MC'   : { 'AODSIM' : 'RunIISummer20UL17RECO',   'MINIAODSIM' : 'RunIISummer20UL17MiniAOD',   'NANOAODSIM' : 'RunIISummer20UL17NanoAODv2',  'GEN' : 'RunIISummer20UL17*GEN'  },
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, }, 
               'UL18'  : { 'Data' : { 'AOD'    : '12Nov2019_UL2018-',      'MINIAOD'    : '12Nov2019_UL2018-',         'NANOAOD'    : 'UL2018_MiniAODv1_NanoAODv2'                                  },             
-                          'MC'   : { 'AODSIM' : 'RunIISummer*UL18RECO',  'MINIAODSIM' : 'RunIISummer*UL18MiniAOD',  'NANOAODSIM' : 'RunIISummer*UL18NanoAODv2', 'GEN' : 'RunIISummer*UL18*GEN'  },
+                          'MC'   : { 'AODSIM' : 'RunIISummer20UL18RECO',  'MINIAODSIM' : 'RunIISummer20UL18MiniAOD',  'NANOAODSIM' : 'RunIISummer20UL18NanoAODv2', 'GEN' : 'RunIISummer20UL18*GEN'  },
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, }, 
             }
 
@@ -70,6 +71,23 @@ def substringinlist(sample_list,substring):
             inlist.add(item)
             #print "satisfies", substring, item
     return list(inlist)
+
+def getEventsFromDAS(dassample): 
+
+    nEvents = -1
+    summaryDAS = subprocess.check_output('dasgoclient -query=\"instance=prod/global summary dataset='+dassample+'\"', shell=True)
+    for dasInfo in summaryDAS.split(','):
+        if 'nevents' in dasInfo:
+            nEvents = dasInfo.split(':')[1]
+    return nEvents
+
+def getReadableNumber(rawstringnumber):
+    rawnumber = int(rawstringnumber)
+    if rawnumber<1000: return rawstringnumber
+    elif rawnumber<10000: return str(round(float(rawstringnumber)/1000.,1))+'K'
+    elif rawnumber<1000000: return str(round(float(rawstringnumber)/1000.,0)).replace('.0','')+'K'
+    elif rawnumber<10000000: return str(round(float(rawstringnumber)/1000000.,1))+'M'
+    else: return str(round(float(rawstringnumber)/1000000.,0)).replace('.0','')+'M'
 
 # Main
 if __name__ == '__main__':
@@ -127,6 +145,16 @@ if __name__ == '__main__':
             print campaign_year
         if 'Run' in opt.samplefile:
             Sim = '' 
+            if "VPF" in opt.campaign: 
+                print "Data doesn't have pre/post vpf"
+                answer = raw_input("did you mean -c UL16? ").lower()
+                if "y" in answer:
+                    print "Switching to UL16"
+                    campaign_year= 'UL16'
+                else:
+                    print "Exiting..."
+                    exit()
+            print "Campaign year", campaign_year, campaigns[campaign_year].keys()
             campaign = campaigns[campaign_year]['Data']
             isData=True
         else:      
@@ -167,26 +195,59 @@ if __name__ == '__main__':
         print opt.tier, campaign_year
         thistier=opt.tier.upper()+Sim
         print "CAMPAIGN:", campaign[thistier].upper(), thistier
-        for sample in Samples:
+        lastSampleInit = ''
+        for sample in sorted (Samples.keys()):
             #print sample
             #if ("WWTo2L" not in sample): continue
+ 
+            nEvents, nOriginalEvents = '-1', getEventsFromDAS(Samples[sample][opt.tier])
+         
             process = Samples[sample][opt.tier].split('/')[1]
             period = '' if Sim=='SIM' else Samples[sample][opt.tier].split('/')[2].split('-')[0].split('_')[0]
 
-            status = 'Missing'
+            status = 'Missing:'
+
+            if verbose: print '\n', 'Original process name', process, period, '(original events =', nOriginalEvents, ')'
 
             if not isData:
                 process = process.replace('_PSweights', '')
                 if 'Tune' not in process: process = process.replace('13TeV', '*13TeV')
-                process = process.replace('pythia8_TuneCP5', 'pythia8*')
+                process = process.replace('pythia8_TuneCP5', 'pythia8')
                 process = process.replace('13TeV_powheg_pythia', '13TeV*powheg*pythia')
                 process = process.replace('TuneCUETP8M1', 'TuneCP5')
                 process = process.replace('TuneCUETP8M2', 'TuneCP5')         
                 process = process.replace('_ttHtranche3', '')
                 process = process.replace('DYJetsToLL_M-5to50', 'DYJetsToLL_M-4to50')
                 process = process.replace('_ext1', '')
- 
-            if verbose: print '\n', process, period
+                process = process.replace('_NNPDF31_', '_')
+                process = process.replace('_13TeV_powheg_jhugen724_pythia8', '_13TeV*powheg*jhugen727*pythia8')
+                process = process.replace('_13TeV_powheg_jhugen714_pythia8', '_13TeV*powheg*jhugen727*pythia8')
+                if campaign_year=='UL17':
+                    if 'GluGluToContinToZZ' in process: 
+                        process = process.replace('13TeV_TuneCP5_MCFM701_pythia8', 'TuneCP5_13TeV-mcfm701-pythia8')
+                        process = process.replace('13TeV_MCFM701_pythia8', 'TuneCP5_13TeV-mcfm701-pythia8')
+                    elif 'ST_t-channel_antitop_5f_' in process or 'ST_t-channel_antitop_5f_' in process: 
+	                process = process.replace('_5f_', '_5f_InclusiveDecays_')
+                    elif 'DYJetsToLL_M-50_HT' in process:
+                        process = process.replace('_TuneCP5_', '_TuneCP5_PSweights_')
+                    elif 'HWminusJ_HToWW' in process or 'HWplusJ_HToWW' in process or 'HZJ_HToWWTo2L2Nu' in process:
+                        process = process.replace('_M125_', '_M-125_*')  
+                elif campaign_year=='UL18':
+                    if 'GluGluToContinToZZ' in process:
+                        process = process.replace('13TeV_TuneCP5_MCFM701_pythia8', 'TuneCP5_13TeV-mcfm701-pythia8')
+                        process = process.replace('13TeV_MCFM701_pythia8', 'TuneCP5_13TeV-mcfm701-pythia8')
+                    elif 'DYJetsToLL_M-50_HT' in process:
+                        process = process.replace('_TuneCP5_', '_TuneCP5_PSweights_')
+                    elif 'DYJetsToLL_M-4to50_HT' in process:
+                        process = process.replace('_TuneCP5_PSweights_', '_TuneCP5_')
+                        process = process.replace('_TuneCP5_PSWeights_', '_TuneCP5_')
+                    elif 'GluGluZH_HToWWTo2L2Nu_' in process:
+                        process = process.replace('_M125_', '_M*125_').replace('pythia8', 'pythia8*')
+                    elif 'HWminusJ_HToWW' in process or 'HWplusJ_HToWW' in process or 'HZJ_HToWWTo2L2Nu' in process:
+                        process = process.replace('_M125_', '_M-125_*')
+                    elif 'tZq_ll_4f' in process:
+                        process = process.replace('13TeV-madgraph-pythia8', '13TeV-amcatnlo-pythia8')
+            if verbose: print 'Corrected process name', process, period
 
             datasetsFound = [ ] 
             parentsFound = [ ]
@@ -211,6 +272,7 @@ if __name__ == '__main__':
             if len(datasetsFound)==1:
                 datasetFound = datasetsFound[0]
                 status = 'NanoAODv2 ready:, ' + datasetFound
+                nEvents = getEventsFromDAS(datasetFound)
                 if verbose:
                     print '\033['+okcolor + 'Dataset found for sample', process+period, 'in campaign', campaign[thistier], '-->', datasetFound + '\033[0m'
             elif len(datasetsFound)>1:
@@ -234,6 +296,7 @@ if __name__ == '__main__':
                 if verbose: print 'Dataset picked for sample', process+period, 'in campaign', campaign[thistier], '-->', saveset
                 datasetFound = saveset
                 status       = 'NanoAODv2 ready:, ' + saveset
+                nEvents = getEventsFromDAS(datasetFound)
             else:   
                 if verbose: 
                     print 'Warning: no dataset found for sample', process+period, 'in tier', opt.tier, 'for campaign', campaign[thistier] 
@@ -241,8 +304,26 @@ if __name__ == '__main__':
                     for parent in parentsFound:
                         if 'MINIAOD' in parent: 
                             status = 'MiniAOD ready:, ' + parent
-                        elif 'MINIAOD' not in status:
+                            nEvents = getEventsFromDAS(parent)
+                            miniquery = 'dataset_name='+parent.split('/')[1]+'&prepid=*'+parent.split('/')[2].split('-')[0]+'*'
+                            minirequests = mcm.get('requests', None, miniquery)
+                            for minirequest in minirequests:
+                                if len(minirequest['output_dataset'])==0: continue
+                                if minirequest['output_dataset'][0]==parent:
+                                    for chainrequest in minirequest['member_of_chain']:
+                                        if 'NanoAODv2' in chainrequest:
+                                            status = 'NanoAODv2 request in chain:' + mcmurl.replace('requests?', 'chained_requests?').replace('PREPID', chainrequest)
+                                            chainedrequests = mcm.get('chained_requests', None, 'prepid='+chainrequest)
+                                            for chainedrequest in chainedrequests:
+                                                print chainedrequest['chain']
+                                                for requestinchain in chainedrequest['chain']:
+                                                    if 'NanoAODv2' in requestinchain:
+                                                        nanorequests = mcm.get('requests', None, 'prepid='+requestinchain)
+                                                        for nanorequest in nanorequests:
+                                                            status = 'NanoAODv2 request ' + nanorequest['status'] + ':' + mcmurl.replace('PREPID', nanorequest['prepid'])
+                        elif 'MiniAOD' not in status and 'NanoAODv2' not in status:
                             status = 'AOD ready:, ' + parent
+                            nEvents = getEventsFromDAS(parent)
                     if verbose:
                         print '\033['+okcolor + '        available parents are', parentsFound, '' + '\033[0m'
 
@@ -253,7 +334,7 @@ if __name__ == '__main__':
                     mcm_query = 'dataset_name='+process+'&prepid=*'+campaign['GEN']+'*'
                     #print mcm_query
                     requests = mcm.get('requests', None, mcm_query)
-                    #print requests
+                    #print mcm_query, requests
                     if len(requests)>0:
                         status = 'McM:, '
                         for request in requests:
@@ -264,11 +345,11 @@ if __name__ == '__main__':
 		            elif request['status']=='approved': mcm_status = 4
                             elif request['status']=='submitted': mcm_status = 5                         
 
-                            status += request['prepid'] + ' in status ' + request['status'] + ' - '
+                            status += request['prepid'] + ' / ' + request['status'] + ' / ' + str(request['total_events']) + ' - '
 
-                            if verbose:   
+                            if verbose:
                                 textcolor = okcolor if mcm_status==5 else warningcolor
-                                print '\033['+textcolor + 'Request', request['prepid'], 'for sample', process, 'in status', request['status'] + '\033[0m'
+                                print '\033['+textcolor + 'Request', request['prepid'], 'for sample', request['dataset_name'], 'in status', request['status'] + '\033[0m'
 
                     if mcm_status<1:
 
@@ -345,11 +426,11 @@ if __name__ == '__main__':
                                     print '\033[0m',
                                     #if len(incsvsample)>1:exit()
                         elif (len(incsv)>1)  : 
-                            status = 'Planned'
+                            status = 'Planned:'
                             if verbose: print '\033['+testcolor+"MULTIPLE OPTIONS AVAILABLE FOR THE CSV FILE", ' \033[0m', incsv, set(incsv), len(set(incsv))
                             exit()
                         elif verbose: 
-                            status = 'Planned'
+                            status = 'Planned:'
                             print '\033['+warningcolor + 'SAMPLES IN CSV:', process, incsv, ' \033[0m'
                             #exit()
                             
@@ -360,6 +441,7 @@ if __name__ == '__main__':
                     print "................................\n", datasetFound
                     exit()
             
+            status = status.replace(':,',':')
             print "STATUS", status
             if len(datasetFound) == 0 : 
                 datasetFlag = ''
@@ -377,13 +459,36 @@ if __name__ == '__main__':
                 #    print "#################################\nFLAG#####", Samples[sample][opt.tier], process, sample
                     #exit()
             if opt.list:
-                outList.write(process + ',' + status + '\n')
-            sampleName = process if Sim=='' else sample.replace('_newpmx','').replace('_PSWeights', '').split('_ext')[0]
-            sampleName += datasetFlag # -> to be refined
-            #print "Samplename", sampleName
-            OutputSamples[sampleName] = { }
-            OutputSamples[sampleName][opt.tier] = datasetFound
-            line+="Samples[\'"+sampleName+"\'] \t = {\'"+opt.tier+"\': \'"+datasetFound+"\'}"
-            if "#" not in line: print "Add to line", line
-            writeList.write(line)
+                statuslist = status.split(':')
+                nMeventsOriginal = getReadableNumber(nOriginalEvents)
+                if 'McM' not in status:
+                    nMevents = getReadableNumber(nEvents)
+                    eventString = '?/'+nMeventsOriginal
+                    if nEvents!='-1':
+                        eventString = nMevents + '/' + nMeventsOriginal + '('+str(int(100.*float(nEvents)/float(nOriginalEvents)))+'%)'
+                    outList.write(process + ',' + statuslist[0] + ',' + eventString + ',' + statuslist[1].replace('https#','https:') + '\n')
+                else: 
+                    nmcm = 0
+                    for mcmRequest in statuslist[1].split(' - '):
+                        if nmcm<(len(statuslist[1].split(' - '))-1):
+                            nMevents = getReadableNumber(mcmRequest.split(' / ')[2])
+                            eventString = nMevents + '/' + nMeventsOriginal + '('+str(int(100.*float(mcmRequest.split(' / ')[2])/float(nOriginalEvents)))+'%)'
+                            processString = process if nmcm==0 else ' '
+                            outList.write(processString + ',McM: ' + mcmRequest.split(' / ')[1] + ',' + eventString + ',' + mcmurl.replace('PREPID', mcmRequest.split(' / ')[0].replace(' ','')).replace('https#','https:') + '\n')
+                            nmcm += 1
+            else:
+                sampleName = process if Sim=='' else sample.replace('_newpmx','').replace('_PSWeights', '').split('_ext')[0]
+                sampleName += datasetFlag # -> to be refined
+                #print "Samplename", sampleName
+                OutputSamples[sampleName] = { }
+                OutputSamples[sampleName][opt.tier] = datasetFound
+                line+="Samples[\'"+sampleName+"\'] \t = {\'"+opt.tier+"\': \'"+datasetFound+"\'}"
+                if "#" not in line: print "Add to line", line
+                if sampleName[0:2]!=lastSampleInit:
+                    writeList.write('\n')
+                    lastSampleInit = sampleName[0:2]
+                writeList.write(line)
             
+        if lastSampleInit!='':
+            writeList.write('\n')
+
