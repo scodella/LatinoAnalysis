@@ -245,7 +245,7 @@ class BTagEventWeightProducer(Module):
                         idx = event.CleanJet_jetIdx[i]
                         jet_discriminant = getattr(event, "Jet_%s" % self.bTagDiscriminant)[idx]
 
-                        bTagPass = jet_discriminant>=bTagCut
+                        bTagPass = jet_discriminant>=float(bTagCut)
 
                         if self.dataType!='data' and self.bTagMethod=='2a':
                             bTagDice = self.random.Rndm()
@@ -269,7 +269,7 @@ class BTagEventWeightProducer(Module):
                                             bTagConfirm = True
 
                                 if bTagConfirm==True:
-                            
+
                                     if event.CleanJet_pt[i]>leadingPtTaggedValue[central_or_syst] :
                                         trailingPtTaggedValue[central_or_syst] = leadingPtTaggedValue[central_or_syst]
                                         leadingPtTaggedValue[central_or_syst] = event.CleanJet_pt[i]
@@ -314,7 +314,7 @@ class BTagEventWeightProducer(Module):
     		            weightjjet = [ ]
                             for j in range(event.nCleanJet):	
                                 if event.CleanJet_pt[j]>=float(bTagPtCut) and abs(event.CleanJet_eta[j])<self.bTagEtaMax:
-                                    if getattr(event, "Jet_%s" % self.bTagDiscriminant)[event.CleanJet_jetIdx[j]]>=bTagCut:
+                                    if getattr(event, "Jet_%s" % self.bTagDiscriminant)[event.CleanJet_jetIdx[j]]>=float(bTagCut):
                                         weight1idx.append(j)
                                         weight1jet.append(1.)
                                         weightjjet.append(self.getbTagSF(event, event.CleanJet_jetIdx[j], self.bTagAlgo+'_'+bTagWP, central_or_syst))
@@ -325,7 +325,7 @@ class BTagEventWeightProducer(Module):
                                 jet_discriminant = getattr(event, "Jet_%s" % self.bTagDiscriminant)[idx]
                                 jet_weight = self.getbTagSF(event, idx, self.bTagAlgo+'_'+bTagWP, central_or_syst)
                                 if self.bTagMethod=='1a':
-                                    if jet_discriminant>=bTagCut:
+                                    if jet_discriminant>=float(bTagCut):
                                         weight *= jet_weight
                                     else :
                                         jet_bTagEff = self.bTagEfficiency(bTagWP, event.CleanJet_pt[i], event.CleanJet_eta[i], jfl)
@@ -333,7 +333,7 @@ class BTagEventWeightProducer(Module):
                                 elif self.bTagMethod=='1b': # To be completed
                                     pass
                                 elif self.bTagMethod=='1c':
-                                    if jet_discriminant>=bTagCut:
+                                    if jet_discriminant>=float(bTagCut):
                                         weight *= (1. - jet_weight)
                                         if central_or_syst=='central':       
                                             for j in range(len(weight1jet)):
