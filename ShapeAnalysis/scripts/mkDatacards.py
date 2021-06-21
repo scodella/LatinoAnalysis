@@ -146,7 +146,17 @@ class DatacardFactory:
 #                        if not sampleName in killBinSig : killBinSig[sampleName] = []
 #                        killBinSig[sampleName].append(iBin)
 #                        histo.SetBinContent(iBin,0.)
-                    
+                  if 'scaleSampleForDatacard' in structure[sampleName]:
+                    scaleFactor = 1.
+                    if type(structure[sampleName]['scaleSampleForDatacard']) is dict:
+                      try:
+                        scaleFactor = structure[sampleName]['scaleSampleForDatacard'][cutName]
+                      except:
+                        pass
+                    if type(structure[sampleName]['scaleSampleForDatacard']) is int or type(structure[sampleName]['scaleSampleForDatacard']) is float:
+                      scaleFactor = structure[sampleName]['scaleSampleForDatacard']
+                    histo.Scale(scaleFactor)
+                  
                   yields[sampleName] = histo.Integral()
   
                 #
@@ -280,6 +290,17 @@ class DatacardFactory:
                         histoUp.SetDirectory(self._outFile)
                         histoDown.SetDirectory(self._outFile)
 
+                        if 'scaleSampleForDatacard' in structure[sampleName]:
+                          scaleFactor = 1.
+                          if type(structure[sampleName]['scaleSampleForDatacard']) is dict:
+                            try:
+                              scaleFactor = structure[sampleName]['scaleSampleForDatacard'][cutName]
+                            except:
+                              pass
+                          if type(structure[sampleName]['scaleSampleForDatacard']) is int or type(structure[sampleName]['scaleSampleForDatacard']) is float:
+                            scaleFactor = structure[sampleName]['scaleSampleForDatacard']
+                          histoUp.Scale(scaleFactor)
+                          histoDown.Scale(scaleFactor)
                         if '/' in nuisance['samples'][sampleName]:
                           up, down = nuisance['samples'][sampleName].split('/')
                           histoUp.Scale(float(up))
@@ -341,7 +362,7 @@ class DatacardFactory:
                           if self._skipMissingNuisance:
                             card.write(('-').ljust(columndef)) 
                             continue
-
+                        
                         histoIntegral = histo.Integral()
                         histoUpIntegral = histoUp.Integral()
                         histoDownIntegral = histoDown.Integral()
@@ -521,7 +542,14 @@ class DatacardFactory:
                   raise RuntimeError('Invalid rateParam: unknown sample %s' % sampleName)
 
                 card.write(sampleName.ljust(25))
-                card.write(('%-.4f' % float(initialValue)).ljust(columndef))
+                if 'bond' not in nuisance.keys():
+                    card.write(('%-.4f' % float(initialValue)).ljust(columndef))
+                    if 'limits' in nuisance.keys():
+                        card.write(nuisance['limits'].ljust(20))
+                else:
+                    bondFormula, bondParameters = nuisance['bond'][cutName][variableName].items()[0]
+                    card.write(bondFormula.ljust(40))
+                    card.write(bondParameters.ljust(20))
                 card.write('\n')
 
               # now add other nuisances            
@@ -552,6 +580,17 @@ class DatacardFactory:
           if self._skipMissingNuisance:
             return False
           # else let ROOT raise
+        if 'scaleSampleForDatacard' in structure[sampleName]:
+          scaleFactor = 1.
+          if type(structure[sampleName]['scaleSampleForDatacard']) is dict:
+            try:
+              scaleFactor = structure[sampleName]['scaleSampleForDatacard'][cutName]
+            except:
+              pass
+          if type(structure[sampleName]['scaleSampleForDatacard']) is int or type(structure[sampleName]['scaleSampleForDatacard']) is float:
+            scaleFactor = structure[sampleName]['scaleSampleForDatacard']
+          histoUp.Scale(scaleFactor)
+          histoDown.Scale(scaleFactor)
 
         if symmetrize:
           histoNom = self._getHisto(cutName, variableName, sampleName)
