@@ -288,10 +288,10 @@ class BTagEventWeightProducer(Module):
                     if self.bTagMethod=='1b' or self.bTagMethod=='1c':
                         self.out.fillBranch('btagWeight_1tag'+bTagFlag, (leadingPtTaggedValue['central']>=float(bTagPtCut)))
                         self.out.fillBranch('btagWeight_2tag'+bTagFlag, (trailingPtTaggedValue['central']>=float(bTagPtCut)))
-                    return True
+                    continue
 
                 if self.bTagMethod[0]!='1':
-                    return True
+                    continue
 
                 for central_or_syst in self.central_and_systs_shape_corr:
                     weight = 1.
