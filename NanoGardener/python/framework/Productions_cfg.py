@@ -572,7 +572,7 @@ Productions = {
 
 #################################### nAODv8 UL DATA  ##############################################
  # -------- 2016 DATA UL2016 nAODv8: Full2016v8
- 'Run2016_UL2016_nAODv8_HIPM_Full2016v8': {
+ 'Run2016_106X_nAODv8_HIPM_Full2016v8': {
                        'isData'  : True ,
                        'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_UL2016_HIPM_nAODv8.py' ,
@@ -580,7 +580,7 @@ Productions = {
                        'year'    : '2016' ,
                    },
 
- 'Run2016_UL2016_nAODv8_noHIPM_Full2016v8': {
+ 'Run2016_106X_nAODv8_noHIPM_Full2016v8': {
                        'isData'  : True ,
                        'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_UL2016_noHIPM_nAODv8.py' ,
@@ -590,19 +590,19 @@ Productions = {
 
 
  # -------- 2017 DATA UL2017 nAODv8: Full2017v8
- 'Run2017_UL2017_nAODv8_Full2017v8': {
+ 'Run2017_106X_nAODv8_Full2017v8': {
                        'isData'  : True ,
                        'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt"  % os.environ["CMSSW_BASE"]',
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2017_UL2017_nAODv8.py' ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2017_106X_nAODv8.py' ,
                        'cmssw'   : 'Full2017v8',
                        'year'    : '2017' ,
                    },
 
  # -------- 2018 DATA UL2018 nAODv8: Full2018v8
- 'Run2018_UL2018_nAODv8_Full2018v8': {
+ 'Run2018_106X_nAODv8_Full2018v8': {
                        'isData'  : True ,
                        'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2018_UL2018_nAODv8.py' ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2018_106X_nAODv8.py' ,
                        'cmssw'   : 'Full2018v8',
                        'year'    : '2018' ,
                    },
@@ -701,9 +701,9 @@ Productions = {
 #################################### nAODv8 MC ##############################################
 
  # -------- 2016 MC 106X nAODv8: Full2016v8
- 'Summer20UL16_106x_nAODv8_HIPM_Full2016v8': {
+ 'Summer20UL16_106X_nAODv8_HIPM_Full2016v8': {
                        'isData'  : False ,
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16APV_106x_nAODv2.py' ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16preVPF_susy_106X_nAODv8.py' ,
                        'cmssw'   : 'Full2016v8HIPM' ,
                        'year'    : '2016' ,
  #                      'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
@@ -711,9 +711,9 @@ Productions = {
                        'YRver'   : ['YR4','13TeV'] ,
                    },
 
- 'Summer20UL16_106x_nAODv8_noHIPM_Full2016v8': {
+ 'Summer20UL16_106X_nAODv8_noHIPM_Full2016v8': {
                        'isData'  : False ,
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16_106x_nAODv2.py' ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16postVPF_susy_106X_nAODv8.py' ,
                        'cmssw'   : 'Full2016v8noHIPM' ,
                        'year'    : '2016' ,
  #                      'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
@@ -722,9 +722,9 @@ Productions = {
                    },
 
  # -------- 2017 MC UL
- 'Summer20UL17_106x_nAODv8_Full2017v8' : {
+ 'Summer20UL17_106X_nAODv8_Full2017v8' : {
                        'isData'  : False ,
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL17_106x_nAODv2.py',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL17_susy_106X_nAODv8.py',
                        'cmssw'   : 'Full2017v8',
                        'year'    : '2017' ,
  #                      'JESGT'   : 'Fall17_17Nov2017_V32_MC' ,
@@ -733,9 +733,9 @@ Productions = {
                    },
 
  # -------- 2018 MC UL
- 'Summer20UL18_106x_nAODv8_Full2018v8' : {
+ 'Summer20UL18_106X_nAODv8_Full2018v8' : {
                        'isData'  : False ,
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL18_106x_nAODv2.py',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL18_susy_106X_nAODv8.py',
                        'cmssw'   : 'Full2018v8',
                        'year'    : '2018' ,
  #                      'JESGT'   : 'Autumn18_V19_MC',

@@ -132,6 +132,7 @@ samples['DYJetsToLL_M-5to50_HT-200to400']  .extend( ['xsec=37.2',   'kfact=1.000
 samples['DYJetsToLL_M-5to50_HT-400to600']  .extend( ['xsec=3.581',  'kfact=1.000',          'ref=E'] )
 samples['DYJetsToLL_M-5to50_HT-600toInf']  .extend( ['xsec=1.124',  'kfact=1.000',          'ref=E'] )
 
+samples['DYJetsToLL_M-4to50_HT-70to100']        .extend( ['xsec=307.',   'kfact=1.000',          'ref=I'] )
 samples['DYJetsToLL_M-4to50_HT-100to200']       .extend( ['xsec=204.',   'kfact=1.000',          'ref=W'] )
 samples['DYJetsToLL_M-4to50_HT-100to200-ext1']  .extend( ['xsec=204.',   'kfact=1.000',          'ref=W'] )
 samples['DYJetsToLL_M-4to50_HT-200to400']       .extend( ['xsec=54.39',  'kfact=1.000',          'ref=W'] )
@@ -592,6 +593,8 @@ samples['VBFHToMuMu_M125_EEC5_powheg']           .extend( ['xsec=0.00082296',   
 samples['VBFHToMuMu_M125_EEC5_amcatnlo']         .extend( ['xsec=0.00082296',   'kfact=1.000',          'ref=FT'] ) # 3.782*2.176*10^{-4}
 samples['VBFHToMuMu_M125_CP5_powheg']            .extend( ['xsec=0.00082296',   'kfact=1.000',          'ref=FT'] ) # 3.782*2.176*10^{-4}
 
+samples['VBFHToZZTo4L_M125']	         .extend( ['xsec=0.0010179925',	'kfact=1.000',		'ref=FT'] ) # 3.782*0.0264*0.033658*0.033658*9
+
 # ggZH
 samples['ggZH_HToWW_M120']		.extend( ['xsec=1.0000',	'kfact=1.000',		'ref=X'] )
 samples['ggZH_HToWW_M125']		.extend( ['xsec=1.0000',	'kfact=1.000',		'ref=X'] )
@@ -920,44 +923,6 @@ samples['monoH_ZpBaryonic_MZp-10000_MChi-150'] .extend( ['xsec=0.000000000259886
 samples['monoH_ZpBaryonic_MZp-10000_MChi-10']  .extend( ['xsec=0.0000000002676616', 'kfact=1.000', 'ref=U'] ) 
 samples['monoH_ZpBaryonic_MZp-10000_MChi-1000'].extend( ['xsec=0.0000000001480138', 'kfact=1.000', 'ref=U'] ) 
 
-
-
-# Stop T2tt FullSim
-samples['T2tt_mStop425_mLSP325']             .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop500_mLSP325']             .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop850_mLSP100']             .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-# Stop T2tt FastSim Scans
-samples['T2tt_mStop100-125_mLSP1to50']       .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop150-175_mLSP1to100']      .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop200_mLSP1to125']          .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop225_mLSP25to150']         .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop250_mLSP1to175']          .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop275_mLSP75to200']         .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop183to291_mLSP1to100']     .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop300to375_mLSP1to300']     .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop400to475_mLSP1to400']     .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop500-525-550_mLSP1to425-325to450-1to475'] .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop600-950_mLSP1to450']      .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop-150to250']               .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop-250to350']               .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop-350to400']               .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_mStop-400to1200']              .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_dM10to80']                     .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tt_dM10to80_genHT160_genMET80']   .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-# Stop T2tb FastSim Scans
-samples['T2tb_mStop200to325_mLSP0to150']     .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] ) 
-samples['T2tb_mStop200to625_mLSP50to475']    .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tb_mStop350to400_mLSP0to225']     .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tb_mStop425to600_mLSP0to425']     .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tb_mStop625to850_mLSP0to450']     .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2tb_mStop875to1125_mLSP0to475']    .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-# Stop T2bW FastSim Scans
-samples['T2bW_X05_mStop125to275_mLSP0to150'] .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2bW_X05_mStop300to400_mLSP0to275'] .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2bW_X05_mStop425to600_mLSP0to375'] .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2bW_X05_mStop625to950_mLSP0to350'] .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-samples['T2bW']                              .extend( ['xsec=1.000','kfact=1.000',   'ref=X'] )
-
 #alternative spin parity Higgs
 samples['H0PM_ToWWTo2L2Nu'] .extend( ['xsec=0.9913',  'kfact=1.000',        'ref=CF'] ) # 43.92*0.215*0.108*0.108*9 Higgs LHC value
 samples['H0PH_ToWWTo2L2Nu']  .extend( ['xsec=0.9913',  'kfact=1.000',        'ref=CF'] ) # 43.92*0.215*0.108*0.108*9 Higgs LHC value
@@ -997,6 +962,16 @@ samples['WpToLNu_WpTo2J_QCD']   .extend( ['xsec=0.08642',   'kfact=1.000',   're
 samples['WpToLNu_WmTo2J_QCD']   .extend( ['xsec=5.544',     'kfact=1.000',   'ref=W' ])
 samples['WpToLNu_ZTo2J_QCD']    .extend( ['xsec=2.162',     'kfact=1.000',   'ref=W' ])
 samples['ZTo2L_ZTo2J_QCD']      .extend( ['xsec=0.3756',    'kfact=1.000',   'ref=W' ])
+
+# Dummies for Susy samples
+samples['T2tt__mStop-150to250']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-250to350']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-350to400']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-400to1200']    .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2bW']                     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['TChipmSlepSnu']            .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['TChipmSlepSnu_mC1_825_1500'].extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['TChipmWW']                 .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
 
 # Wjets EWK production semileptonic analysis
 # XS from AN CMS-SMP-17-161
@@ -1132,7 +1107,6 @@ samples['WZJJ_TL'].extend( ['xsec=0.003198',    'kfact=1.000',   'ref=W' ])
 samples['WZJJ_TT'].extend( ['xsec=0.008885',    'kfact=1.000',   'ref=W' ])
 samples['WZJJ_LL'].extend( ['xsec=0.00138',    'kfact=1.000',   'ref=W' ])
 
-
 ####### EFT samples for ssWW
 samples['SSWW'].extend( ['xsec=0.02798',    'kfact=1.000',   'ref=W' ])
 samples['VBS_SSWW_cW_INT'].extend( ['xsec=0.001001',    'kfact=1.000',   'ref=W' ])
@@ -1150,3 +1124,4 @@ samples['WpWmJJ_EWK_pol_TT'].extend( ['xsec=0.2464',     'kfact=1.000',   'ref=I
 
 # EFT dim8 OSWW  
 samples['WWjj_OS_EWK_dim8'].extend( ['xsec=0.2464',     'kfact=1.000',   'ref=I' ])
+

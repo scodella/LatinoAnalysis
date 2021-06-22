@@ -146,6 +146,10 @@ class DatacardFactory:
 #                        if not sampleName in killBinSig : killBinSig[sampleName] = []
 #                        killBinSig[sampleName].append(iBin)
 #                        histo.SetBinContent(iBin,0.)
+
+                  if 'stat' in nuisances and 'removeZeros' in nuisances['stat'] and nuisances['stat']['removeZeros']:
+                      self._removeZeroStatUncertainties (histo)                  
+
                   if 'scaleSampleForDatacard' in structure[sampleName]:
                     scaleFactor = 1.
                     if type(structure[sampleName]['scaleSampleForDatacard']) is dict:
@@ -166,7 +170,7 @@ class DatacardFactory:
                 #
                 if 'removeStatUnc' in structureFile[sampleName] and structureFile[sampleName]['removeStatUnc']:
                   self._removeStatUncertainty (histo)
-                 
+ 
                 self._outFile.cd()
                 histo.Write()
 
@@ -640,7 +644,13 @@ class DatacardFactory:
         for iBin in range(0,histo.GetNbinsX()+2) :
           histo.SetBinError(iBin,0.)
 
-
+    # _____________________________________________________________________________
+    def _removeZeroStatUncertainties(self, histo):
+        if histo.GetEntries()>0.:
+            zeroError = 1.84102*histo.Integral()/histo.GetEntries()
+            for iBin in range(1,histo.GetNbinsX()+1):
+                if histo.GetBinError(iBin)==0.:
+                    histo.SetBinError(iBin, zeroError)
 
 if __name__ == '__main__':
     sys.argv = argv

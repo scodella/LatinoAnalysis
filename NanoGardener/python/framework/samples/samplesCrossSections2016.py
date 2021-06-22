@@ -186,6 +186,8 @@ samples['ggZZ2e2t']                     .extend( ['xsec=0.003194',	'kfact=1.000'
 samples['ZZJJTo4L_EWK']                 .extend( ['xsec=0.0004453',	'kfact=1.000',		'ref=E'] )
 samples['ZZTo2L2Nu_EWK']		            .extend( ['xsec=0.0003014',	'kfact=1.000',		'ref=I'] ) #Run SMP-RunIISummer15wmLHEGS-00086
 
+samples['qqHToZZTo4L_M125']	   	.extend( ['xsec=0.001',     	'kfact=1.000',		'ref=CF'] ) # 43.92*0.0264*0.033658*0.033658*9 ?????
+
 ## Single top
 samples['ST_t-channel_antitop']         .extend( ['xsec=26.38',		'kfact=1.000',		'ref=E'] )
 samples['ST_t-channel_top']             .extend( ['xsec=44.33',		'kfact=1.000',		'ref=E'] )
@@ -563,6 +565,8 @@ samples['VBFHToMuMu_M125_CP5down']	         .extend( ['xsec=0.00082296',	'kfact=
 samples['VBFHToMuMu_M125_EEC5_powheg']	         .extend( ['xsec=0.00082296',	'kfact=1.000',		'ref=FT'] ) # 3.782*2.176*10^{-4}
 samples['VBFHToMuMu_M125_EEC5_amcatnlo']	 .extend( ['xsec=0.00082296',	'kfact=1.000',		'ref=FT'] ) # 3.782*2.176*10^{-4}
 samples['VBFHToMuMu_M125_CP5_powheg']	         .extend( ['xsec=0.00082296',	'kfact=1.000',		'ref=FT'] ) # 3.782*2.176*10^{-4}
+
+samples['VBFHToZZTo4L_M125']	         .extend( ['xsec=0.0010179925',	'kfact=1.000',		'ref=FT'] ) # 3.782*0.0264*0.033658*0.033658*9
 
 # ggZH
 samples['ggZH_HToWW_M120']		.extend( ['xsec=1.0000',	'kfact=1.000',		'ref=X'] )
@@ -964,14 +968,6 @@ samples['ZTo2L_ZTo2J_QCD']      .extend( ['xsec=0.3756',    'kfact=1.000',   're
 # FIXME: insert reference
 samples['HH_bblnjj']        .extend(['xsec=1.97', 'kfact=1.000', 'ref=??'])
 
-# Dummies for Susy samples
-samples['T2tt__mStop-150to250']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
-samples['T2tt__mStop-250to350']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
-samples['T2tt__mStop-350to400']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
-samples['T2tt__mStop-400to1200']    .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
-samples['T2tt__mStop-1200to2000']   .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
-
-
 #PrivateNanoSamples
 samples['GluGluHToWWTo2L2Nu_M125_PrivateNano']      .extend( ['xsec=1.0315',    'kfact=1.000',          'ref=Y'] ) # 45.20*0.215*0.1086*0.1086*9
 samples['GluGluHToWWTo2L2Nu_M125_herwigpp_PrivateNano']  .extend( ['xsec=0.9913',       'kfact=1.000',          'ref=CF'] ) # 43.92*0.215*0.108*0.108*9 Higgs LHC value
@@ -988,6 +984,16 @@ samples['HWplusJ_HToTauTau_M125_PrivateNano']   .extend( ['xsec=0.0532',        
 samples['HZJ_HToWW_M125_PrivateNano']           .extend( ['xsec=0.187',         'kfact=1.000',          'ref=EF'] ) # 0.8696*0.215
 samples['bbHToWWTo2L2Nu_M125_ybyt_PrivateNano']     .extend( ['xsec=0.000743225',    'kfact=1.000',         'ref=N'] ) # 0.000743225 = -0.03293*0.215*0.108*0.108*9
 
+# Dummies for Susy samples
+samples['T2tt__mStop-150to250']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-250to350']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-350to400']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-400to1200']    .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-1200to2000']   .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2bW']                     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['TChipmSlepSnu']            .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['TChipmSlepSnu_mC1_825_1500'].extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['TChipmWW']                 .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
 
 # monoH dileptonic for FullRun2 analysis
 # Insert xsec value in pb for each mass point in samples.py
@@ -1113,3 +1119,4 @@ samples['WpWmJJ_EWK_pol_TL'].extend( ['xsec=0.07367',      'kfact=1.000',   'ref
 samples['WpWmJJ_EWK_pol_TT'].extend( ['xsec=0.247',     'kfact=1.000',   'ref=I' ])
 # EFT dim8 OSWW
 samples['WWjj_OS_EWK_dim8'].extend( ['xsec=0.247',     'kfact=1.000',   'ref=I' ])
+

@@ -612,6 +612,8 @@ samples['VBFHToMuMu_M125_EEC5_powheg']           .extend( ['xsec=0.00082296',   
 samples['VBFHToMuMu_M125_EEC5_amcatnlo']         .extend( ['xsec=0.00082296',   'kfact=1.000',          'ref=FT'] ) # 3.782*2.176*10^{-4}
 samples['VBFHToMuMu_M125_CP5_powheg']            .extend( ['xsec=0.00082296',   'kfact=1.000',          'ref=FT'] ) # 3.782*2.176*10^{-4}
 
+samples['VBFHToZZTo4L_M125']	         .extend( ['xsec=0.0010179925',	'kfact=1.000',		'ref=FT'] ) # 3.782*0.0264*0.033658*0.033658*9
+
 # ggZH
 samples['ggZH_HToWW_M120']		.extend( ['xsec=1.0000',	'kfact=1.000',		'ref=X'] )
 samples['ggZH_HToWW_M125']		.extend( ['xsec=1.0000',	'kfact=1.000',		'ref=X'] )
@@ -1062,6 +1064,16 @@ samples['WpTo2J_ZTo2L_aQGC']       .extend( ['xsec=0.569',    'kfact=1.000',   '
 samples['WpTo2J_WmTo2L_aQGC']      .extend( ['xsec=17.91',    'kfact=1.000',   'ref=W' ])
 samples['WmTo2L_ZTo2J_aQGC']       .extend( ['xsec=0.7416',    'kfact=1.000',   'ref=W' ])
 
+# Dummies for Susy samples
+samples['T2tt__mStop-150to250']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-250to350']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-350to400']     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-400to1200']    .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2tt__mStop-1200to2000']   .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['T2bW']                     .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['TChipmSlepSnu']            .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['TChipmSlepSnu_mC1_825_1500'].extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
+samples['TChipmWW']                 .extend(['xsec=1.',     'kfact=1.000',   'ref=X' ])
 
 # monoH dileptonic for FullRun2 analysis
 # Insert xsec value in pb for each mass point in samples.py
@@ -1179,7 +1191,6 @@ samples['WZJJ_TL'].extend( ['xsec=0.003198',    'kfact=1.000',   'ref=W' ])
 samples['WZJJ_TT'].extend( ['xsec=0.008885',    'kfact=1.000',   'ref=W' ])
 samples['WZJJ_LL'].extend( ['xsec=0.00138',    'kfact=1.000',   'ref=W' ])
 
-
 ####### EFT samples for ssWW
 samples['SSWW'].extend( ['xsec=0.02795',    'kfact=1.000',   'ref=W' ])
 samples['VBS_SSWW_cW_INT'].extend( ['xsec=0.000993',    'kfact=1.000',   'ref=W' ])
@@ -1197,3 +1208,4 @@ samples['WpWmJJ_EWK_pol_TT'].extend( ['xsec=0.2455',     'kfact=1.000',   'ref=I
 
 # EFT dim8 OSWW
 samples['WWjj_OS_EWK_dim8'].extend( ['xsec=0.2447',     'kfact=1.000',   'ref=I' ])
+

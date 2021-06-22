@@ -37,6 +37,7 @@ if __name__ == '__main__':
     parser = optparse.OptionParser(usage)
 
     parser.add_option('--scaleToPlot'    , dest='scaleToPlot'    , help='scale of maxY to maxHistoY'                 , default=3.0  ,    type=float   )
+    parser.add_option('--sigset'         , dest='sigset'         , help='Signal samples [SM]'                        , default='SM')
     parser.add_option('--minLogC'        , dest='minLogC'        , help='min Y in log plots'                         , default=0.01  ,    type=float   )
     parser.add_option('--maxLogC'        , dest='maxLogC'        , help='max Y in log plots'                         , default=100   ,    type=float   )
     parser.add_option('--minLogCratio'   , dest='minLogCratio'   , help='min Y in log ratio plots'                   , default=0.001 ,    type=float   )
@@ -56,6 +57,7 @@ if __name__ == '__main__':
 
     parser.add_option('--fileFormats'    , dest='fileFormats'    , help='Output plot file formats (comma-separated png, pdf, root, C, and/or eps). Default "png,root"', default='png,root')
 
+    parser.add_option('--plotNormalizedCRratio'       , dest='plotNormalizedCRratio'       , help='plot distributions normalized to control region'                  , default=None )
     parser.add_option('--plotNormalizedIncludeData'    , dest='plotNormalizedIncludeData'    , help='plot also normalized distributions for data, for shape comparison purposes', default=None )
     parser.add_option('--plotNormalizedDistributions'         , dest='plotNormalizedDistributions'         , help='plot also normalized distributions for optimization purposes'    ,    action='store_true'     , default=None )
     parser.add_option('--plotNormalizedDistributionsTHstack'  , dest='plotNormalizedDistributionsTHstack'  , help='plot also normalized distributions for optimization purposes, with stacked sig and bkg'  ,    action='store_true'       , default=None )
@@ -63,6 +65,7 @@ if __name__ == '__main__':
     parser.add_option('--showIntegralLegend'           , dest='showIntegralLegend'           , help='show the integral, the yields, in the legend'                         , default=0,    type=float )
           
     parser.add_option('--showRelativeRatio'   , dest='showRelativeRatio'   , help='draw instead of data-expected, (data-expected) / expected' ,    action='store_true', default=False)
+    parser.add_option('--showDataVsBkgOnly', dest='showDataVsBkgOnly', help='draw instead of data/expected, data/expected background only (for exclusion searches)' , action='store_true', default=False)
     parser.add_option('--showDataMinusBkgOnly', dest='showDataMinusBkgOnly', help='draw instead of data-expected, data-expected background only' , action='store_true', default=False)
          
     parser.add_option('--removeWeight', dest='removeWeight', help='Remove weight S/B for PR plots, just do the sum' , action='store_true', default=False)
@@ -94,6 +97,7 @@ if __name__ == '__main__':
     print "                        lumi =", opt.lumi
     print "                   inputFile =", opt.inputFile
     print "              outputDirPlots =", opt.outputDirPlots
+    print "       plotNormalizedCRratio =", opt.plotNormalizedCRratio
     print " plotNormalizedDistributions =", opt.plotNormalizedDistributions
     print "   plotNormalizedIncludeData =", opt.plotNormalizedIncludeData  
     print " plotNormalizedDistributionsTHstack =", opt.plotNormalizedDistributionsTHstack
@@ -104,7 +108,8 @@ if __name__ == '__main__':
     print "                minLogCratio =", opt.minLogCratio
     print "                maxLogCratio =", opt.maxLogCratio
     print "           showRelativeRatio =", opt.showRelativeRatio
-    print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
+    print "           showDataVsBkgOnly =", opt.showDataVsBkgOnly
+    print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly 
     print "                removeWeight =", opt.removeWeight
     print "                    invertXY =", opt.invertXY    
     print "        skipMissingNuisance  =", opt.skipMissingNuisance
@@ -136,6 +141,7 @@ if __name__ == '__main__':
     factory._tag       = opt.tag
     factory._energy    = opt.energy
     factory._lumi      = opt.lumi
+    factory._plotNormalizedCRratio = opt.plotNormalizedCRratio
     factory._plotNormalizedDistributions = opt.plotNormalizedDistributions
     factory._plotNormalizedIncludeData = opt.plotNormalizedIncludeData
     factory._plotNormalizedDistributionsTHstack = opt.plotNormalizedDistributionsTHstack
@@ -157,6 +163,7 @@ if __name__ == '__main__':
     factory._maxLogCdifference = opt.maxLogCratio
 
     factory._showRelativeRatio = opt.showRelativeRatio
+    factory._showDataVsBkgOnly = opt.showDataVsBkgOnly
     factory._showDataMinusBkgOnly = opt.showDataMinusBkgOnly
 
     factory._removeWeight = opt.removeWeight
@@ -193,16 +200,16 @@ if __name__ == '__main__':
       handle = open(opt.samplesFile,'r')
       exec(handle)
       handle.close()
-   
-    cuts = {}
-    if os.path.exists(opt.cutsFile) :
-      handle = open(opt.cutsFile,'r')
-      exec(handle)
-      handle.close()
 
     variables = {}
     if os.path.exists(opt.variablesFile) :
       handle = open(opt.variablesFile,'r')
+      exec(handle)
+      handle.close()
+   
+    cuts = {}
+    if os.path.exists(opt.cutsFile) :
+      handle = open(opt.cutsFile,'r')
       exec(handle)
       handle.close()
 

@@ -20,7 +20,8 @@ class NanoProdMaker():
      self.checkProxy()
 
      # CRAB Stage Out Config
-     self._storageSite   = 'T2_CH_CERN'
+     #self._storageSite   = 'T2_CH_CERN'
+     self._storageSite   = 'T2_ES_IFCA'
      self._outLFNDirBase = '/store/group/phys_higgs/cmshww/amassiro/NanoProd/'
 
      # CMS Stuff
@@ -206,8 +207,9 @@ class NanoProdMaker():
         # ...... Input Data
         fCfg.write('config.Data.inputDataset = \''+self._Samples[iSample]['miniAOD']+'\'\n') 
         fCfg.write('config.Data.inputDBS = \'global\'\n')
-        fCfg.write('config.Data.splitting = \'Automatic\'\n')
-        #fCfg.write('config.Data.unitsPerJob = 1\n')
+        #fCfg.write('config.Data.splitting = \'Automatic\'\n')
+        fCfg.write('config.Data.splitting = \'FileBased\'\n')
+        fCfg.write('config.Data.unitsPerJob = 1\n')
         # ...... Output data
         fCfg.write('config.Data.publication = True\n')
         fCfg.write('config.Data.publishDBS = \'phys03\'\n')

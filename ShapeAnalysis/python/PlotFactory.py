@@ -245,8 +245,32 @@ class PlotFactory:
 
             nexpected = 0
 
+            scaleCR = 1.
+            if self._plotNormalizedCRratio:
+                if 'CRbins' in variable.keys():
+
+                    bNorm, dNorm = 0., 0.
+
+                    CRbins = variable['CRbins']
+                    for sampleName, plotdef in plot.iteritems():
+                        if 'samples' in variable and sampleName not in variable['samples']: continue
+                        shapeName = cutName+"/"+variableName+'/histo_' + sampleName
+                        if type(fileIn) is dict:
+                            temp_histo = fileIn[sampleName].Get(shapeName)
+                        else:
+                            temp_histo = fileIn.Get(shapeName)
+                        tNorm = temp_histo.Integral(CRbins[0], CRbins[1])
+                        if plotdef['isData']==1:
+                            dNorm += tNorm
+                        elif plotdef['isSignal']!=1:
+                            bNorm += tNorm
+
+                    scaleCR = dNorm/bNorm
+
             for sampleName, plotdef in plot.iteritems():
               if 'samples' in variable and sampleName not in variable['samples']:
+                continue
+              if 'removeFromCuts' in samples[sampleName] and cutName in samples[sampleName]['removeFromCuts']:
                 continue
 
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
@@ -268,6 +292,9 @@ class PlotFactory:
               if 'scale' in plotdef.keys() : 
                 histos[sampleName].Scale(plotdef['scale'])
                 #print " >> scale ", sampleName, " to ", plotdef['scale']
+              if scaleCR!=1.:
+                if plotdef['isData']==0 and plotdef['isSignal']==0:
+                  histos[sampleName].Scale(scaleCR)
 
               # apply cut dependent scale factors
               # for example when plotting different phase spaces
@@ -498,6 +525,9 @@ class PlotFactory:
                     else:
                       if 'scale' in plotdef:
                         histoVar.Scale(plotdef['scale'])
+                      if scaleCR!=1.:
+                          if plotdef['isData']==0 and plotdef['isSignal']==0:
+                              histoVar.Scale(scaleCR)
                                    
                       # apply cut dependent scale factors
                       # for example when plotting different phase spaces
@@ -577,11 +607,14 @@ class PlotFactory:
             for sampleName, plotdef in plot.iteritems():
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
+              if 'removeFromCuts' in samples[sampleName] and cutName in samples[sampleName]['removeFromCuts']:
+                continue
 
               # MC style
               if plotdef['isData'] == 0 :
                 if plotdef['isSignal'] == 1 :
-                  thsBackground.Add(histos[sampleName])
+                  if not self._showDataVsBkgOnly : 
+                    thsBackground.Add(histos[sampleName])
 
             #
             # you need to add the signal as well, since the signal was considered in the nuisances vector
@@ -628,8 +661,11 @@ class PlotFactory:
 
             ## --postFit 1 --> line is prefit
             if self._postFit == 'p':
-                tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
-                histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_prefit')
+                tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC 
+                if self._showDataVsBkgOnly : 
+                    histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_background_prefit')
+                else:           
+                    histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_prefit')
             ## --postFit 2 --> line is (S+B) postfit
             if self._postFit == 's':
                 tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
@@ -689,7 +725,8 @@ class PlotFactory:
             # see https://hypernews.cern.ch/HyperNews/CMS/get/higgs-combination/995.html )
             # from the histogram itself
             #
-            special_shapeName = cutName+"/"+variableName+'/histo_total' 
+            special_shapeName = cutName+"/"+variableName+'/histo_total'
+            if self._showDataVsBkgOnly: special_shapeName += '_background'
             if type(fileIn) is dict:
               if 'total' in fileIn:
                 histo_total = fileIn['total'].Get(special_shapeName)
@@ -767,9 +804,11 @@ class PlotFactory:
             for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
               if 'samples' in variable and len(set(sampleConfiguration['samples']) & set(variable['samples'])) == 0:
                 continue
+              if 'removeFromCuts' in sampleConfiguration and cutName in sampleConfiguration['removeFromCuts']:
+                continue
                   
               if sampleConfiguration['isSignal'] == 1 :
-                  print "############################################################## isSignal 1", sampleNameGroup
+                  print "############################################################## isSignal 1", sampleNameGroup, cutName
                   #
                   # if, for some reason, you want to scale only the overlaid signal
                   # for example to show the shape of the signal, without affecting the actual stacked (true) distribution
@@ -789,7 +828,8 @@ class PlotFactory:
               # the signal has to be the last one in the dictionary!
               # make it sure in plot.py
               if groupFlag == False:
-                  thsBackground_grouped.Add(histos_grouped[sampleNameGroup])
+                  if sampleConfiguration['isSignal'] == 0 or not self._showDataVsBkgOnly:
+                      thsBackground_grouped.Add(histos_grouped[sampleNameGroup])
             
             #---- now plot
             
@@ -1005,7 +1045,9 @@ class PlotFactory:
               for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
                 if 'samples' in variable and len(set(sampleConfiguration['samples']) & set(variable['samples'])) == 0:
                   continue
-                  
+                if 'removeFromCuts' in sampleConfiguration and cutName in sampleConfiguration['removeFromCuts']:
+                  continue
+  
                 if self._showIntegralLegend == 0 :
                   tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
                 else :
@@ -1017,6 +1059,8 @@ class PlotFactory:
                
               for sampleName in reversedSampleNames:
                 if 'samples' in variable and sampleName not in variable['samples']:
+                  continue
+                if 'removeFromCuts' in samples[sampleName] and cutName in samples[sampleName]['removeFromCuts']:
                   continue
 
                 try:
@@ -1122,6 +1166,8 @@ class PlotFactory:
             print "- draw with ratio"
             
             canvasRatioNameTemplate = 'cratio_' + cutName + "_" + variableName
+            if scaleCR!=1.:
+              canvasRatioNameTemplate = canvasRatioNameTemplate.replace('cratio', 'cratioCR')
 
             tcanvasRatio.cd()
             canvasPad1Name = 'pad1_' + cutName + "_" + variableName
@@ -1196,11 +1242,35 @@ class PlotFactory:
             #                               if there is "histo_total" there is no need of explicit nuisances
             if len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMC.Draw("2")
-             
+ 
             #     - then the superimposed MC
             if len(sigSupList) != 0 and groupFlag==False:
               for hist in sigSupList:
                 hist.Draw("hist same")
+
+            if self._postFit == 'p' or self._postFit == 's' or  self._postFit == 'b':
+                histoPF.SetLineWidth(4)
+                if self._postFit == 'p':
+                    histoPF.SetLineColor(9)
+                    histoPF.SetLineStyle(2)
+                    postfitName = 'Pre-fit'
+                elif self._postFit == 's':
+                    histoPF.SetLineColor(632+2)
+                    histoPF.SetLineStyle(3)
+                    postfitName = 'Fit b+s'
+                elif self._postFit == 'b':
+                    histoPF.SetLineColor(632+4)
+                    histoPF.SetLineStyle(4)
+                    postfitName = 'Fit b'
+                histoPF.Draw("hist same")
+                if self._showIntegralLegend == 0 :
+                    tlegend.AddEntry(histoPF, postfitName , "L")
+                else :
+                    if variable["divideByBinWidth"] == 1:
+                        nevents = histoPF.Integral(1,histoPF.GetNbinsX(),"width")
+                    else:
+                        nevents = histoPF.Integral(1,histoPF.GetNbinsX())
+                    tlegend.AddEntry(histoPF, postfitName + " [" +  str(round(nevents,1)) + "]", "L")
 
             #     - then the DATA  
             if tgrData.GetN() != 0:
@@ -1256,8 +1326,8 @@ class PlotFactory:
               frameRatio.GetXaxis().SetTitle(variableName)
             frameRatio.GetYaxis().SetTitle("Data/Expected")
             #frameRatio.GetYaxis().SetTitle("Data/MC")
-            #frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
-            frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
+            frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
+            #frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
             self.Pad2TAxis(frameRatio)
             #                               if there is "histo_total" there is no need of explicit nuisances
             if len(mynuisances.keys()) != 0 or histo_total!= None:
@@ -1281,7 +1351,8 @@ class PlotFactory:
                 if self._postFit == 's' or  self._postFit == 'b':
                     tlegendRatio.AddEntry(tgrDataOverMC, "pre-fit", "PL")
                     tlegendRatio.AddEntry(tgrDataOverPF, "post-fit", "PL")
-                
+ 
+                totalInSamples = False
                 for sampleName, sample in self._samples.iteritems():
                     ##if sampleName.find('total') == 1: 
                     ## or sampleName == 'total_background_prefit' or sampleName == 'total_background_postfit_s' or sampleName == 'total_background_postfit_b':
@@ -1290,8 +1361,22 @@ class PlotFactory:
                         tgrDataOverPF.SetLineColor(plot[sampleName]['color'])
                         # tgrDataOverPF.SetMarkerColor(2)
                         # tgrDataOverPF.SetLineColor(2)
-                tgrDataOverPF.Draw("PE,same")
-                tlegendRatio.Draw("same")
+                        totalInSamples = True
+                if not totalInSamples:
+                    binEdges = [ ]
+                    for ipoint in range(tgrDataOverPF.GetN()):
+                        binEdges.append(tgrDataOverPF.GetX()[ipoint]-tgrDataOverPF.GetErrorX(ipoint))
+                    binEdges.append(tgrDataOverPF.GetX()[tgrDataOverPF.GetN()-1]+tgrDataOverPF.GetErrorX(tgrDataOverPF.GetN()-1))
+                    ratioHisto = ROOT.TH1F('tgrDataOverPF', '', len(binEdges)-1, array('d',binEdges))
+                    for ipoint in range(tgrDataOverPF.GetN()):
+                        ratioHisto.SetBinContent(ipoint+1, tgrDataOverPF.GetY()[ipoint])
+                    ratioHisto.SetLineStyle(histoPF.GetLineStyle())
+                    ratioHisto.SetLineWidth(histoPF.GetLineWidth())
+                    ratioHisto.SetLineColor(histoPF.GetLineColor())
+                    ratioHisto.Draw("same")
+                else: 
+                    tgrDataOverPF.Draw("PE,same")
+                    tlegendRatio.Draw("same")
             
             
             for samplesToRatioGrName, samplesGrToRatio in tgrRatioList.iteritems() :
@@ -1346,6 +1431,8 @@ class PlotFactory:
               canvasDifferenceNameTemplate = 'cdifference_relative_' + cutName + "_" + variableName
             else :
               canvasDifferenceNameTemplate = 'cdifference_' + cutName + "_" + variableName
+            if scaleCR!=1.:
+              canvasDifferenceNameTemplate = canvasDifferenceNameTemplate.replace('cdifference', 'cdifferenceCR')
 
             tcanvasDifference.cd()
             canvasPad1differenceName = 'pad1difference_' + cutName + "_" + variableName

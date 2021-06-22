@@ -317,7 +317,10 @@ class PostProcMaker():
      self._targetDir = None
      self._sourceDir = None
      if not self._iniStep == 'Prod' :
-       self._sourceDir = self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'+self._iniStep+'/'
+       if 'sourceDir' in self._Sites[self._LocalSite]:
+         self._sourceDir = self._Sites[self._LocalSite]['sourceDir']  +'/'+iProd+'/'+self._iniStep+'/'
+       else:
+         self._sourceDir = self._Sites[self._LocalSite]['treeBaseDir']+'/'+iProd+'/'+self._iniStep+'/'
 
 
      if not iStep == 'UEPS' :
@@ -370,7 +373,6 @@ class PostProcMaker():
      stepList=[]
      stepList.append(iStep)
 
-     #print self._targetDic.keys()
      #exit()
 
      # Check pre bash command for Steps
@@ -392,7 +394,7 @@ class PostProcMaker():
      elif self._jobMode == 'Crab':
        print "INFO: Using CRAB3"
        self._crab = crabTool('NanoGardening',iProd,[iStep],targetList,'Targets,Steps',bpostFix)
-       self._crab.setStorage('T2_CH_CERN','/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/')
+       self._crab.setStorage('T2_CH_CERN','/store/group/phys_higgs/cmshww/amassiro/HWWNanoCrab/') 
        self._crab.AddInputFile(self._cmsswBasedir+'/src/'+self._haddnano)
        #self._crab._ScriptHeader = self._cmsswBasedir+'/src/LatinoAnalysis/NanoGardener/test/PostProc_CrabScript_Header.sh'
 
@@ -782,7 +784,6 @@ class PostProcMaker():
 
      def addCommands(s):
        global preBash
-
        step = self._Steps[s]
        if step['isChain']:
          for subtarget in step['subTargets']:
@@ -824,7 +825,7 @@ class PostProcMaker():
              exit()
 
          # Now Build the HADD dictionnary according to target size
-         HaddDic = self.buildHadd(iSample, cutby='size')
+         HaddDic = self.buildHadd(iSample, FileInList, cutby='size')
 
          if len(HaddDic) > 0:
            self._HaddDic[iSample] = HaddDic
