@@ -178,24 +178,36 @@ class mt2Producer(Module):
  
         ptmissvec3 = ROOT.TVector3()
 
-        metBranch = 'MET' 
-        if hasattr(event, 'METFixEE2017_pt_nom'): metBranch = 'METFixEE2017' 
+        hasNewUENames = hasattr(event, 'MET_T1_pt_unclustEnUp') or hasattr(event, 'METFixEE2017_T1_pt_unclustEnUp')
+
+        if 'unclust' in self.metSystematic and not hasNewUENames:
+            metBranch='MET'
+        elif 'jer' in self.metSystematic or 'Smear' in self.metSystematic:
+            metBranch='MET_T1Smear'
+        else:
+            metBranch = 'MET_T1' 
+
+        if hasattr(event, 'METFixEE2017_T1_pt'): metBranch = metBranch.replace('MET', 'METFixEE2017') 
         if self.metType=='puppi':  metBranch = 'PuppiMET' 
 
-        metSystem = '_'+self.metSystematic.replace('Smear', '') 
+        metSystem = '_'+self.metSystematic.replace('Smear' , '') 
+        if metSystem == '_jer' or metSystem=='_nom' : metSystem = ''
+        
         if not hasattr(event, metBranch+'_pt'+metSystem):
             if self.metSystematic=='nom':
-                metSystem = ''
+                metBranch = 'MET'
             else:    
                 raise Exception('mt2producer ERROR: variable', metBranch+'_pt'+metSystem, 'does not exist')
 
         ptmissvec3.SetPtEtaPhi(getattr(event, metBranch+'_pt'+metSystem), 0., getattr(event, metBranch+'_phi'+metSystem)) 
 
-        if 'Smear' in self.metSystematic:
+        if "unclustEnSmear" in self.metSystematic and not hasNewUENames:
             ptmissnom = ROOT.TVector3()
             ptmissjer = ROOT.TVector3()
-            ptmissnom.SetPtEtaPhi(getattr(event, metBranch+'_pt_nom'), 0., getattr(event, metBranch+'_phi_nom'))
-            ptmissjer.SetPtEtaPhi(getattr(event, metBranch+'_pt_jer'), 0., getattr(event, metBranch+'_phi_jer'))
+
+
+            ptmissnom.SetPtEtaPhi(getattr(event, metBranch+'_T1_pt'), 0., getattr(event, metBranch+'_T1_phi'))
+            ptmissjer.SetPtEtaPhi(getattr(event, metBranch+'_T1Smear_pt'), 0., getattr(event, metBranch+'_T1Smear_phi'))
             #ptmissvec3 = ptmissjer + (ptmissvec3 - ptmissnom)
             ptmissvec3 += ptmissjer - ptmissnom
 
