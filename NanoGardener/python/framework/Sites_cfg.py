@@ -47,7 +47,7 @@ Sites = {
               'xrootdPath'  : '' ,
               'srmPrefix'   : 'srm://srm01.ifca.es' ,
               'treeBaseDir' : '/gpfs/projects/tier3data/LatinosSkims/RunII/Nano/' ,
-              'batchQueues' : ['cms_main', 'cms_high', 'cms_medium', 'gridui_sort','gridui_medium'],
+              'batchQueues' : ['cms_main','cms_high','cms_med'],
               'slc_ver'     : 7
              },
 
