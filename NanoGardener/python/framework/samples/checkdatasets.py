@@ -89,6 +89,12 @@ def getReadableNumber(rawstringnumber):
     elif rawnumber<10000000: return str(round(float(rawstringnumber)/1000000.,1))+'M'
     else: return str(round(float(rawstringnumber)/1000000.,0)).replace('.0','')+'M'
 
+def isBackupSample(sampleName):
+    for backupSample in [ 'WJetsToLNu-LO', 'WJetsToLNu_HT', 'tZq_ll', 'ttHToNonbb', 'TTJetsDilep', 'HZJ' ]:
+        if backupSample in sampleName:
+            return True
+    return False
+
 # Main
 if __name__ == '__main__':
 
@@ -106,7 +112,7 @@ if __name__ == '__main__':
     parser.add_option('-n', '--newcsv'    , dest='newcsv'    , help='Download new csv', default=False, action='store_true')
     
     (opt, args) = parser.parse_args()
-    
+ 
     csvfile = "Summer20ULPlanning.csv"
     if opt.newcsv: renewSampleFile(csvfile)
     csvsamples = readSampleFile(csvfile)
@@ -282,14 +288,16 @@ if __name__ == '__main__':
                 saveset = ''
                 for dataset in datasetsFound:  
                     if "FlatPU" in dataset: continue
+                    if '_ext' in dataset: continue # To be improved, by chosing the dataset with larger statistics
                     #print "DATASET", dataset, dataset.split('-v')
                     if len(dataset.split('ver'))>1: ver = 'ver'
                     else:  ver = 'v'
                     if len(dataset.split(ver))>1: 
-                        print dataset.split(ver)[1], ver,  dataset.split(ver)[1][0]
+                        #print dataset.split(ver)[1], ver,  dataset.split(ver)[1][0]
                         if (version < int(dataset.split(ver)[1][0])):
                             #print "new sample", dataset, version
                             saveset=dataset
+                            version = int(dataset.split(ver)[1][0])
                         elif (version == int(dataset.split(ver)[1][0])):
                             print "WARNING: "+ dataset+" and "+saveset+" have the same version" 
                     else: print "TRY DIFFERENT CODING" #May have to be updated in the future
@@ -435,11 +443,11 @@ if __name__ == '__main__':
                             #exit()
                             
             line='\n'
-            for data in datasetFound.split('/'):
+            for data in datasetFound.split('/'): # Isn't this useless given that later we have: elif "_ext" in datasetFound: ?
                 if 'ext' in data:
-                    datasetFlag='_extN'
-                    print "................................\n", datasetFound
-                    exit()
+                    datasetFlag='_extN' 
+                    #print "................................\n", datasetFound
+                    continue
             
             status = status.replace(':,',':')
             print "STATUS", status
@@ -449,8 +457,8 @@ if __name__ == '__main__':
             elif isData: datasetFlag = '_'+datasetFound.split('/')[2]
             elif "_ext" in datasetFound:#.split('/')[2]: 
                 datasetFlag = "_ext"+datasetFound.split('/')[2].split("_ext")[1].split('-')[0]#+Samples[sample][opt.tier].split("_ext")[1].split("-")[0]
-                print '\033['+testcolor+ " REEEMOVING THE _EXT", datasetFlag, "\033[0m"
-                exit()
+                #print '\033['+testcolor+ " REEEMOVING THE _EXT", datasetFlag, "\033[0m"
+                #exit()
             else: 
                 datasetFlag = ''#'_'+Samples[sample][opt.tier].split('/')[2]
                 #print "##############\nDATASET FLAG\n", datasetFlag,"\nsamples[sample]",  Samples[sample][opt.tier], "\nprocess", process, "\nsample", sample, "\n##############"
@@ -487,6 +495,8 @@ if __name__ == '__main__':
                 if sampleName[0:2]!=lastSampleInit:
                     writeList.write('\n')
                     lastSampleInit = sampleName[0:2]
+                if isBackupSample(sampleName):
+                    line = line.replace('Samples', '#Samples') 
                 writeList.write(line)
             
         if lastSampleInit!='':
