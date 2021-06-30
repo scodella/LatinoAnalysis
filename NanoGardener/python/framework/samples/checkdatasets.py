@@ -253,6 +253,10 @@ if __name__ == '__main__':
                         process = process.replace('_M125_', '_M-125_*')
                     elif 'tZq_ll_4f' in process:
                         process = process.replace('13TeV-madgraph-pythia8', '13TeV-amcatnlo-pythia8')
+                process = process.replace('_5f_Tune', '_5f_InclusiveDecays_Tune')
+                if 'ST_tW' in process:
+                    process = process.replace('InclusiveDecays', 'NoFullyHadronicDecays')
+                    process = process.replace('inclusiveDecays', 'NoFullyHadronicDecays')
             if verbose: print 'Corrected process name', process, period
 
             datasetsFound = [ ] 
@@ -466,6 +470,9 @@ if __name__ == '__main__':
                 #if 'TTTo2L2Nu' in sample : 
                 #    print "#################################\nFLAG#####", Samples[sample][opt.tier], process, sample
                     #exit()
+            if 'ST_tW' in process and 'NoFullyHadronicDecays':
+                datasetFlag += '_nohad'
+
             if opt.list:
                 statuslist = status.split(':')
                 nMeventsOriginal = getReadableNumber(nOriginalEvents)
