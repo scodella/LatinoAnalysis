@@ -89,7 +89,6 @@ samples['DYJetsToLL_M-50-PSdo']                 .extend( ['xsec=6189.39',    'kf
 samples['DYJetsToLL_M-5to50-LO']      	   .extend( ['xsec=81880.0',	'kfact=1.158',		'ref=W'] )
 samples['DYJetsToLL_M-10to50-LO']          .extend( ['xsec=18610.0',    'kfact=1.000',          'ref=E'] )
 samples['DYJetsToLL_M-50-LO']      	   .extend( ['xsec=6025.20',	'kfact=1.000',		'ref=E'] )
-samples['DYJetsToLL_M-50_LO']      	   .extend( ['xsec=6025.20',	'kfact=1.000',		'ref=E'] )
 samples['DYJetsToLL_M-50-LO-ext1']         .extend( ['xsec=6025.20',    'kfact=1.000',          'ref=E'] )
 samples['DYJetsToLL_M-50_HT-70to100']      .extend( ['xsec=169.9',	'kfact=1.158',	'ref=I'] ) 
 samples['DYJetsToLL_M-50_HT-100to200']     .extend( ['xsec=161.1',	'kfact=1.158',	'ref=W'] ) 
@@ -210,6 +209,8 @@ samples['ST_tW_antitop_noHad']          .extend( ['xsec=1.000',         'kfact=1
 samples['ST_tW_antitop_noHad_ext1']          .extend( ['xsec=1.000',         'kfact=1.000',          'ref=X'] )
 samples['ST_tW_top_noHad']              .extend( ['xsec=1.000',         'kfact=1.000',          'ref=X'] )
 samples['ST_tW_top_noHad_ext1']              .extend( ['xsec=1.000',         'kfact=1.000',          'ref=X'] )
+samples['ST_tW_antitop_nohad']           .extend( ['xsec=19.466962',    'kfact=1.000',          'ref=X'] ) # 0.54301148*35.85
+samples['ST_tW_top_nohad']               .extend( ['xsec=19.466962',    'kfact=1.000',          'ref=X'] ) # 0.54301148*35.85
 
 samples['ST_t-channel_antitop_5f']        .extend( ['xsec=80.95',          'kfact=1.000',          'ref=Z'] )
 samples['ST_t-channel_top_5f']            .extend( ['xsec=136.02',         'kfact=1.000',          'ref=Z'] )
