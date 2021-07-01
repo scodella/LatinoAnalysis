@@ -209,6 +209,8 @@ samples['ST_tW_antitop_noHad']          .extend( ['xsec=1.000',         'kfact=1
 samples['ST_tW_antitop_noHad_ext1']          .extend( ['xsec=1.000',         'kfact=1.000',          'ref=X'] )
 samples['ST_tW_top_noHad']              .extend( ['xsec=1.000',         'kfact=1.000',          'ref=X'] )
 samples['ST_tW_top_noHad_ext1']              .extend( ['xsec=1.000',         'kfact=1.000',          'ref=X'] )
+samples['ST_tW_antitop_nohad']           .extend( ['xsec=19.466962',    'kfact=1.000',          'ref=X'] ) # 0.54301148*35.85
+samples['ST_tW_top_nohad']               .extend( ['xsec=19.466962',    'kfact=1.000',          'ref=X'] ) # 0.54301148*35.85
 
 samples['ST_t-channel_antitop_5f']        .extend( ['xsec=80.95',          'kfact=1.000',          'ref=Z'] )
 samples['ST_t-channel_top_5f']            .extend( ['xsec=136.02',         'kfact=1.000',          'ref=Z'] )
