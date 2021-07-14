@@ -209,6 +209,8 @@ samples['ST_tW_antitop_noHad']          .extend( ['xsec=1.000',         'kfact=1
 samples['ST_tW_antitop_noHad_ext1']          .extend( ['xsec=1.000',         'kfact=1.000',          'ref=X'] )
 samples['ST_tW_top_noHad']              .extend( ['xsec=1.000',         'kfact=1.000',          'ref=X'] )
 samples['ST_tW_top_noHad_ext1']              .extend( ['xsec=1.000',         'kfact=1.000',          'ref=X'] )
+samples['ST_tW_antitop_nohad']           .extend( ['xsec=19.466962',    'kfact=1.000',          'ref=X'] ) # 0.54301148*35.85
+samples['ST_tW_top_nohad']               .extend( ['xsec=19.466962',    'kfact=1.000',          'ref=X'] ) # 0.54301148*35.85
 
 samples['ST_t-channel_antitop_5f']        .extend( ['xsec=80.95',          'kfact=1.000',          'ref=Z'] )
 samples['ST_t-channel_top_5f']            .extend( ['xsec=136.02',         'kfact=1.000',          'ref=Z'] )
@@ -643,6 +645,8 @@ samples['WWW_DiLepFilter']	.extend( ['xsec=0.007666',	'kfact=1.000',	'ref=N'] )
 
 ## Vg
 samples['Wg_AMCNLOFXFX']  .extend( ['xsec=586.000',  'kfact=1.000',  'ref=Rafael'] )  # NNLO
+samples['Wg_AMCNLOFXFX_PDFWeights']  .extend( ['xsec=586.000',  'kfact=1.000',  'ref=Rafael'] )  # NNLO
+samples['Wg_AMCNLOFXFX_PDFWeights_ext1']  .extend( ['xsec=586.000',  'kfact=1.000',  'ref=Rafael'] )  # NNLO
 samples['Wg_MADGRAPHMLM'] .extend( ['xsec=405.271',  'kfact=1.000',  'ref=E'] )       # LO
 samples['Wg500']          .extend( ['xsec=1.00000',  'kfact=1.000',  'ref=X'] )
 samples['WgStarLNuMuMu']  .extend( ['xsec=2.793',    'kfact=1.000',  'ref=X'] )

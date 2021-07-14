@@ -178,7 +178,9 @@ class mt2Producer(Module):
  
         ptmissvec3 = ROOT.TVector3()
 
-        if 'unclust' in self.metSystematic:
+        hasNewUENames = hasattr(event, 'MET_T1_pt_unclustEnUp') or hasattr(event, 'METFixEE2017_T1_pt_unclustEnUp')
+
+        if 'unclust' in self.metSystematic and not hasNewUENames:
             metBranch='MET'
         elif 'jer' in self.metSystematic or 'Smear' in self.metSystematic:
             metBranch='MET_T1Smear'
@@ -199,7 +201,7 @@ class mt2Producer(Module):
 
         ptmissvec3.SetPtEtaPhi(getattr(event, metBranch+'_pt'+metSystem), 0., getattr(event, metBranch+'_phi'+metSystem)) 
 
-        if "unclustEnSmear" in self.metSystematic :
+        if "unclustEnSmear" in self.metSystematic and not hasNewUENames:
             ptmissnom = ROOT.TVector3()
             ptmissjer = ROOT.TVector3()
 
