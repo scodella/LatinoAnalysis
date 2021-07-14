@@ -68,12 +68,9 @@ Samples['VBFHToTauTau_M125'] 	 = {'nanoAOD': '/VBFHToTauTau_M125_TuneCP5_13TeV-p
 #Samples['WJetsToLNu_HT800_1200'] 	 = {'nanoAOD': '/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL18NanoAODv2-106X_upgrade2018_realistic_v15_L1v1-v1/NANOAODSIM'}
 
 #Samples['WWG'] 	 = {'nanoAOD': ''}
-<<<<<<< HEAD
-Samples['WWTo2L2Nu'] 	 = {'nanoAOD': '/WWTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv2-106X_upgrade2018_realistic_v15_L1v1-v1/NANOAODSIM'}
-=======
 Samples['WWTo2L2Nu'] 	 = {'nanoAOD': '/WWTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv2-106X_upgrade2018_realistic_v15_L1v1-v1/NANOAODSIM'}
 Samples['WWW'] 	 = {'nanoAOD': '/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL18NanoAODv2-106X_upgrade2018_realistic_v15_L1v1-v1/NANOAODSIM'}
-Samples['WWZ'] 	 = {'nanoAOD': '/WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL18NanoAODv2-106X_upgrade2018_realistic_v15_L1v1-v1/NANOAODSIM'}
+#Samples['WWZ'] 	 = {'nanoAOD': ''}
 
 #Samples['WZTo2L2Q'] 	 = {'nanoAOD': ''}
 #Samples['WZTo3LNu'] 	 = {'nanoAOD': ''}
@@ -96,4 +93,3 @@ Samples['ggZZ2m2t'] 	 = {'nanoAOD': '/GluGluToContinToZZTo2mu2tau_TuneCP5_13TeV-
 #Samples['tZq_ll'] 	 = {'nanoAOD': '/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL18NanoAODv2-106X_upgrade2018_realistic_v15_L1v1-v1/NANOAODSIM'}
 
 ##Samples['ttHToNonbb_M125'] 	 = {'nanoAOD': ''}
->>>>>>> upstream/worker
