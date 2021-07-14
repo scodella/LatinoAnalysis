@@ -403,6 +403,7 @@ class ShapeFactory:
                     warnIfTreeWeight = False
 
           # Set up cuts
+
           cuts = collections.OrderedDict()
           if 'subsamples' in sample:
             # If the sample has "subsamples" defined (e.g. signal sample for differential),
@@ -651,7 +652,7 @@ class ShapeFactory:
 
           print 'Start nominal histogram fill'
           drawer.execute(nevents, firstEvent)
-          
+
           # tree-type nuisances
           for nuisanceName in nuisanceDrawers.keys():
             ndrawers = nuisanceDrawers.pop(nuisanceName)
