@@ -180,6 +180,7 @@ samples['ZZTo2L2Q']                     .extend( ['xsec=3.220000',	'kfact=1.000'
 samples['ZZTo4L']                       .extend( ['xsec=1.212000',	'kfact=1.000',		'ref=E'] )
 samples['ZZTo4L_ext1']                  .extend( ['xsec=1.212000',	'kfact=1.000',		'ref=E'] )
 samples['ZZTo4L_ext2']                  .extend( ['xsec=1.212000',	'kfact=1.000',		'ref=E'] )
+samples['ZZTo4LM-1toInf']               .extend( ['xsec=13.74',         'kfact=1.000',          'ref=N'] )
 samples['ZZTo2L2Nu']                    .extend( ['xsec=0.564000',	'kfact=1.000',		'ref=E'] )
 samples['ZZTo2L2Nu_ext1']               .extend( ['xsec=0.564000',	'kfact=1.000',		'ref=E'] )
 samples['ZZTo2L2Nu_ext2']               .extend( ['xsec=0.564000',	'kfact=1.000',		'ref=E'] )
