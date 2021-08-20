@@ -559,7 +559,9 @@ if __name__ == '__main__':
                 print "WARNING: you are trying to hadd more than 500 files. hadd will proceed by steps of 500 files (otherwise it may silently fail)."
               for istart in range(0,int(float(number)/500+1)):
                   command = 'cd '+os.getcwd()+'/'+opt.outputDir+'; '
-                  command += 'hadd -f plots_'+opt.tag+'_temp'+str(istart)+'.root'
+                  hadd = os.environ['CMSSW_BASE'] + '/src/LatinoAnalysis/Tools/scripts/haddfast'
+                  command += hadd+' -f plots_'+opt.tag+'_temp'+str(istart)+'.root'
+                  #command += 'hadd -f plots_'+opt.tag+'_temp'+str(istart)+'.root'
                   for i in range(istart*500,(istart+1)*500):
                     if i>=number: break
                     command += " "+fileList[i]
