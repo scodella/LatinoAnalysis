@@ -25,10 +25,10 @@ else:
 gardening_directory = 'src/LatinoAnalysis/NanoGardener/python/framework/samples/'
 production_directory = 'src/LatinoAnalysis/NanoProducer/python/samples/'
 
-campaigns = { 'UL16preVPF' : { 'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODAPV', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODAPVv2', 'GEN' : 'RunIISummer20UL16*GENAPV-' },
+campaigns = { 'UL16preVPF' : { 'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODAPVv2', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODAPVv9', 'GEN' : 'RunIISummer20UL16*GENAPV-' },
                             'FS'   : { 'AODSIM' : '',                         'MINIAODSIM' : '',                            'NANOAODSIM' : ''                             , 'GEN' : ''                         }, },
               'UL16postVPF'  : { 
-                          'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECO-', 'MINIAODSIM' : 'RunIISummer20UL16MiniAOD-', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODv2', 'GEN' : 'RunIISummer20UL16*GEN-' },    
+                          'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECO-', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODv2-', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODv9', 'GEN' : 'RunIISummer20UL16*GEN-' },    
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, },
               'UL16'  : { 'Data' : { 'AOD'    : '21Feb2020_UL2016-',      'MINIAOD'    : '21Feb2020_UL2016-',         'NANOAOD'    : 'UL2016_MiniAODv1_NanoAODv2'  }, },
               'UL17'  : { 'Data' : { 'AOD'    : '09Aug2019_UL2017-',      'MINIAOD'    : '09Aug2019_UL2017-',         'NANOAOD'    : 'UL2017_MiniAODv1_NanoAODv2'                                  },             
@@ -89,6 +89,12 @@ def getReadableNumber(rawstringnumber):
     elif rawnumber<10000000: return str(round(float(rawstringnumber)/1000000.,1))+'M'
     else: return str(round(float(rawstringnumber)/1000000.,0)).replace('.0','')+'M'
 
+def isBackupSample(sampleName):
+    for backupSample in [ 'WJetsToLNu-LO', 'WJetsToLNu_HT', 'tZq_ll', 'ttHToNonbb', 'TTJetsDilep', 'HZJ' ]:
+        if backupSample in sampleName:
+            return True
+    return False
+
 # Main
 if __name__ == '__main__':
 
@@ -106,7 +112,7 @@ if __name__ == '__main__':
     parser.add_option('-n', '--newcsv'    , dest='newcsv'    , help='Download new csv', default=False, action='store_true')
     
     (opt, args) = parser.parse_args()
-    
+ 
     csvfile = "Summer20ULPlanning.csv"
     if opt.newcsv: renewSampleFile(csvfile)
     csvsamples = readSampleFile(csvfile)
@@ -222,7 +228,15 @@ if __name__ == '__main__':
                 process = process.replace('_NNPDF31_', '_')
                 process = process.replace('_13TeV_powheg_jhugen724_pythia8', '_13TeV*powheg*jhugen727*pythia8')
                 process = process.replace('_13TeV_powheg_jhugen714_pythia8', '_13TeV*powheg*jhugen727*pythia8')
-                if campaign_year=='UL17':
+                if 'UL16' in campaign_year:
+                    if 'GluGluToContinToZZ' in process:
+                        process = process.replace('13TeV_TuneCP5_MCFM701_pythia8', 'TuneCP5_13TeV-mcfm701-pythia8')
+                        process = process.replace('13TeV_MCFM701_pythia8', 'TuneCP5_13TeV-mcfm701-pythia8')
+                    elif 'DYJetsToLL_M-50_HT' in process:
+                        process = process.replace('TuneCP5', 'TuneCP5_PSweights')
+                    elif 'HWminusJ_HToWW' in process or 'HWplusJ_HToWW' in process or 'HZJ_HToWWTo2L2Nu' in process:
+                        process = process.replace('_M125_', '_M-125_*')
+                elif campaign_year:
                     if 'GluGluToContinToZZ' in process: 
                         process = process.replace('13TeV_TuneCP5_MCFM701_pythia8', 'TuneCP5_13TeV-mcfm701-pythia8')
                         process = process.replace('13TeV_MCFM701_pythia8', 'TuneCP5_13TeV-mcfm701-pythia8')
@@ -247,6 +261,14 @@ if __name__ == '__main__':
                         process = process.replace('_M125_', '_M-125_*')
                     elif 'tZq_ll_4f' in process:
                         process = process.replace('13TeV-madgraph-pythia8', '13TeV-amcatnlo-pythia8')
+                    elif 'WWZ_Tune' in process:
+                        process = process.replace('WWZ_Tune', 'WWZ_4F_Tune')
+                process = process.replace('_5f_Tune', '_5f_InclusiveDecays_Tune')
+                if 'ZZTo4L' in process:
+                    process = process.replace('ZZTo4L_*13TeV*powheg*pythia8', 'ZZTo4L_T*13TeV*powheg*pythia8')
+                if 'ST_tW' in process:
+                    process = process.replace('InclusiveDecays', 'NoFullyHadronicDecays')
+                    process = process.replace('inclusiveDecays', 'NoFullyHadronicDecays')
             if verbose: print 'Corrected process name', process, period
 
             datasetsFound = [ ] 
@@ -282,14 +304,16 @@ if __name__ == '__main__':
                 saveset = ''
                 for dataset in datasetsFound:  
                     if "FlatPU" in dataset: continue
+                    if '_ext' in dataset: continue # To be improved, by chosing the dataset with larger statistics
                     #print "DATASET", dataset, dataset.split('-v')
                     if len(dataset.split('ver'))>1: ver = 'ver'
                     else:  ver = 'v'
                     if len(dataset.split(ver))>1: 
-                        print dataset.split(ver)[1], ver,  dataset.split(ver)[1][0]
+                        #print dataset.split(ver)[1], ver,  dataset.split(ver)[1][0]
                         if (version < int(dataset.split(ver)[1][0])):
                             #print "new sample", dataset, version
                             saveset=dataset
+                            version = int(dataset.split(ver)[1][0])
                         elif (version == int(dataset.split(ver)[1][0])):
                             print "WARNING: "+ dataset+" and "+saveset+" have the same version" 
                     else: print "TRY DIFFERENT CODING" #May have to be updated in the future
@@ -435,11 +459,11 @@ if __name__ == '__main__':
                             #exit()
                             
             line='\n'
-            for data in datasetFound.split('/'):
+            for data in datasetFound.split('/'): # Isn't this useless given that later we have: elif "_ext" in datasetFound: ?
                 if 'ext' in data:
-                    datasetFlag='_extN'
-                    print "................................\n", datasetFound
-                    exit()
+                    datasetFlag='_extN' 
+                    #print "................................\n", datasetFound
+                    continue
             
             status = status.replace(':,',':')
             print "STATUS", status
@@ -449,8 +473,8 @@ if __name__ == '__main__':
             elif isData: datasetFlag = '_'+datasetFound.split('/')[2]
             elif "_ext" in datasetFound:#.split('/')[2]: 
                 datasetFlag = "_ext"+datasetFound.split('/')[2].split("_ext")[1].split('-')[0]#+Samples[sample][opt.tier].split("_ext")[1].split("-")[0]
-                print '\033['+testcolor+ " REEEMOVING THE _EXT", datasetFlag, "\033[0m"
-                exit()
+                #print '\033['+testcolor+ " REEEMOVING THE _EXT", datasetFlag, "\033[0m"
+                #exit()
             else: 
                 datasetFlag = ''#'_'+Samples[sample][opt.tier].split('/')[2]
                 #print "##############\nDATASET FLAG\n", datasetFlag,"\nsamples[sample]",  Samples[sample][opt.tier], "\nprocess", process, "\nsample", sample, "\n##############"
@@ -458,6 +482,9 @@ if __name__ == '__main__':
                 #if 'TTTo2L2Nu' in sample : 
                 #    print "#################################\nFLAG#####", Samples[sample][opt.tier], process, sample
                     #exit()
+            if 'ST_tW' in process and 'NoFullyHadronicDecays':
+                datasetFlag += '_nohad'
+
             if opt.list:
                 statuslist = status.split(':')
                 nMeventsOriginal = getReadableNumber(nOriginalEvents)
@@ -487,6 +514,8 @@ if __name__ == '__main__':
                 if sampleName[0:2]!=lastSampleInit:
                     writeList.write('\n')
                     lastSampleInit = sampleName[0:2]
+                if isBackupSample(sampleName):
+                    line = line.replace('Samples', '#Samples') 
                 writeList.write(line)
             
         if lastSampleInit!='':
