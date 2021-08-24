@@ -25,10 +25,10 @@ else:
 gardening_directory = 'src/LatinoAnalysis/NanoGardener/python/framework/samples/'
 production_directory = 'src/LatinoAnalysis/NanoProducer/python/samples/'
 
-campaigns = { 'UL16preVPF' : { 'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODAPV', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODAPVv2', 'GEN' : 'RunIISummer20UL16*GENAPV-' },
+campaigns = { 'UL16preVPF' : { 'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODAPVv2', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODAPVv9', 'GEN' : 'RunIISummer20UL16*GENAPV-' },
                             'FS'   : { 'AODSIM' : '',                         'MINIAODSIM' : '',                            'NANOAODSIM' : ''                             , 'GEN' : ''                         }, },
               'UL16postVPF'  : { 
-                          'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECO-', 'MINIAODSIM' : 'RunIISummer20UL16MiniAOD-', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODv2', 'GEN' : 'RunIISummer20UL16*GEN-' },    
+                          'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECO-', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODv2-', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODv9', 'GEN' : 'RunIISummer20UL16*GEN-' },    
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, },
               'UL16'  : { 'Data' : { 'AOD'    : '21Feb2020_UL2016-',      'MINIAOD'    : '21Feb2020_UL2016-',         'NANOAOD'    : 'UL2016_MiniAODv1_NanoAODv2'  }, },
               'UL17'  : { 'Data' : { 'AOD'    : '09Aug2019_UL2017-',      'MINIAOD'    : '09Aug2019_UL2017-',         'NANOAOD'    : 'UL2017_MiniAODv1_NanoAODv2'                                  },             
@@ -228,7 +228,15 @@ if __name__ == '__main__':
                 process = process.replace('_NNPDF31_', '_')
                 process = process.replace('_13TeV_powheg_jhugen724_pythia8', '_13TeV*powheg*jhugen727*pythia8')
                 process = process.replace('_13TeV_powheg_jhugen714_pythia8', '_13TeV*powheg*jhugen727*pythia8')
-                if campaign_year=='UL17':
+                if 'UL16' in campaign_year:
+                    if 'GluGluToContinToZZ' in process:
+                        process = process.replace('13TeV_TuneCP5_MCFM701_pythia8', 'TuneCP5_13TeV-mcfm701-pythia8')
+                        process = process.replace('13TeV_MCFM701_pythia8', 'TuneCP5_13TeV-mcfm701-pythia8')
+                    elif 'DYJetsToLL_M-50_HT' in process:
+                        process = process.replace('TuneCP5', 'TuneCP5_PSweights')
+                    elif 'HWminusJ_HToWW' in process or 'HWplusJ_HToWW' in process or 'HZJ_HToWWTo2L2Nu' in process:
+                        process = process.replace('_M125_', '_M-125_*')
+                elif campaign_year:
                     if 'GluGluToContinToZZ' in process: 
                         process = process.replace('13TeV_TuneCP5_MCFM701_pythia8', 'TuneCP5_13TeV-mcfm701-pythia8')
                         process = process.replace('13TeV_MCFM701_pythia8', 'TuneCP5_13TeV-mcfm701-pythia8')
@@ -253,7 +261,15 @@ if __name__ == '__main__':
                         process = process.replace('_M125_', '_M-125_*')
                     elif 'tZq_ll_4f' in process:
                         process = process.replace('13TeV-madgraph-pythia8', '13TeV-amcatnlo-pythia8')
+<<<<<<< HEAD
                 process = process.replace('_5f_Tune', '_5f_InclusiveDecays_Tune')
+=======
+                    elif 'WWZ_Tune' in process:
+                        process = process.replace('WWZ_Tune', 'WWZ_4F_Tune')
+                process = process.replace('_5f_Tune', '_5f_InclusiveDecays_Tune')
+                if 'ZZTo4L' in process:
+                    process = process.replace('ZZTo4L_*13TeV*powheg*pythia8', 'ZZTo4L_T*13TeV*powheg*pythia8')
+>>>>>>> upstream/UL_worker
                 if 'ST_tW' in process:
                     process = process.replace('InclusiveDecays', 'NoFullyHadronicDecays')
                     process = process.replace('inclusiveDecays', 'NoFullyHadronicDecays')
