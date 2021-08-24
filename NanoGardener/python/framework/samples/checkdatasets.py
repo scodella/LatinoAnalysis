@@ -190,12 +190,12 @@ if __name__ == '__main__':
 
             print opt.samplefile
         OutputSamples = { }
-        print "OUTPUT FILE",opt.outputfile
+        print "OUTPUT FILE","tmp_"+opt.outputfile
         #testout=opt.outputfile+'.py'
         if opt.list:
             outList = open(opt.outputfile+'.csv' , 'w')
         else: 
-            writeList = open(opt.outputfile+'.py','w')
+            writeList = open("tmp_"+opt.outputfile+'.py','w')
             writeList.write("Samples = {} \n\n")
 
         print opt.tier, campaign_year
