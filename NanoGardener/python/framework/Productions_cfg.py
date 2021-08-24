@@ -587,6 +587,23 @@ Productions = {
                        'cmssw'   : 'Full2016v8noHIPM',
                        'year'    : 'UL2016' ,
                    },
+ # -------- 2016 DATA UL2016 nAODv8: Full2016v9
+
+ 'Run2016_106X_nAODv9_HIPM_Full2016v9': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_UL2016_HIPM_nAODv9.py' ,
+                       'cmssw'   : 'Full2016v9HIPM',
+                       'year'    : 'UL2016_preVFP' ,
+                   },
+
+ 'Run2016_106X_nAODv9_noHIPM_Full2016v9': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_UL2016_noHIPM_nAODv9.py' ,
+                       'cmssw'   : 'Full2016v9noHIPM',
+                       'year'    : 'UL2016' ,
+                   },
 
 
  # -------- 2017 DATA UL2017 nAODv8: Full2017v8
