@@ -271,7 +271,6 @@ class BTagEventWeightProducer(Module):
                                             bTagConfirm = True
 
                                 if bTagConfirm==True:
-
                                     if event.CleanJet_pt[i]>leadingPtTaggedValue[central_or_syst] :
                                         trailingPtTaggedValue[central_or_syst] = leadingPtTaggedValue[central_or_syst]
                                         leadingPtTaggedValue[central_or_syst] = event.CleanJet_pt[i]

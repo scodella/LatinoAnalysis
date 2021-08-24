@@ -25,9 +25,9 @@ else:
 gardening_directory = 'src/LatinoAnalysis/NanoGardener/python/framework/samples/'
 production_directory = 'src/LatinoAnalysis/NanoProducer/python/samples/'
 
-campaigns = { 'UL16preVPF' : { 'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODAPVv2', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODAPVv9', 'GEN' : 'RunIISummer20UL16*GENAPV-' },
+campaigns = { 'UL16preVFP' : { 'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECOAPV', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODAPVv2', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODAPVv9', 'GEN' : 'RunIISummer20UL16*GENAPV-' },
                             'FS'   : { 'AODSIM' : '',                         'MINIAODSIM' : '',                            'NANOAODSIM' : ''                             , 'GEN' : ''                         }, },
-              'UL16postVPF'  : { 
+              'UL16postVFP'  : { 
                           'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECO-', 'MINIAODSIM' : 'RunIISummer20UL16MiniAODv2-', 'NANOAODSIM' : 'RunIISummer20UL16NanoAODv9', 'GEN' : 'RunIISummer20UL16*GEN-' },    
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, },
               'UL16'  : { 'Data' : { 'AOD'    : '21Feb2020_UL2016-',      'MINIAOD'    : '21Feb2020_UL2016-',         'NANOAOD'    : 'UL2016_MiniAODv1_NanoAODv2'  }, },
@@ -151,8 +151,8 @@ if __name__ == '__main__':
             print campaign_year
         if 'Run' in opt.samplefile:
             Sim = '' 
-            if "VPF" in opt.campaign: 
-                print "Data doesn't have pre/post vpf"
+            if "VFP" in opt.campaign: 
+                print "Data doesn't have pre/post vfp"
                 answer = raw_input("did you mean -c UL16? ").lower()
                 if "y" in answer:
                     print "Switching to UL16"
@@ -181,21 +181,21 @@ if __name__ == '__main__':
         exec(open(opt.directory+sample_directory+opt.samplefile.replace('.py', '')+'.py').read())
 
         if opt.outputfile=='test' and ('UL' in opt.campaign or 'run2' in opt.campaign):
-            opt.outputfile = opt.samplefile.replace('102X_nAODv6', '106X_nAODv8').replace('.py', '')
+            opt.outputfile = opt.samplefile.replace('102X_nAODv6', '106X_nAODv9').replace('.py', '')
             opt.outputfile = opt.outputfile.replace('Summer16','Summer20UL16').replace('fall17','Summer20UL17').replace('Autumn18','Summer20UL18')
-            if 'preVPF' in opt.campaign:
-                opt.outputfile = opt.outputfile.replace('16', '16preVPF')
-            elif 'postVPF' in opt.campaign:
-                opt.outputfile = opt.outputfile.replace('16', '16postVPF')
+            if 'preVFP' in opt.campaign:
+                opt.outputfile = opt.outputfile.replace('18','16').replace('16', '16preVFP')
+            elif 'postVFP' in opt.campaign:
+                opt.outputfile = opt.outputfile.replace('18','16').replace('16', '16postVFP')
 
             print opt.samplefile
         OutputSamples = { }
-        print "OUTPUT FILE",opt.outputfile
+        print "OUTPUT FILE","tmp_"+opt.outputfile
         #testout=opt.outputfile+'.py'
         if opt.list:
             outList = open(opt.outputfile+'.csv' , 'w')
         else: 
-            writeList = open(opt.outputfile+'.py','w')
+            writeList = open("tmp_"+opt.outputfile+'.py','w')
             writeList.write("Samples = {} \n\n")
 
         print opt.tier, campaign_year
