@@ -261,11 +261,15 @@ if __name__ == '__main__':
                         process = process.replace('_M125_', '_M-125_*')
                     elif 'tZq_ll_4f' in process:
                         process = process.replace('13TeV-madgraph-pythia8', '13TeV-amcatnlo-pythia8')
+<<<<<<< HEAD
                     elif 'WWZ_Tune' in process:
                         process = process.replace('WWZ_Tune', 'WWZ_4F_Tune')
                 process = process.replace('_5f_Tune', '_5f_InclusiveDecays_Tune')
                 if 'ZZTo4L' in process:
                     process = process.replace('ZZTo4L_*13TeV*powheg*pythia8', 'ZZTo4L_T*13TeV*powheg*pythia8')
+=======
+                process = process.replace('_5f_Tune', '_5f_InclusiveDecays_Tune')
+>>>>>>> upstream/worker
                 if 'ST_tW' in process:
                     process = process.replace('InclusiveDecays', 'NoFullyHadronicDecays')
                     process = process.replace('inclusiveDecays', 'NoFullyHadronicDecays')
