@@ -587,7 +587,7 @@ Productions = {
                        'cmssw'   : 'Full2016v8noHIPM',
                        'year'    : 'UL2016' ,
                    },
- # -------- 2016 DATA UL2016 nAODv8: Full2016v9
+ # -------- 2016 DATA UL2016 nAODv9: Full2016v8
 
  'Run2016_106X_nAODv9_HIPM_Full2016v8': {
                        'isData'  : True ,
