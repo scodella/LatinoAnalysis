@@ -1725,7 +1725,7 @@ ElectronWP = {
     ######################################
     #        ULTRA LEGACY (UL)           #
     ######################################
-    'Full2016v8': {
+    'Full2016v8HIPM': {
         
         'VetoObjWP' : { 
             'cutBasedVeto' : { 
@@ -2077,9 +2077,11 @@ ElectronWP['Full2017v7']['FakeObjWP']['baseele'] = ElectronWP['Full2017v7']['Tig
 ElectronWP['Full2018v7']['VetoObjWP']['baseele'] = ElectronWP['Full2018v7']['TightObjWP']['SusyMVAVLoose']
 ElectronWP['Full2018v7']['FakeObjWP']['baseele'] = ElectronWP['Full2018v7']['TightObjWP']['SusyMVAVLoose']
 
-ElectronWP['Full2016v8']['FakeObjWP']['cutBasedVeto'] = ElectronWP['Full2016v8']['VetoObjWP']['cutBasedVeto']
-ElectronWP['Full2017v8']['FakeObjWP']['cutBasedVeto'] = ElectronWP['Full2017v8']['VetoObjWP']['cutBasedVeto']
-ElectronWP['Full2018v8']['FakeObjWP']['cutBasedVeto'] = ElectronWP['Full2018v8']['VetoObjWP']['cutBasedVeto']
+ElectronWP['Full2016v8HIPM']['FakeObjWP']['cutBasedVeto'] = ElectronWP['Full2016v8HIPM']['VetoObjWP']['cutBasedVeto']
+ElectronWP['Full2017v8'    ]['FakeObjWP']['cutBasedVeto'] = ElectronWP['Full2017v8']['VetoObjWP']['cutBasedVeto']
+ElectronWP['Full2018v8'    ]['FakeObjWP']['cutBasedVeto'] = ElectronWP['Full2018v8']['VetoObjWP']['cutBasedVeto']
+
+ElectronWP['Full2016v8noHIPM'] = ElectronWP['Full2016v8HIPM']
 
 MuonWP = {
 
@@ -2910,7 +2912,7 @@ MuonWP = {
     ######################################
     #        ULTRA LEGACY (UL)           #
     ######################################
-    'Full2016v8': {
+    'Full2016v8HIPM': {
 
         'VetoObjWP' : { 
             'looseRelIsoLoose' : {
@@ -3171,7 +3173,6 @@ MuonWP['Full2016v4']['FakeObjWP']['looseRelIsoLoose'] = MuonWP['Full2016v4']['Ve
 MuonWP['Full2017v4']['FakeObjWP']['looseRelIsoLoose'] = MuonWP['Full2017v4']['VetoObjWP']['looseRelIsoLoose']
 MuonWP['Full2018v4']['FakeObjWP']['looseRelIsoLoose'] = MuonWP['Full2018v4']['VetoObjWP']['looseRelIsoLoose']
 
-
 MuonWP['Full2016v6'] = MuonWP['Full2016v4']
 MuonWP['Full2017v6'] = MuonWP['Full2017v4']
 MuonWP['Full2018v6'] = MuonWP['Full2018v4']
@@ -3183,9 +3184,12 @@ MuonWP['Full2017v7']['FakeObjWP']['basemuo'] = MuonWP['Full2017v7']['TightObjWP'
 MuonWP['Full2018v7']['VetoObjWP']['basemuo'] = MuonWP['Full2018v7']['TightObjWP']['looseMiniIsoLoose']
 MuonWP['Full2018v7']['FakeObjWP']['basemuo'] = MuonWP['Full2018v7']['TightObjWP']['looseMiniIsoLoose']
 
-MuonWP['Full2016v8']['FakeObjWP']['looseRelIsoLoose'] = MuonWP['Full2016v8']['VetoObjWP']['looseRelIsoLoose']
-MuonWP['Full2017v8']['FakeObjWP']['looseRelIsoLoose'] = MuonWP['Full2017v8']['VetoObjWP']['looseRelIsoLoose']
-MuonWP['Full2018v8']['FakeObjWP']['looseRelIsoLoose'] = MuonWP['Full2018v8']['VetoObjWP']['looseRelIsoLoose']
+MuonWP['Full2016v8HIPM']['FakeObjWP']['looseRelIsoLoose'] = MuonWP['Full2016v8HIPM']['VetoObjWP']['looseRelIsoLoose']
+MuonWP['Full2017v8'    ]['FakeObjWP']['looseRelIsoLoose'] = MuonWP['Full2017v8']['VetoObjWP']['looseRelIsoLoose']
+MuonWP['Full2018v8'    ]['FakeObjWP']['looseRelIsoLoose'] = MuonWP['Full2018v8']['VetoObjWP']['looseRelIsoLoose']
+
+MuonWP['Full2016v8noHIPM'] = MuonWP['Full2016v8HIPM']
+#MuonWP['Full2016v8']['FakeObjWP']['looseRelIsoLoose'] = MuonWP['Full2016v8']['VetoObjWP']['looseRelIsoLoose']
 
 if __name__ == '__main__':
     print('_______________LepFilter_dict___________')

@@ -3536,12 +3536,12 @@ Steps = {
                  'module'     : 'trigData()',
                },
   'trigDataRunP' : { 'isChain'    : False ,
-                 'do4MC'      : False ,
-                 'do4Data'    : True  ,
-                 'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
-                 'declare'    : 'trigData = lambda : TrigMaker("RPLME_CMSSW",isData=True,keepRunP=True)',
-                 'module'     : 'trigData()',
-               },
+                     'do4MC'      : False ,
+                     'do4Data'    : True  ,
+                     'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
+                     'declare'    : 'trigData = lambda : TrigMaker("RPLME_CMSSW",isData=True,keepRunP=True)',
+                     'module'     : 'trigData()',
+                   },
 
  
   'trigMC'   : { 'isChain'    : False ,

@@ -98,7 +98,8 @@ class TrigMaker(Module):
            self.TM_LegEff[RunP]  = {}
            self.TM_DZEff[RunP]   = {}
            self.TM_GlEff[RunP] = {}
-           self.TM_runInt[RunP]  = {'b': self.Trigger[self.cmssw][RunP]['begin'], 'e': self.Trigger[self.cmssw][RunP]['end']}
+           if not 'runList' in self.Trigger[self.cmssw][RunP]: 
+               self.TM_runInt[RunP]  = {'b': self.Trigger[self.cmssw][RunP]['begin'], 'e': self.Trigger[self.cmssw][RunP]['end']}
            for Tname in self.Trigger[self.cmssw][RunP][self.typeStr]:
               self.TM_trig[RunP][Tname] = []
               for HLT in self.Trigger[self.cmssw][RunP][self.typeStr][Tname]:
