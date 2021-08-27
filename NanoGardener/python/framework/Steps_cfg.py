@@ -1989,7 +1989,7 @@ Steps = {
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>1)"' ,
                   'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
-                                  'trigDataRunP', 'btagPerEventDeepCSVWPsData'
+                                  'trigData', 'btagPerEventDeepCSVWPsData'
                                   ],
                 },
 
@@ -3535,14 +3535,6 @@ Steps = {
                  'declare'    : 'trigData = lambda : TrigMaker("RPLME_CMSSW",isData=True,keepRunP=False)',
                  'module'     : 'trigData()',
                },
-  'trigDataRunP' : { 'isChain'    : False ,
-                     'do4MC'      : False ,
-                     'do4Data'    : True  ,
-                     'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
-                     'declare'    : 'trigData = lambda : TrigMaker("RPLME_CMSSW",isData=True,keepRunP=True)',
-                     'module'     : 'trigData()',
-                   },
-
  
   'trigMC'   : { 'isChain'    : False ,
                  'do4MC'      : True  ,
