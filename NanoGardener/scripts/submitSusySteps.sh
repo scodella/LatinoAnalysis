@@ -21,7 +21,7 @@ if [ $prod == '16HIPM' ]; then
 elif [ $prod == '16noHIPM' ]; then
     year='16'
     naod='nAODv9_noHIPM'
-else:
+else
     year=$prod
 fi
 
