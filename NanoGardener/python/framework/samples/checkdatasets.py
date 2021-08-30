@@ -180,7 +180,7 @@ if __name__ == '__main__':
 
         exec(open(opt.directory+sample_directory+opt.samplefile.replace('.py', '')+'.py').read())
         veryear = 'v8' 
-        if '16' in opt.samplefile: veryear = 'v9'
+        if 'UL16' in opt.campaign: veryear = 'v9'
         if opt.outputfile=='test' and ('UL' in opt.campaign or 'run2' in opt.campaign):
             opt.outputfile = opt.samplefile.replace('102X_nAODv6', '106X_nAOD'+veryear).replace('.py', '')
             opt.outputfile = opt.outputfile.replace('Summer16','Summer20UL16').replace('fall17','Summer20UL17').replace('Autumn18','Summer20UL18')
