@@ -21,7 +21,7 @@ if [ $prod == '16HIPM' ]; then
 elif [ $prod == '16noHIPM' ]; then
     year='16'
     naod='nAODv9_noHIPM'
-else:
+else
     year=$prod
 fi
 
@@ -30,7 +30,7 @@ if [ $step == 'data' ]; then
     ./mkPostProc.py -p Run20${year}_106X_${naod}_Full20${year}v8 -s DATASusy20${year}v8 -b -Q $queue -T MuonEG_Run2016C_HIPM_UL2016-v1
 
 elif [ $step == 'sel' ]; then
-
+    echo ./mkPostProc.py -p Summer20UL${year}_106X_${naod}_Full20${year}v8 -s MCSusy20${year}v8 -b -Q $queue
     ./mkPostProc.py -p Summer20UL${year}_106X_${naod}_Full20${year}v8 -s MCSusy20${year}v8 -b -Q $queue
 
 elif [ $step == 'corr' ]; then
