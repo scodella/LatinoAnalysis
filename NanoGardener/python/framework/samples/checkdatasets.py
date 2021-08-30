@@ -182,7 +182,7 @@ if __name__ == '__main__':
         veryear = 'v8' 
         if '16' in opt.samplefile: veryear = 'v9'
         if opt.outputfile=='test' and ('UL' in opt.campaign or 'run2' in opt.campaign):
-            opt.outputfile = opt.samplefile.replace('102X_nAODv6', '106X_nAOD'+ver_year).replace('.py', '')
+            opt.outputfile = opt.samplefile.replace('102X_nAODv6', '106X_nAOD'+veryear).replace('.py', '')
             opt.outputfile = opt.outputfile.replace('Summer16','Summer20UL16').replace('fall17','Summer20UL17').replace('Autumn18','Summer20UL18')
             if 'preVFP' in opt.campaign:
                 opt.outputfile = opt.outputfile.replace('18','16').replace('16', '16preVFP')
