@@ -1060,6 +1060,16 @@ Steps = {
                                   ],
                 },
 
+  'xytest5nojme' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker', 'lepSelSusy',#  'JMEUncertMC' ,
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
   'MCSusy2017FS' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
