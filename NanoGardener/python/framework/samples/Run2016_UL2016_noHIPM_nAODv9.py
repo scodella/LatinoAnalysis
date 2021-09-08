@@ -1,9 +1,8 @@
 Samples = {}
 
 Samples["DoubleEG_Run2016F_UL2016-v1"] 	   	       = {'nanoAOD' : '/DoubleEG/Run2016F-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD'}
-#Samples["DoubleEG_Run2016G_UL2016-v1"]                 = {}
+Samples["DoubleEG_Run2016G_UL2016-v1"]                 = {'nanoAOD' : '/DoubleEG/Run2016G-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD'}
 #Samples["DoubleEG_Run2016H_UL2016-v1"]                 = {}
-
 
 Samples["DoubleMuon_Run2016F_UL2016-v1"] 	       = {'nanoAOD' : '/DoubleMuon/Run2016F-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD'}
 Samples["DoubleMuon_Run2016G_UL2016-v1"] 	       = {'nanoAOD' : '/DoubleMuon/Run2016G-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD'}
