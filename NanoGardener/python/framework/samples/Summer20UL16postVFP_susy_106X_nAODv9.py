@@ -67,7 +67,7 @@ Samples['TTZToQQ'] 	 = {'nanoAOD': '/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8/RunI
 #Samples['WJetsToLNu_HT70_100'] 	 = {'nanoAOD': '/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
 #Samples['WJetsToLNu_HT800_1200'] 	 = {'nanoAOD': '/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
 
-#Samples['WWG'] 	 = {'nanoAOD': ''}
+Samples['WWG'] 	 = {'nanoAOD': '/WWG_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
 Samples['WWTo2L2Nu'] 	 = {'nanoAOD': '/WWTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
 Samples['WWW'] 	 = {'nanoAOD': '/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM'}
 #Samples['WWZ'] 	 = {'nanoAOD': ''}
