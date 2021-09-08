@@ -7,6 +7,7 @@ Samples['DoubleEG_Run2017C-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/Dou
 Samples['DoubleEG_Run2017D-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/DoubleEG/Run2017D-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD'}
 Samples['DoubleEG_Run2017E-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/DoubleEG/Run2017E-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD'}
 Samples['DoubleEG_Run2017F-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/DoubleEG/Run2017F-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD'}
+
 Samples['DoubleMuon_Run2017B-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/DoubleMuon/Run2017B-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD'}
 Samples['DoubleMuon_Run2017C-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/DoubleMuon/Run2017C-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD'}
 Samples['DoubleMuon_Run2017D-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/DoubleMuon/Run2017D-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD'}
@@ -29,7 +30,9 @@ Samples['SingleElectron_Run2017B-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD':
 Samples['SingleElectron_Run2017C-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/SingleElectron/Run2017C-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD'}
 Samples['SingleElectron_Run2017D-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/SingleElectron/Run2017D-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD'}
 Samples['SingleElectron_Run2017E-UL2017_MiniAODv1_NanoAODv2-v2'] 	 = {'nanoAOD': '/SingleElectron/Run2017E-UL2017_MiniAODv1_NanoAODv2-v2/NANOAOD'}
-Samples['SingleElectron_Run2017F-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/SingleElectron/Run2017F-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD'}
+#Samples['SingleElectron_Run2017F-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/SingleElectron/Run2017F-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD'}
+Samples['SingleElectron_Run2017F-UL2017_MiniAODv1_NanoAODv2-v3']        = {'nanoAOD': '/SingleElectron/Run2017F-UL2017_MiniAODv1_NanoAODv2-v3/NANOAOD'}
+
 Samples['SingleMuon_Run2017B-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/SingleMuon/Run2017B-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD'}
 Samples['SingleMuon_Run2017C-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/SingleMuon/Run2017C-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD'}
 Samples['SingleMuon_Run2017D-UL2017_MiniAODv1_NanoAODv2-v1'] 	 = {'nanoAOD': '/SingleMuon/Run2017D-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD'}
