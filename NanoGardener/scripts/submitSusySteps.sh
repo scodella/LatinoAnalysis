@@ -39,6 +39,15 @@ if [ $step == 'data' ]; then
 
     ./mkPostProc.py -p Run20${year}_106X_${naod}_Full20${year}v8 -s DATASusy20${year}v8 -b -Q $queue $sample
 
+elif [ $step == 'hadd' ]; then
+
+    ./mkPostProc.py -p Run20${year}_106X_${naod}_Full20${year}v8 -i DATASusy20${year}v8 -s hadd -b -Q $queue $sample
+
+elif [ $step == 'mt2' ]; then
+
+     ./mkPostProc.py -p Run20${year}_106X_${naod}_Full20${year}v8 -i DATASusy20${year}v8__hadd -s susyMT2recoNomin -b -Q $queue $sample
+     ./mkPostProc.py -p Run20${year}_106X_${naod}_Full20${year}v8 -i DATASusy20${year}v8__hadd -s susyMT2ctrlNomin -b -Q $queue $sample
+
 elif [ $step == 'sel' ]; then
 
     ./mkPostProc.py -p Summer20UL${year}_106X_${naod}_Full20${year}v8 -s MCSusy20${year}v8 -b -Q $queue $sample
