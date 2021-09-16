@@ -743,7 +743,7 @@ Productions = {
  # -------- 2016 MC 106X nAODv9: Full2016v8
  'Summer20UL16_106X_nAODv9_HIPM_Full2016v8': {
                        'isData'  : False ,
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16preVPF_susy_106X_nAODv9.py' ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16preVFP_susy_106X_nAODv9.py' ,
                        'cmssw'   : 'Full2016v8HIPM' ,
                        'year'    : 'UL2016_preVFP' ,
  #                      'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
@@ -753,7 +753,7 @@ Productions = {
 
  'Summer20UL16_106X_nAODv9_noHIPM_Full2016v8': {
                        'isData'  : False ,
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16postVPF_susy_106X_nAODv9.py' ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16postVFP_susy_106X_nAODv9.py' ,
                        'cmssw'   : 'Full2016v8noHIPM' ,
                        'year'    : 'UL2016' ,
  #                      'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
