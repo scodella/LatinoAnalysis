@@ -50,6 +50,7 @@ isAllDone () {
                 dataset=$line
             fi
         done < filesToHadd_${2}_${3}.txt
+        rm filesToHadd_${2}_${3}.txt
         if [[ "$datasetsToExclude" != "" &&  "$datasetsToExclude" != *"-E "* ]] ; then
             datasetsToExclude="-b -E "$datasetsToExclude
         fi
