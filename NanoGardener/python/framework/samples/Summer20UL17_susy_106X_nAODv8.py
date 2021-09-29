@@ -94,4 +94,4 @@ Samples['ggZZ4t'] 	 = {'nanoAOD': '/GluGluToContinToZZTo4tau_TuneCP5_13TeV-mcfm7
 
 #Samples['tZq_ll'] 	 = {'nanoAOD': '/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL17NanoAODv2-106X_mc2017_realistic_v8-v1/NANOAODSIM'}
 
-##Samples['ttHToNonbb_M125'] 	 = {'nanoAOD': ''}
+#Samples['ttHToNonbb_M125'] 	 = {'nanoAOD': '/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL17NanoAODv2-106X_mc2017_realistic_v8-v1/NANOAODSIM'}
