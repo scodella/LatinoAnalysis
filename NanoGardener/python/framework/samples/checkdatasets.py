@@ -206,7 +206,6 @@ if __name__ == '__main__':
         for sample in sorted (Samples.keys()):
             #print sample
             #if ("WWTo2L" not in sample): continue
- 
             nEvents, nOriginalEvents = '-1', getEventsFromDAS(Samples[sample][opt.tier])
          
             process = Samples[sample][opt.tier].split('/')[1]
@@ -293,11 +292,12 @@ if __name__ == '__main__':
             datasetFound = ''
             if period!='': period = '_'+period 
             if len(datasetsFound)==1:
-                datasetFound = datasetsFound[0]
-                status = 'NanoAODv2 ready:, ' + datasetFound
-                nEvents = getEventsFromDAS(datasetFound)
-                if verbose:
-                    print '\033['+okcolor + 'Dataset found for sample', process+period, 'in campaign', campaign[thistier], '-->', datasetFound + '\033[0m'
+                if 'FlatPU' not in datasetsFound[0] and '_ext' not in datasetsFound[0]: # To be improved, by chosing the ext dataset with larger statistics
+                    datasetFound = datasetsFound[0]
+                    status = 'NanoAODv2 ready:, ' + datasetFound
+                    nEvents = getEventsFromDAS(datasetFound)
+                    if verbose:
+                        print '\033['+okcolor + 'Dataset found for sample', process+period, 'in campaign', campaign[thistier], '-->', datasetFound + '\033[0m'
             elif len(datasetsFound)>1:
                 if verbose: 
                     print '\033['+okcolor + 'Warning: multiple datasets found for sample', process+period, 'in campaign', campaign[thistier], '-->', datasetsFound, '\033[0m'
@@ -318,11 +318,15 @@ if __name__ == '__main__':
                         elif (version == int(dataset.split(ver)[1][0])):
                             print "WARNING: "+ dataset+" and "+saveset+" have the same version" 
                     else: print "TRY DIFFERENT CODING" #May have to be updated in the future
-                if verbose: print 'Dataset picked for sample', process+period, 'in campaign', campaign[thistier], '-->', saveset
-                datasetFound = saveset
-                status       = 'NanoAODv2 ready:, ' + saveset
-                nEvents = getEventsFromDAS(datasetFound)
-            else:   
+                if saveset=='':
+                    if verbose: print 'No valid dataset picked for sample', process+period, 'in campaign', campaign[thistier]
+                else:
+                    if verbose: print 'Dataset picked for sample', process+period, 'in campaign', campaign[thistier], '-->', saveset
+                    datasetFound = saveset
+                    status       = 'NanoAODv2 ready:, ' + saveset
+                    nEvents = getEventsFromDAS(datasetFound)
+
+            if datasetFound=='':   
                 if verbose: 
                     print 'Warning: no dataset found for sample', process+period, 'in tier', opt.tier, 'for campaign', campaign[thistier] 
                 if len(parentsFound)>0:
@@ -458,7 +462,7 @@ if __name__ == '__main__':
                             status = 'Planned:'
                             print '\033['+warningcolor + 'SAMPLES IN CSV:', process, incsv, ' \033[0m'
                             #exit()
-                            
+               
             line='\n'
             for data in datasetFound.split('/'): # Isn't this useless given that later we have: elif "_ext" in datasetFound: ?
                 if 'ext' in data:
