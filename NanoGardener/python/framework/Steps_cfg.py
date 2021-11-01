@@ -3356,14 +3356,6 @@ Steps = {
                   'module'     : 'mt2Producer(analysisRegion="",  metKind="gen",  metSystematic="nom", filterRegion="region")' ,
                },
 
-   'susyMT2puppi': {
-                  'isChain'    : False ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : True ,
-                  'import'     : 'LatinoAnalysis.NanoGardener.modules.mt2Producer' ,
-                  'module'     : 'mt2Producer(metType="puppi")' ,
-               },
-
 ## EFT JJH->WW->2l2nu
 
     'JJHl2EFT' : {
@@ -6786,6 +6778,21 @@ for treesyst in ['nom',  'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', '
     }
   if treesyst=='nom': 
     Steps['susyMT2ctrl'+treesystname]['do4Data'] = True
+
+susyMT2StepList = [ ]
+for step in Steps:
+    if 'susyMT2' in step:
+        susyMT2StepList.append(step)
+for step in susyMT2StepList:
+    puppiMT2StepName = step.replace('susyMT2', 'puppiMT2')
+    Steps[puppiMT2StepName] = { }
+    for key in Steps[step]:
+        Steps[puppiMT2StepName][key] = Steps[step][key]
+    if 'module' in Steps[puppiMT2StepName]:
+        Steps[puppiMT2StepName]['module'] = Steps[puppiMT2StepName]['module'].replace('mt2Producer(', 'mt2Producer(metType="puppi", ')
+    else:
+        for tg in range(len(Steps[puppiMT2StepName]['subTargets'])):
+            Steps[puppiMT2StepName]['subTargets'][tg] = Steps[puppiMT2StepName]['subTargets'][tg].replace('susyMT2', 'puppiMT2')
 
 #
 

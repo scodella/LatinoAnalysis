@@ -178,38 +178,45 @@ class mt2Producer(Module):
  
         ptmissvec3 = ROOT.TVector3()
 
-        hasNewUENames = hasattr(event, 'MET_T1_pt_unclustEnUp') or hasattr(event, 'METFixEE2017_T1_pt_unclustEnUp')
+        if self.metType=='type1pf':
 
-        if 'unclust' in self.metSystematic and not hasNewUENames:
-            metBranch='MET'
-        elif 'jer' in self.metSystematic or 'Smear' in self.metSystematic:
-            metBranch='MET_T1Smear'
-        else:
-            metBranch = 'MET_T1' 
+            hasNewUENames = hasattr(event, 'MET_T1_pt_unclustEnUp') or hasattr(event, 'METFixEE2017_T1_pt_unclustEnUp')
 
-        if hasattr(event, 'METFixEE2017_T1_pt'): metBranch = metBranch.replace('MET', 'METFixEE2017') 
-        if self.metType=='puppi':  metBranch = 'PuppiMET' 
+            if 'unclust' in self.metSystematic and not hasNewUENames:
+                metBranch='MET'
+            elif 'jer' in self.metSystematic or 'Smear' in self.metSystematic:
+                metBranch='MET_T1Smear'
+            else:
+                metBranch = 'MET_T1' 
 
-        metSystem = '_'+self.metSystematic.replace('Smear' , '') 
-        if metSystem == '_jer' or metSystem=='_nom' : metSystem = ''
+            if hasattr(event, 'METFixEE2017_T1_pt'): metBranch = metBranch.replace('MET', 'METFixEE2017') 
+
+            metSystem = '_'+self.metSystematic.replace('Smear' , '') 
+            if metSystem == '_jer' or metSystem=='_nom' : metSystem = ''
         
-        if not hasattr(event, metBranch+'_pt'+metSystem):
-            if self.metSystematic=='nom':
-                metBranch = 'MET'
-            else:    
-                raise Exception('mt2producer ERROR: variable', metBranch+'_pt'+metSystem, 'does not exist')
+            if not hasattr(event, metBranch+'_pt'+metSystem):
+                if self.metSystematic=='nom':
+                    metBranch = 'MET'
+                else:    
+                    raise Exception('mt2producer ERROR: variable', metBranch+'_pt'+metSystem, 'does not exist')
 
-        ptmissvec3.SetPtEtaPhi(getattr(event, metBranch+'_pt'+metSystem), 0., getattr(event, metBranch+'_phi'+metSystem)) 
+            ptmissvec3.SetPtEtaPhi(getattr(event, metBranch+'_pt'+metSystem), 0., getattr(event, metBranch+'_phi'+metSystem)) 
 
-        if "unclustEnSmear" in self.metSystematic and not hasNewUENames:
-            ptmissnom = ROOT.TVector3()
-            ptmissjer = ROOT.TVector3()
+            if "unclustEnSmear" in self.metSystematic and not hasNewUENames:
+                ptmissnom = ROOT.TVector3()
+                ptmissjer = ROOT.TVector3()
 
+                ptmissnom.SetPtEtaPhi(getattr(event, metBranch+'_T1_pt'), 0., getattr(event, metBranch+'_T1_phi'))
+                ptmissjer.SetPtEtaPhi(getattr(event, metBranch+'_T1Smear_pt'), 0., getattr(event, metBranch+'_T1Smear_phi'))
+                #ptmissvec3 = ptmissjer + (ptmissvec3 - ptmissnom)
+                ptmissvec3 += ptmissjer - ptmissnom
 
-            ptmissnom.SetPtEtaPhi(getattr(event, metBranch+'_T1_pt'), 0., getattr(event, metBranch+'_T1_phi'))
-            ptmissjer.SetPtEtaPhi(getattr(event, metBranch+'_T1Smear_pt'), 0., getattr(event, metBranch+'_T1Smear_phi'))
-            #ptmissvec3 = ptmissjer + (ptmissvec3 - ptmissnom)
-            ptmissvec3 += ptmissjer - ptmissnom
+        elif self.metType=='puppi':
+
+            metBranch='PuppiMET'
+            metSystem = self.metSystematic.replace('Smear' , '').replace('nom' , '')
+            metSystem = metSystem.replace('jesTotal' , 'JES').replace('jer' , 'JER').replace('unclustEn', 'Unclustered')
+            ptmissvec3.SetPtEtaPhi(getattr(event, metBranch+'_pt'+metSystem), 0., getattr(event, metBranch+'_phi'+metSystem))
 
         passRegion = False
 

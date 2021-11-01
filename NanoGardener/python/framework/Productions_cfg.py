@@ -617,11 +617,29 @@ Productions = {
                        'year'    : 'UL2017' ,
                    },
 
+# -------- 2017 DATA UL2017 nAODv9: Full2017v8
+ 'Run2017_106X_nAODv9_Full2017v8': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2017_106X_nAODv9.py' ,
+                       'cmssw'   : 'Full2017v8',
+                       'year'    : 'UL2017' ,
+                   },
+
  # -------- 2018 DATA UL2018 nAODv8: Full2018v8
  'Run2018_106X_nAODv8_Full2018v8': {
                        'isData'  : True ,
                        'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2018_106X_nAODv8.py' ,
+                       'cmssw'   : 'Full2018v8',
+                       'year'    : 'UL2018' ,
+                   },
+
+ # -------- 2018 DATA UL2018 nAODv9: Full2018v8
+ 'Run2018_106X_nAODv9_Full2018v8': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2018_106X_nAODv9.py' ,
                        'cmssw'   : 'Full2018v8',
                        'year'    : 'UL2018' ,
                    },
