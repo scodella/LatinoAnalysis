@@ -735,7 +735,7 @@ Productions = {
                        'year'    : '2018' ,
                       },
 
-#################################### nAODv8 MC ##############################################
+#################################### nAODv8/nAODv9 MC ##############################################
 
  # -------- 2016 MC 106X nAODv8: Full2016v8
  'Summer20UL16_106X_nAODv8_HIPM_Full2016v8': {
@@ -790,10 +790,31 @@ Productions = {
                        'YRver'   : ['YR4','13TeV'] ,
                    },
 
+ # -------- 2017 MC UL
+ 'Summer20UL17_106X_nAODv9_Full2017v8' : {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL17_susy_106X_nAODv9.py',
+                       'cmssw'   : 'Full2017v8',
+                       'year'    : 'UL2017' ,
+ #                      'JESGT'   : 'Fall17_17Nov2017_V32_MC' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+ 
  # -------- 2018 MC UL
  'Summer20UL18_106X_nAODv8_Full2018v8' : {
                        'isData'  : False ,
                        'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL18_susy_106X_nAODv8.py',
+                       'cmssw'   : 'Full2018v8',
+                       'year'    : 'UL2018' ,
+ #                      'JESGT'   : 'Autumn18_V19_MC',
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+ # -------- 2018 MC UL
+ 'Summer20UL18_106X_nAODv9_Full2018v8' : {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL18_susy_106X_nAODv9.py',
                        'cmssw'   : 'Full2018v8',
                        'year'    : 'UL2018' ,
  #                      'JESGT'   : 'Autumn18_V19_MC',

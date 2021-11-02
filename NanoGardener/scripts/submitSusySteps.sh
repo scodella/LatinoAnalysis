@@ -120,7 +120,7 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
                     fi
                 fi
 
-                naod='nAODv8'
+                naod='nAODv9'
 
                 if [ $prod == '16HIPM' ]; then
                     year='16'
