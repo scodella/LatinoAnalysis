@@ -32,10 +32,10 @@ campaigns = { 'UL16preVFP' : { 'MC'   : { 'AODSIM' : 'RunIISummer20UL16RECOAPV',
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, },
               'UL16'  : { 'Data' : { 'AOD'    : '21Feb2020_UL2016-',      'MINIAOD'    : '21Feb2020_UL2016-',         'NANOAOD'    : 'UL2016_MiniAODv1_NanoAODv2'  }, },
               'UL17'  : { 'Data' : { 'AOD'    : '09Aug2019_UL2017-',      'MINIAOD'    : '09Aug2019_UL2017-',         'NANOAOD'    : 'UL2017_MiniAODv1_NanoAODv2'                                  },             
-                          'MC'   : { 'AODSIM' : 'RunIISummer20UL17RECO',   'MINIAODSIM' : 'RunIISummer20UL17MiniAOD',   'NANOAODSIM' : 'RunIISummer20UL17NanoAODv2',  'GEN' : 'RunIISummer20UL17*GEN'  },
+                          'MC'   : { 'AODSIM' : 'RunIISummer20UL17RECO',   'MINIAODSIM' : 'RunIISummer20UL17MiniAODv2',   'NANOAODSIM' : 'RunIISummer20UL17NanoAODv9',  'GEN' : 'RunIISummer20UL17*GEN'  },
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, }, 
               'UL18'  : { 'Data' : { 'AOD'    : '12Nov2019_UL2018-',      'MINIAOD'    : '12Nov2019_UL2018-',         'NANOAOD'    : 'UL2018_MiniAODv1_NanoAODv2'                                  },             
-                          'MC'   : { 'AODSIM' : 'RunIISummer20UL18RECO',  'MINIAODSIM' : 'RunIISummer20UL18MiniAOD',  'NANOAODSIM' : 'RunIISummer20UL18NanoAODv2', 'GEN' : 'RunIISummer20UL18*GEN'  },
+                          'MC'   : { 'AODSIM' : 'RunIISummer20UL18RECO',  'MINIAODSIM' : 'RunIISummer20UL18MiniAODv2',  'NANOAODSIM' : 'RunIISummer20UL18NanoAODv9', 'GEN' : 'RunIISummer20UL18*GEN'  },
                           'FS'   : { 'AODSIM' : '',                       'MINIAODSIM' : '',                          'NANOAODSIM' : ''                          , 'GEN' : ''                      }, }, 
             }
 
