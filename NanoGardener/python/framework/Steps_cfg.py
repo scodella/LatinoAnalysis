@@ -769,11 +769,11 @@ Steps = {
                                      'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
                 },
 
-  'MCSusyCorr2016v8NoHIPM' : {
+  'MCSusyCorr2016v8noHIPM' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','PrefCorrUL16NoHIPM','btagPerJetDeepCSVWPs',
+                     'subTargets' : ['baseW','PrefCorrUL16noHIPM','btagPerJetDeepCSVWPs',
                                      'rochesterMC','trigMC','LeptonSFSusy','puW','EmbeddingVeto',
                                      'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
                 },
