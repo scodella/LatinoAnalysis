@@ -3550,13 +3550,13 @@ Steps = {
                  'module'     : 'prefCorrUL16HIPM()',
                },
 
-  'PrefCorrUL16NoHIPM' : {
+  'PrefCorrUL16noHIPM' : {
                  'isChain'    : False ,
                  'do4MC'      : True ,
                  'do4Data'    : False  ,
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.PrefireCorr' ,
-                 'declare'    : 'prefCorrUL16NoHIPM = lambda : PrefCorr(jetroot="L1PrefiringMaps.root", jetmapname="L1prefiring_jetptvseta_UL2016postVFP", photonroot="L1PrefiringMaps.root", photonmapname="L1prefiring_photonptvseta_UL2016postVFP", UseEMpT=0)',
-                 'module'     : 'prefCorrUL16NoHIPM()',
+                 'declare'    : 'prefCorrUL16noHIPM = lambda : PrefCorr(jetroot="L1PrefiringMaps.root", jetmapname="L1prefiring_jetptvseta_UL2016postVFP", photonroot="L1PrefiringMaps.root", photonmapname="L1prefiring_photonptvseta_UL2016postVFP", UseEMpT=0)',
+                 'module'     : 'prefCorrUL16noHIPM()',
                },
 
   'PrefCorrUL17' : {
@@ -3564,7 +3564,7 @@ Steps = {
                  'do4MC'      : True ,
                  'do4Data'    : False  ,
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.PrefireCorr' ,
-                 'declare'    : 'prefCorrUL17 = lambda : PrefCorr(jetroot="L1PrefiringMaps_WithUL17.root", jetmapname="L1prefiring_jetptvseta_UL2017BtoF", photonroot="L1PrefiringMaps_WithUL17.root", photonmapname="L1prefiring_photonptvseta_UL2017BtoF", UseEMpT=0)', #SHOULD WE CHANGE IT HERE TOO?
+                 'declare'    : 'prefCorrUL17 = lambda : PrefCorr(jetroot="L1PrefiringMaps.root", jetmapname="L1prefiring_jetptvseta_UL2017BtoF", photonroot="L1PrefiringMaps.root", photonmapname="L1prefiring_photonptvseta_UL2017BtoF", UseEMpT=0)',
                  'module'     : 'prefCorrUL17()',
                },
 
