@@ -765,7 +765,7 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','PrefCorrUL16HIPM','btagPerJetDeepCSVWPs',
-                                     'rochesterMC','trigMC','LeptonSFSusy','puW','EmbeddingVeto',
+                                     'rochesterMC','trigMC','LeptonSFSusy','puW','puWUL16','EmbeddingVeto',
                                      'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
                 },
 
@@ -774,7 +774,7 @@ Steps = {
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'subTargets' : ['baseW','PrefCorrUL16noHIPM','btagPerJetDeepCSVWPs',
-                                     'rochesterMC','trigMC','LeptonSFSusy','puW','EmbeddingVeto',
+                                     'rochesterMC','trigMC','LeptonSFSusy','puW','puWUL16','EmbeddingVeto',
                                      'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
                 },
 
@@ -4249,8 +4249,15 @@ Steps = {
                   'declare'    : 'puWeight = lambda : runDependentPuW("RPLME_CMSSW")',
                   'module'     : 'puWeight()', 
              } , 
-
-
+   
+  'puWUL16': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.runDependentPuW' ,
+                  'declare'    : 'puWeight = lambda : runDependentPuW(cmssw="RPLME_CMSSW", PUWeight_cfg="LatinoAnalysis/NanoGardener/python/data/PUWeight_UL16_cfg.py")',
+                  'module'     : 'puWeight()',
+             } ,
 
 
   'puW2016': {
