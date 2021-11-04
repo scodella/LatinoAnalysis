@@ -19,7 +19,7 @@ from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree
 
 class LeptonSFMaker(Module):
     '''
-    Produce branches with recoSF, IDIsoSF, totSF (and fastsimSF if appropriate) 
+    Produce branches with recoSF, IDIsoSF, totSF, extraSF (and fastsimSF if appropriate) 
     ''' 
 
     def __init__(self, cmssw, WP_path = 'LatinoAnalysis/NanoGardener/python/data/LeptonSel_cfg.py', branch_map='', isFastSim=False):
@@ -61,7 +61,7 @@ class LeptonSFMaker(Module):
         self.out.branch('Lepton_RecoSF_Up', 'F', lenVar='nLepton')
         self.out.branch('Lepton_RecoSF_Down', 'F', lenVar='nLepton')
        
-        self.wp_sf_pf = ['_IdIsoSF', '_IdIsoSF_Up', '_IdIsoSF_Down', '_IdIsoSF_Syst', '_TotSF', '_TotSF_Up', '_TotSF_Down']
+        self.wp_sf_pf = ['_IdIsoSF', '_IdIsoSF_Up', '_IdIsoSF_Down', '_IdIsoSF_Syst', '_TotSF', '_TotSF_Up', '_TotSF_Down', '_ExtraSF', '_ExtraSF_Up', 'ExtraSF_Down']
         if self.isFastSim:
             self.wp_sf_pf.extend(['_FastSimSF', '_FastSimSF_Up', '_FastSimSF_Down'])
         for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
@@ -87,6 +87,7 @@ class LeptonSFMaker(Module):
             self.SF_dict['electron'][wp]['wpSF'] = {}
             self.SF_dict['electron'][wp]['fsSF'] = {}
             self.SF_dict['electron'][wp]['susySF'] = {}
+            self.SF_dict['electron'][wp]['ExtraSF'] = {}
             for SFkey in self.ElectronWP[self.cmssw]['TightObjWP'][wp]:
                 if SFkey == 'tkSF':
                     self.SF_dict['electron'][wp]['tkSF']['data'] = []
@@ -125,6 +126,21 @@ class LeptonSFMaker(Module):
                                 susyHistos.append(self.get_root_obj(susy_file, susyData[susy_histo]))
                             susy_file.Close()
                         self.SF_dict['electron'][wp]['susySF']['data'].append(susyHistos)
+                        
+                if SFkey == 'extraSF':
+                    self.SF_dict['electron'][wp]['extraSF']['data'] = []
+                    self.SF_dict['electron'][wp]['extraSF']['beginRP'] = []
+                    self.SF_dict['electron'][wp]['extraSF']['endRP'] = []
+                    for rpr in self.ElectronWP[self.cmssw]['TightObjWP'][wp]['extraSF']:
+                        self.SF_dict['electron'][wp]['extraSF']['beginRP'].append(int(rpr.split('-')[0]))
+                        self.SF_dict['electron'][wp]['extraSF']['endRP'].append(int(rpr.split('-')[1]))
+                        extraHistos = []
+                        extraData   = self.ElectronWP[self.cmssw]['TightObjWP'][wp]['extraSF'][rpr].split('#')
+                        extra_file  = self.open_root(cmssw_base + '/src/' + extraData[0])
+                        for extra_histo in range(1, len(extraData)):
+                            extraHistos.append(self.get_root_obj(extra_file, extraData[extra_histo]))
+                        self.SF_dict['electron'][wp]['extraSF']['data'].append(extraHistos)
+                        extra_file.Close()
 
                 if self.isFastSim:
                     if SFkey == 'fsSF':
@@ -150,6 +166,7 @@ class LeptonSFMaker(Module):
             self.SF_dict['muon'][wp]['idSF'] = {}
             self.SF_dict['muon'][wp]['isoSF'] = {}
             self.SF_dict['muon'][wp]['susySF'] = {}
+            self.SF_dict['muon'][wp]['extraSF'] = {}
             self.SF_dict['muon'][wp]['fsSF'] = {}
             self.SF_dict['muon'][wp]['tthMvaSF']  = {} 
             self.SF_dict['muon'][wp]['hastthMvaSF'] = False 
@@ -236,6 +253,21 @@ class LeptonSFMaker(Module):
                             susy_file.Close()
                         self.SF_dict['muon'][wp]['susySF']['data'].append(susyHistos)
                             
+                if SFkey == 'extraSF':
+                    self.SF_dict['muon'][wp]['extraSF']['data'] = []
+                    self.SF_dict['muon'][wp]['extraSF']['beginRP'] = []
+                    self.SF_dict['muon'][wp]['extraSF']['endRP'] = []
+                    for rpr in self.MuonWP[self.cmssw]['TightObjWP'][wp]['extraSF']:
+                        self.SF_dict['muon'][wp]['extraSF']['beginRP'].append(int(rpr.split('-')[0]))
+                        self.SF_dict['muon'][wp]['extraSF']['endRP'].append(int(rpr.split('-')[1]))
+                        extraHistos = []
+                        extraData   = self.MuonWP[self.cmssw]['TightObjWP'][wp]['extraSF'][rpr].split('#')
+                        extra_file  = self.open_root(cmssw_base + '/src/' + extraData[0])
+                        for extra_histo in range(1, len(extraData)):
+                            extraHistos.append(self.get_root_obj(extra_file, extraData[extra_histo]))
+                        self.SF_dict['muon'][wp]['extraSF']['data'].append(extraHistos)
+                        extra_file.Close()
+
                 if self.isFastSim:
                     if SFkey == 'fsSF':
                         self.SF_dict['muon'][wp]['fsSF']['data'] = []
@@ -544,6 +576,33 @@ class LeptonSFMaker(Module):
                tkSF = tkSF_id*tkSF_iso
             return tkSF, tkSF_dwn, tkSF_up, 0.0
         return tkSF, tkSF_err, tkSF_err, tkSF_sys
+
+    def get_Extra_SF(self, pdgId, lep_pt, lep_eta, nvtx, wp, run_period):
+
+        if abs(pdgId)!=11 and abs(pdgId)!=13:
+            return 1., 1., 1.
+
+        kin_str = 'electron' if (abs(pdgId) == 11) else 'muon'        
+
+        #select right SF dict index based on runperiod
+        run_idx = 0
+        for idx in range(len(self.SF_dict[kin_str][wp]['extraSF']['beginRP'])):
+            if run_period >= self.SF_dict[kin_str][wp]['extraSF']['beginRP'][idx] and run_period <= self.SF_dict[kin_str][wp]['extraSF']['endRP'][idx]:
+                run_idx = idx
+
+        extraSF, extraSFup, extraSFdown = 1., 1., 1.
+
+        extraHistos = self.SF_dict[kin_str][wp]['extraSF']['data'][run_idx]
+        for extra_histo in extraHistos:
+
+            thisSF, thisSFerr = self.get_SF_fromHisto(lep_pt, lep_eta, extra_histo)
+            extraSF     *= thisSF
+            extraSFup   *= (thisSF + thisSFerr)
+            extraSFdown *= (thisSF - thisSFerr)
+            
+        extraSF_err = abs(extraSFup - extraSF)
+
+        return extraSF, extraSF_err, extraSF_err
 
     def get_fastSim_SF(self, pdgId, lep_pt, lep_eta, nvtx, wp, run_period):
 
