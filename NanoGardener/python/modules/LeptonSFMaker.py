@@ -587,8 +587,8 @@ class LeptonSFMaker(Module):
         return tkSF, tkSF_err, tkSF_err, tkSF_sys
 
     def get_Extra_SF(self, pdgId, lep_pt, lep_eta, nvtx, wp, run_period):
-
-        if (abs(pdgId)!=11 and abs(pdgId)!=13) or self.SF_dict[kin_str][wp] is False:
+                    
+        if (abs(pdgId)!=11 and abs(pdgId)!=13) or not self.SF_dict[kin_str][wp:
             return 1., 0., 0.
 
         kin_str = 'electron' if (abs(pdgId) == 11) else 'muon' 
