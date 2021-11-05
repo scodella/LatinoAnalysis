@@ -19,7 +19,7 @@ from LatinoAnalysis.NanoGardener.framework.BranchMapping import mappedOutputTree
 
 class LeptonSFMaker(Module):
     '''
-    Produce branches with recoSF, IDIsoSF, totSF (and fastsimSF if appropriate) 
+    Produce branches with recoSF, IDIsoSF, totSF, extraSF (and fastsimSF if appropriate) 
     ''' 
 
     def __init__(self, cmssw, WP_path = 'LatinoAnalysis/NanoGardener/python/data/LeptonSel_cfg.py', branch_map='', isFastSim=False):
@@ -61,7 +61,7 @@ class LeptonSFMaker(Module):
         self.out.branch('Lepton_RecoSF_Up', 'F', lenVar='nLepton')
         self.out.branch('Lepton_RecoSF_Down', 'F', lenVar='nLepton')
        
-        self.wp_sf_pf = ['_IdIsoSF', '_IdIsoSF_Up', '_IdIsoSF_Down', '_IdIsoSF_Syst', '_TotSF', '_TotSF_Up', '_TotSF_Down']
+        self.wp_sf_pf = ['_IdIsoSF', '_IdIsoSF_Up', '_IdIsoSF_Down', '_IdIsoSF_Syst', '_TotSF', '_TotSF_Up', '_TotSF_Down', '_ExtraSF', '_ExtraSF_Up', 'ExtraSF_Down']
         if self.isFastSim:
             self.wp_sf_pf.extend(['_FastSimSF', '_FastSimSF_Up', '_FastSimSF_Down'])
         for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
@@ -83,10 +83,12 @@ class LeptonSFMaker(Module):
         self.SF_dict['electron'] = {}
         for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
             self.SF_dict['electron'][wp] = {}
-            self.SF_dict['electron'][wp]['tkSF'] = {}
-            self.SF_dict['electron'][wp]['wpSF'] = {}
-            self.SF_dict['electron'][wp]['fsSF'] = {}
-            self.SF_dict['electron'][wp]['susySF'] = {}
+            self.SF_dict['electron'][wp]['tkSF'   ] = {}
+            self.SF_dict['electron'][wp]['wpSF'   ] = {}
+            self.SF_dict['electron'][wp]['fsSF'   ] = {}
+            self.SF_dict['electron'][wp]['susySF' ] = {}
+            self.SF_dict['electron'][wp]['extraSF'] = {}
+            self.SF_dict['electron'][wp]['hasextraSF'] = False
             for SFkey in self.ElectronWP[self.cmssw]['TightObjWP'][wp]:
                 if SFkey == 'tkSF':
                     self.SF_dict['electron'][wp]['tkSF']['data'] = []
@@ -125,6 +127,22 @@ class LeptonSFMaker(Module):
                                 susyHistos.append(self.get_root_obj(susy_file, susyData[susy_histo]))
                             susy_file.Close()
                         self.SF_dict['electron'][wp]['susySF']['data'].append(susyHistos)
+                        
+                if SFkey == 'extraSF':
+                    self.SF_dict['electron'][wp]['hasextraSF'] = True
+                    self.SF_dict['electron'][wp]['extraSF']['data'] = []
+                    self.SF_dict['electron'][wp]['extraSF']['beginRP'] = []
+                    self.SF_dict['electron'][wp]['extraSF']['endRP'] = []
+                    for rpr in self.ElectronWP[self.cmssw]['TightObjWP'][wp]['extraSF']:
+                        self.SF_dict['electron'][wp]['extraSF']['beginRP'].append(int(rpr.split('-')[0]))
+                        self.SF_dict['electron'][wp]['extraSF']['endRP'].append(int(rpr.split('-')[1]))
+                        extraHistos = []
+                        extraData   = self.ElectronWP[self.cmssw]['TightObjWP'][wp]['extraSF'][rpr].split('#')
+                        extra_file  = self.open_root(cmssw_base + '/src/' + extraData[0])
+                        for extra_histo in range(1, len(extraData)):
+                            extraHistos.append(self.get_root_obj(extra_file, extraData[extra_histo]))
+                        self.SF_dict['electron'][wp]['extraSF']['data'].append(extraHistos)
+                        extra_file.Close()
 
                 if self.isFastSim:
                     if SFkey == 'fsSF':
@@ -146,14 +164,17 @@ class LeptonSFMaker(Module):
         self.SF_dict['muon'] = {}
         for wp in self.MuonWP[self.cmssw]['TightObjWP']:
             self.SF_dict['muon'][wp] = {}
-            self.SF_dict['muon'][wp]['tkSF'] = {}
-            self.SF_dict['muon'][wp]['idSF'] = {}
-            self.SF_dict['muon'][wp]['isoSF'] = {}
-            self.SF_dict['muon'][wp]['susySF'] = {}
-            self.SF_dict['muon'][wp]['fsSF'] = {}
+            self.SF_dict['muon'][wp]['tkSF'    ]  = {}
+            self.SF_dict['muon'][wp]['idSF'    ]  = {}
+            self.SF_dict['muon'][wp]['isoSF'   ]  = {}
+            self.SF_dict['muon'][wp]['susySF'  ]  = {}
+            self.SF_dict['muon'][wp]['extraSF' ]  = {}
+            self.SF_dict['muon'][wp]['fsSF'    ]  = {}
             self.SF_dict['muon'][wp]['tthMvaSF']  = {} 
             self.SF_dict['muon'][wp]['hastthMvaSF'] = False 
-            self.SF_dict['muon'][wp]['hasSFreco'] = False
+            self.SF_dict['muon'][wp]['hasSFreco'  ] = False
+            self.SF_dict['muon'][wp]['hasextraSF' ] = False
+
             for SFkey in self.MuonWP[self.cmssw]['TightObjWP'][wp]:
                 if SFkey == 'tkSF':
                     self.SF_dict['muon'][wp]['hasSFreco'] = True
@@ -236,6 +257,22 @@ class LeptonSFMaker(Module):
                             susy_file.Close()
                         self.SF_dict['muon'][wp]['susySF']['data'].append(susyHistos)
                             
+                if SFkey == 'extraSF':
+                    self.SF_dict['muon'][wp]['hasextraSF']         = True
+                    self.SF_dict['muon'][wp]['extraSF']['data']    = []
+                    self.SF_dict['muon'][wp]['extraSF']['beginRP'] = []
+                    self.SF_dict['muon'][wp]['extraSF']['endRP']   = []
+                    for rpr in self.MuonWP[self.cmssw]['TightObjWP'][wp]['extraSF']:
+                        self.SF_dict['muon'][wp]['extraSF']['beginRP'].append(int(rpr.split('-')[0]))
+                        self.SF_dict['muon'][wp]['extraSF']['endRP'].append(int(rpr.split('-')[1]))
+                        extraHistos = []
+                        extraData   = self.MuonWP[self.cmssw]['TightObjWP'][wp]['extraSF'][rpr].split('#')
+                        extra_file  = self.open_root(cmssw_base + '/src/' + extraData[0])
+                        for extra_histo in range(1, len(extraData)):
+                            extraHistos.append(self.get_root_obj(extra_file, extraData[extra_histo]))
+                        self.SF_dict['muon'][wp]['extraSF']['data'].append(extraHistos)
+                        extra_file.Close()
+
                 if self.isFastSim:
                     if SFkey == 'fsSF':
                         self.SF_dict['muon'][wp]['fsSF']['data'] = []
@@ -421,18 +458,12 @@ class LeptonSFMaker(Module):
         pt, eta = self.trunc_kin(pdgId, lep_pt, lep_eta)
         kin_str = 'electron' if (abs(pdgId) == 11) else 'muon'       
 
-        #select right SF dict index based on runperiod
-        run_idx = 0
-        for idx in range(len(self.SF_dict[kin_str][wp]['tkSF']['beginRP'])):
-            if run_period >= self.SF_dict[kin_str][wp]['tkSF']['beginRP'][idx] and run_period <= self.SF_dict[kin_str][wp]['tkSF']['endRP'][idx]:
-                run_idx = idx
-
-        tkSF = 0.
-        tkSF_up = 1.
-        tkSF_dwn = 1.
-        tkSF_sys = 1.
 
         if 'susySF' in self.SF_dict[kin_str][wp].keys():
+            run_idx = 0
+            for idx in range(len(self.SF_dict[kin_str][wp]['susySF']['beginRP'])):
+                if run_period >= self.SF_dict[kin_str][wp]['susySF']['beginRP'][idx] and run_period <= self.SF_dict[kin_str][wp]['susySF']['endRP'][idx]:
+                    run_idx = idx
 
             idisoSF, idisoSFup, idisoSFdown = 1., 1., 1.
 
@@ -445,8 +476,18 @@ class LeptonSFMaker(Module):
                 idisoSFdown *= (thisSF - thisSFerr)
 
             idisoSF_err = abs(idisoSFup - idisoSF) 
-
             return idisoSF, idisoSF_err, idisoSF_err, 0.
+
+        #select right SF dict index based on runperiod
+        run_idx = 0
+        for idx in range(len(self.SF_dict[kin_str][wp]['tkSF']['beginRP'])):
+            if run_period >= self.SF_dict[kin_str][wp]['tkSF']['beginRP'][idx] and run_period <= self.SF_dict[kin_str][wp]['tkSF']['endRP'][idx]:
+                run_idx = idx
+
+        tkSF = 0.
+        tkSF_up = 1.
+        tkSF_dwn = 1.
+        tkSF_sys = 1.
 
         if abs(pdgId) == 11:
             for dot in self.SF_dict[kin_str][wp]['wpSF']['data'][run_idx]:
@@ -545,10 +586,37 @@ class LeptonSFMaker(Module):
             return tkSF, tkSF_dwn, tkSF_up, 0.0
         return tkSF, tkSF_err, tkSF_err, tkSF_sys
 
+    def get_Extra_SF(self, pdgId, lep_pt, lep_eta, nvtx, wp, run_period):
+        kin_str = 'electron' if (abs(pdgId) == 11) else 'muon' 
+                    
+        if (abs(pdgId)!=11 and abs(pdgId)!=13) or not self.SF_dict[kin_str][wp]['hasextraSF']:
+            return 1., 0., 0.
+
+       
+        #select right SF dict index based on runperiod
+        run_idx = 0
+        for idx in range(len(self.SF_dict[kin_str][wp]['extraSF']['beginRP'])):
+            if run_period >= self.SF_dict[kin_str][wp]['extraSF']['beginRP'][idx] and run_period <= self.SF_dict[kin_str][wp]['extraSF']['endRP'][idx]:
+                run_idx = idx
+
+        extraSF, extraSFup, extraSFdown = 1., 1., 1.
+
+        extraHistos = self.SF_dict[kin_str][wp]['extraSF']['data'][run_idx]
+        for extra_histo in extraHistos:
+
+            thisSF, thisSFerr = self.get_SF_fromHisto(lep_pt, lep_eta, extra_histo)
+            extraSF     *= thisSF
+            extraSFup   *= (thisSF + thisSFerr)
+            extraSFdown *= (thisSF - thisSFerr)
+
+        extraSF_err = abs(extraSFup - extraSF)
+
+        return extraSF, extraSF_err, extraSF_err
+
     def get_fastSim_SF(self, pdgId, lep_pt, lep_eta, nvtx, wp, run_period):
 
         if abs(pdgId)!=11 and abs(pdgId)!=13:
-            return 1., 1., 1.
+            return 1., 0., 0.
 
         kin_str = 'electron' if (abs(pdgId) == 11) else 'muon'        
 
@@ -626,22 +694,31 @@ class LeptonSFMaker(Module):
                   el_wp_var[wp + '_IdIsoSF_Up'].append(idiso_sf + idiso_sf_up)
                   el_wp_var[wp + '_IdIsoSF_Down'].append(idiso_sf - idiso_sf_dwn)
                   el_wp_var[wp + '_IdIsoSF_Syst'].append(idiso_sf + idiso_sf_sys)
-                  el_wp_var[wp + '_TotSF'].append(idiso_sf*reco_sf)
-                  el_wp_var[wp + '_TotSF_Up'].append(idiso_sf*reco_sf + math.sqrt(idiso_sf_up**2 + reco_sf_up**2 + idiso_sf_sys**2))
-                  el_wp_var[wp + '_TotSF_Down'].append(idiso_sf*reco_sf - math.sqrt(idiso_sf_dwn**2 + reco_sf_dwn**2 + idiso_sf_sys**2))
+
+                  extra_sf, extra_sf_dwn, extra_sf_up = self.get_extra_SF(pdgId, pt, eta, nvtx, wp, run_period)
+                  el_wp_var[wp + '_ExtraSF'     ].append(extra_sf)
+                  el_wp_var[wp + '_ExtraSF_Up'  ].append(extra_sf + extra_sf_up)
+                  el_wp_var[wp + '_ExtraSF_Down'].append(extra_sf - extra_sf_dwn)
+
+                  el_wp_var[wp + '_TotSF'     ].append(idiso_sf*reco_sf*extra_sf)
+                  el_wp_var[wp + '_TotSF_Up'  ].append(idiso_sf*reco_sf*extra_sf + math.sqrt(idiso_sf_up**2  + reco_sf_up**2  + extra_sf_up**2  + idiso_sf_sys**2))
+                  el_wp_var[wp + '_TotSF_Down'].append(idiso_sf*reco_sf*extra_sf - math.sqrt(idiso_sf_dwn**2 + reco_sf_dwn**2 + extra_sf_dwn**2 + idiso_sf_sys**2))
                   if self.isFastSim:
                       fastsim_sf, fastsim_sf_dwn, fastsim_sf_up = self.get_fastSim_SF(pdgId, pt, etasc, nvtx, wp, run_period)
                       el_wp_var[wp + '_FastSimSF'].append(fastsim_sf)
                       el_wp_var[wp + '_FastSimSF_Up'].append(fastsim_sf + fastsim_sf_up)
                       el_wp_var[wp + '_FastSimSF_Down'].append(fastsim_sf - fastsim_sf_dwn)
               for wp in self.MuonWP[self.cmssw]['TightObjWP']:
-                  mu_wp_var[wp + '_IdIsoSF'].append(1.0)
-                  mu_wp_var[wp + '_IdIsoSF_Up'].append(1.0)
+                  mu_wp_var[wp + '_IdIsoSF'     ].append(1.0)
+                  mu_wp_var[wp + '_IdIsoSF_Up'  ].append(1.0)
                   mu_wp_var[wp + '_IdIsoSF_Down'].append(1.0)
                   mu_wp_var[wp + '_IdIsoSF_Syst'].append(1.0)
-                  mu_wp_var[wp + '_TotSF'].append(reco_sf)
-                  mu_wp_var[wp + '_TotSF_Up'].append(reco_sf + reco_sf_up)
-                  mu_wp_var[wp + '_TotSF_Down'].append(reco_sf - reco_sf_dwn)
+                  mu_wp_var[wp + '_ExtraSF'     ].append(1.0)
+                  mu_wp_var[wp + '_ExtraSF_Up'  ].append(1.0)
+                  mu_wp_var[wp + '_ExtraSF_Down'].append(1.0)
+                  mu_wp_var[wp + '_TotSF'       ].append(1.0)
+                  mu_wp_var[wp + '_TotSF_Up'    ].append(1.0)
+                  mu_wp_var[wp + '_TotSF_Down'  ].append(1.0)
                   if self.isFastSim:
                       mu_wp_var[wp + '_FastSimSF'].append(1.0)
                       mu_wp_var[wp + '_FastSimSF_Up'].append(1.0)
@@ -659,22 +736,31 @@ class LeptonSFMaker(Module):
                   mu_wp_var[wp + '_IdIsoSF_Up'].append(idiso_sf + idiso_sf_up)
                   mu_wp_var[wp + '_IdIsoSF_Down'].append(idiso_sf - idiso_sf_dwn)
                   mu_wp_var[wp + '_IdIsoSF_Syst'].append(idiso_sf + idiso_sf_sys)
-                  mu_wp_var[wp + '_TotSF'].append(idiso_sf*reco_sf)
-                  mu_wp_var[wp + '_TotSF_Up'].append(idiso_sf*reco_sf + math.sqrt(idiso_sf_up**2 + reco_sf_up**2 + idiso_sf_sys**2))
-                  mu_wp_var[wp + '_TotSF_Down'].append(idiso_sf*reco_sf - math.sqrt(idiso_sf_dwn**2 + reco_sf_dwn**2 + idiso_sf_sys**2))
+
+                  extra_sf, extra_sf_dwn, extra_sf_up = self.get_extra_SF(pdgId, pt, eta, nvtx, wp, run_period)
+                  mu_wp_var[wp + '_ExtraSF'     ].append(extra_sf)
+                  mu_wp_var[wp + '_ExtraSF_Up'  ].append(extra_sf + extra_sf_up)
+                  mu_wp_var[wp + '_ExtraSF_Down'].append(extra_sf - extra_sf_dwn)
+
+                  mu_wp_var[wp + '_TotSF'     ].append(idiso_sf*reco_sf*extra_sf)
+                  mu_wp_var[wp + '_TotSF_Up'  ].append(idiso_sf*reco_sf*extra_sf + math.sqrt(idiso_sf_up**2  + reco_sf_up**2  + extra_sf_up**2  + idiso_sf_sys**2))
+                  mu_wp_var[wp + '_TotSF_Down'].append(idiso_sf*reco_sf*extra_sf - math.sqrt(idiso_sf_dwn**2 + reco_sf_dwn**2 + extra_sf_dwn**2 + idiso_sf_sys**2))
                   if self.isFastSim:
                       fastsim_sf, fastsim_sf_dwn, fastsim_sf_up = self.get_fastSim_SF(pdgId, pt, eta, nvtx, wp, run_period)
                       mu_wp_var[wp + '_FastSimSF'].append(fastsim_sf)
                       mu_wp_var[wp + '_FastSimSF_Up'].append(fastsim_sf + fastsim_sf_up)
                       mu_wp_var[wp + '_FastSimSF_Down'].append(fastsim_sf - fastsim_sf_dwn)
               for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
-                  el_wp_var[wp + '_IdIsoSF'].append(1.0)
-                  el_wp_var[wp + '_IdIsoSF_Up'].append(1.0)
+                  el_wp_var[wp + '_IdIsoSF'     ].append(1.0)
+                  el_wp_var[wp + '_IdIsoSF_Up'  ].append(1.0)
                   el_wp_var[wp + '_IdIsoSF_Down'].append(1.0)
                   el_wp_var[wp + '_IdIsoSF_Syst'].append(1.0)
-                  el_wp_var[wp + '_TotSF'].append(reco_sf)
-                  el_wp_var[wp + '_TotSF_Up'].append(reco_sf + reco_sf_up)
-                  el_wp_var[wp + '_TotSF_Down'].append(reco_sf - reco_sf_dwn)
+                  el_wp_var[wp + '_ExtraSF'     ].append(1.0)
+                  el_wp_var[wp + '_ExtraSF_Up'  ].append(1.0)
+                  el_wp_var[wp + '_ExtraSF_Down'].append(1.0)
+                  el_wp_var[wp + '_TotSF'       ].append(1.0)
+                  el_wp_var[wp + '_TotSF_Up'    ].append(1.0)
+                  el_wp_var[wp + '_TotSF_Down'  ].append(1.0)
                   if self.isFastSim:
                       el_wp_var[wp + '_FastSimSF'].append(1.0)
                       el_wp_var[wp + '_FastSimSF_Up'].append(1.0)
