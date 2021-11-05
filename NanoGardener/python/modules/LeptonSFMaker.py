@@ -584,34 +584,35 @@ class LeptonSFMaker(Module):
     def get_Extra_SF(self, pdgId, lep_pt, lep_eta, nvtx, wp, run_period):
 
         if abs(pdgId)!=11 and abs(pdgId)!=13:
-            return 1., 1., 1.
+            return 1., 0., 0.
 
-        kin_str = 'electron' if (abs(pdgId) == 11) else 'muon'        
+        kin_str = 'electron' if (abs(pdgId) == 11) else 'muon' 
+       
+        if 'extraSF' in self.SF_dict[kin_str][wp].keys():
+            #select right SF dict index based on runperiod
+            run_idx = 0
+            for idx in range(len(self.SF_dict[kin_str][wp]['extraSF']['beginRP'])):
+                if run_period >= self.SF_dict[kin_str][wp]['extraSF']['beginRP'][idx] and run_period <= self.SF_dict[kin_str][wp]['extraSF']['endRP'][idx]:
+                    run_idx = idx
 
-        #select right SF dict index based on runperiod
-        run_idx = 0
-        for idx in range(len(self.SF_dict[kin_str][wp]['extraSF']['beginRP'])):
-            if run_period >= self.SF_dict[kin_str][wp]['extraSF']['beginRP'][idx] and run_period <= self.SF_dict[kin_str][wp]['extraSF']['endRP'][idx]:
-                run_idx = idx
+            extraSF, extraSFup, extraSFdown = 1., 1., 1.
 
-        extraSF, extraSFup, extraSFdown = 1., 1., 1.
+            extraHistos = self.SF_dict[kin_str][wp]['extraSF']['data'][run_idx]
+            for extra_histo in extraHistos:
 
-        extraHistos = self.SF_dict[kin_str][wp]['extraSF']['data'][run_idx]
-        for extra_histo in extraHistos:
+                thisSF, thisSFerr = self.get_SF_fromHisto(lep_pt, lep_eta, extra_histo)
+                extraSF     *= thisSF
+                extraSFup   *= (thisSF + thisSFerr)
+                extraSFdown *= (thisSF - thisSFerr)
 
-            thisSF, thisSFerr = self.get_SF_fromHisto(lep_pt, lep_eta, extra_histo)
-            extraSF     *= thisSF
-            extraSFup   *= (thisSF + thisSFerr)
-            extraSFdown *= (thisSF - thisSFerr)
-            
-        extraSF_err = abs(extraSFup - extraSF)
+            extraSF_err = abs(extraSFup - extraSF)
 
-        return extraSF, extraSF_err, extraSF_err
+            return extraSF, extraSF_err, extraSF_err
 
     def get_fastSim_SF(self, pdgId, lep_pt, lep_eta, nvtx, wp, run_period):
 
         if abs(pdgId)!=11 and abs(pdgId)!=13:
-            return 1., 1., 1.
+            return 1., 0., 0.
 
         kin_str = 'electron' if (abs(pdgId) == 11) else 'muon'        
 
@@ -690,7 +691,7 @@ class LeptonSFMaker(Module):
                   el_wp_var[wp + '_IdIsoSF_Down'].append(idiso_sf - idiso_sf_dwn)
                   el_wp_var[wp + '_IdIsoSF_Syst'].append(idiso_sf + idiso_sf_sys)
 
-                  extra_sf, extra_sf_dwn, extra_sf_up = self.get_extra_SF(pdgId, pt, etasc, nvtx, wp, run_period)
+                  extra_sf, extra_sf_dwn, extra_sf_up = self.get_extra_SF(pdgId, pt, eta, nvtx, wp, run_period)
                   el_wp_var[wp + '_ExtraSF'     ].append(extra_sf)
                   el_wp_var[wp + '_ExtraSF_Up'  ].append(extra_sf + extra_sf_up)
                   el_wp_var[wp + '_ExtraSF_Down'].append(extra_sf - extra_sf_dwn)
@@ -732,7 +733,7 @@ class LeptonSFMaker(Module):
                   mu_wp_var[wp + '_IdIsoSF_Down'].append(idiso_sf - idiso_sf_dwn)
                   mu_wp_var[wp + '_IdIsoSF_Syst'].append(idiso_sf + idiso_sf_sys)
 
-                  extra_sf, extra_sf_dwn, extra_sf_up = self.get_extra_SF(pdgId, pt, etasc, nvtx, wp, run_period)
+                  extra_sf, extra_sf_dwn, extra_sf_up = self.get_extra_SF(pdgId, pt, eta, nvtx, wp, run_period)
                   mu_wp_var[wp + '_ExtraSF'     ].append(extra_sf)
                   mu_wp_var[wp + '_ExtraSF_Up'  ].append(extra_sf + extra_sf_up)
                   mu_wp_var[wp + '_ExtraSF_Down'].append(extra_sf - extra_sf_dwn)
