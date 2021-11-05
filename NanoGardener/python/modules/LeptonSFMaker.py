@@ -61,7 +61,7 @@ class LeptonSFMaker(Module):
         self.out.branch('Lepton_RecoSF_Up', 'F', lenVar='nLepton')
         self.out.branch('Lepton_RecoSF_Down', 'F', lenVar='nLepton')
        
-        self.wp_sf_pf = ['_IdIsoSF', '_IdIsoSF_Up', '_IdIsoSF_Down', '_IdIsoSF_Syst', '_TotSF', '_TotSF_Up', '_TotSF_Down', '_ExtraSF', '_ExtraSF_Up', 'ExtraSF_Down']
+        self.wp_sf_pf = ['_IdIsoSF', '_IdIsoSF_Up', '_IdIsoSF_Down', '_IdIsoSF_Syst', '_TotSF', '_TotSF_Up', '_TotSF_Down', '_ExtraSF', '_ExtraSF_Up', '_ExtraSF_Down']
         if self.isFastSim:
             self.wp_sf_pf.extend(['_FastSimSF', '_FastSimSF_Up', '_FastSimSF_Down'])
         for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
