@@ -457,7 +457,7 @@ class LeptonSFMaker(Module):
         if 'susySF' in self.SF_dict[kin_str][wp].keys():
             run_idx = 0
             for idx in range(len(self.SF_dict[kin_str][wp]['susySF']['beginRP'])):
-                if run_period >= self.SF_dict[kin_str][wp]['susySF']['beginRP'][idx] and run_period <= self.SF_dict[kin_str][wp]['tkSF']['endRP'][idx]:
+                if run_period >= self.SF_dict[kin_str][wp]['susySF']['beginRP'][idx] and run_period <= self.SF_dict[kin_str][wp]['susySF']['endRP'][idx]:
                     run_idx = idx
 
             idisoSF, idisoSFup, idisoSFdown = 1., 1., 1.
