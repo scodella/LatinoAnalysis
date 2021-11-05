@@ -695,7 +695,7 @@ class LeptonSFMaker(Module):
                   el_wp_var[wp + '_IdIsoSF_Down'].append(idiso_sf - idiso_sf_dwn)
                   el_wp_var[wp + '_IdIsoSF_Syst'].append(idiso_sf + idiso_sf_sys)
 
-                  extra_sf, extra_sf_dwn, extra_sf_up = self.get_extra_SF(pdgId, pt, eta, nvtx, wp, run_period)
+                  extra_sf, extra_sf_dwn, extra_sf_up = self.get_Extra_SF(pdgId, pt, eta, nvtx, wp, run_period)
                   el_wp_var[wp + '_ExtraSF'     ].append(extra_sf)
                   el_wp_var[wp + '_ExtraSF_Up'  ].append(extra_sf + extra_sf_up)
                   el_wp_var[wp + '_ExtraSF_Down'].append(extra_sf - extra_sf_dwn)
@@ -737,7 +737,7 @@ class LeptonSFMaker(Module):
                   mu_wp_var[wp + '_IdIsoSF_Down'].append(idiso_sf - idiso_sf_dwn)
                   mu_wp_var[wp + '_IdIsoSF_Syst'].append(idiso_sf + idiso_sf_sys)
 
-                  extra_sf, extra_sf_dwn, extra_sf_up = self.get_extra_SF(pdgId, pt, eta, nvtx, wp, run_period)
+                  extra_sf, extra_sf_dwn, extra_sf_up = self.get_Extra_SF(pdgId, pt, eta, nvtx, wp, run_period)
                   mu_wp_var[wp + '_ExtraSF'     ].append(extra_sf)
                   mu_wp_var[wp + '_ExtraSF_Up'  ].append(extra_sf + extra_sf_up)
                   mu_wp_var[wp + '_ExtraSF_Down'].append(extra_sf - extra_sf_dwn)
