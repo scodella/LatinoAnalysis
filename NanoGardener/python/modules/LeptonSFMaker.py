@@ -583,31 +583,30 @@ class LeptonSFMaker(Module):
 
     def get_Extra_SF(self, pdgId, lep_pt, lep_eta, nvtx, wp, run_period):
 
-        if abs(pdgId)!=11 and abs(pdgId)!=13:
+        if (abs(pdgId)!=11 and abs(pdgId)!=13) or 'extraSF' not in self.SF_dict[kin_str][wp].keys():
             return 1., 0., 0.
 
         kin_str = 'electron' if (abs(pdgId) == 11) else 'muon' 
        
-        if 'extraSF' in self.SF_dict[kin_str][wp].keys():
-            #select right SF dict index based on runperiod
-            run_idx = 0
-            for idx in range(len(self.SF_dict[kin_str][wp]['extraSF']['beginRP'])):
-                if run_period >= self.SF_dict[kin_str][wp]['extraSF']['beginRP'][idx] and run_period <= self.SF_dict[kin_str][wp]['extraSF']['endRP'][idx]:
-                    run_idx = idx
+        #select right SF dict index based on runperiod
+        run_idx = 0
+        for idx in range(len(self.SF_dict[kin_str][wp]['extraSF']['beginRP'])):
+            if run_period >= self.SF_dict[kin_str][wp]['extraSF']['beginRP'][idx] and run_period <= self.SF_dict[kin_str][wp]['extraSF']['endRP'][idx]:
+                run_idx = idx
 
-            extraSF, extraSFup, extraSFdown = 1., 1., 1.
+        extraSF, extraSFup, extraSFdown = 1., 1., 1.
 
-            extraHistos = self.SF_dict[kin_str][wp]['extraSF']['data'][run_idx]
-            for extra_histo in extraHistos:
+        extraHistos = self.SF_dict[kin_str][wp]['extraSF']['data'][run_idx]
+        for extra_histo in extraHistos:
 
-                thisSF, thisSFerr = self.get_SF_fromHisto(lep_pt, lep_eta, extra_histo)
-                extraSF     *= thisSF
-                extraSFup   *= (thisSF + thisSFerr)
-                extraSFdown *= (thisSF - thisSFerr)
+            thisSF, thisSFerr = self.get_SF_fromHisto(lep_pt, lep_eta, extra_histo)
+            extraSF     *= thisSF
+            extraSFup   *= (thisSF + thisSFerr)
+            extraSFdown *= (thisSF - thisSFerr)
 
-            extraSF_err = abs(extraSFup - extraSF)
+        extraSF_err = abs(extraSFup - extraSF)
 
-            return extraSF, extraSF_err, extraSF_err
+        return extraSF, extraSF_err, extraSF_err
 
     def get_fastSim_SF(self, pdgId, lep_pt, lep_eta, nvtx, wp, run_period):
 
