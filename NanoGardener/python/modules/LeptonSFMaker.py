@@ -87,7 +87,7 @@ class LeptonSFMaker(Module):
             self.SF_dict['electron'][wp]['wpSF'] = {}
             self.SF_dict['electron'][wp]['fsSF'] = {}
             self.SF_dict['electron'][wp]['susySF'] = {}
-            self.SF_dict['electron'][wp]['ExtraSF'] = {}
+            self.SF_dict['electron'][wp]['extraSF'] = {}
             for SFkey in self.ElectronWP[self.cmssw]['TightObjWP'][wp]:
                 if SFkey == 'tkSF':
                     self.SF_dict['electron'][wp]['tkSF']['data'] = []
