@@ -121,13 +121,16 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
                 fi
 
                 naod='nAODv9'
+                corr=''
 
                 if [ $prod == '16HIPM' ]; then
                     year='16'
                     naod='nAODv9_HIPM'
+                    corr='HIPM'
                 elif [ $prod == '16noHIPM' ]; then
                     year='16'
                     naod='nAODv9_noHIPM'
+                    corr='noHIPM'
                 else
                     year=$prod
                 fi
@@ -151,22 +154,22 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
 
                 elif [ $step == 'corr' ]; then
 
-                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8 MCSusyCorr20${year}v8
+                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8 MCSusyCorr20${year}v8$corr
 
                 elif [ $step == 'syst' ]; then
 
                     for syst in Nomin JESUp JESDo ; do 
-                        submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8 MCSusy${syst}20${year}v8
+                        submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8$corr MCSusy${syst}20${year}v8
                     done
 
                 elif [[ $step == 'reco' ]] || [[ $step == 'ctrl' ]] ; then
 
                     for met in Nomin Smear SMTUp SMTDo ; do
-                        submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8__MCSusyNomin20${year}v8 susyMT2${step}$met
+                        submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyNomin20${year}v8 susyMT2${step}$met
                     done
 
-                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8__MCSusyJESUp20${year}v8 susyMT2${step}SJSUp
-                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8__MCSusyJESDo20${year}v8 susyMT2${step}SJSDo
+                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJESUp20${year}v8 susyMT2${step}SJSUp
+                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJESDo20${year}v8 susyMT2${step}SJSDo
 
                 fi
 
