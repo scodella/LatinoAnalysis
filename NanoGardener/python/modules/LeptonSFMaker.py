@@ -83,14 +83,13 @@ class LeptonSFMaker(Module):
         self.SF_dict['electron'] = {}
         for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
             self.SF_dict['electron'][wp] = {}
-            self.SF_dict['electron'][wp]['tkSF'] = {}
-            self.SF_dict['electron'][wp]['wpSF'] = {}
-            self.SF_dict['electron'][wp]['fsSF'] = {}
-            self.SF_dict['electron'][wp]['susySF'] = {}
-            self.SF_dict['electron'][wp]['extraSF'] = False
+            self.SF_dict['electron'][wp]['tkSF'   ] = {}
+            self.SF_dict['electron'][wp]['wpSF'   ] = {}
+            self.SF_dict['electron'][wp]['fsSF'   ] = {}
+            self.SF_dict['electron'][wp]['susySF' ] = {}
+            self.SF_dict['electron'][wp]['extraSF'] = {}
+            self.SF_dict['electron'][wp]['hasextraSF'] = False
             for SFkey in self.ElectronWP[self.cmssw]['TightObjWP'][wp]:
-                if SFkey == 'susySF':
-                    self.SF_dict['electron'][wp]['extraSF'] = True
                 if SFkey == 'tkSF':
                     self.SF_dict['electron'][wp]['tkSF']['data'] = []
                     self.SF_dict['electron'][wp]['tkSF']['beginRP'] = []
@@ -130,6 +129,7 @@ class LeptonSFMaker(Module):
                         self.SF_dict['electron'][wp]['susySF']['data'].append(susyHistos)
                         
                 if SFkey == 'extraSF':
+                    self.SF_dict['electron'][wp]['hasextraSF'] = True
                     self.SF_dict['electron'][wp]['extraSF']['data'] = []
                     self.SF_dict['electron'][wp]['extraSF']['beginRP'] = []
                     self.SF_dict['electron'][wp]['extraSF']['endRP'] = []
@@ -164,19 +164,18 @@ class LeptonSFMaker(Module):
         self.SF_dict['muon'] = {}
         for wp in self.MuonWP[self.cmssw]['TightObjWP']:
             self.SF_dict['muon'][wp] = {}
-            self.SF_dict['muon'][wp]['tkSF'] = {}
-            self.SF_dict['muon'][wp]['idSF'] = {}
-            self.SF_dict['muon'][wp]['isoSF'] = {}
-            self.SF_dict['muon'][wp]['susySF'] = {}
-            self.SF_dict['muon'][wp]['extraSF'] = False
-            self.SF_dict['muon'][wp]['fsSF'] = {}
+            self.SF_dict['muon'][wp]['tkSF'    ]  = {}
+            self.SF_dict['muon'][wp]['idSF'    ]  = {}
+            self.SF_dict['muon'][wp]['isoSF'   ]  = {}
+            self.SF_dict['muon'][wp]['susySF'  ]  = {}
+            self.SF_dict['muon'][wp]['extraSF' ]  = {}
+            self.SF_dict['muon'][wp]['fsSF'    ]  = {}
             self.SF_dict['muon'][wp]['tthMvaSF']  = {} 
             self.SF_dict['muon'][wp]['hastthMvaSF'] = False 
-            self.SF_dict['muon'][wp]['hasSFreco'] = False
-            for SFkey in self.MuonWP[self.cmssw]['TightObjWP'][wp]:
-                if SFkey == 'extraSF':
-                    self.SF_dict['muon'][wp]['extraSF'] = True
+            self.SF_dict['muon'][wp]['hasSFreco'  ] = False
+            self.SF_dict['muon'][wp]['hasextraSF' ] = False
 
+            for SFkey in self.MuonWP[self.cmssw]['TightObjWP'][wp]:
                 if SFkey == 'tkSF':
                     self.SF_dict['muon'][wp]['hasSFreco'] = True
                     self.SF_dict['muon'][wp]['tkSF']['data'] = []
@@ -259,9 +258,10 @@ class LeptonSFMaker(Module):
                         self.SF_dict['muon'][wp]['susySF']['data'].append(susyHistos)
                             
                 if SFkey == 'extraSF':
-                    self.SF_dict['muon'][wp]['extraSF']['data'] = []
+                    self.SF_dict['muon'][wp]['hasextraSF']         = True
+                    self.SF_dict['muon'][wp]['extraSF']['data']    = []
                     self.SF_dict['muon'][wp]['extraSF']['beginRP'] = []
-                    self.SF_dict['muon'][wp]['extraSF']['endRP'] = []
+                    self.SF_dict['muon'][wp]['extraSF']['endRP']   = []
                     for rpr in self.MuonWP[self.cmssw]['TightObjWP'][wp]['extraSF']:
                         self.SF_dict['muon'][wp]['extraSF']['beginRP'].append(int(rpr.split('-')[0]))
                         self.SF_dict['muon'][wp]['extraSF']['endRP'].append(int(rpr.split('-')[1]))
@@ -588,7 +588,7 @@ class LeptonSFMaker(Module):
 
     def get_Extra_SF(self, pdgId, lep_pt, lep_eta, nvtx, wp, run_period):
 
-        if (abs(pdgId)!=11 and abs(pdgId)!=13) or 'extraSF' not in self.SF_dict[kin_str][wp].keys():
+        if (abs(pdgId)!=11 and abs(pdgId)!=13) or self.SF_dict[kin_str][wp] is False:
             return 1., 0., 0.
 
         kin_str = 'electron' if (abs(pdgId) == 11) else 'muon' 
