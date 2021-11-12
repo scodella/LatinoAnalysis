@@ -6836,8 +6836,10 @@ for step in susyMT2StepList:
     if 'module' in Steps[puppiMT2StepName]:
         Steps[puppiMT2StepName]['module'] = Steps[puppiMT2StepName]['module'].replace('mt2Producer(', 'mt2Producer(metType="puppi", ')
     else:
-        for tg in range(len(Steps[puppiMT2StepName]['subTargets'])):
-            Steps[puppiMT2StepName]['subTargets'][tg] = Steps[puppiMT2StepName]['subTargets'][tg].replace('susyMT2', 'puppiMT2')
+        targetList = [ ]
+        for target in Steps[puppiMT2StepName]['subTargets']:
+            targetList.append(target.replace('susyMT2', 'puppiMT2'))
+        Steps[puppiMT2StepName]['subTargets'] = targetList
 
 #
 
