@@ -3995,8 +3995,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
-                  'declare'    : 'btagSFProducerWPs = lambda : btagSFProducer(era="RPLME_YEAR", algo="deepcsv", doFastSim=False, addCorrelations=True, selectedWPs=["L", "M", "T"])',
-                  'module'     : 'btagSFProducerWPs()',
+                  'declare'    : 'btagSFProducerDeepCSVWPs = lambda : btagSFProducer(era="RPLME_YEAR", algo="deepcsv", doFastSim=False, addCorrelations=True, selectedWPs=["L", "M", "T"])',
+                  'module'     : 'btagSFProducerDeepCSVWPs()',
                  },
 
   'btagPerJetDeepJetWPs': {
@@ -4004,8 +4004,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
-                  'declare'    : 'btagSFProducerWPs = lambda : btagSFProducer(era="RPLME_YEAR", algo="deepjet", doFastSim=False, addCorrelations=True, selectedWPs=["L", "M", "T"])',
-                  'module'     : 'btagSFProducerWPs()',
+                  'declare'    : 'btagSFProducerDeepJetWPs = lambda : btagSFProducer(era="RPLME_YEAR", algo="deepjet", doFastSim=False, addCorrelations=True, selectedWPs=["L", "M", "T"])',
+                  'module'     : 'btagSFProducerDeepJetWPs()',
                  },
 
   ### Old style, to be removed after transition to UL complete
