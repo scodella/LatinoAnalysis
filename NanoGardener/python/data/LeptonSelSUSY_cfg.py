@@ -2980,7 +2980,7 @@ MuonWP = {
                     } ,
                 'susySF':  {
                     '1-3' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/Efficiencies_muon_generalTracks_Z_Run2016_UL_HIPM_ID.root#NUM_MediumID_DEN_TrackerMuons_abseta_pt&LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/Efficiencies_muon_generalTracks_Z_Run2016_UL_HIPM_ISO.root#NUM_TightRelIso_DEN_MediumID_abseta_pt' ,
-                    '4-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/Efficiencies_muon_generalTracks_Z_Run2016_UL_ID.root#NUM_MediumID_DEN_TrackerMuons__abseta_pt&LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/Efficiencies_muon_generalTracks_Z_Run2016_UL_ISO.root#NUM_TightRelIso_DEN_MediumID_abseta_pt' ,
+                    '4-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/Efficiencies_muon_generalTracks_Z_Run2016_UL_ID.root#NUM_MediumID_DEN_TrackerMuons_abseta_pt&LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/Efficiencies_muon_generalTracks_Z_Run2016_UL_ISO.root#NUM_TightRelIso_DEN_MediumID_abseta_pt' ,
                      } ,
                 'extraSF':  {
                     '1-3' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/AdditionalSF_2016_HIPMMuon.root#hSFDataMC_central' ,  
