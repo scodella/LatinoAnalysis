@@ -764,7 +764,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','PrefCorrUL16HIPM','btagPerJetDeepCSVWPs',
+                     'subTargets' : ['baseW','PrefCorrUL16HIPM','btagPerJetDeepCSVWPs','btagPerJetDeepJetWPs',
                                      'rochesterMC','trigMC','LeptonSFSusy','puW','puWUL16','EmbeddingVeto',
                                      'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
                 },
@@ -773,7 +773,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','PrefCorrUL16noHIPM','btagPerJetDeepCSVWPs',
+                     'subTargets' : ['baseW','PrefCorrUL16noHIPM','btagPerJetDeepCSVWPs','btagPerJetDeepJetWPs',
                                      'rochesterMC','trigMC','LeptonSFSusy','puW','puWUL16','EmbeddingVeto',
                                      'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
                 },
@@ -782,7 +782,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs',
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs','btagPerEventDeepJetWPs'
                                    ],
                 },
 
@@ -3999,6 +3999,15 @@ Steps = {
                   'module'     : 'btagSFProducerWPs()',
                  },
 
+  'btagPerJetDeepJetWPs': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'declare'    : 'btagSFProducerWPs = lambda : btagSFProducer(era="RPLME_YEAR", algo="deepjet", doFastSim=False, addCorrelations=True, selectedWPs=["L", "M", "T"])',
+                  'module'     : 'btagSFProducerWPs()',
+                 },
+
   ### Old style, to be removed after transition to UL complete
   'btagPerEvent2016': {
                   'isChain'    : False ,
@@ -4090,6 +4099,15 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
                   'declare'    : '',
                   'module'     : 'BTagEventWeightProducer(bTagAlgo="deepcsv", bTagEra="RPLME_YEAR", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="mc")',
+                },
+
+  'btagPerEventDeepJetWPs': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="deepjet", bTagEra="RPLME_YEAR", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="mc")',
                 },
 
   # For v6loose beckward compatibility

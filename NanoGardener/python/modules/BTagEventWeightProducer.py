@@ -41,7 +41,7 @@ class BTagEventWeightProducer(Module):
         self.bTagPtCuts = bTagPtCuts
         self.bTagSyst = bTagSyst
         self.bTagEff_path = bTagEff_path
-        self.bTagEtaMax = 2.4 if (bTagEra=='2016' or bTagEra=='UL2016') else 2.5
+        self.bTagEtaMax = 2.4 if '2016' in bTagEra else 2.5
         self.bTagWPs = bTagWPs
         self.bTagCuts = [ ]
         for bTagWP in bTagWPs:
@@ -91,8 +91,9 @@ class BTagEventWeightProducer(Module):
                 for syst in self.bTagSyst: 
                     self.systs_shape_corr.append("b_up"+syst)
                     self.systs_shape_corr.append("b_down"+syst)
-                self.systs_shape_corr.append("l_up")
-                self.systs_shape_corr.append("l_down")
+                    if syst=='' or syst=='_correlated' or syst=='_uncorrelated': # Others might be b-specific
+                        self.systs_shape_corr.append("l_up"+syst)
+                        self.systs_shape_corr.append("l_down"+syst)
                 if self.dataType=='fastsim':
                     self.systs_shape_corr.append("b_up_fastsim")
                     self.systs_shape_corr.append("b_down_fastsim")
