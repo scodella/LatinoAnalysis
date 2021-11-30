@@ -6813,7 +6813,7 @@ for treesyst in ['nom',  'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', '
     for ver_step in ['v6loose','v8']:
       for year in [ '2016', '2017', '2018' ]:
         for datatype in [ 'MC', 'FS' ]:
-          if (datatype =='FS' or year == '2016') and ver_step in 'v8': continue #REMOVE WHEN THREE YEARS AVAILABLE
+          if datatype=='FS' and ver_step in 'v8': continue # TODO: remove when UL FastSim available
 
           Steps[datatype+'Susy'+treesystname+year+ver_step] = { } 
           for key in Steps[datatype+'SusySyst'+year+ver_step]:
