@@ -4097,7 +4097,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
-                  'declare'    : '',
+                  #'declare'    : '',
                   'module'     : 'BTagEventWeightProducer(bTagAlgo="deepcsv", bTagEra="RPLME_YEAR", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="mc")',
                 },
 
@@ -4106,7 +4106,7 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
-                  'declare'    : '',
+                  #'declare'    : '',
                   'module'     : 'BTagEventWeightProducer(bTagAlgo="deepjet", bTagEra="RPLME_YEAR", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="mc")',
                 },
 
