@@ -4273,8 +4273,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.runDependentPuW' ,
-                  'declare'    : 'puWeight = lambda : runDependentPuW(cmssw="RPLME_CMSSW", PUWeight_cfg="LatinoAnalysis/NanoGardener/python/data/PUWeight_UL16_cfg.py")',
-                  'module'     : 'puWeight()',
+                  'declare'    : 'puWeightUL16 = lambda : runDependentPuW(cmssw="RPLME_CMSSW", PUWeight_cfg="LatinoAnalysis/NanoGardener/python/data/PUWeight_UL16_cfg.py")',
+                  'module'     : 'puWeightUL16()',
              } ,
 
 
