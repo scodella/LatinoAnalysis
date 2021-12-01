@@ -112,6 +112,8 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
                 if [ $# -gt 2 ]; then
                     if [[ $3 == *' '* ]]; then
                         sample=$3
+                    elif [[ $3 == 'cms_'* ]]; then
+                        queue=$3
                     else
                         queue=cms_$3
                     fi 
@@ -158,7 +160,7 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
 
                 elif [ $step == 'syst' ]; then
 
-                    for syst in Nomin JESUp JESDo ; do 
+                    for syst in Nomin JESUp JESDo JERUp JERDo ; do 
                         submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8$corr MCSusy${syst}20${year}v8
                     done
 
@@ -170,6 +172,9 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
 
                     submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJESUp20${year}v8 susyMT2${step}SJSUp
                     submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJESDo20${year}v8 susyMT2${step}SJSDo
+
+                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJERUp20${year}v8 susyMT2${step}JERUp
+                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJERDo20${year}v8 susyMT2${step}JERDo
 
                 fi
 

@@ -92,8 +92,10 @@ class TrigMaker(Module):
         self.TM_GlEff = {}
         #self.TM_trkSFMu = {}
         self.TM_runInt  = {}
+        self.firstPeriod = 999
         for RunP in self.Trigger[self.cmssw]:
            #self.TM_trkSFMu[RunP] = deepcopy(self.Trigger[self.cmssw][RunP]['trkSFMu'])
+           if RunP<self.firstPeriod: self.firstPeriod = RunP
            self.TM_trig[RunP]    = {}
            self.TM_LegEff[RunP]  = {}
            self.TM_DZEff[RunP]   = {}
@@ -162,9 +164,9 @@ class TrigMaker(Module):
          toss_a_coin = get_rndm(event_seed)
          for iPeriod in range(1,len(self.RunFrac)) :
            if toss_a_coin >= self.RunFrac[iPeriod-1] and toss_a_coin < self.RunFrac[iPeriod]:
-              return iPeriod
+              return iPeriod+self.firstPeriod-1
            if toss_a_coin == 1.0:
-              return len(self.RunFrac)-1
+              return len(self.RunFrac)-1+self.firstPeriod-1
         print "Run Period undefined"
         return -1 
 

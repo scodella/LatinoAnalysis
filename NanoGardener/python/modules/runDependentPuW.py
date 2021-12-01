@@ -39,7 +39,8 @@ class runDependentPuW(Module):
             self.fixLargeWeights = False #AR: it seems to crash with it, to be deugged
             self.autoPU=True
             ROOT.gROOT.cd()
-            self.myh=self.targeth['hist'][0].Clone("autoPU")
+            histoNameFlag = PUWeight_cfg.split('/')[-1].replace('PUWeight', '').replace('_cfg.py', '')
+            self.myh=self.targeth['hist'][0].Clone("autoPU"+histoNameFlag)
             self.myh.Reset()
         self.name = self.PUWeightCfg['name']
         self.norm = self.PUWeightCfg['norm']
@@ -78,7 +79,7 @@ class runDependentPuW(Module):
            self.myh.Reset()
            print "Computing PU profile for this file"
            ROOT.gROOT.cd()
-           inputFile.Get("Events").Project("autoPU",self.nvtxVar)#doitfrom inputFile
+           inputFile.Get("Events").Project(self.myh.GetName(),self.nvtxVar)#doitfrom inputFile
            if outputFile : 
              outputFile.cd()
              self.myh.Write()    

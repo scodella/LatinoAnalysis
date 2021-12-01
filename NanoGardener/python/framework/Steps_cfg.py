@@ -764,7 +764,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','PrefCorrUL16HIPM','btagPerJetDeepCSVWPs',
+                     'subTargets' : ['baseW','PrefCorrUL16HIPM','btagPerJetDeepCSVWPs','btagPerJetDeepJetWPs',
                                      'rochesterMC','trigMC','LeptonSFSusy','puW','puWUL16','EmbeddingVeto',
                                      'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
                 },
@@ -773,7 +773,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['baseW','PrefCorrUL16noHIPM','btagPerJetDeepCSVWPs',
+                     'subTargets' : ['baseW','PrefCorrUL16noHIPM','btagPerJetDeepCSVWPs','btagPerJetDeepJetWPs',
                                      'rochesterMC','trigMC','LeptonSFSusy','puW','puWUL16','EmbeddingVeto',
                                      'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
                 },
@@ -782,7 +782,7 @@ Steps = {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
-                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs',
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs','btagPerEventDeepJetWPs'
                                    ],
                 },
 
@@ -3995,8 +3995,17 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
-                  'declare'    : 'btagSFProducerWPs = lambda : btagSFProducer(era="RPLME_YEAR", algo="deepcsv", doFastSim=False, addCorrelations=True, selectedWPs=["L", "M", "T"])',
-                  'module'     : 'btagSFProducerWPs()',
+                  'declare'    : 'btagSFProducerDeepCSVWPs = lambda : btagSFProducer(era="RPLME_YEAR", algo="deepcsv", doFastSim=False, addCorrelations=True, selectedWPs=["L", "M", "T"])',
+                  'module'     : 'btagSFProducerDeepCSVWPs()',
+                 },
+
+  'btagPerJetDeepJetWPs': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'declare'    : 'btagSFProducerDeepJetWPs = lambda : btagSFProducer(era="RPLME_YEAR", algo="deepjet", doFastSim=False, addCorrelations=True, selectedWPs=["L", "M", "T"])',
+                  'module'     : 'btagSFProducerDeepJetWPs()',
                  },
 
   ### Old style, to be removed after transition to UL complete
@@ -4088,8 +4097,17 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
-                  'declare'    : '',
+                  #'declare'    : '',
                   'module'     : 'BTagEventWeightProducer(bTagAlgo="deepcsv", bTagEra="RPLME_YEAR", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="mc")',
+                },
+
+  'btagPerEventDeepJetWPs': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  #'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="deepjet", bTagEra="RPLME_YEAR", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="mc")',
                 },
 
   # For v6loose beckward compatibility
@@ -4255,8 +4273,8 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.runDependentPuW' ,
-                  'declare'    : 'puWeight = lambda : runDependentPuW(cmssw="RPLME_CMSSW", PUWeight_cfg="LatinoAnalysis/NanoGardener/python/data/PUWeight_UL16_cfg.py")',
-                  'module'     : 'puWeight()',
+                  'declare'    : 'puWeightUL16 = lambda : runDependentPuW(cmssw="RPLME_CMSSW", PUWeight_cfg="LatinoAnalysis/NanoGardener/python/data/PUWeight_UL16_cfg.py")',
+                  'module'     : 'puWeightUL16()',
              } ,
 
 
@@ -6795,7 +6813,7 @@ for treesyst in ['nom',  'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', '
     for ver_step in ['v6loose','v8']:
       for year in [ '2016', '2017', '2018' ]:
         for datatype in [ 'MC', 'FS' ]:
-          if (datatype =='FS' or year == '2016') and ver_step in 'v8': continue #REMOVE WHEN THREE YEARS AVAILABLE
+          if datatype=='FS' and ver_step in 'v8': continue # TODO: remove when UL FastSim available
 
           Steps[datatype+'Susy'+treesystname+year+ver_step] = { } 
           for key in Steps[datatype+'SusySyst'+year+ver_step]:
