@@ -4,8 +4,8 @@ if [[ $HOST == 'lxplus'* ]] ; then
     #baseOutputDirectory='/eos/cms/store/user/scodella/SUSY/Nano/'
     #baseOutputDirectory='/eos/cms/store/caf/user/scodella/BTV/Nano/'
     baseOutputDirectory='/eos/cms/store/group/phys_susy/Chargino/Nano/'
-    #baseInputDirectory=$baseOutputDirectory
-    baseInputDirectory='/eos/cms/store/caf/user/scodella/BTV/Nano/'
+    baseInputDirectory=$baseOutputDirectory
+    #baseInputDirectory='/eos/cms/store/caf/user/scodella/BTV/Nano/'
     #baseInputDirectory='/eos/user/s/scodella/SUSY/Nano/'
 else
     baseInputDirectory='/gpfs/projects/tier3data/LatinosSkims/RunII/Nano/'
