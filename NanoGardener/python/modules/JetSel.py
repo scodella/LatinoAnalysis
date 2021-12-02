@@ -7,7 +7,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from LatinoAnalysis.NanoGardener.data.common_cfg import Type_dict
 
 class JetSel(Module):
-    def __init__(self,jetid=2,pujetid='none',minpt=15.0,maxeta=5.2,jetColl="CleanJet"):
+    def __init__(self,jetid=2,pujetid='none',minpt=15.0,maxeta=5.2,jetColl="CleanJet",dataEra='whenever'):
         # Jet ID flags bit1 is loose (always false in 2017 since it does not exist), bit2 is tight, bit3 is tightLepVeto
         # jetId = userInt('tightId')*2+4*userInt('tightIdLepVeto')
         # >=2 -> ask tightId
@@ -23,6 +23,7 @@ class JetSel(Module):
         self.minpt   = minpt
         self.maxeta  = maxeta 
         self.jetColl = jetColl
+        self.dataEra = dataEra
     def beginJob(self):
         pass
     def endJob(self):
@@ -60,9 +61,14 @@ class JetSel(Module):
           else                       : 
              jetId = jet_coll[iJet]['jetId']
              puId  = jet_coll[iJet]['puId']
-          pu_loose  = bool(puId & (1 << 2))
-          pu_medium = bool(puId & (1 << 1))
-          pu_tight  = bool(puId & (1 << 0))
+          if 'UL2016' in self.dataEra:
+              pu_loose  = bool(puId & (1 << 0))
+              pu_medium = bool(puId & (1 << 1))
+              pu_tight  = bool(puId & (1 << 2))
+          else:
+              pu_loose  = bool(puId & (1 << 2))
+              pu_medium = bool(puId & (1 << 1))
+              pu_tight  = bool(puId & (1 << 0))
 
           goodJet = True
           if pt         <  self.minpt   : goodJet = False    
