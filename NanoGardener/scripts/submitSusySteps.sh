@@ -1,6 +1,16 @@
 #!/bin/bash
 
-baseDirectory='/gpfs/projects/tier3data/LatinosSkims/RunII/Nano/'
+if [[ $HOST == 'lxplus'* ]] ; then
+    #baseOutputDirectory='/eos/cms/store/user/scodella/SUSY/Nano/'
+    #baseOutputDirectory='/eos/cms/store/caf/user/scodella/BTV/Nano/'
+    baseOutputDirectory='/eos/cms/store/group/phys_susy/Chargino/Nano/'
+    #baseInputDirectory=$baseOutputDirectory
+    baseInputDirectory='/eos/cms/store/caf/user/scodella/BTV/Nano/'
+    #baseInputDirectory='/eos/user/s/scodella/SUSY/Nano/'
+else
+    baseInputDirectory='/gpfs/projects/tier3data/LatinosSkims/RunII/Nano/'
+    baseOutputDirectory=$baseInputDirectory
+fi
 
 prods=$1
 steps=$2
@@ -9,7 +19,7 @@ isAllDone () {
 
     datasetsToExclude=$sample
  
-    inputDirectory=$baseDirectory/$2/$3/
+    inputDirectory=$baseInputDirectory/$2/$3/
     if [ -d "$inputDirectory" ]; then
         inputFiles=$(ls $inputDirectory/*root | grep -c root)
         if [ "$inputFiles" == "0" ] ; then
@@ -56,7 +66,7 @@ isAllDone () {
         fi
         return $noAvailableDatasets
     else
-        outputDirectory=$baseDirectory/$2/${3}__${4}/
+        outputDirectory=$baseOutputDirectory/$2/${3}__${4}/
         if [ -d "$outputDirectory" ]; then
             outputFiles=$(ls $outputDirectory/*root | grep -c root)
             if [[ $inputFiles -eq $outputFiles ]] ; then
@@ -101,21 +111,25 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
             fi
             if [[ $steps == 'all' || $steps == $stepType || $steps == $step ]] ; then
 
-                queue=cms_med
-                if [[ $step == 'lep' || $step == 'sel' ]]; then
-                    queue=cms_main
-                elif [[ $step == 'hadd' || $step == 'mt2' || $step == 'reco' || $step == 'ctrl' ]]; then
-                    queue=cms_high
+                if [[ $HOST == 'lxplus'* ]] ; then
+                    queue=tomorrow
+                else
+                    queue=cms_med
+                    if [[ $step == 'lep' || $step == 'sel' ]]; then
+                        queue=cms_main
+                    elif [[ $step == 'hadd' || $step == 'mt2' || $step == 'reco' || $step == 'ctrl' ]]; then
+                        queue=cms_high
+                    fi
                 fi
 
                 sample=''
                 if [ $# -gt 2 ]; then
                     if [[ $3 == *' '* ]]; then
                         sample=$3
-                    elif [[ $3 == 'cms_'* ]]; then
-                        queue=$3
-                    else
+                    elif [[ $3 == 'main' || $3 == 'med' || $3 == 'high' ]]; then
                         queue=cms_$3
+                    else
+                        queue=$3
                     fi 
                     if [ $# -gt 3 ]; then
                         sample=$4
