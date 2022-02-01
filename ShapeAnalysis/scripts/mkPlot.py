@@ -201,15 +201,15 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
 
-    variables = {}
-    if os.path.exists(opt.variablesFile) :
-      handle = open(opt.variablesFile,'r')
-      exec(handle)
-      handle.close()
-   
     cuts = {}
     if os.path.exists(opt.cutsFile) :
       handle = open(opt.cutsFile,'r')
+      exec(handle)
+      handle.close()
+
+    variables = {}
+    if os.path.exists(opt.variablesFile) :
+      handle = open(opt.variablesFile,'r')
       exec(handle)
       handle.close()
 
