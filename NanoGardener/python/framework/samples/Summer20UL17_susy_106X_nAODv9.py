@@ -72,7 +72,7 @@ Samples['WWTo2L2Nu'] 	 = {'nanoAOD': '/WWTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/Ru
 Samples['WWW'] 	 = {'nanoAOD': '/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM'}
 Samples['WWZ'] 	 = {'nanoAOD': '/WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM'}
 
-#Samples['WZTo2L2Q'] 	 = {'nanoAOD': ''}
+Samples['WZTo2L2Q'] 	 = {'nanoAOD': '/WZTo2Q2L_mllmin4p0_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v2/NANOAODSIM'}
 Samples['WZTo3LNu'] 	 = {'nanoAOD': '/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v2/NANOAODSIM'}
 Samples['WZZ'] 	 = {'nanoAOD': '/WZZ_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM'}
 
@@ -94,3 +94,13 @@ Samples['ggZZ4t'] 	 = {'nanoAOD': '/GluGluToContinToZZTo4tau_TuneCP5_13TeV-mcfm7
 #Samples['tZq_ll'] 	 = {'nanoAOD': '/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM'}
 
 #Samples['ttHToNonbb_M125'] 	 = {'nanoAOD': '/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v2/NANOAODSIM'}
+
+
+### SUSY signal samples
+
+Samples['T2tt_mStop-525_mLSP-350']     = {'nanoAOD' : '/SMS-T2tt_mStop-525_mLSP-350_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v2/NANOAODSIM'}
+Samples['T2tt_mStop-525_mLSP-438']     = {'nanoAOD' : '/SMS-T2tt_mStop-525_mLSP-438_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v2/NANOAODSIM'}
+Samples['TChipmSlepSnu_mC-1150_mX-1' ] = {'nanoAOD' : '/SMS-TChipmSlepSnu_mC1_1150_mN1_1_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM'}
+Samples['TChipmSlepSnu_mC-900_mX-475'] = {'nanoAOD' : '/SMS-TChipmSlepSnu_mC1_900_mN1_475_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v2/NANOAODSIM'}
+
+

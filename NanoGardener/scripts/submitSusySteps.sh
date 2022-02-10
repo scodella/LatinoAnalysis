@@ -15,6 +15,8 @@ fi
 prods=$1
 steps=$2
 
+sigSamples='T2tt_mStop-525_mLSP-350,T2tt_mStop-525_mLSP-438,TChipmSlepSnu_mC-1150_mX-1,TChipmSlepSnu_mC-900_mX-475'
+
 isAllDone () {
 
     datasetsToExclude=$sample
@@ -29,7 +31,7 @@ isAllDone () {
         return 1
     fi
 
-    if [[ $1 == 'hadd' || $1 == 'corr' ]] ; then
+    if [[ $1 == 'hadd' || $1 == 'corr' || $1 == 'swgt' ]] ; then
         # This is treaky
         if [[ "$datasetsToExclude" == *"-T "* ]] ; then
             echo Will not proceed with submission for $2 step $4: option -T not supported by this script for the required step
@@ -83,8 +85,15 @@ isAllDone () {
 
 submitJobs () {
 
-    if [[ $1 == 'lep' || $1 == 'sel' ]] ; then
-        ./mkPostProc.py -p $2 -s $3 -b -Q $queue $sample
+    if [[ $1 == 'lep' || $1 == 'sel' || $1 == 'sgen' ]] ; then
+        if [ $1 == 'lep' ]; then
+            samples=$sample
+        elif [ $1 == 'sel' ]; then
+            samples=" -E "$sigSamples
+        elif [ $1 == 'sgen' ]; then
+            samples=" -T "$sigSamples
+        fi
+        ./mkPostProc.py -p $2 -s $3 -b -Q $queue $samples
     else
         isAllDone $step $2 $3 $4
         allDone=$?
@@ -102,12 +111,18 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
        
         dataSteps=(lep hadd mt2)
         mcSteps=(sel corr syst reco ctrl)
-        for step in ${dataSteps[@]} ${mcSteps[@]}; do
+        sigSteps=(sgen swgt ssel scorr ssyst sreco sctrl)
+        for step in ${dataSteps[@]} ${mcSteps[@]} ${sigSteps[@]} ; do
             stepType=''
+            sigPreDir=''
             if echo ${dataSteps[@]} | grep -w -q $step ; then
                 stepType=data
             elif echo ${mcSteps[@]} | grep -w -q $step ; then
                 stepType=mc
+            elif echo ${sigSteps[@]} | grep -w -q $step ; then
+                stepType=sig
+                sigPreStep='susyGen__susyW'
+                sigPreDir=${sigPreStep}__
             fi
             if [[ $steps == 'all' || $steps == $stepType || $steps == $step ]] ; then
 
@@ -115,9 +130,9 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
                     queue=tomorrow
                 else
                     queue=cms_med
-                    if [[ $step == 'lep' || $step == 'sel' ]]; then
+                    if [[ $step == 'lep' || $step == 'sel' || $step == 'ssel' || $step == 'swgt' ]]; then
                         queue=cms_main
-                    elif [[ $step == 'hadd' || $step == 'mt2' || $step == 'reco' || $step == 'ctrl' ]]; then
+                    elif [[ $step == 'hadd' || $step == 'mt2' || $step == *'reco' || $step == *'ctrl' ]]; then
                         queue=cms_high
                     fi
                 fi
@@ -168,27 +183,46 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
 
                     submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8
 
-                elif [ $step == 'corr' ]; then
+                elif [ $step == 'sgen' ]; then
 
-                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8 MCSusyCorr20${year}v8$corr
+                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 susyGen
 
-                elif [ $step == 'syst' ]; then
+                elif [ $step == 'swgt' ]; then
+
+                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 susyGen susyW
+
+                elif [ $step == 'ssel' ]; then
+
+                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 $sigPreStep MCSusy20${year}v8
+
+                elif [[ $step == *'corr' ]]; then
+
+                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 ${sigPreDir}MCSusy20${year}v8 MCSusyCorr20${year}v8$corr
+
+                elif [[ $step == *'syst' ]]; then
 
                     for syst in Nomin JESUp JESDo JERUp JERDo ; do 
-                        submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8$corr MCSusy${syst}20${year}v8
+                        submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 ${sigPreDir}MCSusy20${year}v8__MCSusyCorr20${year}v8$corr MCSusy${syst}20${year}v8
                     done
 
-                elif [[ $step == 'reco' ]] || [[ $step == 'ctrl' ]] ; then
+                elif [[ $step == *'reco' ]] || [[ $step == *'ctrl' ]] ; then
+
+                    sstep=$step
+                    if [[ $step == 'sreco' ]] ; then
+                        sstep=reco
+                    elif [[ $step == 'sctrl' ]] ; then
+                        sstep=ctrl
+                    fi
 
                     for met in Nomin Smear SMTUp SMTDo ; do
-                        submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyNomin20${year}v8 susyMT2${step}$met
+                        submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 ${sigPreDir}MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyNomin20${year}v8 susyMT2${sstep}$met
                     done
 
-                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJESUp20${year}v8 susyMT2${step}SJSUp
-                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJESDo20${year}v8 susyMT2${step}SJSDo
+                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 ${sigPreDir}MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJESUp20${year}v8 susyMT2${sstep}SJSUp
+                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 ${sigPreDir}MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJESDo20${year}v8 susyMT2${sstep}SJSDo
 
-                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJERUp20${year}v8 susyMT2${step}JERUp
-                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJERDo20${year}v8 susyMT2${step}JERDo
+                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 ${sigPreDir}MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJERUp20${year}v8 susyMT2${sstep}JERUp
+                    submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 ${sigPreDir}MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJERDo20${year}v8 susyMT2${sstep}JERDo
 
                 fi
 

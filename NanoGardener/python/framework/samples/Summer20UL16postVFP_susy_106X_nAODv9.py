@@ -93,3 +93,13 @@ Samples['ggZZ4t'] 	 = {'nanoAOD': '/GluGluToContinToZZTo4tau_TuneCP5_13TeV-mcfm7
 ##Samples['tZq_ll'] 	 = {'nanoAOD': ''}
 
 #Samples['ttHToNonbb_M125'] 	 = {'nanoAOD': '/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
+
+
+### SUSY signal samples
+
+Samples['T2tt_mStop-525_mLSP-350']     = {'nanoAOD' : '/SMS-T2tt_mStop-525_mLSP-350_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM' }
+Samples['T2tt_mStop-525_mLSP-438']     = {'nanoAOD' : '/SMS-T2tt_mStop-525_mLSP-438_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM' }
+Samples['TChipmSlepSnu_mC-1150_mX-1' ] = {'nanoAOD' : '/SMS-TChipmSlepSnu_mC1_1150_mN1_1_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
+Samples['TChipmSlepSnu_mC-900_mX-475'] = {'nanoAOD' : '/SMS-TChipmSlepSnu_mC1_900_mN1_475_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
+
+
