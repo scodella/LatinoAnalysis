@@ -111,7 +111,7 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
        
         dataSteps=(lep hadd mt2)
         mcSteps=(sel corr syst reco ctrl)
-        sigSteps=(sgen swgt ssel scorr ssyst sreco sctrl)
+        sigSteps=(sgen swgt ssel scorr ssyst sreco)
         for step in ${dataSteps[@]} ${mcSteps[@]} ${sigSteps[@]} ; do
             stepType=''
             sigPreDir=''
@@ -205,13 +205,11 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
                         submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 ${sigPreDir}MCSusy20${year}v8__MCSusyCorr20${year}v8$corr MCSusy${syst}20${year}v8
                     done
 
-                elif [[ $step == *'reco' ]] || [[ $step == *'ctrl' ]] ; then
+                elif [[ $step == *'reco' ]] || [[ $step == 'ctrl' ]] ; then
 
                     sstep=$step
                     if [[ $step == 'sreco' ]] ; then
                         sstep=reco
-                    elif [[ $step == 'sctrl' ]] ; then
-                        sstep=ctrl
                     fi
 
                     for met in Nomin Smear SMTUp SMTDo ; do
