@@ -145,6 +145,9 @@ class PlotFactory:
             if 'cuts' in variable and cutName not in variable['cuts']:
               continue
 
+            if self._plotNormalizedCRratio and 'CRbins' not in variable.keys():
+              continue
+
             if type(fileIn) is not dict and not fileIn.GetDirectory(cutName+"/"+variableName):
               continue
               
