@@ -1,0 +1,175 @@
+#!/usr/bin/env python
+import os
+import sys
+import ROOT
+import math
+import json
+import csv
+
+args=sys.argv
+
+action   = args[1].lower()
+years    = args[2]
+years    = years.replace('Run2', 'UL2016-UL2017-UL2018')
+periods  = args[3] if len(sys.argv)>=4 else 'All'
+hltPaths = args[4] if len(sys.argv)>=5 else ''
+redoPS   = int(args[5]) if len(sys.argv)>=6 else 1
+
+minBiasXsec = { 'Run2' : { 'pileup' : '69200', 'pileup_minus' : '66017', 'pileup_plus' : '72383' }
+               }
+
+DirectoryDQM = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'
+
+yearsInfos  = { 'UL2016' : { 'Run' : 'Run2', 'runs' : [ 272007, 284044 ], 'numPileupBins' : '100',
+                             'jsonFile'    : DirectoryDQM+'Collisions16/13TeV/Legacy_2016/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt', 
+                             'pileupFile'  : DirectoryDQM+'Collisions16/13TeV/PileUp/pileup_latest.txt',
+                             'normtagFile' : '/afs/cern.ch/user/l/lumipro/public/Normtags/normtag_BRIL.json' },
+                'UL2017' : { 'Run' : 'Run2', 'runs' : [ 297020, 306462 ], 'numPileupBins' : '100',
+                             'jsonFile'    : DirectoryDQM+'Collisions17/13TeV/Legacy_2017/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt',
+                             'pileupFile'  : DirectoryDQM+'Collisions17/13TeV/PileUp/pileup_latest.txt',
+                             'normtagFile' : '/afs/cern.ch/user/l/lumipro/public/Normtags/normtag_BRIL.json' },
+                'UL2018' : { 'Run' : 'Run2', 'runs' : [ 315252 , 325175 ], 'numPileupBins' : '100',
+                             'jsonFile'    : DirectoryDQM+'Collisions18/13TeV/Legacy_2018/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt',
+                             'pileupFile'  : DirectoryDQM+'Collisions18/13TeV/PileUp/pileup_latest.txt',
+                             'normtagFile' : '/afs/cern.ch/user/l/lumipro/public/Normtags/normtag_BRIL.json' },
+               }
+
+runPeriods = { '2016' : { '2016B'   : [ 272007,   275376 ],
+                          '2016C'   : [ 275657,   276283 ],
+	                  '2016D'   : [ 276315,   276811 ],
+                          '2016E'   : [ 276831,	  277420 ],
+                          '2016F'   : [ 277772,   278808 ],
+                          '2016G'   : [ 278820,   280385 ],
+                          '2016H'   : [ 280919,	  284044 ],
+                         } 
+              }
+runPeriods['UL2016'] = runPeriods['2016']
+
+brilcalcCommand  = 'export LD_LIBRARY_PATH=/afs/cern.ch/cms/lumi/brilconda-1.1.7/root/lib ; '
+brilcalcCommand += 'export PYTHONPATH=/afs/cern.ch/cms/lumi/brilconda-1.1.7/root/lib ; '
+brilcalcCommand += 'export PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH ; '
+brilcalcCommand += 'export ROOTSYS=/afs/cern.ch/cms/lumi/brilconda-1.1.7/root ; '
+brilcalcCommand += 'export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.1.7/bin:$PATH ; '
+brilcalcCommand += 'pip uninstall brilws -y ; '
+brilcalcCommand += 'pip install --install-option="--prefix=$HOME/.local" brilws ; '
+
+if 'prescale' in action or 'ps' in action:
+    action = 'prescales'
+    if redoPS:
+        if hltPaths=='':
+            print 'Warning: HLT paths need to be specified with prescales action'
+            exit()
+        else:
+            for hltPath in hltPaths.split('-'):
+                brilcalcCommand += 'brilcalc trg --prescale --hltpath "'+hltPath+'_v*" -o ./Prescales/Prescales_'+hltPath+'.txt ; ' 
+            os.system('mkdir -p ./Prescales ; '+brilcalcCommand)
+
+for year in years.split('-'): 
+
+    yearInfos = yearsInfos[year]
+    yearPeriods = { }
+
+    if periods=='All': yearPeriods[year] = yearInfos['runs']
+    else:
+        for period in periods.split('-'):
+            if 'to' not in period:
+                if year in runPeriods:
+                    if period=='Split': 
+                        yearPeriods = runPeriods[year]
+                    else:
+                        firstRun, lastRun = 99999999999999, 0
+                        for prd in runPeriods[year]:
+                            if prd.replace(year, '') in period:
+                                firstRun = min(firstRun, runPeriods[year][prd][0])
+                                lastRun  = max(lastRun,  runPeriods[year][prd][1])
+                        yearPeriods[period] = [ firstRun, lastRun ]
+                else: print 'Warning:', year, 'not in runPeriods'
+            elif ':' in period:
+                periodname = period.split(':')[0]
+                periodrange = period.split(':')[1]
+                yearPeriods[periodname] = [ int(periodrange.split('to')[0]), int(periodrange.split('to')[1]) ]
+            else: print 'Warning:', period, 'has not a good period structure'
+
+    if len(yearPeriods.keys())==0: exit()
+
+    for period in yearPeriods:
+
+        if action=='prescales':
+
+            periodPrescales = { }
+
+            for hltPath in hltPaths.split('-'):
+
+                periodPrescales[hltPath] = { } 
+ 
+                with open('./Prescales/Prescales_'+hltPath+'.txt', 'r') as file:
+                    csvreader = csv.reader(file)
+                    for row in csvreader:
+                        if hltPath in row[4]:
+
+                            run, lumiblock, prescale = row[0], row[1], row[3]
+
+                            if int(run)>=yearPeriods[period][0] and int(run)<=yearPeriods[period][1]:
+
+                                if run not in periodPrescales[hltPath]: 
+                                    periodPrescales[hltPath][run] = { }
+
+                                periodPrescales[hltPath][run][lumiblock] = { }
+                                periodPrescales[hltPath][run][lumiblock]['prescale'] = prescale
+
+                for run in periodPrescales[hltPath]:
+                    for lumiblock in periodPrescales[hltPath][run]:
+                        lastblock = 99999999999999999
+                        for otherblock in periodPrescales[hltPath][run]:
+                            if otherblock!=lumiblock:
+                                if int(otherblock)>int(lumiblock) and int(otherblock)<=lastblock:
+                                    lastblock = int(otherblock)-1
+                        periodPrescales[hltPath][run][lumiblock]['lastblock'] = str(lastblock)
+
+                if len(periodPrescales[hltPath].keys())==0:
+                    del periodPrescales[hltPath]
+
+            with open('./Prescales/TriggerPrescales_'+period+'.py', 'w') as file:
+                file.write('TriggerPrescales = { }\n\n')
+                for hltPath in periodPrescales:
+                    file.write('TriggerPrescales[\''+hltPath+'\'] = '+json.dumps(periodPrescales[hltPath])+'\n\n')
+ 
+        else:
+
+            selectedGoodRuns = { }
+    
+            goodRuns = json.load(open(yearInfos['jsonFile'], 'r'))
+
+            for run in goodRuns:
+                if int(run)>=yearPeriods[period][0] and int(run)<=yearPeriods[period][1]:
+                    selectedGoodRuns[run] = goodRuns[run]
+
+            json.dump(selectedGoodRuns, open('temporary_'+period+'.json', 'w'))
+
+            if 'lumi' in action:
+
+                brilcalcCommand += 'mkdir -p ./Luminosity ; '
+     
+                brilcalcBaseCommand = 'brilcalc lumi -b "STABLE BEAMS" -i temporary_'+period+'.json --normtag '+yearInfos['normtagFile']+' -u /pb'
+
+                for hltPath in hltPaths.split('-'):
+
+                    hltOption = '' if hltPath=='' else ' --hltpath "'+hltPath+'_v*" '
+                    brilcalcCommand += brilcalcBaseCommand+hltOption+' > ./Luminosity/Luminosity_'+hltPath+'_'+period+'.txt ; '
+
+            elif 'pileup' in action.lower() or 'pu' in action.lower():
+
+                for xSec in minBiasXsec[yearInfos['Run']]:
+
+                    pileupCalcCommand = 'pileupCalc.py -i temporary_'+period+'.json --inputLumiJSON ' + yearInfos['pileupFile'] + ' --calcMode true --minBiasXsec ' + minBiasXsec[yearInfos['Run']][xSec] + ' --maxPileupBin ' + yearInfos['numPileupBins'] + ' --numPileupBins ' + yearInfos['numPileupBins'] + ' --pileupHistName ' + xSec + ' ' + period+'_'+xSec+'.root'
+ 
+                    os.system(pileupCalcCommand)
+
+                os.system('mkdir -p ./Pileup ; hadd -f -k ./Pileup/'+period+'.root'+' '+period+'_*.root; rm '+period+'_*.root')
+ 
+if action!='prescales':
+    
+    if 'lumi' in action: os.system(brilcalcCommand)
+    os.system('rm temporary_*.json')
+
+
