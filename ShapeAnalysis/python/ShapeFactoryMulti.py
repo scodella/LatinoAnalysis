@@ -482,6 +482,13 @@ class ShapeFactory:
               else:
                 reweight = None
 
+              if 'weight' in cut: ### SUSY
+                if reweight is None:
+                  reweight = ShapeFactory._make_reweight(cut['weight'])
+                else:
+                  reweightCut = ShapeFactory._make_reweight(cut['weight'])
+                  reweight = ROOT.multidraw.ReweightSource(reweight, reweightCut)
+
               if 'tree' in variable: # variable is actually a tree definition
                 def setup_filler(drawer, reweight, variation=''):
                   if variation:

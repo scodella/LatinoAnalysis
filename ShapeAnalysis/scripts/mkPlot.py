@@ -46,6 +46,7 @@ if __name__ == '__main__':
     parser.add_option('--outputDirPlots' , dest='outputDirPlots' , help='output directory'                           , default='./')
     parser.add_option('--inputFile'      , dest='inputFile'      , help='input file with histograms'                 , default='input.root')
     parser.add_option('--tag'            , dest='tag'            , help='Tag used for the shape file name. Used if inputFile is a directory', default=None)
+    parser.add_option('--sigset'         , dest='sigset'         , help='Subset of signal to plot'                   , default='SM')
     parser.add_option('--nuisancesFile'  , dest='nuisancesFile'  , help='file with nuisances configurations'         , default=None )
 
     parser.add_option('--onlyVariable'   , dest='onlyVariable'   , help='draw only one variable (may be needed in post-fit plots)'          , default=None)
