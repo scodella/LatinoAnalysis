@@ -1,7 +1,7 @@
 #!/bin/sh -x
-git checkout master
+git checkout base
 git fetch
 #git pull
-git checkout base
-git merge origin/master
+git checkout BTagPerf
+git merge origin/base
 
