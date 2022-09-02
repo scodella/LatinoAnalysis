@@ -687,5 +687,44 @@ Productions = {
                        'year'    : '2018' ,
                       },
 
+#################################### nAODv9 BTagPerf ##############################################
+
+ 'Summer20UL17_106X_nAODv9_Full2017v8' : {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL17_btv_106X_nAODv9.py',
+                       'cmssw'   : 'Full2017v8',
+                       'year'    : 'UL2017' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+
+ 'Run2017_106X_nAODv9_Full2017v8': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2017_btv_106X_nAODv9.py' ,
+                       'cmssw'   : 'Full2017v8',
+                       'year'    : 'UL2017' ,
+                   },
+
+ 'Summer20UL18_106X_nAODv9_Full2018v8' : {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL18_btv_106X_nAODv9.py',
+                       'cmssw'   : 'Full2018v8',
+                       'year'    : 'UL2018' ,
+ #                      'JESGT'   : 'Autumn18_V19_MC',
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+
+ 'Run2018_106X_nAODv9_Full2018v8': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2018_btv_106X_nAODv9.py' ,
+                       'cmssw'   : 'Full2018v8',
+                       'year'    : 'UL2018' ,
+                   },
+
+
 }
+
 

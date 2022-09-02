@@ -2782,6 +2782,55 @@ Steps = {
                  'module'     : 'prefCorr2017()',
                },
 
+  # BTagPerf
+  'ptrelObj' : { 'isChain'    : False ,
+                 'do4MC'      : True ,
+                 'do4Data'    : True  ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.PtRelObjectsMaker' ,
+                 'module'     : 'PtRelObjectsMaker()',
+               },
+
+  'JMEUncertMC' : {
+                   'isChain'    : False ,
+                   'do4MC'      : True ,
+                   'do4Data'    : False ,
+                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                   'declare'    : 'jetmetCorrectorMC = createJMECorrector(isMC=True, dataYear="RPLME_YEAR", jesUncert="Total", isFastSim=False)',
+                   'module'     : 'jetmetCorrectorMC()',
+                 },
+
+  'btvperfMC' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"(nMuon>0)"' ,
+                  'subTargets' : ['ptrelObj', 'JMEUncertMC' ],
+                 },
+
+  'btvperfWeights' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'subTargets' : ['baseW', 'RunPeriodMC', 'puW' ],
+                 },
+
+  'trigPrescales' : { 
+                 'isChain'    : False ,
+                 'do4MC'      : False ,
+                 'do4Data'    : True  ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.TriggerPrescalesMaker' ,
+                 'declare'    : 'trigPrescales = lambda : TriggerPrescalesMaker(TriggerPrescalesPath="LatinoAnalysis/NanoGardener/python/data/trigger/TriggerPrescales_RPLME_YEAR.py")',
+                 'module'     : 'trigPrescales()',
+               },
+
+  'btvperfData' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : False  ,
+                  'do4Data'    : True ,
+                  'selection'  : '"(nMuon>0)"' ,
+                  'subTargets' : ['ptrelObj', 'trigPrescales' ],
+                 },
+
   'trigData' : { 'isChain'    : False ,
                  'do4MC'      : False ,
                  'do4Data'    : True  ,
