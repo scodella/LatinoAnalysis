@@ -352,6 +352,8 @@ if __name__ == '__main__':
     parser.add_option('--structureFile'         , dest='structureFile'         , help='file with datacard configurations'          , default=None )
     parser.add_option('--getSignalFromPrefit'   , dest='getSignalFromPrefit'   , help='get the signal shape and normalization from pre-fit. Needed for exclusion analyses. Set to 1 to trigger this.', default=0   ,    type=int)
     parser.add_option('--MCStatFromInput'       , dest='MCStatFromInput'       , help='add prefit MC stat. unc. to posterior total unc. (for bystander fits)', action="store_true", default=False)
+    parser.add_option('--tag'                   , dest='tag'                   , help='Tag used for the shape file name'           , default=None)
+    parser.add_option('--sigset'                , dest='sigset'                , help='Signal samples [SM]'                        , default='SM')    
           
     # read default parsing options as well
     hwwtools.addOptions(parser)
