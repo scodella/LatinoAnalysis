@@ -170,6 +170,13 @@ class DatacardFactory:
                 #
                 if 'removeStatUnc' in structureFile[sampleName] and structureFile[sampleName]['removeStatUnc']:
                   self._removeStatUncertainty (histo)
+
+                if 'scaleStatUnc' in structureFile[sampleName] and structureFile[sampleName]['scaleStatUnc']>0. and structureFile[sampleName]['scaleStatUnc']!=1.:
+                  if histo.GetEntries()>0.:
+                    for iBin in range(1,histo.GetNbinsX()+1):
+                      if histo.GetBinError(iBin)>0.:
+                        scaledError = histo.GetBinError(iBin)/math.sqrt(structureFile[sampleName]['scaleStatUnc'])
+                        histo.SetBinError(iBin, scaledError)
  
                 self._outFile.cd()
                 histo.Write()
@@ -624,7 +631,8 @@ class DatacardFactory:
     def _getHisto(self, cutName, variableName, sampleName, suffix = None):
         shapeName = '%s/%s/histo_%s' % (cutName, variableName, sampleName)
         if suffix:
-            shapeName += suffix
+            if 'WWshape' not in suffix and 'WZbin' not in suffix: # Dirty patch for SUSY
+                shapeName += suffix
 
         if type(self._fileIn) is dict:
             # by-sample ROOT file
@@ -635,7 +643,48 @@ class DatacardFactory:
 
         if not histo:
             print shapeName, 'not found'
-      
+     
+        ### Some dirty patch for SUSY
+
+        # WZ Figure 14 AN-19-256_v6
+        if '_WZbin' in opt.tag and 'Merge' not in opt.tag:
+            if sampleName=='WZ': 
+                applyWZscale = True
+                if suffix:
+                    if 'WZbin' in suffix and 'Up' in suffix:
+                        applyWZscale = False
+                if applyWZscale:
+                    binContent = histo.GetBinContent(9)
+                    binError   = histo.GetBinError(9)
+                    histo.SetBinContent(9, binContent*0.25)
+                    histo.SetBinError(9, binError*0.25)
+                if 'WZbin' in suffix:
+                    histo.SetName(shapeName+suffix)
+                    histo.SetTitle(shapeName+suffix)
+                 
+        # WW Figure 9 AN-19-256_v6
+        if '_WWshape' in opt.tag:
+            if sampleName=='WW' or sampleName=='STtW' or sampleName=='ttbar':
+                if suffix:
+                    if 'WWshape' in suffix and 'Up' in suffix:
+                        binContent = histo.GetBinContent(6)
+                        binError   = histo.GetBinError(6)
+                        histo.SetBinContent(6, binContent*1.2)
+                        histo.SetBinError(6, binError*1.2)
+                        binContent = histo.GetBinContent(7)
+                        binError   = histo.GetBinError(7)
+                        histo.SetBinContent(7, binContent*1.4)
+                        histo.SetBinError(7, binError*1.4)
+                        for ibin in range(8, 10):
+                            if histo.GetNbinsX()>=ibin:
+                                binContent = histo.GetBinContent(ibin)
+                                binError   = histo.GetBinError(ibin)
+                                histo.SetBinContent(ibin, binContent*1.5)
+                                histo.SetBinError(ibin, binError*1.5)
+                    if 'WWshape' in suffix:
+                        histo.SetName(shapeName+suffix)
+                        histo.SetTitle(shapeName+suffix)
+
         return histo
 
 
