@@ -631,7 +631,7 @@ class DatacardFactory:
     def _getHisto(self, cutName, variableName, sampleName, suffix = None):
         shapeName = '%s/%s/histo_%s' % (cutName, variableName, sampleName)
         if suffix:
-            if 'WWshape' not in suffix and 'WZbin' not in suffix: # Dirty patch for SUSY
+            if 'WWshape' not in suffix and 'WZbin' not in suffix and 'WWShape' not in suffix: # Dirty patch for SUSY
                 shapeName += suffix
 
         if type(self._fileIn) is dict:
@@ -682,6 +682,34 @@ class DatacardFactory:
                                 histo.SetBinContent(ibin, binContent*1.5)
                                 histo.SetBinError(ibin, binError*1.5)
                     if 'WWshape' in suffix:
+                        histo.SetName(shapeName+suffix)
+                        histo.SetTitle(shapeName+suffix)
+
+        if '_WWShape' in opt.tag:
+            if sampleName=='WW' or sampleName=='STtW' or sampleName=='ttbar':
+                if suffix:
+                    if 'WWShape' in suffix and 'Up' in suffix:
+                        if 'Bin6' in suffix:
+                            binContent = histo.GetBinContent(6)
+                            binError   = histo.GetBinError(6)
+                            histo.SetBinContent(6, binContent*1.2)
+                            histo.SetBinError(6, binError*1.2)
+                        elif 'Bin7' in suffix:
+                            binContent = histo.GetBinContent(7)
+                            binError   = histo.GetBinError(7)
+                            histo.SetBinContent(7, binContent*1.4)
+                            histo.SetBinError(7, binError*1.4)
+                        elif 'Bin8' in suffix:
+                            binContent = histo.GetBinContent(8)
+                            binError   = histo.GetBinError(8)
+                            histo.SetBinContent(8, binContent*1.5)
+                            histo.SetBinError(8, binError*1.5)
+                        elif 'Bin9' in suffix:
+                            binContent = histo.GetBinContent(9)
+                            binError   = histo.GetBinError(9)
+                            histo.SetBinContent(9, binContent*1.5)
+                            histo.SetBinError(9, binError*1.5)
+                    if 'WWShape' in suffix:
                         histo.SetName(shapeName+suffix)
                         histo.SetTitle(shapeName+suffix)
 
