@@ -631,7 +631,7 @@ class DatacardFactory:
     def _getHisto(self, cutName, variableName, sampleName, suffix = None):
         shapeName = '%s/%s/histo_%s' % (cutName, variableName, sampleName)
         if suffix:
-            if 'WWshape' not in suffix and 'WZbin' not in suffix and 'WWShape' not in suffix: # Dirty patch for SUSY
+            if 'WWshape' not in suffix and 'WZbin' not in suffix: # Dirty patch for SUSY
                 shapeName += suffix
 
         if type(self._fileIn) is dict:
@@ -658,9 +658,22 @@ class DatacardFactory:
                     binError   = histo.GetBinError(9)
                     histo.SetBinContent(9, binContent*0.25)
                     histo.SetBinError(9, binError*0.25)
-                if 'WZbin' in suffix:
-                    histo.SetName(shapeName+suffix)
-                    histo.SetTitle(shapeName+suffix)
+                if suffix:
+                    if 'WZbin' in suffix:
+                        histo.SetName(shapeName+suffix)
+                        histo.SetTitle(shapeName+suffix)
+
+        if '_WZBin' in opt.tag and 'Merge' not in opt.tag:
+            if sampleName=='WZ':
+                if suffix:
+                    if 'WZbin' in suffix and 'Up' in suffix:
+                        binContent = histo.GetBinContent(9)
+                        binError   = histo.GetBinError(9)
+                        histo.SetBinContent(9, binContent*0.25)
+                        histo.SetBinError(9, binError*0.25)
+                    if 'WZbin' in suffix:
+                        histo.SetName(shapeName+suffix)
+                        histo.SetTitle(shapeName+suffix)
                  
         # WW Figure 9 AN-19-256_v6
         if '_WWshape' in opt.tag:
@@ -688,7 +701,7 @@ class DatacardFactory:
         if '_WWShape' in opt.tag:
             if sampleName=='WW' or sampleName=='STtW' or sampleName=='ttbar':
                 if suffix:
-                    if 'WWShape' in suffix and 'Up' in suffix:
+                    if 'WWshape' in suffix and 'Up' in suffix:
                         if 'Bin6' in suffix:
                             binContent = histo.GetBinContent(6)
                             binError   = histo.GetBinError(6)
@@ -709,7 +722,7 @@ class DatacardFactory:
                             binError   = histo.GetBinError(9)
                             histo.SetBinContent(9, binContent*1.5)
                             histo.SetBinError(9, binError*1.5)
-                    if 'WWShape' in suffix:
+                    if 'WWshape' in suffix:
                         histo.SetName(shapeName+suffix)
                         histo.SetTitle(shapeName+suffix)
 
