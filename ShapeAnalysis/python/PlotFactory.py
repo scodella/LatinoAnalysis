@@ -865,7 +865,8 @@ class PlotFactory:
                 histos[sampleName].SetMaximum(self._scaleToPlot * maxY)
                 maxYused = self._scaleToPlot * maxY
                 minYused = self.GetMinimum(histos[sampleName])
-            
+           
+            minYback = 2.
             if thsBackground.GetNhists() != 0:
               thsBackground.Draw("hist")
               maxY = thsBackground.GetMaximum ()
@@ -876,6 +877,7 @@ class PlotFactory:
               minY = thsBackground.GetMinimum ()
               if (minY < minYused) :
                 minYused = minY 
+              if minY<minYback: minYback = minY
 
                
             if thsSignal.GetNhists() != 0:
@@ -1153,7 +1155,7 @@ class PlotFactory:
 
                 if self._plotLog:
                     # log Y axis
-                    minYplot = max(self._minLogC, minYused) if minYused>2. else self._minLogC
+                    minYplot = max(self._minLogC, minYused) if minYback>2. else self._minLogC
                     frame.GetYaxis().SetRangeUser( minYplot, self._maxLogC * maxYused )  # Jonatan
                     #frame.GetYaxis().SetRangeUser( min(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
                     tcanvas.SetLogy(True)
