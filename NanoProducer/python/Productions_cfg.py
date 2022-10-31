@@ -84,6 +84,31 @@ Productions = {
                          'GlobalTag'    : '102X_upgrade2018_realistic_v20' ,
                          'EraModifiers' : 'Run2_2018,run2_nanoAOD_102Xv1' ,
                          'tagJEC'       : 'Autumn18_FastSimV1_MC', 
-   }
+   },
+   # UL
+   'Spring21UL16FS_106X_nAODv9_Full2016v9': {
+                         'isData'       : False ,
+                         'isFastSim'    : True ,
+                         'samples'      : 'LatinoAnalysis/NanoProducer/python/samples/Spring21UL16FS_106X_mAODv2.py' ,
+                         'GlobalTag'    : '106X_mcRun2_asymptotic_v17' ,
+                         'EraModifiers' : 'Run2_2016,run2_nanoAOD_106Xv2' ,
+                         #'tagJEC'       : '',
+   },
+   'Spring21UL17FS_106X_nAODv9_Full2016v9': {
+                         'isData'       : False ,
+                         'isFastSim'    : True ,
+                         'samples'      : 'LatinoAnalysis/NanoProducer/python/samples/Spring21UL17FS_106X_mAODv2.py' ,
+                         'GlobalTag'    : '106X_mc2017_realistic_v9' ,
+                         'EraModifiers' : 'Run2_2017,run2_nanoAOD_106Xv2' ,
+                         #'tagJEC'       : '',
+   },
+   'Spring21UL18FS_106X_nAODv9_Full2016v9': {
+                         'isData'       : False ,
+                         'isFastSim'    : True ,
+                         'samples'      : 'LatinoAnalysis/NanoProducer/python/samples/Spring21UL18FS_106X_mAODv2.py' ,
+                         'GlobalTag'    : '106X_upgrade2018_realistic_v16_L1v1' ,
+                         'EraModifiers' : 'Run2_2018,run2_nanoAOD_106Xv2' ,
+                         #'tagJEC'       : '',
+   },
 
 }

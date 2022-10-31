@@ -3056,6 +3056,11 @@ Trigger['Full2017v4'] = Trigger['Full2017v2']
 #Trigger['Full2017v2LP19'] = Trigger['Full2017v2'] 
 Trigger['Full2018v4'] = Trigger['Full2018'] 
 
+Trigger['Full2016v8'] = {}
+for runPeriod in [ 'HIPM', 'noHIPM' ]:
+    for trigPeriod in Trigger['Full2016v8'+runPeriod]:
+        Trigger['Full2016v8'][trigPeriod] = Trigger['Full2016v8'+runPeriod][trigPeriod]
+
 # Set v6 to V5
 
 NewVar_MC_dict = {

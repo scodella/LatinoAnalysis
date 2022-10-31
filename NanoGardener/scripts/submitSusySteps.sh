@@ -100,19 +100,20 @@ submitJobs () {
         if [ "$allDone" == "0" ] ; then
             ./mkPostProc.py -p $2 -i $3 -s $4 -b -Q $queue $datasetsToExclude
         elif [ "$allDone" == "1" ] ; then
-            echo Nothing to submit for $2 step $4
+            echo Nothing to submit for $2 step $4 from $3
         fi
     fi
 
 }
 
-for prod in 16HIPM 16noHIPM 17 18 ; do
+for prod in 16 16HIPM 16noHIPM 17 18 ; do
     if [[ $prods == 'all' || $prods == *${prod}* ]]; then
        
         dataSteps=(lep hadd mt2)
         mcSteps=(sel corr syst reco ctrl)
         sigSteps=(sgen swgt ssel scorr ssyst sreco)
-        for step in ${dataSteps[@]} ${mcSteps[@]} ${sigSteps[@]} ; do
+        fsSteps=(fsgen fswgt fssel fscorr fssyst fsreco)
+        for step in ${dataSteps[@]} ${mcSteps[@]} ${sigSteps[@]} ${fsSteps[@]} ; do
             stepType=''
             sigPreDir=''
             if echo ${dataSteps[@]} | grep -w -q $step ; then
@@ -123,14 +124,27 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
                 stepType=sig
                 sigPreStep='susyGen__susyW'
                 sigPreDir=${sigPreStep}__
+            elif echo ${fsSteps[@]} | grep -w -q $step ; then
+                stepType=fs
+                sigPreStep='susyGen__susyW'
+                sigPreDir=${sigPreStep}__
             fi
+
+            if [[ $prod == *'HIPM' && $stepType == 'fs' ]] ; then
+                continue
+            fi
+
+            if [[ $prod == '16' && $stepType != 'fs' ]] ; then
+                continue
+            fi
+
             if [[ $steps == 'all' || $steps == $stepType || $steps == $step ]] ; then
 
                 if [[ $HOST == 'lxplus'* ]] ; then
                     queue=tomorrow
                 else
                     queue=cms_med
-                    if [[ $step == 'lep' || $step == 'sel' || $step == 'ssel' || $step == 'swgt' ]]; then
+                    if [[ $step == 'lep' || $step == *'sel' || $step == *'swgt' ]]; then
                         queue=cms_main
                     elif [[ $step == 'hadd' || $step == 'mt2' || $step == *'reco' || $step == *'ctrl' ]]; then
                         queue=cms_high
@@ -164,6 +178,11 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
                     corr='noHIPM'
                 else
                     year=$prod
+                    if [ $prod == '16' ]; then
+                        periods=('HIPM' 'noHIPM')
+                    else
+                        periods=("")
+                    fi
                 fi
 
                 if [ $step == 'lep' ]; then
@@ -199,13 +218,21 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
 
                     submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 ${sigPreDir}MCSusy20${year}v8 MCSusyCorr20${year}v8$corr
 
-                elif [[ $step == *'syst' ]]; then
+                elif [[ $step == 'syst' ]] || [[ $step == 'ssyst' ]] ; then
 
                     for syst in Nomin JESUp JESDo JERUp JERDo ; do 
                         submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 ${sigPreDir}MCSusy20${year}v8__MCSusyCorr20${year}v8$corr MCSusy${syst}20${year}v8
                     done
 
-                elif [[ $step == *'reco' ]] || [[ $step == 'ctrl' ]] ; then
+                elif [[ $step == 'fssyst' ]] ; then
+
+                    for syst in Nomin JESUp JESDo JERUp JERDo ; do
+                        for period in "${periods[@]}"; do
+                            submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period} FSSusy${syst}20${year}v8${period}
+                        done    
+                    done
+
+                elif [[ $step == 'reco' ]] || [[ $step == 'sreco' ]] || [[ $step == 'ctrl' ]] ; then
 
                     sstep=$step
                     if [[ $step == 'sreco' ]] ; then
@@ -221,6 +248,22 @@ for prod in 16HIPM 16noHIPM 17 18 ; do
 
                     submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 ${sigPreDir}MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJERUp20${year}v8 susyMT2${sstep}JERUp
                     submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 ${sigPreDir}MCSusy20${year}v8__MCSusyCorr20${year}v8${corr}__MCSusyJERDo20${year}v8 susyMT2${sstep}JERDo
+
+                elif [[ $step == 'fsreco' ]] ; then
+
+                    for period in "${periods[@]}"; do
+
+                        for met in fastSmear fastSMTUp fastSMTDo recoSmear genmNomin ; do
+                            submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyNomin20${year}v8${period} susyMT2$met
+                        done
+
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyJESUp20${year}v8${period} susyMT2fastSJSUp
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyJESDo20${year}v8${period} susyMT2fastSJSDo
+
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyJERUp20${year}v8${period} susyMT2fastJERUp
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyJERDo20${year}v8${period} susyMT2fastJERDo
+
+                    done
 
                 fi
 

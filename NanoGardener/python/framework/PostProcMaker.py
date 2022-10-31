@@ -217,7 +217,12 @@ class PostProcMaker():
            PartName=''
            if len(FileList)>0 : PartName='__part'+str(iPart)
            fileTargetName = self._targetDir+self._treeFilePrefix+iSample+PartName+'.root'
-           FileDic[self._aaaXrootd+iFile] = fileTargetName
+           rootPath = self._aaaXrootd ### Patch
+           if 'srmPrefix' in self._Samples[iSample]: 
+             if 'ifca' in self._Samples[iSample]['srmPrefix'] and (self._LocalSite=='ifca' or self._LocalSite=='cloud'):
+               rootPath = ''
+           FileDic[rootPath+iFile] = fileTargetName
+           #FileDic[self._aaaXrootd+iFile] = fileTargetName
          iPart +=1
 
      return FileDic
@@ -244,8 +249,12 @@ class PostProcMaker():
        return getSampleFiles(directory, sample, True, self._treeFilePrefix, True)
 
    def getFilesFromSource(self, sample):
-       if 'srmPrefix' in self._Samples[sample]:
-         return self.getFilesFromPath(self._Samples[sample]['paths'], self._Samples[sample]['srmPrefix'])
+       if 'srmPrefix' in self._Samples[sample]: ### Patch
+         if 'ifca' in self._Samples[sample]['srmPrefix'] and (self._LocalSite=='ifca' or self._LocalSite=='cloud'):
+           return self.getSampleFiles(self._Samples[sample]['paths'][0], sample)
+         else:
+           return self.getFilesFromPath(self._Samples[sample]['paths'], self._Samples[sample]['srmPrefix'])
+         #return self.getFilesFromPath(self._Samples[sample]['paths'], self._Samples[sample]['srmPrefix'])
        else:
          try:
            dasInst = self._Samples[sample]['dasInst']

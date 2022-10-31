@@ -10,7 +10,6 @@ Samples["DoubleMuon_Run2016G_UL2016-v2"]              = {'nanoAOD' : '/DoubleMuo
 Samples["DoubleMuon_Run2016H_UL2016-v1"]               = {'nanoAOD' : '/DoubleMuon/Run2016H-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD'}
 
 Samples["MET_Run2016F_UL2016-v2"] 	    	       = {'nanoAOD' : '/MET/Run2016F-UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD'}
-#Samples["MET_Run2016F_UL2016_pilot-v1"]		       = {'nanoAOD' : '/MET/Run2016F-UL2016_MiniAODv2_NanoAODv9_pilot-v1/NANOAOD'}
 Samples["MET_Run2016G_UL2016-v1"] 	    	       = {'nanoAOD' : '/MET/Run2016G-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD'}
 Samples["MET_Run2016H_UL2016-v1"] 	    	       = {'nanoAOD' : '/MET/Run2016H-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD'}
 
@@ -25,3 +24,8 @@ Samples["SingleElectron_Run2016H_UL2016-v1"] 	       = {'nanoAOD' : '/SingleElec
 Samples["SingleMuon_Run2016F_UL2016-v1"] 	       = {'nanoAOD' : '/SingleMuon/Run2016F-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD'}
 Samples["SingleMuon_Run2016G_UL2016-v1"] 	       = {'nanoAOD' : '/SingleMuon/Run2016G-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD'}
 Samples["SingleMuon_Run2016H_UL2016-v1"] 	       = {'nanoAOD' : '/SingleMuon/Run2016H-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD'}
+
+#Samples["JetHT_Run2016F_UL2016-v1"]                    = {'nanoAOD' : '/JetHT/Run2016F-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD'}
+#Samples["JetHT_Run2016G_UL2016-v1"]                    = {'nanoAOD' : '/JetHT/Run2016G-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD'}
+#Samples["JetHT_Run2016H_UL2016-v1"]                    = {'nanoAOD' : '/JetHT/Run2016H-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD'}
+

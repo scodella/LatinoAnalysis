@@ -44,6 +44,19 @@ PUCfg = {
                    'doSysVar'    : True ,
                 } ,
 
+ 'Full2016v8' : {
+                   'srcfile'     : "auto" ,
+                   'targetfiles' : { '1-4' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2016/UL2016BCDEF_PU.root' ,
+                                     '5-7' : 'LatinoAnalysis/NanoGardener/python/data/PUweights/2016/UL2016GH_PU.root' ,
+                                   } ,
+                   'srchist'     : "pileup"   ,
+                   'targethist'  : "pileup"   ,
+                   'name'        : "puWeight" ,
+                   'norm'        : True       ,
+                   'verbose'     : False      ,
+                   'nvtx_var'    : "Pileup_nTrueInt" ,
+                   'doSysVar'    : True ,
+                } ,
 
  'Full2017v2' : {
                    'srcfile'     : "auto" ,

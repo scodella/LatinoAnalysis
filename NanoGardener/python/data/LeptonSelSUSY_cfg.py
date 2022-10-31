@@ -1773,9 +1773,9 @@ ElectronWP = {
                     '1-3' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/AdditionalSF_2016_HIPMEle.root#hSFDataMC_central' ,  
                     '4-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/AdditionalSF_2016_noHIPMEle.root#hSFDataMC_central' ,  
                     } ,
-                'fsSF': {
-                    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/detailed_ele_full_fast_sf_17.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/detailed_ele_full_fast_sf_17.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
+                #    },
                 } ,
 
             'cutBasedMediumPOGeta' : {
@@ -1804,9 +1804,9 @@ ElectronWP = {
                     '1-3' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/AdditionalSF_2016_HIPMEle.root#hSFDataMC_central' ,  
                     '4-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/AdditionalSF_2016_noHIPMEle.root#hSFDataMC_central' ,  
                     } ,
-                'fsSF': {
-                    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/detailed_ele_full_fast_sf_17.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/detailed_ele_full_fast_sf_17.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
+                #    },
                 } ,
 
             'cutBasedTightPOG' : {
@@ -1834,9 +1834,9 @@ ElectronWP = {
                     '1-3' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/AdditionalSF_2016_HIPMEle.root#hSFDataMC_central' ,  
                     '4-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/AdditionalSF_2016_noHIPMEle.root#hSFDataMC_central' ,  
                     } ,
-                'fsSF': {
-                    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/detailed_ele_full_fast_sf_17.root#CutBasedTightNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/detailed_ele_full_fast_sf_17.root#CutBasedTightNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
+                #    },
                 } ,
 
         } ,
@@ -1899,9 +1899,9 @@ ElectronWP = {
                 'extraSF':  {
                     '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017v8/AdditionalSF_2017Ele.root#hSFDataMC_central' ,   
                     } ,
-                'fsSF': {
-                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/detailed_ele_full_fast_sf_17.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/detailed_ele_full_fast_sf_17.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
+                #    },
                 } ,
 
             'cutBasedMediumPOGeta' : {
@@ -1927,9 +1927,9 @@ ElectronWP = {
                 'extraSF':  {
                     '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017v8/AdditionalSF_2017Ele.root#hSFDataMC_central' ,   
                     } ,
-                'fsSF': {
-                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/detailed_ele_full_fast_sf_17.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/detailed_ele_full_fast_sf_17.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
+                #    },
                 } ,
 
             'cutBasedTightPOG' : {
@@ -1954,9 +1954,9 @@ ElectronWP = {
                 'extraSF':  {
                     '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017v8/AdditionalSF_2017Ele.root#hSFDataMC_central' ,   
                     } ,
-                'fsSF': {
-                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/detailed_ele_full_fast_sf_17.root#CutBasedTightNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/detailed_ele_full_fast_sf_17.root#CutBasedTightNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
+                #    },
                 } ,
 
         },
@@ -2019,9 +2019,9 @@ ElectronWP = {
                 'extraSF':  {
                     '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018v8/AdditionalSF_2018Ele.root#hSFDataMC_central' ,   
                     } ,
-                'fsSF': {
-                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/detailed_ele_full_fast_sf_18.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/detailed_ele_full_fast_sf_18.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
+                #    },
                 } ,
 
             'cutBasedMediumPOGeta' : {
@@ -2047,9 +2047,9 @@ ElectronWP = {
                 'extraSF':  {
                     '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018v8/AdditionalSF_2018Ele.root#hSFDataMC_central' ,   
                     } ,
-                'fsSF': {
-                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/detailed_ele_full_fast_sf_18.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/detailed_ele_full_fast_sf_18.root#CutBasedMediumNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
+                #    },
                 } ,
 
             'cutBasedTightPOG' : {
@@ -2074,9 +2074,9 @@ ElectronWP = {
                 'extraSF':  {
                     '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018v8/AdditionalSF_2018Ele.root#hSFDataMC_central' ,   
                     } ,
-                'fsSF': {
-                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/detailed_ele_full_fast_sf_18.root#CutBasedTightNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/detailed_ele_full_fast_sf_18.root#CutBasedTightNoIso94XV2_sf#MVAVLooseTightIP2DMini_sf' , 
+                #    },
                 } ,
 
         } ,
@@ -2112,6 +2112,7 @@ ElectronWP['Full2017v8'    ]['FakeObjWP']['cutBasedVeto'] = ElectronWP['Full2017
 ElectronWP['Full2018v8'    ]['FakeObjWP']['cutBasedVeto'] = ElectronWP['Full2018v8']['VetoObjWP']['cutBasedVeto']
 
 ElectronWP['Full2016v8noHIPM'] = ElectronWP['Full2016v8HIPM']
+ElectronWP['Full2016v8']       = ElectronWP['Full2016v8HIPM']
 
 MuonWP = {
 
@@ -2987,9 +2988,9 @@ MuonWP = {
                     '4-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/AdditionalSF_2016_noHIPMMuon.root#hSFDataMC_central' ,  
                     } ,
 
-                'fsSF': {
-                    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/detailed_mu_full_fast_sf_17.root#miniIso01_MediumId_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/detailed_mu_full_fast_sf_17.root#miniIso01_MediumId_sf' , 
+                #    },
                 #'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/lowPtCorrected/36fb_muon/' ,
               } ,
 
@@ -3015,9 +3016,9 @@ MuonWP = {
                     '4-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v8/AdditionalSF_2016_noHIPMMuon.root#hSFDataMC_central' ,  
                     } ,
 
-                'fsSF': {
-                    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/detailed_mu_full_fast_sf_17.root#miniIso01_MediumId_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-7' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2016v2/detailed_mu_full_fast_sf_17.root#miniIso01_MediumId_sf' , 
+                #    },
                 #'fakeW' : '/LatinoAnalysis/Gardener/python/data/fake_prompt_rates/80X/lowPtCorrected/36fb_muon/' ,
               } ,
 
@@ -3078,9 +3079,9 @@ MuonWP = {
                 'extraSF':  {
                     '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017v8/AdditionalSF_2017Muon.root#hSFDataMC_central' ,   
                     } ,
-                'fsSF': {
-                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/detailed_mu_full_fast_sf_17.root#miniIso01_MediumId_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/detailed_mu_full_fast_sf_17.root#miniIso01_MediumId_sf' , 
+                #    },
               } ,
 
             'mediumSUS17010' : {
@@ -3102,9 +3103,9 @@ MuonWP = {
                 'extraSF':  {
                     '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017v8/AdditionalSF_2017Muon.root#hSFDataMC_central' ,   
                     } ,
-                'fsSF': {
-                    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/detailed_mu_full_fast_sf_17.root#miniIso01_MediumId_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-5' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2017/detailed_mu_full_fast_sf_17.root#miniIso01_MediumId_sf' , 
+                #    },
               } ,
             
          } ,
@@ -3164,9 +3165,9 @@ MuonWP = {
                 'extraSF':  {
                     '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018v8/AdditionalSF_2018Muon.root#hSFDataMC_central' ,   
                     } ,
-                'fsSF': {
-                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/detailed_mu_full_fast_sf_18.root#miniIso01_MediumId_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/detailed_mu_full_fast_sf_18.root#miniIso01_MediumId_sf' , 
+                #    },
               } ,
 
             'mediumSUS17010' : {
@@ -3188,9 +3189,9 @@ MuonWP = {
                 'extraSF':  {
                     '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018v8/AdditionalSF_2018Muon.root#hSFDataMC_central' ,   
                     } ,
-                'fsSF': {
-                    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/detailed_mu_full_fast_sf_18.root#miniIso01_MediumId_sf' , 
-                    },
+                #'fsSF': {
+                #    '1-1' : 'LatinoAnalysis/NanoGardener/python/data/scale_factor/Full2018/detailed_mu_full_fast_sf_18.root#miniIso01_MediumId_sf' , 
+                #    },
               } ,
             
          } ,
@@ -3231,6 +3232,7 @@ MuonWP['Full2017v8'    ]['FakeObjWP']['looseRelIsoLoose'] = MuonWP['Full2017v8']
 MuonWP['Full2018v8'    ]['FakeObjWP']['looseRelIsoLoose'] = MuonWP['Full2018v8']['VetoObjWP']['looseRelIsoLoose']
 
 MuonWP['Full2016v8noHIPM'] = MuonWP['Full2016v8HIPM']
+MuonWP['Full2016v8']       = MuonWP['Full2016v8HIPM']
 #MuonWP['Full2016v8']['FakeObjWP']['looseRelIsoLoose'] = MuonWP['Full2016v8']['VetoObjWP']['looseRelIsoLoose']
 
 if __name__ == '__main__':

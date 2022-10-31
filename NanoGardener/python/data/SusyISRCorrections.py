@@ -2,7 +2,7 @@
 SUSYISRCorrections = {
                                    
     'strong' : { 'susyPromptParticles' : [ '1000005', '1000006', '2000005', '2000006' ],
-                 'version' : { 'Ana2016Dec'    : { 'production' : [ 'Full2016v4', 'Full2016v6', 'Full2016v6', 'Full2016v7', 'Full2016v8HIPM', 'Full2016v8noHIPM' ], 
+                 'version' : { 'Ana2016Dec'    : { 'production' : [ 'Full2016v4', 'Full2016v6', 'Full2016v6', 'Full2016v7', 'Full2016v8HIPM', 'Full2016v8noHIPM', 'Full2016v8' ], 
                                                    'observable' : 'njetISR',
                                                    'correction' : { '0' :  '1.000',
                                                                     '1' :  '0.920',
@@ -31,7 +31,7 @@ SUSYISRCorrections = {
     'EWK'    : { 'susyPromptParticles' : [ '1000022', '1000023', '1000024', 
                                            '1000011', '1000013', '1000015', 
                                            '2000011', '2000013', '2000015' ],
-                 'version' : { 'Ana2017Feb'    : { 'production' : [ 'Full2016v4', 'Full2016v6', 'Full2016v7', 'Full2016v8HIPM', 'Full2016v8noHIPM' ],  
+                 'version' : { 'Ana2017Feb'    : { 'production' : [ 'Full2016v4', 'Full2016v6', 'Full2016v7', 'Full2016v8HIPM', 'Full2016v8noHIPM', 'Full2016v8' ],  
                                                    'observable' : 'ptISR',
                                                    'correction' : {  '000' :  '1.000', 
                                                                      '050' :  '1.052', 
