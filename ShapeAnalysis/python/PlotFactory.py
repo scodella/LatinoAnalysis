@@ -1153,7 +1153,8 @@ class PlotFactory:
 
                 if self._plotLog:
                     # log Y axis
-                    frame.GetYaxis().SetRangeUser( max(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
+                    minYplot = max(self._minLogC, minYused) if minYused>2. else self._minLogC
+                    frame.GetYaxis().SetRangeUser( minYplot, self._maxLogC * maxYused )  # Jonatan
                     #frame.GetYaxis().SetRangeUser( min(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
                     tcanvas.SetLogy(True)
                     # if plotLinear is true, we have already saved root and C (if in the list of formats)
