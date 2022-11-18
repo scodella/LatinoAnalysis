@@ -11,7 +11,7 @@ Samples['T2tt_mStop-400to825']            = {'srmPrefix': 'srm://srm01.ifca.es:8
 
 #### T2bW
 
-Samples['T2bW_T2bW_mStop-200to1000']      = {'srmPrefix': 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL16FS_106X_nAODv9/T2bW_T2bW_mStop-200to1000/']}
+Samples['T2bW_mStop-200to1000']      = {'srmPrefix': 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL16FS_106X_nAODv9/T2bW_mStop-200to1000/']}
 
 #### TChipmSlepSnu
 
