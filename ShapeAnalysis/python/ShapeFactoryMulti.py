@@ -1643,3 +1643,55 @@ class ShapeFactory:
                   if twosided:
                     if ShapeFactory._fixNegativeBin(outputsHistoDown, nominal): outputsHistoDown.Write()
 
+    @staticmethod
+    def postprocess_nuisance_average(extremeNuisance, cuts, variables, nuisances, outFile):
+
+      extrames = nuisances[extremeNuisance]['extremes']
+
+      for cut in cuts:
+        if extrames[0] not in cut and extrames[1] not in cut:
+          print 'postprocess_nuisance_average error:', cut, 'is not an extreme'
+          exit()
+        if extrames[0] in cut: 
+
+          cutName = cut.replace(extrames[0], '')
+          outFile.mkdir(cutName)
+
+          for variable in variables:
+            if 'cuts' not in variables[variable] or cut in variables[variable]['cuts']:
+
+              outFile.mkdir(cutName+'/'+variable)
+              outFile.cd(cutName+'/'+variable)
+
+              for sample in nuisances[extremeNuisance]['samples']:
+
+                histoCentralName = 'histo_'+sample
+                histoCentral = outFile.Get(cutName+extrames[0]+'/'+variable+'/'+histoCentralName)
+                histoCentral.Add(outFile.Get(cutName+extrames[1]+'/'+variable+'/'+histoCentralName))
+                histoCentral.Scale(0.5)
+                histoCentral.SetName(histoCentralName); histoCentral.SetTitle(histoCentralName)
+
+                histoExtremeUp = outFile.Get(cutName+extrames[0]+'/'+variable+'/'+histoCentralName)
+                histoExtremeUp.SetName('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Up')
+                histoExtremeUp.SetTitle('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Up')
+
+                histoExtremeDown = outFile.Get(cutName+extrames[1]+'/'+variable+'/'+histoCentralName)
+                histoExtremeDown.SetName('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Down')
+                histoExtremeDown.SetTitle('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Down')
+
+                for nuisance in nuisances:
+                  if nuisance!=extremeNuisance:
+                    if 'type' in nuisances[nuisance] and nuisances[nuisance]['type']=='shape':
+                      if sample in nuisances[nuisance]['samples']:
+                        for variation in [ 'Up', 'Down' ]:
+
+                          histoSystName = 'histo_'+sample+'_'+nuisances[nuisance]['name']+variation
+                          histoSyst = outFile.Get(cutName+extrames[0]+'/'+variable+'/'+histoSystName)
+                          histoSyst.Add(outFile.Get(cutName+extrames[1]+'/'+variable+'/'+histoSystName)) 
+                          histoSyst.Scale(0.5)
+                          histoSyst.SetName(histoSystName); histoSyst.SetTitle(histoSystName)
+
+          outFile.cd()
+          outFile.Delete(utName+extrames[0]+';*')
+          outFile.Delete(utName+extrames[1]+';*')
+
