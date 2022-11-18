@@ -85,13 +85,16 @@ isAllDone () {
 
 submitJobs () {
 
-    if [[ $1 == 'lep' || $1 == 'sel' || $1 == 'sgen' ]] ; then
+    if [[ $1 == 'lep' || $1 == 'sel' || $1 == *'gen' ]] ; then
+        samples=''
         if [ $1 == 'lep' ]; then
             samples=$sample
         elif [ $1 == 'sel' ]; then
             samples=" -E "$sigSamples
         elif [ $1 == 'sgen' ]; then
             samples=" -T "$sigSamples
+        elif [ $1 == 'fsgen' ]; then
+            samples=" -E T2bW_mStop-200to1000"
         fi
         ./mkPostProc.py -p $2 -s $3 -b -Q $queue $samples
     else
@@ -112,7 +115,7 @@ for prod in 16 16HIPM 16noHIPM 17 18 ; do
         dataSteps=(lep hadd mt2)
         mcSteps=(sel corr syst reco ctrl)
         sigSteps=(sgen swgt ssel scorr ssyst sreco)
-        fsSteps=(fsgen fswgt fssel fscorr fssyst fsreco)
+        fsSteps=(fsgen fswgt fssel fscorr fssyst fsreco fsmore)
         for step in ${dataSteps[@]} ${mcSteps[@]} ${sigSteps[@]} ${fsSteps[@]} ; do
             stepType=''
             sigPreDir=''
@@ -146,7 +149,7 @@ for prod in 16 16HIPM 16noHIPM 17 18 ; do
                     queue=cms_med
                     if [[ $step == 'lep' || $step == *'sel' || $step == *'swgt' ]]; then
                         queue=cms_main
-                    elif [[ $step == 'hadd' || $step == 'mt2' || $step == *'reco' || $step == *'ctrl' ]]; then
+                    elif [[ $step == 'hadd' || $step == 'mt2' || $step == *'reco' || $step == *'ctrl' || $step == 'fsmore' ]]; then
                         queue=cms_high
                     fi
                 fi
@@ -206,17 +209,35 @@ for prod in 16 16HIPM 16noHIPM 17 18 ; do
 
                     submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 susyGen
 
+                elif [ $step == 'fsgen' ]; then
+
+                    submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 susyGen
+
                 elif [ $step == 'swgt' ]; then
 
                     submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 susyGen susyW
+
+                elif [ $step == 'fswgt' ]; then
+
+                    submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 susyGen susyW
 
                 elif [ $step == 'ssel' ]; then
 
                     submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 $sigPreStep MCSusy20${year}v8
 
-                elif [[ $step == *'corr' ]]; then
+                elif [ $step == 'fssel' ]; then
+
+                    submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 $sigPreStep FSSusy20${year}v8
+
+                elif [[ $step == 'corr' ]] || [[ $step == 'scorr' ]]; then
 
                     submitJobs $step Summer20UL${year}_106X_${naod}_Full20${year}v8 ${sigPreDir}MCSusy20${year}v8 MCSusyCorr20${year}v8$corr
+
+                elif [[ $step == 'fscorr' ]]; then
+
+                    for period in "${periods[@]}"; do
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8 FSSusyCorr20${year}v8${period}
+                    done
 
                 elif [[ $step == 'syst' ]] || [[ $step == 'ssyst' ]] ; then
 
@@ -228,7 +249,7 @@ for prod in 16 16HIPM 16noHIPM 17 18 ; do
 
                     for syst in Nomin JESUp JESDo JERUp JERDo ; do
                         for period in "${periods[@]}"; do
-                            submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period} FSSusy${syst}20${year}v8${period}
+                            submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd FSSusy${syst}20${year}v8${period}
                         done    
                     done
 
@@ -254,16 +275,34 @@ for prod in 16 16HIPM 16noHIPM 17 18 ; do
                     for period in "${periods[@]}"; do
 
                         for met in fastSmear fastSMTUp fastSMTDo recoSmear genmNomin ; do
-                            submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyNomin20${year}v8${period} susyMT2$met
+                            submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyNomin20${year}v8${period} susyMT2$met
                         done
 
-                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyJESUp20${year}v8${period} susyMT2fastSJSUp
-                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyJESDo20${year}v8${period} susyMT2fastSJSDo
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJESUp20${year}v8${period} susyMT2fastSJSUp
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJESDo20${year}v8${period} susyMT2fastSJSDo
 
-                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyJERUp20${year}v8${period} susyMT2fastJERUp
-                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyJERDo20${year}v8${period} susyMT2fastJERDo
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJERUp20${year}v8${period} susyMT2fastJERUp
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJERDo20${year}v8${period} susyMT2fastJERDo
 
                     done
+
+                elif [[ $step == 'fsmore' ]] ; then
+
+                    for period in "${periods[@]}"; do
+
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyNomin20${year}v8${period} susyMT2recoSMTUp
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyNomin20${year}v8${period} susyMT2recoSMTDo
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJESUp20${year}v8${period} susyMT2recoSJSUp
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJESDo20${year}v8${period} susyMT2recoSJSDo
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJERUp20${year}v8${period} susyMT2recoJERUp
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJERDo20${year}v8${period} susyMT2recoJERDo
+
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJESUp20${year}v8${period} susyMT2genmNomin
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJESDo20${year}v8${period} susyMT2genmNomin
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJERUp20${year}v8${period} susyMT2genmNomin
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJERDo20${year}v8${period} susyMT2genmNomin
+
+                    done 
 
                 fi
 
