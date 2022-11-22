@@ -1672,17 +1672,24 @@ class ShapeFactory:
                 histoExtremeUp = outFile.Get(cutName+extrames[0]+'/'+variableExt0+'/'+histoCentralName)
                 histoExtremeUp.SetName('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Up')
                 histoExtremeUp.SetTitle('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Up')
-                histoExtremeUp.Write()
-
-                histoCentral = outFile.Get(cutName+extrames[0]+'/'+variableExt0+'/'+histoCentralName)
-                histoCentral.Add(outFile.Get(cutName+extrames[1]+'/'+variableExt1+'/'+histoCentralName))
-                histoCentral.Scale(0.5)
-                histoCentral.SetName(histoCentralName); histoCentral.SetTitle(histoCentralName)
-                histoCentral.Write()
 
                 histoExtremeDown = outFile.Get(cutName+extrames[1]+'/'+variableExt1+'/'+histoCentralName)
                 histoExtremeDown.SetName('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Down')
                 histoExtremeDown.SetTitle('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Down')
+
+                histoCentral = histoExtremeUp + histoExtremeDown
+                histoCentral.Scale(0.5)
+                histoCentral.SetName(histoCentralName); histoCentral.SetTitle(histoCentralName)
+                histoCentral.Write()      
+
+                if (histoExtremeUp.Integral()==0. or histoExtremeDown.Integral()==0.) and not histoCentral.Integral()==0.:
+                  for ibin in range(1, histoCentral.GetNbinsX()+1):
+                    if histoExtremeUp.Integral()==0. and not histoCentral.GetBinContent(ibin)==0:
+                      histoExtremeUp.SetBinContent(ibin, histoCentral.GetBinContent(ibin) * 0.0001)
+                    if histoExtremeDown.Integral()==0. and not histoCentral.GetBinContent(ibin)==0:
+                      histoExtremeDown.SetBinContent(ibin, histoCentral.GetBinContent(ibin) * 0.0001)
+
+                histoExtremeUp.Write()
                 histoExtremeDown.Write()
 
                 for nuisance in nuisances:
