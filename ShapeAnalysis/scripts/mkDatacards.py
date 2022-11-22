@@ -631,8 +631,7 @@ class DatacardFactory:
     def _getHisto(self, cutName, variableName, sampleName, suffix = None):
         shapeName = '%s/%s/histo_%s' % (cutName, variableName, sampleName)
         if suffix:
-            if 'WWshape' not in suffix and 'WZbin' not in suffix: # Dirty patch for SUSY
-                shapeName += suffix
+            shapeName += suffix
 
         if type(self._fileIn) is dict:
             # by-sample ROOT file
@@ -646,85 +645,18 @@ class DatacardFactory:
      
         ### Some dirty patch for SUSY
 
-        # WZ Figure 14 AN-19-256_v6
-        if '_WZbin' in opt.tag and 'Merge' not in opt.tag:
-            if sampleName=='WZ': 
-                applyWZscale = True
-                if suffix:
-                    if 'WZbin' in suffix and 'Up' in suffix:
-                        applyWZscale = False
-                if applyWZscale:
-                    binContent = histo.GetBinContent(9)
-                    binError   = histo.GetBinError(9)
-                    histo.SetBinContent(9, binContent*0.25)
-                    histo.SetBinError(9, binError*0.25)
-                if suffix:
-                    if 'WZbin' in suffix:
-                        histo.SetName(shapeName+suffix)
-                        histo.SetTitle(shapeName+suffix)
+        if opt.blindData:
+            if 'DATA' in sampleName:
+                histo.Reset()
 
-        if '_WZBin' in opt.tag and 'Merge' not in opt.tag:
-            if sampleName=='WZ':
-                if suffix:
-                    if 'WZbin' in suffix and 'Up' in suffix:
-                        binContent = histo.GetBinContent(9)
-                        binError   = histo.GetBinError(9)
-                        histo.SetBinContent(9, binContent*0.25)
-                        histo.SetBinError(9, binError*0.25)
-                    if 'WZbin' in suffix:
-                        histo.SetName(shapeName+suffix)
-                        histo.SetTitle(shapeName+suffix)
-                 
-        # WW Figure 9 AN-19-256_v6
-        if '_WWshape' in opt.tag:
-            if sampleName=='WW' or sampleName=='STtW' or sampleName=='ttbar':
-                if suffix:
-                    if 'WWshape' in suffix and 'Up' in suffix:
-                        binContent = histo.GetBinContent(6)
-                        binError   = histo.GetBinError(6)
-                        histo.SetBinContent(6, binContent*1.2)
-                        histo.SetBinError(6, binError*1.2)
-                        binContent = histo.GetBinContent(7)
-                        binError   = histo.GetBinError(7)
-                        histo.SetBinContent(7, binContent*1.4)
-                        histo.SetBinError(7, binError*1.4)
-                        for ibin in range(8, 10):
-                            if histo.GetNbinsX()>=ibin:
-                                binContent = histo.GetBinContent(ibin)
-                                binError   = histo.GetBinError(ibin)
-                                histo.SetBinContent(ibin, binContent*1.5)
-                                histo.SetBinError(ibin, binError*1.5)
-                    if 'WWshape' in suffix:
-                        histo.SetName(shapeName+suffix)
-                        histo.SetTitle(shapeName+suffix)
-
-        if '_WWShape' in opt.tag:
-            if sampleName=='WW' or sampleName=='STtW' or sampleName=='ttbar':
-                if suffix:
-                    if 'WWshape' in suffix and 'Up' in suffix:
-                        if 'Bin6' in suffix:
-                            binContent = histo.GetBinContent(6)
-                            binError   = histo.GetBinError(6)
-                            histo.SetBinContent(6, binContent*1.2)
-                            histo.SetBinError(6, binError*1.2)
-                        elif 'Bin7' in suffix:
-                            binContent = histo.GetBinContent(7)
-                            binError   = histo.GetBinError(7)
-                            histo.SetBinContent(7, binContent*1.4)
-                            histo.SetBinError(7, binError*1.4)
-                        elif 'Bin8' in suffix:
-                            binContent = histo.GetBinContent(8)
-                            binError   = histo.GetBinError(8)
-                            histo.SetBinContent(8, binContent*1.5)
-                            histo.SetBinError(8, binError*1.5)
-                        elif 'Bin9' in suffix:
-                            binContent = histo.GetBinContent(9)
-                            binError   = histo.GetBinError(9)
-                            histo.SetBinContent(9, binContent*1.5)
-                            histo.SetBinError(9, binError*1.5)
-                    if 'WWshape' in suffix:
-                        histo.SetName(shapeName+suffix)
-                        histo.SetTitle(shapeName+suffix)
+        if '_CRBin' in opt.tag:
+            if 'CR' in cutName:
+                histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), 1, histo.GetBinLowEdge(1), histo.GetBinLowEdge(histo.GetNbinsX()+1))
+                errorYield = ROOT.double()
+                histoYield = histo.IntegralAndError(-1,-1,errorYield)
+                histoB.SetBinContent(1, histoYield)
+                histoB.SetBinError(1, errorYield)
+                return histoB
 
         return histo
 
@@ -767,7 +699,8 @@ if __name__ == '__main__':
     parser.add_option('--nuisancesFile'      , dest='nuisancesFile'     , help='file with nuisances configurations'         , default=None )
     parser.add_option('--cardList'           , dest="cardList"          , help="List of cuts to produce datacards"          , default=[], type='string' , action='callback' , callback=list_maker('cardList',','))
     parser.add_option('--skipMissingNuisance', dest='skipMissingNuisance', help="Don't write nuisance lines when histograms are missing", default=False, action='store_true')
-          
+    parser.add_option('--blindData'          , dest='blindData',           help="Force data to be blind"                    , default=False, action='store_true')
+
     # read default parsing options as well
     hwwtools.addOptions(parser)
     hwwtools.loadOptDefaults(parser)
