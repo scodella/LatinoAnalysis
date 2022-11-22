@@ -1657,41 +1657,48 @@ class ShapeFactory:
           cutName = cut.replace(extrames[0], '')
           outFile.mkdir(cutName)
 
-          for variable in variables:
-            if 'cuts' not in variables[variable] or cut in variables[variable]['cuts']:
+          for variableExt0 in variables:
+            if 'cuts' not in variables[variableExt0] or cut in variables[variableExt0]['cuts']:
 
+              variable = variableExt0.replace(extrames[0], '')
+              variableExt1 = variable+extrames[1]
               outFile.mkdir(cutName+'/'+variable)
               outFile.cd(cutName+'/'+variable)
 
               for sample in nuisances[extremeNuisance]['samples']:
 
                 histoCentralName = 'histo_'+sample
-                histoCentral = outFile.Get(cutName+extrames[0]+'/'+variable+'/'+histoCentralName)
-                histoCentral.Add(outFile.Get(cutName+extrames[1]+'/'+variable+'/'+histoCentralName))
-                histoCentral.Scale(0.5)
-                histoCentral.SetName(histoCentralName); histoCentral.SetTitle(histoCentralName)
 
-                histoExtremeUp = outFile.Get(cutName+extrames[0]+'/'+variable+'/'+histoCentralName)
+                histoExtremeUp = outFile.Get(cutName+extrames[0]+'/'+variableExt0+'/'+histoCentralName)
                 histoExtremeUp.SetName('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Up')
                 histoExtremeUp.SetTitle('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Up')
+                histoExtremeUp.Write()
 
-                histoExtremeDown = outFile.Get(cutName+extrames[1]+'/'+variable+'/'+histoCentralName)
+                histoCentral = outFile.Get(cutName+extrames[0]+'/'+variableExt0+'/'+histoCentralName)
+                histoCentral.Add(outFile.Get(cutName+extrames[1]+'/'+variableExt1+'/'+histoCentralName))
+                histoCentral.Scale(0.5)
+                histoCentral.SetName(histoCentralName); histoCentral.SetTitle(histoCentralName)
+                histoCentral.Write()
+
+                histoExtremeDown = outFile.Get(cutName+extrames[1]+'/'+variableExt1+'/'+histoCentralName)
                 histoExtremeDown.SetName('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Down')
                 histoExtremeDown.SetTitle('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Down')
+                histoExtremeDown.Write()
 
                 for nuisance in nuisances:
                   if nuisance!=extremeNuisance:
                     if 'type' in nuisances[nuisance] and nuisances[nuisance]['type']=='shape':
-                      if sample in nuisances[nuisance]['samples']:
-                        for variation in [ 'Up', 'Down' ]:
-
-                          histoSystName = 'histo_'+sample+'_'+nuisances[nuisance]['name']+variation
-                          histoSyst = outFile.Get(cutName+extrames[0]+'/'+variable+'/'+histoSystName)
-                          histoSyst.Add(outFile.Get(cutName+extrames[1]+'/'+variable+'/'+histoSystName)) 
-                          histoSyst.Scale(0.5)
-                          histoSyst.SetName(histoSystName); histoSyst.SetTitle(histoSystName)
+                      if 'cuts' not in nuisances[nuisance] or cut in nuisances[nuisance]['cuts']:
+                        if sample in nuisances[nuisance]['samples']:
+                          for variation in [ 'Up', 'Down' ]:
+                            histoSystName = 'histo_'+sample+'_'+nuisances[nuisance]['name']+variation
+                            histoSyst = outFile.Get(cutName+extrames[0]+'/'+variableExt0+'/'+histoSystName)
+                            histoSyst.Add(outFile.Get(cutName+extrames[1]+'/'+variableExt1+'/'+histoSystName)) 
+                            histoSyst.Scale(0.5)
+                            histoSyst.SetName(histoSystName); histoSyst.SetTitle(histoSystName)
+                            histoSyst.Write()
 
           outFile.cd()
-          outFile.Delete(utName+extrames[0]+';*')
-          outFile.Delete(utName+extrames[1]+';*')
+          outFile.Delete(cutName+extrames[0]+';*')
+          outFile.Delete(cutName+extrames[1]+';*')
 
