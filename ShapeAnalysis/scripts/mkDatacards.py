@@ -649,7 +649,7 @@ class DatacardFactory:
             if 'DATA' in sampleName:
                 histo.Reset()
 
-        if '_CRBin' in opt.tag:
+        if '_CRBinned' not in opt.tag:
             if 'CR' in cutName:
                 histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), 1, histo.GetBinLowEdge(1), histo.GetBinLowEdge(histo.GetNbinsX()+1))
                 errorYield = ROOT.double()
