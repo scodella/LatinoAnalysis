@@ -11,11 +11,11 @@ Samples['T2tt_mStop-400to825']            = {'srmPrefix': 'srm://srm01.ifca.es:8
 
 #### T2bW
 
-Samples['T2bW_T2bW_mStop-200to1000']      = {'srmPrefix': 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL18FS_106X_nAODv9/T2bW_T2bW_mStop-200to1000/']}
+Samples['T2bW_mStop-200to1000']      = {'srmPrefix': 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL18FS_106X_nAODv9/T2bW_mStop-200to1000/']}
 
 #### TChipmSlepSnu
 
-#Samples['TChipmSlepSnu_mC1-100to800']     = {'srmPrefix': 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL18FS_106X_nAODv9/TChipmSlepSnu_mC1-100to800/']}
+Samples['TChipmSlepSnu_mC1-100to800']     = {'srmPrefix': 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL18FS_106X_nAODv9/TChipmSlepSnu_mC1-100to800/']}
 #Samples['TChipmSlepSnu_mC1-100to800_Central']     = {'nanoAOD'  : '/SMS-TChipmSlepSnu_mC1-100to800_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL18NanoAODv9-FSUL18_FSUL18_106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM' }
 Samples['TChipmSlepSnu_mC1-825to1500']    = {'srmPrefix': 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL18FS_106X_nAODv9/TChipmSlepSnu_mC1-825to1500/']}
 

@@ -538,7 +538,17 @@ if __name__ == '__main__':
               outFile = ROOT.TFile.Open(finalpath, 'update')
               ShapeFactory.postprocess_NegativeBinAndError(nuisances, sampleName, sample, cuts, variables, outFile)
               outFile.Close()
-  
+
+        extremeNuisance = ''
+        for nuisanceName in nuisances:
+            if 'extremes' in nuisances[nuisanceName]:
+                if extremeNuisance=='': extremeNuisance = nuisanceName
+                else: print 'Warning: cannot make two extreme nuisances at the time!'
+        if extremeNuisance!='': 
+            outFile = ROOT.TFile.Open(finalpath, 'update')
+            ShapeFactory.postprocess_nuisance_average(extremeNuisance, cuts, variables, nuisances, outFile)
+            outFile.Close()
+
         if not opt.doNotCleanup:
           for fname in fileList:
             os.unlink(opt.outputDir + '/' + fname)

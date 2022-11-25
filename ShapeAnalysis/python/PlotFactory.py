@@ -642,14 +642,26 @@ class PlotFactory:
               # now we need to tell wthether the variation is actually up or down ans sum in quadrature those with the same sign 
               up = nuisances_vy_up[nuisanceName]
               do = nuisances_vy_do[nuisanceName]
-              up_is_up = (up > tgrMC_vy)
-              dup2 = np.square(up - tgrMC_vy)
-              ddo2 = np.square(do - tgrMC_vy)
-              nuisances_err2_up += np.where(up_is_up, dup2, ddo2)
-              nuisances_err2_do += np.where(up_is_up, ddo2, dup2)
+              if not self._nuisanceVariations:
+                up_is_up = (up > tgrMC_vy)
+                dup2 = np.square(up - tgrMC_vy)
+                ddo2 = np.square(do - tgrMC_vy)
+                nuisances_err2_up += np.where(up_is_up, dup2, ddo2)
+                nuisances_err2_do += np.where(up_is_up, ddo2, dup2)
+              else:
+                nuisances_err2_up += up - tgrMC_vy
+                nuisances_err2_do += do - tgrMC_vy
 
-            nuisances_err_up = np.sqrt(nuisances_err2_up)
-            nuisances_err_do = np.sqrt(nuisances_err2_do)
+            if not self._nuisanceVariations:
+              nuisances_err_up = np.sqrt(nuisances_err2_up)
+              nuisances_err_do = np.sqrt(nuisances_err2_do)
+            else:
+              if self._removeMCStat:
+                nuisances_err_up = nuisances_err2_up
+                nuisances_err_do = nuisances_err2_do
+              else:
+                nuisances_err_up = np.sqrt(nuisances_err2_up)
+                nuisances_err_do = -1.*np.sqrt(nuisances_err2_do)
 
             tgrData       = ROOT.TGraphAsymmErrors(thsBackground.GetStack().Last().GetNbinsX())
             for iBin in range(0, len(tgrData_vx)) : 
@@ -744,14 +756,26 @@ class PlotFactory:
             
             #                                  if there is "histo_total" there is no need of explicit nuisances
             if len(mynuisances.keys()) != 0 or histo_total!= None:
-              tgrMC = ROOT.TGraphAsymmErrors()  
+              tgrMC = ROOT.TGraphAsymmErrors()
+              tgrMCup = ROOT.TGraphAsymmErrors()
+              tgrMCdo = ROOT.TGraphAsymmErrors()  
               for iBin in range(0, len(tgrMC_vx)) :
                 tgrMC.SetPoint     (iBin, tgrMC_vx[iBin], tgrMC_vy[iBin])
+                tgrMCup.SetPoint   (iBin, tgrMC_vx[iBin], tgrMC_vy[iBin])
+                tgrMCdo.SetPoint   (iBin, tgrMC_vx[iBin], tgrMC_vy[iBin])
                 if histo_total:
                   tgrMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))
                 else :
                   tgrMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
-              
+                  if nuisances_err_up[iBin]>=0.:
+                    tgrMCup.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], 0., nuisances_err_up[iBin])              
+                  else:
+                    tgrMCup.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], -1.*nuisances_err_up[iBin], 0.)
+                  if nuisances_err_do[iBin]>=0.:
+                    tgrMCdo.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], 0., nuisances_err_do[iBin])
+                  else:
+                    tgrMCdo.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], -1.*nuisances_err_do[iBin], 0.)
+
               tgrMCOverMC = tgrMC.Clone("tgrMCOverMC")  
               tgrMCMinusMC = tgrMC.Clone("tgrMCMinusMC")  
               for iBin in range(0, len(tgrMC_vx)) :
@@ -964,8 +988,19 @@ class PlotFactory:
               tgrMCOverMC.SetFillColor(12)
               tgrMCOverMC.SetLineWidth(2)
               tgrMCOverMC.SetFillStyle(3004)
-              tgrMC.Draw("2")
-
+              if not self._nuisanceVariations:
+                tgrMC.Draw("2")
+              else:
+                 tgrMCup.SetLineColor(2)
+                 tgrMCup.SetFillColor(2)
+                 tgrMCup.SetLineWidth(2)
+                 tgrMCup.SetFillStyle(3004)
+                 tgrMCdo.SetLineColor(4)
+                 tgrMCdo.SetFillColor(4)
+                 tgrMCdo.SetLineWidth(2)
+                 tgrMCdo.SetFillStyle(3005)                 
+                 tgrMCup.Draw("2")
+                 tgrMCdo.Draw("2")
 
 	    #     - then the superimposed MC
             if len(sigSupList) != 0 and groupFlag==False:

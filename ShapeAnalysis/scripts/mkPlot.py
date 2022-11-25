@@ -77,6 +77,7 @@ if __name__ == '__main__':
     parser.add_option('--skipMissingNuisance', dest='skipMissingNuisance', help='Do not trigger errors if a nuisance is missing. To be used with absolute care!!!' , action='store_true', default=False) 
 
     parser.add_option('--removeMCStat', dest='removeMCStat', help='Do not plot the MC statistics contribution in the uncertainty band', action='store_true', default=False)
+    parser.add_option('--nuisanceVariations', dest='nuisanceVariations', help='Plot nuisance variations', action='store_true', default=False)
     parser.add_option('--extraLegend'   , dest='extraLegend'   , help='User-specified additional legend'          , default=None)
 
     parser.add_option('--plotFancy', dest='plotFancy', help='Plot fancy data - bkg plot' , action='store_true', default=False) 
@@ -115,6 +116,7 @@ if __name__ == '__main__':
     print "        skipMissingNuisance  =", opt.skipMissingNuisance
     print "                    postFit  =", opt.postFit
     print "               removeMCStat  =", opt.removeMCStat
+    print "         nuisanceVariations  =", opt.nuisanceVariations
     print "                  plotFancy  =", opt.plotFancy
     print "              NoPreliminary  =", opt.NoPreliminary   
     print "                RemoveAllMC  =", opt.RemoveAllMC   
@@ -178,6 +180,8 @@ if __name__ == '__main__':
 
     factory._removeMCStat = opt.removeMCStat
 
+    factory._nuisanceVariations = opt.nuisanceVariations
+
     factory._plotFancy = opt.plotFancy
 
     factory._extraLegend = opt.extraLegend
@@ -220,6 +224,17 @@ if __name__ == '__main__':
       handle = open(opt.nuisancesFile,'r')
       exec(handle)
       handle.close()
+
+    if opt.nuisanceVariations:
+      nuisanceNames = []
+      for nuisance in nuisances:
+        if 'stat' in nuisance and 'stat' not in nuisanceNames:
+          nuisanceNames.append('stat')
+        elif nuisances[nuisance]['name'] not in nuisanceNames:
+          nuisanceNames.append(nuisances[nuisance]['name'])
+      if len(nuisanceNames)!=1:
+        print 'Error: using nuisanceVariations with', len(nuisanceNames), 'nuisances'
+        exit
 
     import LatinoAnalysis.ShapeAnalysis.utils as utils
 

@@ -11,7 +11,7 @@ Samples['T2tt_mStop-400to825']            = {'srmPrefix': 'srm://srm01.ifca.es:8
 
 #### T2bW
 
-Samples['T2bW_T2bW_mStop-200to1000']      = {'srmPrefix': 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL17FS_106X_nAODv9/T2bW_T2bW_mStop-200to1000/']}
+Samples['T2bW_mStop-200to1000']      = {'srmPrefix': 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL17FS_106X_nAODv9/T2bW_mStop-200to1000/']}
 
 #### TChipmSlepSnu
 
@@ -25,7 +25,7 @@ Samples['TChipmWW_WWTo2LNu_mC1-100to700'] = {'srmPrefix': 'srm://srm01.ifca.es:8
 #### TSlepSlep
 
 Samples['TSlepSlep_mSlep-100to475']       = {'srmPrefix': 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL17FS_106X_nAODv9/TSlepSlep_mSlep-100to475/']}
-#Samples['TSlepSlep_mSlep-500to1000']      = {'srmPrefix': 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL17FS_106X_nAODv9/TSlepSlep_mSlep-500to1000/']}
+Samples['TSlepSlep_mSlep-500to1000']      = {'srmPrefix': 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL17FS_106X_nAODv9/TSlepSlep_mSlep-500to1000/']}
 
 ### SFs
 
