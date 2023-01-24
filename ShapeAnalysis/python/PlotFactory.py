@@ -595,7 +595,8 @@ class PlotFactory:
                 tgrMC_evx.append(thsBackground.GetStack().Last().GetBinWidth(iBin) / 2.)
               nuisances_err2_up = rnp.array(last.GetSumw2())[1:-1]
               nuisances_err2_do = rnp.array(last.GetSumw2())[1:-1]
-              if (self._removeMCStat):
+              nuisances_stat_err2 = rnp.array(last.GetSumw2())[1:-1]
+              if (self._removeMCStat) or self._nuisanceVariations:
                 nuisances_err2_up.fill(0)
                 nuisances_err2_do.fill(0)
             else:
@@ -651,17 +652,15 @@ class PlotFactory:
               else:
                 nuisances_err2_up += up - tgrMC_vy
                 nuisances_err2_do += do - tgrMC_vy
+                if 'WWshape' in nuisanceName: nuisances_err2_do = tgrMC_vy - up
 
             if not self._nuisanceVariations:
               nuisances_err_up = np.sqrt(nuisances_err2_up)
               nuisances_err_do = np.sqrt(nuisances_err2_do)
             else:
-              if self._removeMCStat:
-                nuisances_err_up = nuisances_err2_up
-                nuisances_err_do = nuisances_err2_do
-              else:
-                nuisances_err_up = np.sqrt(nuisances_err2_up)
-                nuisances_err_do = -1.*np.sqrt(nuisances_err2_do)
+              nuisances_err_up = nuisances_err2_up
+              nuisances_err_do = nuisances_err2_do
+              nuisances_stat_err = np.sqrt(nuisances_stat_err2)
 
             tgrData       = ROOT.TGraphAsymmErrors(thsBackground.GetStack().Last().GetNbinsX())
             for iBin in range(0, len(tgrData_vx)) : 
@@ -758,28 +757,38 @@ class PlotFactory:
             if len(mynuisances.keys()) != 0 or histo_total!= None:
               tgrMC = ROOT.TGraphAsymmErrors()
               tgrMCup = ROOT.TGraphAsymmErrors()
-              tgrMCdo = ROOT.TGraphAsymmErrors()  
+              tgrMCdo = ROOT.TGraphAsymmErrors()
+              tgrMCstat = ROOT.TGraphAsymmErrors()  
               for iBin in range(0, len(tgrMC_vx)) :
                 tgrMC.SetPoint     (iBin, tgrMC_vx[iBin], tgrMC_vy[iBin])
                 tgrMCup.SetPoint   (iBin, tgrMC_vx[iBin], tgrMC_vy[iBin])
                 tgrMCdo.SetPoint   (iBin, tgrMC_vx[iBin], tgrMC_vy[iBin])
+                tgrMCstat.SetPoint (iBin, tgrMC_vx[iBin], tgrMC_vy[iBin])
                 if histo_total:
                   tgrMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))
                 else :
                   tgrMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], nuisances_err_do[iBin], nuisances_err_up[iBin])
-                  if nuisances_err_up[iBin]>=0.:
-                    tgrMCup.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], 0., nuisances_err_up[iBin])              
-                  else:
-                    tgrMCup.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], -1.*nuisances_err_up[iBin], 0.)
-                  if nuisances_err_do[iBin]>=0.:
-                    tgrMCdo.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], 0., nuisances_err_do[iBin])
-                  else:
-                    tgrMCdo.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], -1.*nuisances_err_do[iBin], 0.)
+                  if self._nuisanceVariations:
+                    tgrMCstat.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], nuisances_stat_err[iBin], nuisances_stat_err[iBin])
+                    if nuisances_err_up[iBin]>=0.:
+                      tgrMCup.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], 0., nuisances_err_up[iBin])              
+                    else:
+                      tgrMCup.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], -1.*nuisances_err_up[iBin], 0.)
+                    if nuisances_err_do[iBin]>=0.:
+                      tgrMCdo.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], 0., nuisances_err_do[iBin])
+                    else:
+                      tgrMCdo.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], -1.*nuisances_err_do[iBin], 0.)
 
               tgrMCOverMC = tgrMC.Clone("tgrMCOverMC")  
+              tgrMCOverMCup = tgrMCup.Clone("tgrMCOverMCup")
+              tgrMCOverMCdo = tgrMCdo.Clone("tgrMCOverMCdo")
+              tgrMCOverMCstat = tgrMCdo.Clone("tgrMCOverMCstat")
               tgrMCMinusMC = tgrMC.Clone("tgrMCMinusMC")  
               for iBin in range(0, len(tgrMC_vx)) :
                 tgrMCOverMC.SetPoint     (iBin, tgrMC_vx[iBin], 1.)
+                tgrMCOverMCup.SetPoint   (iBin, tgrMC_vx[iBin], 1.)
+                tgrMCOverMCdo.SetPoint   (iBin, tgrMC_vx[iBin], 1.)
+                tgrMCOverMCstat.SetPoint (iBin, tgrMC_vx[iBin], 1.)
                 tgrMCMinusMC.SetPoint    (iBin, tgrMC_vx[iBin], 0.)
                 if histo_total:
                   tgrMCOverMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]), self.Ratio(histo_total.GetBinError(iBin+1), tgrMC_vy[iBin]))     
@@ -789,6 +798,16 @@ class PlotFactory:
                     tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], histo_total.GetBinError(iBin+1), histo_total.GetBinError(iBin+1))     
                 else :
                   tgrMCOverMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
+                  if self._nuisanceVariations:
+                    tgrMCOverMCstat.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_stat_err[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_stat_err[iBin], tgrMC_vy[iBin]))
+                    if nuisances_err_up[iBin]>=0.:
+                      tgrMCOverMCup.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(0., tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))
+                    else:
+                      tgrMCOverMCup.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(-1.*nuisances_err_up[iBin], tgrMC_vy[iBin]), self.Ratio(0., tgrMC_vy[iBin]))
+                    if nuisances_err_do[iBin]>=0.:
+                      tgrMCOverMCdo.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(0., tgrMC_vy[iBin]), self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]))
+                    else:
+                      tgrMCOverMCdo.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(-1.*nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(0., tgrMC_vy[iBin]))
                   if self._showRelativeRatio :
                     tgrMCMinusMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], self.Ratio(nuisances_err_do[iBin], tgrMC_vy[iBin]), self.Ratio(nuisances_err_up[iBin], tgrMC_vy[iBin]))     
                   else :
@@ -998,7 +1017,25 @@ class PlotFactory:
                  tgrMCdo.SetLineColor(4)
                  tgrMCdo.SetFillColor(4)
                  tgrMCdo.SetLineWidth(2)
-                 tgrMCdo.SetFillStyle(3005)                 
+                 tgrMCdo.SetFillStyle(3005)
+                 tgrMCOverMCup.SetLineColor(2)
+                 tgrMCOverMCup.SetFillColor(2)
+                 tgrMCOverMCup.SetLineWidth(2)
+                 tgrMCOverMCup.SetFillStyle(3004)
+                 tgrMCOverMCdo.SetLineColor(4)
+                 tgrMCOverMCdo.SetFillColor(4)
+                 tgrMCOverMCdo.SetLineWidth(2)
+                 tgrMCOverMCdo.SetFillStyle(3005)                 
+                 if not self._removeMCStat:
+                   tgrMCstat.SetLineColor(17)
+                   tgrMCstat.SetFillColor(17)
+                   tgrMCstat.SetLineWidth(2)
+                   tgrMCstat.SetFillStyle(3006)
+                   tgrMCOverMCstat.SetLineColor(17)
+                   tgrMCOverMCstat.SetFillColor(17)
+                   tgrMCOverMCstat.SetLineWidth(2)
+                   tgrMCOverMCstat.SetFillStyle(3001)
+                   tgrMCstat.Draw("2")
                  tgrMCup.Draw("2")
                  tgrMCdo.Draw("2")
 
@@ -1282,8 +1319,14 @@ class PlotFactory:
            
             #                               if there is "histo_total" there is no need of explicit nuisances
             if len(mynuisances.keys()) != 0 or histo_total!= None:
-              tgrMC.Draw("2")
- 
+              if not self._nuisanceVariations:
+                tgrMC.Draw("2")
+              else:
+                 if not self._removeMCStat:
+                   tgrMCstat.Draw("2")
+                 tgrMCup.Draw("2")
+                 tgrMCdo.Draw("2")
+
             #     - then the superimposed MC
             if len(sigSupList) != 0 and groupFlag==False:
               for hist in sigSupList:
@@ -1367,13 +1410,33 @@ class PlotFactory:
               frameRatio.GetXaxis().SetTitle(variableName)
             frameRatio.GetYaxis().SetTitle("Data/Expected")
             #frameRatio.GetYaxis().SetTitle("Data/MC")
-            frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
-            #frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
+            if not self._nuisanceVariations:
+              frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
+              #frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
+            else:
+              yRange = 0.
+              #xGr, yGr = ROOT.Double(0.), ROOT.Double(0.) 
+              for iBin in range(0, len(tgrMC_vx)) :
+                if abs(tgrMCOverMCup.GetErrorYhigh(iBin))>yRange: yRange = abs(tgrMCOverMCup.GetErrorYhigh(iBin))
+                if abs(tgrMCOverMCup.GetErrorYlow(iBin))>yRange:  yRange = abs(tgrMCOverMCup.GetErrorYlow(iBin))
+                if abs(tgrMCOverMCdo.GetErrorYhigh(iBin))>yRange: yRange = abs(tgrMCOverMCdo.GetErrorYhigh(iBin))
+                if abs(tgrMCOverMCdo.GetErrorYlow(iBin))>yRange:  yRange = abs(tgrMCOverMCdo.GetErrorYlow(iBin))
+                if not self._removeMCStat:
+                  if abs(tgrMCOverMCstat.GetErrorYhigh(iBin))>yRange: yRange = abs(tgrMCOverMCstat.GetErrorYhigh(iBin))
+                  if abs(tgrMCOverMCstat.GetErrorYlow(iBin))>yRange:  yRange = abs(tgrMCOverMCstat.GetErrorYlow(iBin))
+                if yRange>0.3: yRange = 0.3
+              frameRatio.GetYaxis().SetRangeUser( 1.-2*yRange, 1+2*yRange )
             self.Pad2TAxis(frameRatio)
             #                               if there is "histo_total" there is no need of explicit nuisances
             if len(mynuisances.keys()) != 0 or histo_total!= None:
-              tgrMCOverMC.Draw("2") 
-            
+              if not self._nuisanceVariations:
+                tgrMCOverMC.Draw("2") 
+              else:
+                if not self._removeMCStat:
+                  tgrMCOverMCstat.Draw("2")
+                tgrMCOverMCup.Draw("2")
+                tgrMCOverMCdo.Draw("2")                
+
             tgrDataOverMC.Draw("P0")
             
             

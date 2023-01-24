@@ -658,6 +658,52 @@ class DatacardFactory:
                 histoB.SetBinError(1, errorYield)
                 return histoB
 
+        if '_Simm' in opt.tag or '_WWSimm' in opt.tag or '_WZSimm' in opt.tag:
+
+            if '_Simm' in opt.tag or '_WZSimm' in opt.tag:
+                if sampleName=='WZ' and histo.GetNbinsX()==9:
+                    if suffix:
+                        if 'WZbin' in suffix and 'Down' in suffix:
+                            binContent = histo.GetBinContent(9)
+                            binError   = histo.GetBinError(9)
+                            histo.SetBinContent(9, binContent*1.75)
+                            histo.SetBinError(9, binError*1.75)
+
+            if '_Simm' in opt.tag or '_WWSimm' in opt.tag:
+                if sampleName=='WW' or sampleName=='STtW' or sampleName=='ttbar':
+                    if suffix:
+                        if 'WWshape' in suffix and 'Down' in suffix:
+                            binContent = histo.GetBinContent(6)
+                            binError   = histo.GetBinError(6)
+                            histo.SetBinContent(6, binContent*0.8)
+                            histo.SetBinError(6, binError*0.8)
+                            binContent = histo.GetBinContent(7)
+                            binError   = histo.GetBinError(7)
+                            histo.SetBinContent(7, binContent*0.6)
+                            histo.SetBinError(7, binError*0.6)
+                            for ibin in range(8, 10):
+                                if histo.GetNbinsX()>=ibin:
+                                    binContent = histo.GetBinContent(ibin)
+                                    binError   = histo.GetBinError(ibin)
+                                    histo.SetBinContent(ibin, binContent*0.5)
+                                    histo.SetBinError(ibin, binError*0.5) 
+
+        if '_WWCorr' in opt.tag:
+            if sampleName=='WW' or sampleName=='STtW' or sampleName=='ttbar':
+                wwCorr = 0
+                if suffix:
+                    if 'WWshape' in suffix and 'Up'   in suffix: wwCorr =  1
+                    if 'WWshape' in suffix and 'Down' in suffix: wwCorr = -1
+                wwBinCorr = [ 0.2, 0.4, 0.5, 0.5 ]
+                for ibin in range(6, 10):
+                    binCorr = 1. + wwBinCorr[ibin-6]
+                    if wwCorr==-1: binCorr = 1. #1./(1.-wwBinCorr[ibin-6])
+                    if wwCorr==1: binCorr = (1.+2.*wwBinCorr[ibin-6])/(1.+wwBinCorr[ibin-6])
+                    binContent = histo.GetBinContent(ibin)
+                    binError   = histo.GetBinError(ibin)
+                    histo.SetBinContent(ibin, binContent*binCorr)
+                    histo.SetBinError(ibin, binError*binCorr)
+
         return histo
 
 
