@@ -633,12 +633,21 @@ class DatacardFactory:
         if suffix:
             shapeName += suffix
 
+        if 'SmtEU' in opt.tag:
+            if 'CR' in cutName or 'T2' in sampleName or 'TChipm' in sampleName or 'TSlep' in sampleName:
+                originalShapeName = shapeName.split('/')[-1]
+                shapeName = shapeName.replace('_Smooth', '_')
+
         if type(self._fileIn) is dict:
             # by-sample ROOT file
             histo = self._fileIn[sampleName].Get(shapeName)
         else:
             # Merged single ROOT file
             histo = self._fileIn.Get(shapeName)
+
+        if 'SmtEU' in opt.tag:
+            if 'CR' in cutName or 'T2' in sampleName or 'TChipm' in sampleName or 'TSlep' in sampleName:
+                if '_Smooth' in originalShapeName: histo.SetTitle(originalShapeName); histo.SetName(originalShapeName)
 
         if not histo:
             print shapeName, 'not found'
