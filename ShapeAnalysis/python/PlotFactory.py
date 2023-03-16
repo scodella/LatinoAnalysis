@@ -456,7 +456,7 @@ class PlotFactory:
                         #print "skip this nuisance since 100 percent uncertainty :: ", nuisanceName
                       else :
                         mynuisances[nuisanceName] = nuisances[nuisanceName]
-                 
+ 
                 nuisanceHistos = ({}, {})
                  
                 for nuisanceName, nuisance in mynuisances.iteritems():
@@ -560,6 +560,8 @@ class PlotFactory:
                     histos_grouped[sampleNameGroup] = histos[sampleName].Clone('new_histo_group_' + sampleNameGroup + '_' + cutName + '_' + variableName)
 
             # end sample loop
+
+            if self._nuisanceVariations and len(mynuisances.keys())==0: continue
 
             # set the colors for the groups of samples
             for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
