@@ -430,6 +430,7 @@ class batchJobs :
          jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
        elif 'ifca' in hostName or 'cloud' in hostName:
            #jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
+           #jobid=os.system('sbatch --exclude=wngridXXX -o '+outFile+' -e '+errFile+' --qos='+queue+' --partition=cloudcms '+jobFile+' > '+jidFile)
            jobid=os.system('sbatch -o '+outFile+' -e '+errFile+' --qos='+queue+' --partition=cloudcms '+jobFile+' > '+jidFile)
        elif "pi.infn.it" in socket.getfqdn():
          queue="cms"

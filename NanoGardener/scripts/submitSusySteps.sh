@@ -115,7 +115,7 @@ for prod in 16 16HIPM 16noHIPM 17 18 ; do
         dataSteps=(lep hadd mt2)
         mcSteps=(sel corr syst reco ctrl)
         sigSteps=(sgen swgt ssel scorr ssyst sreco)
-        fsSteps=(fsgen fswgt fssel fscorr fssyst fsreco fsmore)
+        fsSteps=(fsgen fswgt fssel fscorr fshadd fssyst fsreco fsmore)
         for step in ${dataSteps[@]} ${mcSteps[@]} ${sigSteps[@]} ${fsSteps[@]} ; do
             stepType=''
             sigPreDir=''
@@ -182,7 +182,7 @@ for prod in 16 16HIPM 16noHIPM 17 18 ; do
                 else
                     year=$prod
                     if [ $prod == '16' ]; then
-                        periods=('HIPM' 'noHIPM')
+                        periods=('HIPM' 'noHIPM') 
                     else
                         periods=("")
                     fi
@@ -237,6 +237,12 @@ for prod in 16 16HIPM 16noHIPM 17 18 ; do
 
                     for period in "${periods[@]}"; do
                         submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8 FSSusyCorr20${year}v8${period}
+                    done
+
+                elif [[ $step == 'fshadd' ]]; then
+
+                    for period in "${periods[@]}"; do
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period} hadd
                     done
 
                 elif [[ $step == 'syst' ]] || [[ $step == 'ssyst' ]] ; then

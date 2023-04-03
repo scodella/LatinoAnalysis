@@ -31,4 +31,6 @@ Samples['TSlepSlep_mSlep-500to1000']      = {'srmPrefix': 'srm://srm01.ifca.es:8
 
 
 Samples['DYJetsToLL_M-50-LO'] = {'srmPrefix' : 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL17FS_106X_nAODv9/DYJetsToLL_M-50-LO/'] }
-
+Samples['TTJets_DiLept'] = {'srmPrefix' : 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL17FS_106X_nAODv9/TTJets_DiLept'] }
+Samples['TTJets_SingleLeptFromTbar'] = {'srmPrefix' : 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL17FS_106X_nAODv9/TTJets_SingleLeptFromTbar'] }
+Samples['TTJets_SingleLeptFromT'] = {'srmPrefix' : 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL17FS_106X_nAODv9/TTJets_SingleLeptFromT'] }
