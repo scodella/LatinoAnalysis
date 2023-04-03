@@ -661,7 +661,7 @@ class DatacardFactory:
                 histodo = self._fileIn.Get(shapeName.replace('Up','Down'))
                 for ibin in range(1,histo.GetNbinsX()+1):
                     binContent = histocn.GetBinContent(ibin) - (histodo.GetBinContent(ibin)-histocn.GetBinContent(ibin))
-                    binError   = binContent*histocn.GetBinError(ibin)/histocn.GetBinContent(ibin)
+                    binError   = 0. if histocn.GetBinContent(ibin)==0. else binContent*histocn.GetBinError(ibin)/histocn.GetBinContent(ibin)
                     histo.SetBinContent(ibin, binContent)
                     histo.SetBinError(ibin, binError)
 
