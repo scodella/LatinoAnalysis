@@ -93,8 +93,6 @@ submitJobs () {
             samples=" -E "$sigSamples
         elif [ $1 == 'sgen' ]; then
             samples=" -T "$sigSamples
-        elif [ $1 == 'fsgen' ]; then
-            samples=" -E T2bW_mStop-200to1000"
         fi
         ./mkPostProc.py -p $2 -s $3 -b -Q $queue $samples
     else
