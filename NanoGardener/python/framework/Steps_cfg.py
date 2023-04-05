@@ -3361,6 +3361,15 @@ Steps = {
                  'onlySample' : [ 'DYJetsToLL_M-50-LO' ],
                 },
 
+   'SFSusyTT'  : {
+                 'isChain'    : True  ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'selection'  : '"((nElectron+nMuon)>0)"' ,
+                 'subTargets' : ['leptonMaker','lepSelSusySF'],
+                 'onlySample' : [ 'TTJets_DiLept', 'TTJets_SingleLeptFromTbar', 'TTJets_SingleLeptFromT' ],
+                },
+
    'MCSusyFakeLepton' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,

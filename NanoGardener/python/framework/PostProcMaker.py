@@ -219,7 +219,7 @@ class PostProcMaker():
            fileTargetName = self._targetDir+self._treeFilePrefix+iSample+PartName+'.root'
            rootPath = self._aaaXrootd ### Patch
            if 'srmPrefix' in self._Samples[iSample]: 
-             if 'ifca' in self._Samples[iSample]['srmPrefix'] and (self._LocalSite=='ifca' or self._LocalSite=='cloud'):
+             if 'ifca' in self._Samples[iSample]['srmPrefix'] and (self._LocalSite=='ifca' or self._LocalSite=='cloud' or self._LocalSite=='cern'):
                rootPath = ''
            FileDic[rootPath+iFile] = fileTargetName
            #FileDic[self._aaaXrootd+iFile] = fileTargetName
@@ -250,7 +250,7 @@ class PostProcMaker():
 
    def getFilesFromSource(self, sample):
        if 'srmPrefix' in self._Samples[sample]: ### Patch
-         if 'ifca' in self._Samples[sample]['srmPrefix'] and (self._LocalSite=='ifca' or self._LocalSite=='cloud'):
+         if 'ifca' in self._Samples[sample]['srmPrefix'] and (self._LocalSite=='ifca' or self._LocalSite=='cloud' or self._LocalSite=='cern'):
            return self.getSampleFiles(self._Samples[sample]['paths'][0], sample)
          else:
            return self.getFilesFromPath(self._Samples[sample]['paths'], self._Samples[sample]['srmPrefix'])

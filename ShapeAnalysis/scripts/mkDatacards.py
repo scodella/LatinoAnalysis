@@ -654,6 +654,17 @@ class DatacardFactory:
      
         ### Some dirty patch for SUSY
 
+        # Temporary fix for isrFS Up
+        if suffix:
+            if 'isrFS' in suffix and 'Up' in suffix:
+                histocn = self._fileIn.Get(shapeName.split('_isrFS')[0])
+                histodo = self._fileIn.Get(shapeName.replace('Up','Down'))
+                for ibin in range(1,histo.GetNbinsX()+1):
+                    binContent = histocn.GetBinContent(ibin) - (histodo.GetBinContent(ibin)-histocn.GetBinContent(ibin))
+                    binError   = 0. if histocn.GetBinContent(ibin)==0. else binContent*histocn.GetBinError(ibin)/histocn.GetBinContent(ibin)
+                    histo.SetBinContent(ibin, binContent)
+                    histo.SetBinError(ibin, binError)
+
         if opt.blindData:
             if 'DATA' in sampleName:
                 histo.Reset()
@@ -666,6 +677,17 @@ class DatacardFactory:
                 histoB.SetBinContent(1, histoYield)
                 histoB.SetBinError(1, errorYield)
                 return histoB
+
+        if '_WZAsymm' in opt.tag:
+            if sampleName=='WZ':
+                if suffix:
+                    if 'WZbin' in suffix and 'Up' in suffix:
+                        histocen = self._fileIn.Get(shapeName.split('histo_WZ')[0]+'histo_WZ')
+                        for ibin in range(1,histo.GetNbinsX()+1):
+                            binContent = histocen.GetBinContent(ibin)
+                            binError   = histocen.GetBinError(ibin)
+                            histo.SetBinContent(ibin, binContent)
+                            histo.SetBinError(ibin, binError)
 
         if '_Simm' in opt.tag or '_WWSimm' in opt.tag or '_WZSimm' in opt.tag:
 

@@ -104,7 +104,7 @@ if __name__ == '__main__':
     print " plotNormalizedDistributionsTHstack =", opt.plotNormalizedDistributionsTHstack
     print "          showIntegralLegend =", opt.showIntegralLegend
     print "                 scaleToPlot =", opt.scaleToPlot
-    print "                     minLogC =", opt.minLogC
+    print "            123      minLogC =", opt.minLogC
     print "                     maxLogC =", opt.maxLogC
     print "                minLogCratio =", opt.minLogCratio
     print "                maxLogCratio =", opt.maxLogCratio
@@ -155,7 +155,9 @@ if __name__ == '__main__':
     factory._plotLog = opt.logOnly or not opt.linearOnly
 
     factory._scaleToPlot = opt.scaleToPlot 
-    factory._minLogC = opt.minLogC 
+    factory._minLogC = opt.minLogC
+    print "OPT:##########", opt.minLogC,
+    #exit()
     factory._maxLogC = opt.maxLogC 
     factory._minLogCratio = opt.minLogCratio
     factory._maxLogCratio = opt.maxLogCratio
