@@ -741,8 +741,8 @@ class PlotFactory:
             # see https://hypernews.cern.ch/HyperNews/CMS/get/higgs-combination/995.html )
             # from the histogram itself
             #
-            special_shapeName = cutName+"/"+variableName+'/histo_total'
-            if self._showDataVsBkgOnly: special_shapeName += '_background'
+            special_shapeName = cutName+"/"+variableName+'/histo_total_background' # the way it's done is always on top of bkg stuck!!!
+            #if self._showDataVsBkgOnly: special_shapeName += '_background'
             if type(fileIn) is dict:
               if 'total' in fileIn:
                 histo_total = fileIn['total'].Get(special_shapeName)
