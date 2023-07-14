@@ -368,7 +368,6 @@ def plot_plots():
 
       factory._scaleToPlot = opt.scaleToPlot
       factory._minLogC = opt.minLogC
-      print "tell me we are here please", opt.minLogC
       factory._maxLogC = opt.maxLogC
       factory._minLogCratio = opt.minLogCratio
       factory._maxLogCratio = opt.maxLogCratio

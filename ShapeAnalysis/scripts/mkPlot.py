@@ -104,7 +104,7 @@ if __name__ == '__main__':
     print " plotNormalizedDistributionsTHstack =", opt.plotNormalizedDistributionsTHstack
     print "          showIntegralLegend =", opt.showIntegralLegend
     print "                 scaleToPlot =", opt.scaleToPlot
-    print "                     minLogC =", opt.minLogC
+    print "                     minLogC =", opt.minLogC 
     print "                     maxLogC =", opt.maxLogC
     print "                minLogCratio =", opt.minLogCratio
     print "                maxLogCratio =", opt.maxLogCratio
