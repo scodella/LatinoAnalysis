@@ -827,7 +827,7 @@ if __name__ == '__main__':
     print " inputCutsList  =     ", opt.inputCutsList
     print " outputDirPlots =     ", opt.outputDirPlots
     
-    print " minLogC222   =          ", opt.minLogC
+    print " minLogC   =          ", opt.minLogC
     print " maxLogC   =          ", opt.maxLogC
 
     print " minLogCratio   =          ", opt.minLogCratio
