@@ -60,7 +60,7 @@ class SusyGenVarsProducer(Module):
                 if self.susyProcess=='' :
                     print 'SusyGenVarsProducer WARNING: SUSY process not found for output file', outputFile.GetName()
             
-            if self.susyProcess!='' :
+            if self.susyProcess!='' and self.susyProcess!='Slepton' :
                 self.susyModelIsSet = True
 
     ###    
@@ -219,7 +219,7 @@ class SusyGenVarsProducer(Module):
     
         susyMass = int(25*round(float(massPrompt)/25)) if ((massPrompt%25)>=21 or (massPrompt%25)<=4) else massPrompt
         xSection, xSectionUp, xSectionDown = self.getCrossSection(self.susyProcess, self.susyModel, susyMass)
-        
+
         if nSusyParticles==2 :
             ptISR = (susyParticle1+susyParticle2).Pt()
         else :

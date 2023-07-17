@@ -70,13 +70,13 @@ class mt2Producer(Module):
                 if 'ttZ' in self.analysisRegion or 'ZZ' in self.analysisRegion:
                     self.out.branch("lep3idx"+self.suffix, "I")
 
-        if self.metKind=='fast' and not self.isSystematic:
+        if self.metKind=='fast': # and not self.isSystematic:
 
             self.out.branch("ptmiss_reco",      "F")
-            self.out.branch("ptmiss_reco_phi",  "F")
+            self.out.branch("ptmiss_phi_reco",  "F")
             self.out.branch("mt2ll_reco",       "F")
             self.out.branch("ptmiss_gen",       "F")
-            self.out.branch("ptmiss_gen_phi",   "F")
+            self.out.branch("ptmiss_phi_gen",   "F")
             self.out.branch("mt2ll_gen",        "F")
 
     ###    
@@ -178,26 +178,45 @@ class mt2Producer(Module):
  
         ptmissvec3 = ROOT.TVector3()
 
-        metBranch = 'MET' 
-        if hasattr(event, 'METFixEE2017_pt_nom'): metBranch = 'METFixEE2017' 
-        if self.metType=='puppi':  metBranch = 'PuppiMET' 
+        if self.metType=='type1pf':
 
-        metSystem = '_'+self.metSystematic.replace('Smear', '') 
-        if not hasattr(event, metBranch+'_pt'+metSystem):
-            if self.metSystematic=='nom':
-                metSystem = ''
-            else:    
-                raise Exception('mt2producer ERROR: variable', metBranch+'_pt'+metSystem, 'does not exist')
+            hasNewUENames = hasattr(event, 'MET_T1_pt_unclustEnUp') or hasattr(event, 'METFixEE2017_T1_pt_unclustEnUp')
 
-        ptmissvec3.SetPtEtaPhi(getattr(event, metBranch+'_pt'+metSystem), 0., getattr(event, metBranch+'_phi'+metSystem)) 
+            if 'unclust' in self.metSystematic and not hasNewUENames:
+                metBranch='MET'
+            elif 'jer' in self.metSystematic or 'Smear' in self.metSystematic:
+                metBranch='MET_T1Smear'
+            else:
+                metBranch = 'MET_T1' 
 
-        if 'Smear' in self.metSystematic:
-            ptmissnom = ROOT.TVector3()
-            ptmissjer = ROOT.TVector3()
-            ptmissnom.SetPtEtaPhi(getattr(event, metBranch+'_pt_nom'), 0., getattr(event, metBranch+'_phi_nom'))
-            ptmissjer.SetPtEtaPhi(getattr(event, metBranch+'_pt_jer'), 0., getattr(event, metBranch+'_phi_jer'))
-            #ptmissvec3 = ptmissjer + (ptmissvec3 - ptmissnom)
-            ptmissvec3 += ptmissjer - ptmissnom
+            if hasattr(event, 'METFixEE2017_T1_pt'): metBranch = metBranch.replace('MET', 'METFixEE2017') 
+
+            metSystem = '_'+self.metSystematic.replace('Smear' , '') 
+            if metSystem == '_jer' or metSystem=='_nom' : metSystem = ''
+        
+            if not hasattr(event, metBranch+'_pt'+metSystem):
+                if self.metSystematic=='nom':
+                    metBranch = 'MET'
+                else:    
+                    raise Exception('mt2producer ERROR: variable', metBranch+'_pt'+metSystem, 'does not exist')
+
+            ptmissvec3.SetPtEtaPhi(getattr(event, metBranch+'_pt'+metSystem), 0., getattr(event, metBranch+'_phi'+metSystem)) 
+
+            if "unclustEnSmear" in self.metSystematic and not hasNewUENames:
+                ptmissnom = ROOT.TVector3()
+                ptmissjer = ROOT.TVector3()
+
+                ptmissnom.SetPtEtaPhi(getattr(event, metBranch+'_T1_pt'), 0., getattr(event, metBranch+'_T1_phi'))
+                ptmissjer.SetPtEtaPhi(getattr(event, metBranch+'_T1Smear_pt'), 0., getattr(event, metBranch+'_T1Smear_phi'))
+                #ptmissvec3 = ptmissjer + (ptmissvec3 - ptmissnom)
+                ptmissvec3 += ptmissjer - ptmissnom
+
+        elif self.metType=='puppi':
+
+            metBranch='PuppiMET'
+            metSystem = self.metSystematic.replace('Smear' , '').replace('nom' , '')
+            metSystem = metSystem.replace('jesTotal' , 'JES').replace('jer' , 'JER').replace('unclustEn', 'Unclustered')
+            ptmissvec3.SetPtEtaPhi(getattr(event, metBranch+'_pt'+metSystem), 0., getattr(event, metBranch+'_phi'+metSystem))
 
         passRegion = False
 
@@ -433,23 +452,24 @@ class mt2Producer(Module):
 
             if self.metKind=='fast':
 
-                if not self.isSystematic:
-                    self.out.fillBranch("ptmiss_reco",     ptmiss)
-                    self.out.fillBranch("ptmiss_reco_phi", ptmiss_phi)
-                    self.out.fillBranch("mt2ll_reco",      mt2ll)
-                    self.out.fillBranch("ptmiss_gen",      ptmiss_gen)
-                    self.out.fillBranch("ptmiss_gen_phi",  ptmiss_gen_phi)
-                    self.out.fillBranch("mt2ll_gen",       mt2ll_gen)
+                #if not self.isSystematic:
+                self.out.fillBranch("ptmiss_reco",     ptmiss)
+                self.out.fillBranch("ptmiss_phi_reco", ptmiss_phi)
+                self.out.fillBranch("mt2ll_reco",      mt2ll)
+                self.out.fillBranch("ptmiss_gen",      ptmiss_gen)
+                self.out.fillBranch("ptmiss_phi_gen",  ptmiss_gen_phi)
+                self.out.fillBranch("mt2ll_gen",       mt2ll_gen)
 
                 ptmiss = (ptmiss + ptmiss_gen)/2.
                 mt2ll = (mt2ll + mt2ll_gen)/2.
 
             elif self.metKind=='gen':
+
                 ptmiss = ptmiss_gen
                 mt2ll = mt2ll_gen
 
-            if 'syst' in self.filterRegion and self.isSystematic: 
-                if ptmiss<100.: return False
+                if 'syst' in self.filterRegion and self.isSystematic: 
+                    if ptmiss<100.: return False
 
         self.out.fillBranch("mll"+self.suffix,        mll)
         self.out.fillBranch("lep0idx"+self.suffix,    lep0idx)
