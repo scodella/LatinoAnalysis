@@ -94,10 +94,10 @@ class LawnMower:
 
         folder_fit_name = "prefit"
         if self._kind == 'p' :
-          folder_fit_name = "prefit"  
-        elif  self._kind == 'P' :
-          folder_fit_name = "postfit" 
-     
+          folder_fit_name = "prefit"
+        elif self._kind == 'P' :
+          folder_fit_name = "postfit"  
+
         cuts = []
         folders = []
         
@@ -110,7 +110,8 @@ class LawnMower:
           if (obj.IsA().GetName() == "TDirectoryFile") :
             if ("_" + folder_fit_name) in obj.GetName():
               #print "obj.GetName() = " , obj.GetName() 
-              cuts.append (obj.GetName()[:-7])   # length of "_prefit" = 7
+              #cuts.append (obj.GetName()[:-7])   # length of "_prefit" = 7
+              cuts.append (obj.GetName().replace("_"+folder_fit_name, "")) # because "_postfit" has a character more
               folders.append(obj)
               
         print " cuts = ", cuts
@@ -118,9 +119,11 @@ class LawnMower:
         #
         # prepare output file
         #
-        
-        #self._outFile = ROOT.TFile.Open( self._outputFileName, 'update')  # need to append in an existing file if more cuts/variables are wanted
-        self._outFile = ROOT.TFile.Open( self._outputFileName, 'recreate')  # need to append in an existing file if more cuts/variables are wanted
+       
+        if self._update: 
+          self._outFile = ROOT.TFile.Open( self._outputFileName, 'update')  # need to append in an existing file if more cuts/variables are wanted
+        else:
+          self._outFile = ROOT.TFile.Open( self._outputFileName, 'recreate')  # need to append in an existing file if more cuts/variables are wanted
 
         self._outFile.mkdir ( self._cutName )
         self._outFile.mkdir ( self._cutName + "/" + self._variable)
@@ -132,7 +135,7 @@ class LawnMower:
         # namely, if it is the same process
         #
         histos = {}
-        
+
         for folder in folders:
           keys = folder.GetListOfKeys()
           for key in keys:
@@ -146,10 +149,8 @@ class LawnMower:
                   histos[obj.GetName()].Add(obj)
                 else :
                   histos[obj.GetName()] = obj
-           
         print " histos selected = ", histos
         total_MC = self._AddHistos(histos, "histo_total")
-        
         
         
         #
@@ -174,6 +175,10 @@ class LawnMower:
                   
                   if obj_histo.GetName() == "TotalProcs":
                     total_MC_Errors = obj_histo
+                  if obj_histo.GetName() == "TotalBkg":
+                    total_Bkg_Errors = obj_histo 
+                  if obj_histo.GetName() == "TotalSig":
+                    total_Sig_Errors = obj_histo 
                   if obj_histo.GetName() == "data_obs":
                     total_data = obj_histo
 
@@ -259,14 +264,43 @@ class LawnMower:
         total_MC_gr.SetName ("gr_total")
 
         self._outFile.cd ( self._cutName + "/" + self._variable )
-        total_MC_gr.Write()
-        total_MC.Write()
+        #total_MC_gr.Write()
+        #total_MC.Write()
+        if self._inputForData!='': # data from fit (useful for asimov data)
+          total_data.Reset()
+          fitFile = ROOT.TFile(self._inputForData, "READ") 
+          for cardName in cuts:
+            datagraph = fitFile.Get("/".join(["shapes_prefit", cardName, "data"]))
+            for point in range(datagraph.GetN()):
+              xP, yP = ROOT.double(), ROOT.double()
+              datagraph.GetPoint(point, xP, yP)
+              total_data.SetBinContent(point+1, total_data.GetBinContent(point+1)+yP)
+              total_data.SetBinError(point+1, math.sqrt(total_data.GetBinContent(point+1))) # Will be fixed in PlotFactory       
+          fitFile.Close()
+          self._outFile.cd ( self._cutName + "/" + self._variable )
         total_data.Write()
+
         for histoName, histo in histos.iteritems():
-          histo.Write()
-          
+          if self._signal=='' or histo.GetName()!="histo_"+self._signal:
+            histo.Write()
+          else:
+            total_Sig_Errors.Write("histo_"+self._signal)
+        total_MC_Errors.Write("histo_total")
+        total_Bkg_Errors.Write("histo_total_background")
         
-        
+        if self._kind == 'P' :
+          for key in keys:
+            obj = key.ReadObj()
+            if (obj.IsA().GetName() == "TDirectoryFile") :
+              if obj.GetName() == "prefit" :
+                keys_histo = obj.GetListOfKeys()
+                for key_histo in keys_histo:
+                  obj_histo = key_histo.ReadObj()
+                  if (obj_histo.IsA().GetName() != "TProfile" and obj_histo.InheritsFrom("TH1")) :
+                    if obj_histo.GetName() == "TotalProcs": obj_histo.Write("histo_total_prefit")
+                    if obj_histo.GetName() == "TotalBkg":   obj_histo.Write("histo_total_background_prefit")
+                    if obj_histo.GetName() == "TotalSig":   obj_histo.Write("histo_signal_prefit")
+
         #
         # Do I really need to define myself a cut for cuts.py with the "combined" ?
         # And the simplified variables.py with only the combined variable?
@@ -414,9 +448,12 @@ if __name__ == '__main__':
 
     parser.add_option('--inputFilePostFitShapesFromWorkspace'      , dest='inputFilePostFitShapesFromWorkspace'      , help='input file with roofit results, mlfit'                          , default='input.root')
     parser.add_option('--outputFile'            , dest='outputFile'            , help='output file with histograms, same format as mkShape.py output'  , default='output.root')
+    parser.add_option('--update'                , dest='update'                , help='update existing file instead of recreating it', default=False, action='store_true')
     parser.add_option('--kind'                  , dest='kind'                  , help='which kind of pre/post-fit distribution: p = prefit, P = postfit'  , default='P')
     parser.add_option('--cutName'               , dest='cutName'               , help='cut name as will appear in cuts.py'  , default='combined')
     parser.add_option('--variable'              , dest='variable'              , help='variable name'  , default='mll')
+    parser.add_option('--signal'                , dest='signal'                , help='signal name (for BSM searches)'  , default='')
+    parser.add_option('--inputForData'          , dest='inputForData'          , help='fit root for asimov data'        , default='')
     parser.add_option('--structureFile'         , dest='structureFile'         , help='file with datacard configurations'          , default=None )
     parser.add_option('--lumiText'              , dest='lumiText'              , help='text for luminosity to be shown in legend'  , default="100/fb")
     parser.add_option('--nonFitVariable'        , dest='nonFitVariable'        , help='Is this a variable not used in the fit? (default False = it is the variable fitted)', action='store_true', default=False)
@@ -433,9 +470,12 @@ if __name__ == '__main__':
     print " configuration file    =          ", opt.pycfg
     print " inputFilePostFitShapesFromWorkspace      =          ", opt.inputFilePostFitShapesFromWorkspace
     print " outputFile            =          ", opt.outputFile
+    print " update                =          ", opt.update
     print " variable              =          ", opt.variable
     print " kind                  =          ", opt.kind
     print " cutName               =          ", opt.cutName
+    print " signal                =          ", opt.signal
+    print " inputForData          =          ", opt.inputForData
     print " structureFile         =          ", opt.structureFile
     print " plotFile              =          ", opt.plotFile
     print " lumiText              =          ", opt.lumiText
@@ -458,9 +498,12 @@ if __name__ == '__main__':
     factory = LawnMower()
     factory._inputFilePostFitShapesFromWorkspace  = opt.inputFilePostFitShapesFromWorkspace
     factory._outputFileName      = opt.outputFile
+    factory._update              = opt.update
     factory._variable            = opt.variable
     factory._kind                = opt.kind    
     factory._cutName             = opt.cutName
+    factory._signal              = opt.signal
+    factory._inputForData        = opt.inputForData
     factory._structureFile       = opt.structureFile
     factory._plotFile            = opt.plotFile
     factory._lumiText            = opt.lumiText
