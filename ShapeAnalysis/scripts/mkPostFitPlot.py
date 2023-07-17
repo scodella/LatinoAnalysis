@@ -119,10 +119,20 @@ class LawnMower:
              print 'histo_' + cardName
              histo.SetName  ('histo_' + cardName)
              histo.SetTitle ('histo_' + cardName)
-             histo.Write()              
+             if sampleName!="DATA" or not factory._getDataFromCombine: histo.Write()              
              
              template_histogram = histo.Clone ("template")
 
+           if sampleName == "DATA" and factory._getDataFromCombine:
+             datagraph = fileIn.Get(folder_fit_name + "/" + self._cut + "/data")
+             histo = ROOT.TH1D('histo_DATA', 'histo_DATA', datagraph.GetN(), 0, datagraph.GetN())
+             for point in range(datagraph.GetN()):
+               xP, yP = ROOT.double(), ROOT.double()
+               datagraph.GetPoint(point, xP, yP)
+               histo.SetBinContent(point+1, yP)
+               histo.SetBinError(point+1, datagraph.GetErrorY(point))
+             histo = self._ChangeBin(histo, template_histogram)
+             histo.Write() 
 
         #print " template_histogram = " , template_histogram
          
@@ -155,13 +165,13 @@ class LawnMower:
            if 'removeFromCuts' in structureDef and self._cutNameInOriginal in structureDef['removeFromCuts']:
              continue
 
-           print " sampleName = ", sampleName, shapeSource +"/histo_"+sampleName
+           print " sampleName = ", sampleName
            
            if sampleName != "DATA":
                if totalFromDatacard == 0:
-                   totalFromDatacard = fileInJustForDATA.Get(shapeSource +"/histo_"+sampleName).Clone()
+                   totalFromDatacard = fileInJustForDATA.Get(shapeSource+"/histo_"+sampleName).Clone()
                else:
-                   tmp = fileInJustForDATA.Get(shapeSource +"/histo_"+sampleName)
+                   tmp = fileInJustForDATA.Get(shapeSource+"/histo_"+sampleName)
                    totalFromDatacard.Add(tmp)
 
            copied_from_original = False
@@ -353,8 +363,9 @@ if __name__ == '__main__':
     parser.add_option('--getSignalFromPrefit'   , dest='getSignalFromPrefit'   , help='get the signal shape and normalization from pre-fit. Needed for exclusion analyses. Set to 1 to trigger this.', default=0   ,    type=int)
     parser.add_option('--MCStatFromInput'       , dest='MCStatFromInput'       , help='add prefit MC stat. unc. to posterior total unc. (for bystander fits)', action="store_true", default=False)
     parser.add_option('--tag'                   , dest='tag'                   , help='Tag used for the shape file name'           , default=None)
-    parser.add_option('--sigset'                , dest='sigset'                , help='Signal samples [SM]'                        , default='SM')      
-
+    parser.add_option('--sigset'                , dest='sigset'                , help='Signal samples [SM]'                        , default='SM')    
+    parser.add_option('--getDataFromCombine'    , dest='getDataFromCombine'    , help='Get data from combine output (for asimov fit)', action="store_true", default=False)
+      
     # read default parsing options as well
     hwwtools.addOptions(parser)
     hwwtools.loadOptDefaults(parser)
@@ -372,7 +383,7 @@ if __name__ == '__main__':
     print " kind                  =          ", opt.kind
     print " getSignalFromPrefit   =          ", opt.getSignalFromPrefit
     print " structureFile         =          ", opt.structureFile
-
+    print " getDataFromCombine    =          ", opt.getDataFromCombine
 
 
     if opt.cutNameInOriginal == '' :
@@ -398,6 +409,7 @@ if __name__ == '__main__':
     factory._kind              = opt.kind
     factory._getSignalFromPrefit = opt.getSignalFromPrefit
     factory._MCStatFromInput   = opt.MCStatFromInput
+    factory._getDataFromCombine = opt.getDataFromCombine
 
     # ~~~~
     samples = OrderedDict()
@@ -408,13 +420,6 @@ if __name__ == '__main__':
 
     factory._samples = samples
 
-    cuts = OrderedDict()
-    if os.path.exists(opt.cutsFile) :
-      handle = open(opt.cutsFile,'r')
-      exec(handle)
-      handle.close()
-
-
     # ~~~~
     structure = {}
     if opt.structureFile == None :
@@ -422,6 +427,9 @@ if __name__ == '__main__':
        #exit ()
 
     elif os.path.exists(opt.structureFile) :
+      cuts = {}
+      cuthandle = open('cuts.py','r')
+      exec(cuthandle)
       handle = open(opt.structureFile,'r')
       exec(handle)
       handle.close()

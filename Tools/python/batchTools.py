@@ -37,11 +37,6 @@ try:
 except NameError:
   FORCE_GFAL_SHELL = False
 
-try:
-  REQUEST_CPUS = requestCPUs
-except NameError:
-  REQUEST_CPUS = 1
-
 class batchJobs :
    def __init__ (self,baseName,prodName,stepList,targetList,batchSplit,postFix='',usePython=False,useBatchDir=True,wDir='',JOB_DIR_SPLIT_READY=False,USE_SINGULARITY=False):
      # baseName   = Gardening, Plotting, ....
@@ -156,7 +151,7 @@ class batchJobs :
        if 'knu' in hostName or 'hercules' in hostName:
          pass
        else:
-         jFile.write('ulimit -c 0 -s unlimited\n')
+         jFile.write('ulimit -c 0\n')
        if    useBatchDir : 
          if 'iihe' in hostName:
            jFile.write('cd $TMPDIR \n')
@@ -363,7 +358,7 @@ class batchJobs :
            if AUTO_CONDOR_RETRY:
              jdsFile.write('on_exit_hold = (ExitBySignal == True) || (ExitCode != 0)\n')
              jdsFile.write('periodic_release =  (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > (60*3))\n')
-           jdsFile.write('request_cpus = '+str(REQUEST_CPUS)+'\n')
+           jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
            jdsFile.write('+JobFlavour = "'+queue+'"\n')
            jdsFile.write('queue\n')
            jdsFile.close()
@@ -415,7 +410,7 @@ class batchJobs :
          jdsFile.write('output = '+self.subDir+subDirExtra+'/'+jName+'.out\n')
          jdsFile.write('error = '+self.subDir+subDirExtra+'/'+jName+'.err\n')
          jdsFile.write('log = '+self.subDir+subDirExtra+'/'+jName+'.log\n')
-         jdsFile.write('request_cpus = '+str(REQUEST_CPUS)+'\n')
+         jdsFile.write('request_cpus = '+str(self.nThreads)+'\n')
          jdsFile.write('accounting_group=group_cms\n')
          jdsFile.write('JobBatchName = '+jName.split('__')[0]+'__'+jName.split('__')[1]+'__'+jName.split('__')[2]+'\n')         
          if 'ui10' in hostName:
@@ -435,6 +430,7 @@ class batchJobs :
          jobid=os.system('condor_submit '+jdsFileName+' > ' +jidFile)
        elif 'ifca' in hostName or 'cloud' in hostName:
            #jobid=os.system('qsub -P l.gaes -S /bin/bash -cwd -N Latino -o '+outFile+' -e '+errFile+' '+jobFile+' -j y > '+jidFile)
+           #jobid=os.system('sbatch --exclude=wngridXXX -o '+outFile+' -e '+errFile+' --qos='+queue+' --partition=cloudcms '+jobFile+' > '+jidFile)
            jobid=os.system('sbatch -o '+outFile+' -e '+errFile+' --qos='+queue+' --partition=cloudcms '+jobFile+' > '+jidFile)
        elif "pi.infn.it" in socket.getfqdn():
          queue="cms"
@@ -458,7 +454,7 @@ class batchJobs :
        jds += 'error = $(JName).err\n'
        jds += 'log = $(JName).log\n'
        #jds += 'use_x509userproxy = true\n'
-       jds += 'request_cpus = '+str(REQUEST_CPUS)+'\n'
+       jds += 'request_cpus = '+str(self.nThreads)+'\n'
        if CONDOR_ACCOUNTING_GROUP:
          jds += '+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n'
          jds += 'accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n'
@@ -705,7 +701,7 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
           jdsFile.write('output = '+subDir+'/'+jName+'.out\n')
           jdsFile.write('error = '+subDir+'/'+jName+'.err\n')
           jdsFile.write('log = '+subDir+'/'+jName+'.log\n')
-          jdsFile.write('request_cpus = '+str(REQUEST_CPUS)+'\n')
+          jdsFile.write('request_cpus = '+str(requestCpus)+'\n')
           if CONDOR_ACCOUNTING_GROUP:
             jdsFile.write('+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n')
             jdsFile.write('accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n')
@@ -750,7 +746,7 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
           jdsFile.write('output = '+subDir+'/'+jName+'.out\n')
           jdsFile.write('error = '+subDir+'/'+jName+'.err\n')
           jdsFile.write('log = '+subDir+'/'+jName+'.log\n')
-          jdsFile.write('request_cpus = '+str(REQUEST_CPUS)+'\n')
+          jdsFile.write('request_cpus = '+str(requestCpus)+'\n')
           #jdsFile.write('should_transfer_files = YES\n')
           #jdsFile.write('when_to_transfer_output = ON_EXIT\n')
           #jdsFile.write('transfer_input_files = '+jName+'.sh\n')
@@ -783,7 +779,7 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
         jds += 'output = '+subDir+'/$(JName).out\n'
         jds += 'error = '+subDir+'/$(JName).err\n'
         jds += 'log = '+subDir+'/$(JName).log\n'
-        jds += 'request_cpus = '+str(REQUEST_CPUS)+'\n'
+        jds += 'request_cpus = '+str(requestCpus)+'\n'
         jds += '+JobFlavour = "'+queue+'"\n'
         if CONDOR_ACCOUNTING_GROUP:
           jds += '+AccountingGroup = '+CONDOR_ACCOUNTING_GROUP+'\n'

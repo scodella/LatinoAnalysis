@@ -686,7 +686,7 @@ SUSYCrossSections = {
     ## NLO-NLL sl_L+sl_L: any single generation of left-handed sleptons
     ##    https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVslepslep#NLO_NLL_any_single_generation_of
     ##    NLO-NLL (2019-11-20)
-   
+
     'SleptonLH'   : { 'susyModels' : {   'TSlepSlepLH'           : '2.',
                                          'TSelectronSelectronLH' : '1.',
                                          'TSmuonSmuonLH'         : '1.',

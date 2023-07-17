@@ -510,7 +510,7 @@ if __name__ == '__main__':
 
       nThreads = opt.numThreads
 
-      finalname = "plots_"+opt.tag+".root"
+      finalname = "plots_"+opt.tag+"_"+opt.sigset+".root"
       finalpath = os.path.join(os.getcwd(), opt.outputDir, finalname)
 
       hadd = os.environ['CMSSW_BASE'] + '/src/LatinoAnalysis/Tools/scripts/haddfast'
@@ -524,15 +524,7 @@ if __name__ == '__main__':
       command.extend(fileList)
       print ' '.join(command)
       if not opt.dryRun:
-        proc = subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        ### Display hadd info
-        stoppedForExistingRootfile = False
-        while True:
-          output = proc.stdout.readline()
-          if output == '' and proc.poll() is not None: break
-          if output:
-            if 'exists' in output.lower(): stoppedForExistingRootfile = True
-            print(output.strip())
+        subprocess.Popen(command, cwd = os.path.join(os.getcwd(), opt.outputDir)).communicate()
 
         outFile = ROOT.TFile.Open(finalpath, 'update')
         for nuisance in nuisances.itervalues():
@@ -546,9 +538,18 @@ if __name__ == '__main__':
               outFile = ROOT.TFile.Open(finalpath, 'update')
               ShapeFactory.postprocess_NegativeBinAndError(nuisances, sampleName, sample, cuts, variables, outFile)
               outFile.Close()
-        
-        ### Modded to avoid cleaning all partial shapes if hadd quits because the target rootfile already exists
-        if not opt.doNotCleanup and not stoppedForExistingRootfile:
+
+        extremeNuisance = ''
+        for nuisanceName in nuisances:
+            if 'extremes' in nuisances[nuisanceName]:
+                if extremeNuisance=='': extremeNuisance = nuisanceName
+                else: print 'Warning: cannot make two extreme nuisances at the time!'
+        if extremeNuisance!='': 
+            outFile = ROOT.TFile.Open(finalpath, 'update')
+            ShapeFactory.postprocess_nuisance_average(extremeNuisance, cuts, variables, nuisances, outFile)
+            outFile.Close()
+
+        if not opt.doNotCleanup:
           for fname in fileList:
             os.unlink(opt.outputDir + '/' + fname)
 

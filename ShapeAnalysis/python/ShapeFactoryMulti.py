@@ -310,7 +310,6 @@ class ShapeFactory:
                 # there are various ways to set up branch mapping in NanoGardener, but in practice we use only the branches-suffix configuration
                 bmap = branch_mapping[nuisance['map' + var]]
                 for bname in bmap['branches']:
-                  #print "Replacing branch: ", bname, " --> ",  prefix + bname + bmap['suffix']
                   ndrawer.replaceBranch(bname, prefix + bname + bmap['suffix'])
 
                 ndrawers.append(ndrawer)
@@ -379,7 +378,24 @@ class ShapeFactory:
               else:
                 warnIfTreeWeight = False
 
-              for it, w in enumerate(treeweights):
+              ### SUSY
+              ntreeweights = treeweights
+              if 'kind' in nuisances[nuisanceName] and nuisances[nuisanceName]['kind'].startswith('tree'): 
+                if 'folder' + var in nuisances[nuisanceName]:               
+                  if 'synchronized' in nuisances[nuisanceName] and nuisances[nuisanceName]['synchronized']==False:
+                    existtree = [ ] 
+                    for filename in basenames:
+                      fullfilename = nuisances[nuisanceName]['folder'+var] + '/' + filename 
+                      if self._testLocalFile(fullfilename) or self._testLocalFile(fullfilename.replace('__part0', '')):
+                        existtree.append(True)
+                      else:
+                        existtree.append(False)
+                    ntreeweights = [ ]
+                    for it, w in enumerate(treeweights):
+                      if existtree[it]:
+                        ntreeweights.append(w)
+
+              for it, w in enumerate(ntreeweights): ### SUSY
                 if w is not None:
                   ndrawer.setTreeReweight(it, False, w)
                   if warnIfTreeWeight:
@@ -487,7 +503,7 @@ class ShapeFactory:
                   reweight = ShapeFactory._make_reweight(cut['weight'])
                 else:
                   reweightCut = ShapeFactory._make_reweight(cut['weight'])
-                  reweight = ROOT.multidraw.ReweightSource(reweight, reweightCut)
+                  reweight = ROOT.multidraw.ReweightSource(reweight, reweightCut) 
 
               if 'tree' in variable: # variable is actually a tree definition
                 def setup_filler(drawer, reweight, variation=''):
@@ -799,6 +815,12 @@ class ShapeFactory:
                     if twosided:
                       self._fixNegativeBin(outputsHistoDo, outputsHisto)
 
+                  if 'kind' in nuisance.keys() and nuisance['kind'].startswith('tree'): ### SUSY
+                    if 'suppressZeroTreeNuisances' in sample.keys() and ( cutName in sample['suppressZeroTreeNuisances'] or 'all' in sample['suppressZeroTreeNuisances']) :        
+                      # fix zero tree nuisances
+                      self._fixZeroTreeNuisances(outputsHistoUp, outputsHisto)
+                      if twosided:
+                        self._fixZeroTreeNuisances(outputsHistoDo, outputsHisto)
 
           # end of one sample
           print ''
@@ -1085,6 +1107,15 @@ class ShapeFactory:
 
     # _____________________________________________________________________________
     @staticmethod
+    def _fixZeroTreeNuisances(histoNew, histoReference):
+
+      if histoNew.Integral()==0. and not histoReference.Integral()==0.:
+        for ibin in range(1, histoNew.GetNbinsX()+1) :
+          if not histoReference.GetBinContent(ibin) == 0 :
+            histoNew.SetBinContent(ibin, histoReference.GetBinContent(ibin) * 0.0001)
+
+    # _____________________________________________________________________________
+    @staticmethod
     def _addUncertaintyOn0bincontent(histogram_to_be_fixed):
       changed = 0
       effectiveEntries = histogram_to_be_fixed.GetEffectiveEntries()
@@ -1116,6 +1147,7 @@ class ShapeFactory:
             raise RuntimeError('bin must be an ntuple or an arrays')
 
         l = len(bins)
+        if l==2 and len(bins[1])==1: l = 1 ### SUSY
         # 1D variable binning
         if l == 1 and isinstance(bins[0],list):
             ndim=1
@@ -1313,6 +1345,9 @@ class ShapeFactory:
             if not exists:
               if altDir and testFile(altDir + '/' + os.path.basename(path)):
                 path = altDir + '/' + os.path.basename(path)
+                exists = True
+              elif '__part0' in path and testFile(path.replace('__part0', '')): ### SUSY: hadded systematics
+                path = path.replace('__part0', '')
                 exists = True
 
             if exists:
@@ -1607,4 +1642,70 @@ class ShapeFactory:
                   if ShapeFactory._fixNegativeBin(outputsHistoUp, nominal): outputsHistoUp.Write()
                   if twosided:
                     if ShapeFactory._fixNegativeBin(outputsHistoDown, nominal): outputsHistoDown.Write()
+
+    @staticmethod
+    def postprocess_nuisance_average(extremeNuisance, cuts, variables, nuisances, outFile):
+
+      extrames = nuisances[extremeNuisance]['extremes']
+
+      for cut in cuts:
+        if extrames[0] not in cut and extrames[1] not in cut:
+          print 'postprocess_nuisance_average error:', cut, 'is not an extreme'
+          exit()
+        if extrames[0] in cut: 
+
+          cutName = cut.replace(extrames[0], '')
+          outFile.mkdir(cutName)
+
+          for variableExt0 in variables:
+            if 'cuts' not in variables[variableExt0] or cut in variables[variableExt0]['cuts']:
+
+              variable = variableExt0.replace(extrames[0], '')
+              variableExt1 = variable+extrames[1]
+              outFile.mkdir(cutName+'/'+variable)
+              outFile.cd(cutName+'/'+variable)
+
+              for sample in nuisances[extremeNuisance]['samples']:
+
+                histoCentralName = 'histo_'+sample
+
+                histoExtremeUp = outFile.Get(cutName+extrames[0]+'/'+variableExt0+'/'+histoCentralName)
+                histoExtremeUp.SetName('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Up')
+                histoExtremeUp.SetTitle('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Up')
+
+                histoExtremeDown = outFile.Get(cutName+extrames[1]+'/'+variableExt1+'/'+histoCentralName)
+                histoExtremeDown.SetName('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Down')
+                histoExtremeDown.SetTitle('histo_'+sample+'_'+nuisances[extremeNuisance]['name']+'Down')
+
+                histoCentral = histoExtremeUp + histoExtremeDown
+                histoCentral.Scale(0.5)
+                histoCentral.SetName(histoCentralName); histoCentral.SetTitle(histoCentralName)
+                histoCentral.Write()      
+
+                if (histoExtremeUp.Integral()==0. or histoExtremeDown.Integral()==0.) and not histoCentral.Integral()==0.:
+                  for ibin in range(1, histoCentral.GetNbinsX()+1):
+                    if histoExtremeUp.Integral()==0. and not histoCentral.GetBinContent(ibin)==0:
+                      histoExtremeUp.SetBinContent(ibin, histoCentral.GetBinContent(ibin) * 0.0001)
+                    if histoExtremeDown.Integral()==0. and not histoCentral.GetBinContent(ibin)==0:
+                      histoExtremeDown.SetBinContent(ibin, histoCentral.GetBinContent(ibin) * 0.0001)
+
+                histoExtremeUp.Write()
+                histoExtremeDown.Write()
+
+                for nuisance in nuisances:
+                  if nuisance!=extremeNuisance:
+                    if 'type' in nuisances[nuisance] and nuisances[nuisance]['type']=='shape':
+                      if 'cuts' not in nuisances[nuisance] or cut in nuisances[nuisance]['cuts']:
+                        if sample in nuisances[nuisance]['samples']:
+                          for variation in [ 'Up', 'Down' ]:
+                            histoSystName = 'histo_'+sample+'_'+nuisances[nuisance]['name']+variation
+                            histoSyst = outFile.Get(cutName+extrames[0]+'/'+variableExt0+'/'+histoSystName)
+                            histoSyst.Add(outFile.Get(cutName+extrames[1]+'/'+variableExt1+'/'+histoSystName)) 
+                            histoSyst.Scale(0.5)
+                            histoSyst.SetName(histoSystName); histoSyst.SetTitle(histoSystName)
+                            histoSyst.Write()
+
+          outFile.cd()
+          outFile.Delete(cutName+extrames[0]+';*')
+          outFile.Delete(cutName+extrames[1]+';*')
 
