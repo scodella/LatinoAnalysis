@@ -1229,7 +1229,7 @@ class PlotFactory:
 
                 if self._plotLog:
                     # log Y axis
-                    minYplot = max(self._minLogC, minYused) if minYback>2. else self._minLogC
+                    minYplot = max(self._minLogC, minYused) if minYback>=2. else self._minLogC
                     frame.GetYaxis().SetRangeUser( minYplot, self._maxLogC * maxYused )  # Jonatan
                     #frame.GetYaxis().SetRangeUser( min(self._minLogC, minYused), self._maxLogC * maxYused )  # Jonatan
                     tcanvas.SetLogy(True)
