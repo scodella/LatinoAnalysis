@@ -15,10 +15,12 @@ periods  = args[3] if len(sys.argv)>=4 else 'All'
 hltPaths = args[4] if len(sys.argv)>=5 else ''
 redoPS   = int(args[5]) if len(sys.argv)>=6 else 1
 
-minBiasXsec = { 'Run2' : { 'pileup' : '69200', 'pileup_minus' : '66017', 'pileup_plus' : '72383' }
+minBiasXsec = { 'Run2' : { 'pileup' : '69200', 'pileup_minus' : '66017', 'pileup_plus' : '72383' },
+                'Run3' : { 'pileup' : '80000', 'pileup_minus' : '76320', 'pileup_plus' : '83680' },
                }
 
 DirectoryDQM = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'
+WebCAF = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/'
 
 yearsInfos  = { 'UL2016' : { 'Run' : 'Run2', 'runs' : [ 272007, 284044 ], 'numPileupBins' : '100',
                              'jsonFile'    : DirectoryDQM+'Collisions16/13TeV/Legacy_2016/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt', 
@@ -32,6 +34,10 @@ yearsInfos  = { 'UL2016' : { 'Run' : 'Run2', 'runs' : [ 272007, 284044 ], 'numPi
                              'jsonFile'    : DirectoryDQM+'Collisions18/13TeV/Legacy_2018/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt',
                              'pileupFile'  : DirectoryDQM+'Collisions18/13TeV/PileUp/pileup_latest.txt',
                              'normtagFile' : '/afs/cern.ch/user/l/lumipro/public/Normtags/normtag_BRIL.json' },
+                '2022'   : { 'Run' : 'Run3', 'runs' : [ 355100, 362760 ], 'numPileupBins' : '100',
+                             'jsonFile'    : WebCAF+'Collisions22/Cert_Collisions2022_355100_362760_Golden.json',
+                             'pileupFile'  : '/afs/cern.ch/user/s/smitra/public/xBTV/pileup_JSON.txt',
+                             'normtagFile' : '/afs/cern.ch/user/l/lumipro/public/Normtags/normtag_BRIL.json' },
                }
 
 runPeriods = { '2016' : { '2016B'   : [ 272007,   275376 ],
@@ -40,8 +46,9 @@ runPeriods = { '2016' : { '2016B'   : [ 272007,   275376 ],
                           '2016E'   : [ 276831,	  277420 ],
                           '2016F'   : [ 277772,   278808 ],
                           '2016G'   : [ 278820,   280385 ],
-                          '2016H'   : [ 280919,	  284044 ],
-                         } 
+                          '2016H'   : [ 280919,	  284044 ], }, 
+               '2022' : { '2022CD'  : [ 355794,   359021 ],
+                          '2022EFG' : [ 359022,   362760 ], },
               }
 runPeriods['UL2016'] = runPeriods['2016']
 
@@ -52,6 +59,15 @@ brilcalcCommand += 'export ROOTSYS=/afs/cern.ch/cms/lumi/brilconda-1.1.7/root ; 
 brilcalcCommand += 'export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.1.7/bin:$PATH ; '
 brilcalcCommand += 'pip uninstall brilws -y ; '
 brilcalcCommand += 'pip install --install-option="--prefix=$HOME/.local" brilws ; '
+
+def loadJSON(jsonFile):
+
+    if 'http' in jsonFile:
+        jsonFileLocal = './'+jsonFile.split('/')[-1]
+        if not os.path.isfile(jsonFileLocal): os.system('wget '+jsonFile)
+        jsonFile = jsonFileLocal
+
+    return json.load(open(jsonFile, 'r'))
 
 if 'prescale' in action or 'ps' in action:
     action = 'prescales'
@@ -138,7 +154,7 @@ for year in years.split('-'):
 
             selectedGoodRuns = { }
     
-            goodRuns = json.load(open(yearInfos['jsonFile'], 'r'))
+            goodRuns = loadJSON(yearInfos['jsonFile'])
 
             for run in goodRuns:
                 if int(run)>=yearPeriods[period][0] and int(run)<=yearPeriods[period][1]:
