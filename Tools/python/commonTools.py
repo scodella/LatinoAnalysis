@@ -255,7 +255,7 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
       proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out,err = proc.communicate()
       Files   = string.split(out)
-    if len(Files) == 0 :
+    if len(Files) == 0 : # BTagPerf
       fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'_f*_*.root'
       if 'root://' in inputDir:
         fileCmd = lsCmd+Dir+'/ | grep '+rooFilePrefix+Sample+'_f | grep root'
