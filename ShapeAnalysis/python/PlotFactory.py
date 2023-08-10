@@ -120,7 +120,7 @@ class PlotFactory:
         # standalont data-bkg plot
         list_tcanvasDifference_Fancy = {}
 
-
+        btvReview = '__BTV' in self._tag
 
         generalCounter = 0
 
@@ -137,6 +137,7 @@ class PlotFactory:
               
         else:
           fileIn = ROOT.TFile(inputFile, "READ")
+          if btvReview: fileInBTV = ROOT.TFile(inputFile.replace('ObjectReview','NoBTVObjectReview').replace('_SM','_Backgrounds'), "READ")
 
         #---- save one TCanvas for every cut and every variable
         for cutName in self._cuts :
@@ -214,6 +215,7 @@ class PlotFactory:
             thsSignal     = ROOT.THStack ("thsSignal_" + cutName + "_" + variableName,    "thsSignal_" + cutName + "_" + variableName)
             #print 'really before thstack ... two'
             thsBackground = ROOT.THStack ("thsBackground_" + cutName + "_" + variableName,"thsBackground_" + cutName + "_" + variableName)
+            thsBackgroundBTV = ROOT.THStack ("thsBackgroundBTV_" + cutName + "_" + variableName,"thsBackground_" + cutName + "_" + variableName)
             #print 'really before thstack ... three'
 
             thsSignal_grouped     = ROOT.THStack ("thsSignal_grouped_" + cutName + "_" + variableName,    "thsSignal_grouped_" + cutName + "_" + variableName)
@@ -231,7 +233,6 @@ class PlotFactory:
             thsBackground_grouped_normalized = ROOT.THStack ("thsBackground_grouped_normalized_" + cutName + "_" + variableName,"thsBackground_grouped_normalized_" + cutName + "_" + variableName)
             list_thsSignal_grouped_normalized     [generalCounter] = thsSignal_grouped_normalized
             list_thsBackground_grouped_normalized [generalCounter] = thsBackground_grouped_normalized
-
 
             generalCounter += 1
             
@@ -282,6 +283,8 @@ class PlotFactory:
                 histo = fileIn[sampleName].Get(shapeName)
               else:
                 histo = fileIn.Get(shapeName)
+                if btvReview:
+                    thsBackgroundBTV.Add(fileInBTV.Get(shapeName)) 
               print ' --> ', histo
               print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
               histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
@@ -696,6 +699,9 @@ class PlotFactory:
             tgrDataOverMC = tgrData.Clone("tgrDataOverMC")
             tgrDataMinusMC = tgrData.Clone("tgrDataMinusMC")
             tgrMCSigMinusMCBkg = tgrData.Clone("tgrMCSigMinusMCBkg")  # is like saying "signal"
+            if btvReview:
+                lastBTV = thsBackgroundBTV.GetStack().Last()
+                tgrMCOverBTV = tgrData.Clone("tgrMCOverBTV")
             for iBin in range(0, len(tgrData_vx)) :
               tgrDataOverMC.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , last.GetBinContent(iBin+1)) )
               tgrDataOverMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], last.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], last.GetBinContent(iBin+1)) )
@@ -1279,7 +1285,7 @@ class PlotFactory:
             else:
                 # Grab unit from x axis title -- capture part in () or [] brackets
                 xaxistitle = frameDistro.GetXaxis().GetTitle()
-                unitpattern = '(?:\[|\()(\w+)(?:\]|\))'
+                unitpattern = '(?: \[|\()(\w+)(?:\]|\))'
                 unitsearch = re.search(unitpattern,xaxistitle)
                 unit = 'unit' if unitsearch is None else unitsearch.group(1)
 
@@ -1358,6 +1364,20 @@ class PlotFactory:
                         nevents = histoPF.Integral(1,histoPF.GetNbinsX())
                     tlegend.AddEntry(histoPF, postfitName + " [" +  str(round(nevents,1)) + "]", "L")
 
+            if btvReview:
+                lastBTV.SetLineColor(9)
+                lastBTV.SetLineWidth(2)
+                lastBTV.SetLineStyle(2)
+                lastBTV.Draw("hist same")
+                if self._showIntegralLegend == 0 :
+                    tlegend.AddEntry(lastBTV, "No BTV SFs" , "L")
+                else :
+                    if variable["divideByBinWidth"] == 1:
+                        nevents = lastBTV.Integral(1,lastBTV.GetNbinsX(),"width")
+                    else:
+                        nevents = lastBTV.Integral(1,lastBTV.GetNbinsX())
+                    tlegend.AddEntry(lastBTV, "No BTV SFs" + " [" +  str(round(nevents,1)) + "]", "L")
+
             #     - then the DATA  
             if tgrData.GetN() != 0:
               tgrData.Draw("P0")
@@ -1415,6 +1435,7 @@ class PlotFactory:
             if not self._nuisanceVariations:
               frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
               #frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
+              if btvReview: frameRatio.GetYaxis().SetRangeUser( 0.75, 1.25 )
             else:
               yRange = 0.
               #xGr, yGr = ROOT.Double(0.), ROOT.Double(0.) 
@@ -1441,6 +1462,29 @@ class PlotFactory:
 
             tgrDataOverMC.Draw("P0")
             
+            if btvReview:
+                binEdges = [ ]
+                for ipoint in range(tgrMCOverMC.GetN()):
+                    binEdges.append(tgrMCOverMC.GetX()[ipoint]-tgrMCOverMC.GetErrorX(ipoint))
+                binEdges.append(tgrMCOverMC.GetX()[tgrMCOverMC.GetN()-1]+tgrMCOverMC.GetErrorX(tgrMCOverMC.GetN()-1))
+                tgrMCOverBTV = ROOT.TH1F('tgrMCOverBTV', '', len(binEdges)-1, array('d',binEdges))
+                #tgrMCOverBTV = tgrData.Clone("tgrMCOverBTV")
+                #for iBin in range(0, len(tgrMC_vx)) :
+                #    ratioBTV = self.Ratio(last.GetBinContent(iBin+1),lastBTV.GetBinContent(iBin+1)) if last.GetBinContent(iBin+1)!=0. else 1.
+                #    tgrDataOverMC.SetPoint     (iBin, tgrMC_vx[iBin], ratioBTV )
+                #    tgrDataOverMC.SetPointError(iBin, tgrMC_evx[iBin], tgrMC_evx[iBin], 0, 0 )
+                for iBin in range(last.GetNbinsX()):
+                    ratioBTV = self.Ratio(last.GetBinContent(iBin+1),lastBTV.GetBinContent(iBin+1)) if last.GetBinContent(iBin+1)!=0. else 1.
+                    tgrMCOverBTV.SetBinContent(iBin+1, ratioBTV )
+                    tgrMCOverBTV.SetBinError(iBin+1, 0. )
+                tgrMCOverBTV.SetLineColor(9)
+                tgrMCOverBTV.SetLineWidth(2)
+                tgrMCOverBTV.SetLineStyle(2)
+                #last.Divide(lastBTV)
+                #last.SetLineColor(9)
+                #last.SetLineWidth(2)
+                #last.SetLineStyle(2) 
+                tgrMCOverBTV.Draw("histosame")
             
             if self._postFit == 'p' or self._postFit == 's' or  self._postFit == 'b':
             #---- Ratio Legend

@@ -427,6 +427,9 @@ if __name__ == '__main__':
        #exit ()
 
     elif os.path.exists(opt.structureFile) :
+      cuts = {}
+      cuthandle = open('cuts.py','r')
+      exec(cuthandle)
       handle = open(opt.structureFile,'r')
       exec(handle)
       handle.close()
