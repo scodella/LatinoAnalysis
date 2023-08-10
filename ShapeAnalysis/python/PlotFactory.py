@@ -962,7 +962,7 @@ class PlotFactory:
             else:
                 # Grab unit from x axis title -- capture part in () or [] brackets
                 xaxistitle = frame.GetXaxis().GetTitle()
-                unitpattern = '(?:\[|\()(\w+)(?:\]|\))'
+                unitpattern = '(?: \[|\()(\w+)(?:\]|\))'
                 unitsearch = re.search(unitpattern,xaxistitle)
                 unit = 'unit' if unitsearch is None else unitsearch.group(1)
 
@@ -1614,7 +1614,7 @@ class PlotFactory:
             else:
                 # Grab unit from x axis title -- capture part in () or [] brackets
                 xaxistitle = frameDistro.GetXaxis().GetTitle()
-                unitpattern = '(?:\[|\()(\w+)(?:\]|\))'
+                unitpattern = '(?: \[|\()(\w+)(?:\]|\))'
                 unitsearch = re.search(unitpattern,xaxistitle)
                 unit = 'unit' if unitsearch is None else unitsearch.group(1)
 
