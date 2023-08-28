@@ -294,7 +294,7 @@ def addSampleWeight(sampleDic,key,Sample,Weight,pathname=''):
     for iEntry in range(len(sampleDic[key]['name'])):
       name = sampleDic[key]['name'][iEntry]
       if '/' in name : name = os.path.basename(name)
-      name = name.split('_',1)[-1].replace('.root','').split('__part')[0]
+      name = name.split('_',1)[-1].replace('.root','').split('__part')[0].split('_f')[0] # BTagPerf
       if pathname != '' and pathname not in sampleDic[key]['name'][iEntry]: continue
       if name == Sample: 
         sampleDic[key]['weights'][iEntry] += '*(' + Weight + ')'
