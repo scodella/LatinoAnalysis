@@ -637,6 +637,10 @@ class DatacardFactory:
             if 'CR' in cutName or 'T2' in sampleName or 'TChipm' in sampleName or 'TSlep' in sampleName:
                 originalShapeName = shapeName.split('/')[-1]
                 shapeName = shapeName.replace('_Smooth', '_')
+        #if suffix:
+        #    if 'trigger' in suffix:
+        #        #shapeName = shapeName.replace('_trigger', '_triggerStat')
+
 
         if type(self._fileIn) is dict:
             # by-sample ROOT file
@@ -648,6 +652,8 @@ class DatacardFactory:
         if 'SmtEU' in opt.tag:
             if 'CR' in cutName or 'T2' in sampleName or 'TChipm' in sampleName or 'TSlep' in sampleName:
                 if '_Smooth' in originalShapeName: histo.SetTitle(originalShapeName); histo.SetName(originalShapeName)
+        #if 'triggerStat' in shapeName:
+        #    histo.SetTitle(shapeName.replace('Stat', '')); histo.SetName(shapeName.replace('Stat', ''))
 
         if not histo:
             print shapeName, 'not found'
@@ -665,10 +671,78 @@ class DatacardFactory:
                     histo.SetBinContent(ibin, binContent)
                     histo.SetBinError(ibin, binError)
 
+        # Temp for trigger
+        #if suffix:
+        #    if 'trigger' in suffix and 'triggerStat' in shapeName:
+        #        histocn = self._fileIn.Get(shapeName.split('_trigger')[0])
+        #        signVar = 1. if 'Up' in suffix else -1.
+        #        for ibin in range(1,histo.GetNbinsX()+1):
+        #            totalUnc = math.sqrt( math.pow(0.02*histocn.GetBinContent(ibin),2) + math.pow(histocn.GetBinContent(ibin)-histo.GetBinContent(ibin),2) )
+        #            binContent = histocn.GetBinContent(ibin) + signVar*totalUnc
+        #            histo.SetBinContent(ibin, binContent)
+
+        if 'SymTopPt' in opt.tag and suffix:
+            if 'toppt' in suffix and 'Down' in suffix:
+                histocn = self._fileIn.Get(shapeName.split('_toppt')[0])
+                histoup = self._fileIn.Get(shapeName.replace('Down','Up'))
+                for ibin in range(1,histo.GetNbinsX()+1):
+                    binContent = histocn.GetBinContent(ibin) - (histoup.GetBinContent(ibin)-histocn.GetBinContent(ibin))
+                    binError   = 0. if histocn.GetBinContent(ibin)==0. else binContent*histocn.GetBinError(ibin)/histocn.GetBinContent(ibin)
+                    histo.SetBinContent(ibin, binContent)
+                    histo.SetBinError(ibin, binError)
+
         if opt.blindData:
             if 'DATA' in sampleName:
                 histo.Reset()
 
+        if 'SmtEU' in opt.tag and suffix:
+            btagttz = ('Tag_ttZ' in cutName and ('btag' in shapeName or 'mistag' in shapeName)) or 'ptmissfastsim' in shapeName
+            creu = ('_Smooth' not in shapeName and 'CR' in cutName and ('jer' in suffix or 'jes' in suffix or 'uncl' in suffix))
+            sgeu = ('_Smooth' not in shapeName and 'SR' in cutName and ('jer' in suffix or 'jes' in suffix or 'uncl' in suffix)) and (('T2tt' in sampleName and '_Veto' not in cutName) or ('TChipm' in sampleName and 'SR1' not in cutName and 'SR2' not in cutName and '_Tag' not in cutName))
+            dyeu = ('_Smooth' in shapeName and 'DY' in sampleName and ('jer' in suffix or 'jes' in suffix or 'uncl' in suffix))
+            crsg = creu and (('_WZ_' in shapeName and '_WZ_' in cutName) or ('_ttZ_' in shapeName and '_ttZ_' in cutName) or ('_ZZTo4L_' in shapeName and '_ZZ_' in cutName)) 
+            if btagttz or sgeu or dyeu or creu:
+                histocnname = '%s/%s/histo_%s' % (cutName, variableName, sampleName)
+                histocn = self._fileIn.Get(histocnname)
+                histoopname = shapeName.replace('Up','Down') if 'Up' in shapeName else shapeName.replace('Down','Up')
+                histoop = self._fileIn.Get(histoopname)
+                if histocn.Integral()>0.:
+                    if 'Up' in shapeName and histo.Integral()/histocn.Integral()>3.:
+                        for ibin in range(1, histo.GetNbinsX()+1):
+                            if histocn.GetBinContent(ibin)>0.:
+                                if histo.GetBinContent(ibin)/histocn.GetBinContent(ibin)>3.:
+                                    histo.SetBinContent(ibin, histocn.GetBinContent(ibin))
+                            else: histo.SetBinContent(ibin, histocn.GetBinContent(ibin))
+                if btagttz or sgeu or (histocn.Integral()>0. and (histo.Integral()/histocn.Integral()>3. or histoop.Integral()/histocn.Integral()>3.)):
+                    if ('Down' in shapeName and histo.Integral()>histocn.Integral() and histoop.Integral()>histocn.Integral()) or ('Up' in shapeName and histo.Integral()<histocn.Integral() and histoop.Integral()<histocn.Integral()):
+                        ratioC = histocn.Integral()/histo.Integral()*histocn.Integral()/histo.Integral() if histocn.Integral()/histo.Integral()<3. else histocn.Integral()/histo.Integral()*histocn.Integral()/histoop.Integral() 
+                        #histo.Scale(ratioC)
+
+        if 'SmtEU' in opt.tag and suffix and 'SmtSw' in opt.tag:
+            if '_Smooth' in suffix:
+                histocnname = '%s/%s/histo_%s' % (cutName, variableName, sampleName)
+                histocn = self._fileIn.Get(histocnname)
+                histoopname = shapeName.replace('Up','Down') if 'Up' in shapeName else shapeName.replace('Down','Up')
+                histoop = self._fileIn.Get(histoopname)
+                for ibin in range(1,histo.GetNbinsX()+1):
+                    binCentral = histocn.GetBinContent(ibin)
+                    binContent = histo.GetBinContent(ibin)
+                    if 'Up'   in suffix and binContent<binCentral: 
+                        binOpposit = histoop.GetBinContent(ibin)
+                        if binOpposit>binCentral: 
+                            histo.SetBinContent(ibin, binOpposit)
+                        else:
+                            minErr = min(abs(binContent-binCentral), abs(binOpposit-binCentral))                     
+                            histo.SetBinContent(ibin, binCentral+minErr)
+                    if 'Down' in suffix and binContent>binCentral: 
+                        binOpposit = histoop.GetBinContent(ibin)
+                        if binOpposit<binCentral:
+                            histo.SetBinContent(ibin, binOpposit)
+                        else:
+                            minErr = min(abs(binContent-binCentral), abs(binOpposit-binCentral))
+                            if minErr>binCentral: minErr = binCentral
+                            histo.SetBinContent(ibin, binCentral-minErr)
+                
         if '_CRBinned' not in opt.tag:
             if 'CR' in cutName:
                 histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), 1, histo.GetBinLowEdge(1), histo.GetBinLowEdge(histo.GetNbinsX()+1))
