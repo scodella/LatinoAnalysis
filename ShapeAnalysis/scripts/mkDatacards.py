@@ -354,6 +354,7 @@ class DatacardFactory:
                     entryName = nuisance['name']
                   else:
                     entryName = 'CMS_' + nuisance['name']
+                  if 'correlatedName' in nuisance: entryName = entryName.replace(nuisance['name'], nuisance['correlatedName'])
 
                   card.write(entryName.ljust(80-20))
 
@@ -433,6 +434,7 @@ class DatacardFactory:
                           suffixOut = None
                         else:
                           suffixOut = '_CMS_' + nuisance['name']
+                        if 'correlatedName' in nuisance: suffixOut = suffixOut.replace(nuisance['name'], nuisance['correlatedName'])
 
                         symmetrize = 'symmetrize' in nuisance and nuisance['symmetrize']
 
@@ -727,9 +729,25 @@ class DatacardFactory:
                             minErr = min(abs(binContent-binCentral), abs(binOpposit-binCentral))
                             if minErr>binCentral: minErr = binCentral
                             histo.SetBinContent(ibin, binCentral-minErr)
-                
+            
+        if '_WWcorr' in opt.tag:
+            if suffix:
+                if 'WWtails' in suffix:
+                    variation = 'Up' if 'Up' in suffix else 'Down'
+                    histo.SetName('histo_'+sampleName+'_WWtails'+variation)
+                    histo.SetTitle('histo_'+sampleName+'_WWtails'+variation)
+                          
         if '_CRBinned' not in opt.tag:
             if 'CR' in cutName:
+                histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), 1, histo.GetBinLowEdge(1), histo.GetBinLowEdge(histo.GetNbinsX()+1))
+                errorYield = ROOT.double()
+                histoYield = histo.IntegralAndError(-1,-1,errorYield)
+                histoB.SetBinContent(1, histoYield)
+                histoB.SetBinError(1, errorYield)
+                return histoB
+
+        if '_TagNoBinned' in opt.tag:
+            if 'SR' in cutName and '_Tag' in cutName:
                 histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), 1, histo.GetBinLowEdge(1), histo.GetBinLowEdge(histo.GetNbinsX()+1))
                 errorYield = ROOT.double()
                 histoYield = histo.IntegralAndError(-1,-1,errorYield)
