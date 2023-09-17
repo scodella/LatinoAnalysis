@@ -734,8 +734,17 @@ class DatacardFactory:
             if suffix:
                 if 'WWtails' in suffix:
                     variation = 'Up' if 'Up' in suffix else 'Down'
-                    histo.SetName('histo_'+sampleName+'_WWtails'+variation)
-                    histo.SetTitle('histo_'+sampleName+'_WWtails'+variation)
+                    if '_WWcorrSR' in opt.tag:
+                        histoOutName = shapeName.replace('_SR1_','').replace('_SR2_','').replace('_SR3_','').replace('_SR4_','')
+                        histo.SetName(histoOutName)
+                        histo.SetTitle(histoOutName)
+                    elif '_WWcorrYear' in opt.tag:
+                        histoOutName = shapeName.replace('_2016','').replace('_2017','').replace('_2018','')
+                        histo.SetName(histoOutName)
+                        histo.SetTitle(histoOutName)
+                    else:
+                        histo.SetName('histo_'+sampleName+'_WWtails'+variation)
+                        histo.SetTitle('histo_'+sampleName+'_WWtails'+variation)
                           
         if '_CRBinned' not in opt.tag:
             if 'CR' in cutName:
