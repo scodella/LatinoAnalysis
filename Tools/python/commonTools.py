@@ -256,9 +256,9 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
       out,err = proc.communicate()
       Files   = string.split(out)
     if len(Files) == 0 : # BTagPerf
-      fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'_f*_*.root'
+      fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'f*_*.root'
       if 'root://' in inputDir:
-        fileCmd = lsCmd+Dir+'/ | grep '+rooFilePrefix+Sample+'_f | grep root'
+        fileCmd = lsCmd+Dir+'/ | grep '+rooFilePrefix+Sample+'f | grep root'
       proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out,err = proc.communicate()
       Files   = string.split(out)
@@ -294,9 +294,9 @@ def addSampleWeight(sampleDic,key,Sample,Weight,pathname=''):
     for iEntry in range(len(sampleDic[key]['name'])):
       name = sampleDic[key]['name'][iEntry]
       if '/' in name : name = os.path.basename(name)
-      name = name.split('_',1)[-1].replace('.root','').split('__part')[0].split('_f')[0] # BTagPerf
+      name = name.split('_',1)[-1].replace('.root','').split('__part')[0].split('f')[0] # BTagPerf
       if pathname != '' and pathname not in sampleDic[key]['name'][iEntry]: continue
-      if name == Sample: 
+      if name == Sample or Sample in sampleDic[key]['name'][iEntry]: # BTagPerf
         sampleDic[key]['weights'][iEntry] += '*(' + Weight + ')'
       
 #### To add ext samples

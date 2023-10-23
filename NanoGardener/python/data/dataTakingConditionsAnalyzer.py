@@ -45,6 +45,7 @@ runPeriods = { '2016' : { '2016B'   : [ 272007,   275376 ],
                           '2022EFG' : [ 359022,   362760 ], },
               }
 runPeriods['UL2016'] = runPeriods['2016']
+runPeriods['UL2018'] = { '2018A'   : [ 315252 , 319076 ], '2018B' : [ 319077 , 325175 ] }
 
 def brilcalcSetup():
 
