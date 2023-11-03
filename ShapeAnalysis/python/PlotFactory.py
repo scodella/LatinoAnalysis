@@ -1529,8 +1529,8 @@ class PlotFactory:
                     tlegendRatio.Draw("same")
             
             
-            for samplesToRatioGrName, samplesGrToRatio in tgrRatioList.iteritems() :
-              samplesGrToRatio.Draw("P")
+            #for samplesToRatioGrName, samplesGrToRatio in tgrRatioList.iteritems() :
+            #  samplesGrToRatio.Draw("P")
 
             
             oneLine2 = ROOT.TLine(frameRatio.GetXaxis().GetXmin(), 1,  frameRatio.GetXaxis().GetXmax(), 1);
