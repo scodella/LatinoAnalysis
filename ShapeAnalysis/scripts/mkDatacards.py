@@ -660,6 +660,10 @@ class DatacardFactory:
 
         if not histo:
             print shapeName, 'not found'
+
+        if opt.blindData:
+            if 'DATA' in sampleName:
+                histo.Reset()
       
         return histo
 
@@ -696,7 +700,8 @@ if __name__ == '__main__':
     parser.add_option('--nuisancesFile'      , dest='nuisancesFile'     , help='file with nuisances configurations'         , default=None )
     parser.add_option('--cardList'           , dest="cardList"          , help="List of cuts to produce datacards"          , default=[], type='string' , action='callback' , callback=list_maker('cardList',','))
     parser.add_option('--skipMissingNuisance', dest='skipMissingNuisance', help="Don't write nuisance lines when histograms are missing", default=False, action='store_true')
-          
+    parser.add_option('--blindData'          , dest='blindData',           help="Force data to be blind"                    , default=False, action='store_true')
+ 
     # read default parsing options as well
     hwwtools.addOptions(parser)
     hwwtools.loadOptDefaults(parser)
