@@ -507,7 +507,7 @@ class PlotFactory:
                         histoVar = fileIn[sampleName].Get(shapeNameVar)
                       else:
                         histoVar = fileIn.Get(shapeNameVar)
-  
+
                       if histoVar != None :
                         nuisanceHistos[ivar][nuisanceName] = histoVar
                       elif not self._SkipMissingNuisance :

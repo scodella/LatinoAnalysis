@@ -640,6 +640,17 @@ class DatacardFactory:
                 originalShapeName = shapeName.split('/')[-1]
                 shapeName = shapeName.replace('_Smooth', '_')
 
+        if '_SplitSR' in opt.tag:
+            originalShapeName = shapeName.split('/')[-1]
+            if  '_SR' in shapeName:
+                if not self._fileIn.Get(shapeName):
+                    shapeName = shapeName.replace('_SR1_','').replace('_SR2_','').replace('_SR3_','').replace('_SR4_','')
+
+        if '_SplitFlav' in opt.tag:
+            originalShapeName = shapeName.split('/')[-1]
+            if  '__em' in shapeName or '__sf' in shapeName:
+                if not self._fileIn.Get(shapeName):
+                    shapeName = shapeName.replace('__em','').replace('__sf','')
 
         if type(self._fileIn) is dict:
             # by-sample ROOT file
@@ -651,6 +662,14 @@ class DatacardFactory:
         if 'SmtEU' in opt.tag:
             if 'CR' in cutName or 'T2' in sampleName or 'TChipm' in sampleName or 'TSlep' in sampleName:
                 if '_Smooth' in originalShapeName: histo.SetTitle(originalShapeName); histo.SetName(originalShapeName)
+
+        if '_SplitSR' in opt.tag:
+            if originalShapeName!=shapeName.split('/')[-1]:
+                histo.SetTitle(originalShapeName); histo.SetName(originalShapeName)
+
+        if '_SplitFlav' in opt.tag:
+            if originalShapeName!=shapeName.split('/')[-1]:
+                histo.SetTitle(originalShapeName); histo.SetName(originalShapeName)
 
         if not histo:
             print shapeName, 'not found'
@@ -745,15 +764,46 @@ class DatacardFactory:
                     else:
                         histo.SetName('histo_'+sampleName+'_WWtails'+variation)
                         histo.SetTitle('histo_'+sampleName+'_WWtails'+variation)
-                          
+            
+        if '_RmSR4b1' in opt.tag:
+            if 'SR4' in cutName:
+                histo.SetBinContent(1, 0.)
+                histo.SetBinError(1, 0.)
+             
+        if '_LLLT' in opt.tag:
+            if 'SR1_Tag_em' in cutName and 'DATA' in sampleName:
+                tthisto = self._fileIn.Get(shapeName.replace('DATA','ttbar'))
+                for ib in range(4, 8):
+                    ncont = tthisto.GetBinContent(ib)
+                    histo.SetBinContent(ib, ncont)
+                    histo.SetBinError(ib, math.sqrt(ncont))
+ 
         if '_CRBinned' not in opt.tag:
             if 'CR' in cutName:
                 histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), 1, histo.GetBinLowEdge(1), histo.GetBinLowEdge(histo.GetNbinsX()+1))
                 errorYield = ROOT.double()
                 histoYield = histo.IntegralAndError(-1,-1,errorYield)
+                if '_CRZ' in opt.tag and histoYield==0 and sampleName=='DATA': histoYield = 1.
                 histoB.SetBinContent(1, histoYield)
                 histoB.SetBinError(1, errorYield)
                 return histoB
+
+        if '_LowNoBinned' in opt.tag:
+            if 'SR' in cutName:
+                histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), histo.GetNbinsX()-4, 0, histo.GetNbinsX()-4)
+                errorYield = ROOT.double()
+                histoYield = histo.IntegralAndError(-1,5,errorYield)
+                histoB.SetBinContent(1, histoYield)
+                histoB.SetBinError(1, errorYield)
+                for ib in range(6, histo.GetNbinsX()+1):
+                    histoB.SetBinContent(ib-4, histo.GetBinContent(ib))
+                    histoB.SetBinError(ib-4, histo.GetBinError(ib))
+                return histoB
+
+        if '_killSigStat' in opt.tag:
+            if 'T2' in sampleName or 'TSlep' in sampleName or 'TChipm' in sampleName:
+                for ib in range(1, histo.GetNbinsX()+1):
+                    histo.SetBinError(ib, histo.GetBinContent(ib)/10.)
 
         if '_TagNoBinned' in opt.tag:
             if 'SR' in cutName and '_Tag' in cutName:
