@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import sys, re, os, os.path, string
 import subprocess
-from cookielib import CookieJar
-from urllib2 import build_opener, HTTPCookieProcessor
+from http.cookiejar import CookieJar
+from urllib.request import build_opener, HTTPCookieProcessor
 import socket
 import collections
 
@@ -31,7 +31,7 @@ def query_yes_no(question, default="yes"):
 
     while True:
         sys.stdout.write(question + prompt)
-        choice = raw_input().lower()
+        choice = input().lower()
         if default is not None and choice == '':
             return valid[default]
         elif choice in valid:
@@ -57,7 +57,7 @@ class list_maker:
            setattr(parser.values, self._var, array)
 
         except:
-           print 'Malformed option (comma separated list expected):',value
+           print('Malformed option (comma separated list expected):',value)
 
 #---
 class List_Filter:
@@ -136,17 +136,17 @@ class xsectionDB:
     def get(self,iSample):
       if self._useYR :
         Higgs = self._HiggsXS.GetHiggsXS4Sample(self._YRVersion,self._YREnergy,iSample)
-        print Higgs
+        print(Higgs)
         if not Higgs['xs'] == 0. : return str(Higgs['xs'])
 
       if iSample in self.xsections : 
-        print iSample, self.xsections[iSample]['xs'] , self.xsections[iSample]['kfact']
+        print(iSample, self.xsections[iSample]['xs'] , self.xsections[iSample]['kfact'])
         return str(float(self.xsections[iSample]['xs'])*float(self.xsections[iSample]['kfact']))
       else : 
         return ''
 
     def Print(self) :
-      print self.xsections
+      print(self.xsections)
 
 #db = xsectionDB('1wH73CYA_T4KMkl1Cw-xLTj8YG7OPqayDnP53N-lZwFQ')
 #print db.get(20001)
@@ -240,37 +240,40 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
         lsCmd='ls '
         Dir = inputDir
 
-
     ##### Now get the files for Sample
     fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'.root'
     if 'root://' in inputDir:
       fileCmd = lsCmd+Dir+'/ | grep '+rooFilePrefix+Sample+'.root' 
     proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
     out,err = proc.communicate()
-    Files   = string.split(out)
+    #Files   = string.split(out)
+    Files   = out.decode().split()
     if len(Files) == 0 :
       fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'__part*.root'
       if 'root://' in inputDir:
         fileCmd = lsCmd+Dir+'/ | grep '+rooFilePrefix+Sample+'__part | grep root'
       proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out,err = proc.communicate()
-      Files   = string.split(out)
+      #°Files   = string.split(out)
+      Files   = out.decode().split()
     if len(Files) == 0 : # BTagPerf
       fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'f*_*.root'
       if 'root://' in inputDir:
         fileCmd = lsCmd+Dir+'/ | grep '+rooFilePrefix+Sample+'f | grep root'
       proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out,err = proc.communicate()
-      Files   = string.split(out)
+      #Files   = string.split(out)
+      Files   = out.decode().split()
     if len(Files) == 0 : # BTagPerf
       fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'MC_*_*_*.root'
       if 'root://' in inputDir:
         fileCmd = lsCmd+Dir+'/ | grep '+rooFilePrefix+Sample+'MC_ | grep root'
       proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out,err = proc.communicate()
-      Files   = string.split(out)
+      #Files   = string.split(outs)
+      Files   = out.decode().split()
     if len(Files) == 0 and not FromPostProc :
-      print 'ERROR: No files found for sample ',Sample,' in directory ',Dir
+      print('ERROR: No files found for sample ',Sample,' in directory ',Dir)
       exit() 
     FileTarget = []
     for iFile in Files:
@@ -357,7 +360,7 @@ def getBaseW(directory,Samples = [] ):
     CMSSW=os.environ["CMSSW_BASE"]
     #xsFile=CMSSW+'/src/LatinoTrees/AnalysisStep/python/samplesCrossSections.py'
     xsFile=CMSSW+'/src/LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2016.py'
-    print "I'm reading XS in latinoAnalysis"
+    print("I'm reading XS in latinoAnalysis")
     xsDB.readPython(xsFile)
     xsDB.readYR('YR4','13TeV')
     xs = []
@@ -366,7 +369,7 @@ def getBaseW(directory,Samples = [] ):
     #print xs
     for iEntry in range(len(xs)):
       if not xs[iEntry] == xs[0] : 
-        print 'ERROR: getBaseW: Trying to mix samples with different x-section'
+        print('ERROR: getBaseW: Trying to mix samples with different x-section')
         exit()
 
     ### And now get the baseW
@@ -404,12 +407,12 @@ def getBaseWnAOD(directory,iProd,Samples = [] , prodCfg='LatinoAnalysis/NanoGard
       handle = open(CMSSW+'/src/'+prodCfg)
       exec(handle)
       handle.close()
-      prodList =  Productions.keys()   
+      prodList =  list(Productions.keys())   
     else:
-      print 'ERROR: Please specify the input data config'
+      print('ERROR: Please specify the input data config')
       exit(1)
     if not iProd in prodList:
-      print 'ERROR: iProd not in prodList: ',prodList 
+      print('ERROR: iProd not in prodList: ',prodList) 
 
     # Load X-section
     xsDB = xsectionDB()
@@ -425,7 +428,7 @@ def getBaseWnAOD(directory,iProd,Samples = [] , prodCfg='LatinoAnalysis/NanoGard
       xs.append( xsDB.get(iSampleXS) )
     for iEntry in range(len(xs)):
       if not xs[iEntry] == xs[0] :
-        print 'ERROR: getBaseW: Trying to mix samples with different x-section'
+        print('ERROR: getBaseW: Trying to mix samples with different x-section')
         exit()
 
     ### AND NOW: Compute new baseW
@@ -466,12 +469,12 @@ def getModelDict(inputDir, production, sample, models, absPath=True, rooFilePref
         handle = open(CMSSW+'/src/'+prodCfg)
         exec(handle)
         handle.close()
-        prodList =  Productions.keys()   
+        prodList =  list(Productions.keys())   
     else:
-        print 'ERROR: Please specify the input data config'
+        print('ERROR: Please specify the input data config')
         exit(1)
     if not production in prodList:
-        print 'ERROR: "'+production+'" not in prodList: ',prodList 
+        print('ERROR: "'+production+'" not in prodList: ',prodList) 
     
     # Load X-section
     xsDB = xsectionDB()
@@ -480,7 +483,7 @@ def getModelDict(inputDir, production, sample, models, absPath=True, rooFilePref
                 
     for model in models:
         if len(ModelDict[model]['fileList']) == 0: 
-            print('getModelDict: Warning, model "'+model+'" not found in any of the files from sample"'+sample+'"')
+            print(('getModelDict: Warning, model "'+model+'" not found in any of the files from sample"'+sample+'"'))
 
         if   '_ext' in sample: sampleXS = sample.split('_ext')[0]
         elif '-ext' in sample: sampleXS = sample.split('-ext')[0]
@@ -495,12 +498,12 @@ def getModelDict(inputDir, production, sample, models, absPath=True, rooFilePref
 def printSampleDic(sampleDic):
 
     for iKey in sampleDic:
-      print '----> Sample: '+iKey
-      print 'globalWeight = '+sampleDic[iKey]['weight'] 
+      print('----> Sample: '+iKey)
+      print('globalWeight = '+sampleDic[iKey]['weight']) 
       for iEntry in range(len(sampleDic[iKey]['name'])) :
-        print 'file = '+sampleDic[iKey]['name'][iEntry]
+        print('file = '+sampleDic[iKey]['name'][iEntry])
         if 'weights' in sampleDic[iKey] :
-          print 'weight = '+sampleDic[iKey]['weights'][iEntry]  
+          print('weight = '+sampleDic[iKey]['weights'][iEntry])  
 
 #### SITE COMMANDS:
 
@@ -522,7 +525,7 @@ def delDirSE(Dir):
       if not '/gpfs/gaes/cms' in inDir : inDir = '/gpfs/gaes/cms' + inDir
       os.system('rm -rf '+inDir) 
     else:
-      print 'ERROR: Unknown SITE for srmcp2local ->exit()'
+      print('ERROR: Unknown SITE for srmcp2local ->exit()')
       exit()
 
 def srmcp2local(inFile,outFile):
@@ -537,7 +540,7 @@ def srmcp2local(inFile,outFile):
       if not '/gpfs/gaes/cms' in srcFile : srcFile = '/gpfs/gaes/cms' + srcFile
       os.system('cp '+srcFile+' '+outFile)
     else:
-      print 'ERROR: Unknown SITE for srmcp2local ->exit()'
+      print('ERROR: Unknown SITE for srmcp2local ->exit()')
       exit()
 
 def lsListCommand(inputDir, iniStep = 'Prod'):

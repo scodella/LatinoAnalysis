@@ -23,7 +23,7 @@ class Switch(Module):
     def __init__(self, cmssw = 'Full2016v2', cfg_path = 'LatinoAnalysis/NanoGardener/python/data/switch/MH_triggerSwitch_cfg.py'):
         cmssw_base = os.getenv('CMSSW_BASE')
         var = {}
-        execfile(cmssw_base+'/src/'+cfg_path, var)
+        exec(compile(open(cmssw_base+'/src/'+cfg_path, "rb").read(), cmssw_base+'/src/'+cfg_path, 'exec'), var)
         self.switch_dict = var['SwitchDict'][cmssw]
         
 

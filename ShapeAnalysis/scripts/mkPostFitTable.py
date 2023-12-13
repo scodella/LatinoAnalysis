@@ -35,11 +35,11 @@ class Plow:
     # _____________________________________________________________________________
     def makePostFitTable(self):
 
-        print "========================="
-        print "==== makePostFitTable ===="
-        print "========================="
+        print("=========================")
+        print("==== makePostFitTable ====")
+        print("=========================")
         
-        print " self.inputFileCombine " , self._inputFileCombine
+        print((" self.inputFileCombine " , self._inputFileCombine))
         
         
         fileIn = ROOT.TFile(self._inputFileCombine, "READ")
@@ -77,7 +77,7 @@ class Plow:
         elif  self._kind == 'p' :
           folder_fit_name = "shapes_prefit"   # prefit
         else :
-          print " Seriously? What do you want from me? "
+          print(" Seriously? What do you want from me? ")
           return 
        
        
@@ -89,21 +89,21 @@ class Plow:
         #
         # initialize, to preserve the order of the OrderedDict
         #
-        for samples_key,samples_values in self._samples.iteritems():
+        for samples_key,samples_values in list(self._samples.items()):
           self._samples_yields [samples_key] = (0, 0)
           #                                  yield, error
           
         #  
         # get data  
         #
-        for samples_key,samples_values in self._samples.iteritems():
+        for samples_key,samples_values in list(self._samples.items()):
 
            # 
            # propagate signal from pre-fit if triggered
            # NB: this is needed for exclusion analyses, where the fitted signal is 0
            #     or to show the signal in the background only fit 
            #
-           if (self._getSignalFromPrefit == 1 and samples_key in self._structure.keys() and self._structure[samples_key]['isSignal'] == 1 ) or samples_key == "DATA" :
+           if (self._getSignalFromPrefit == 1 and samples_key in list(self._structure.keys()) and self._structure[samples_key]['isSignal'] == 1 ) or samples_key == "DATA" :
              
              #print "self._inputFile = " , self._inputFile
              
@@ -118,14 +118,14 @@ class Plow:
 
 
          
-        for samples_key,samples_values in self._samples.iteritems():
+        for samples_key,samples_values in list(self._samples.items()):
 
            #print " samples_key = ", samples_key
            
            copied_from_original = False
            
            #if samples_key != "DATA" :
-           if not ((self._getSignalFromPrefit == 1 and samples_key in self._structure.keys() and self._structure[samples_key]['isSignal'] == 1 ) or samples_key == "DATA"):
+           if not ((self._getSignalFromPrefit == 1 and samples_key in list(self._structure.keys()) and self._structure[samples_key]['isSignal'] == 1 ) or samples_key == "DATA"):
              if not (fileIn.Get(folder_fit_name + "/" + self._cut).GetListOfKeys().Contains(samples_key) ):
                #print "Sample ", samples_key, " does not exist in ", fileIn
                #
@@ -206,7 +206,7 @@ class Plow:
         #
 
 
-        for samples_key,samples_values in self._samples_yields.iteritems():
+        for samples_key,samples_values in list(self._samples_yields.items()):
           if samples_key != "DATA" :
             self._outFile.write(' %13s ' % samples_key.replace('_', '-'))
             self._outFile.write(' & %.2f \\\\  \n ' % (samples_values[0]) )
@@ -223,7 +223,7 @@ class Plow:
         self._outFile.write(' & %.2f $\\pm$ %.2f \\\\  \n ' % (self._samples_yields_total[0], self._samples_yields_total[1]) )
 
         self._outFile.write('\\hline\n')
-        for samples_key,samples_values in self._samples_yields.iteritems():
+        for samples_key,samples_values in list(self._samples_yields.items()):
           if samples_key == "DATA" :
             self._outFile.write(' %13s ' % samples_key.replace('_', '-'))
             self._outFile.write(' & %.2f $\\pm$ %.2f  \\\\  \n ' % (samples_values[0], math.sqrt(samples_values[0])) )
@@ -249,7 +249,7 @@ class Plow:
         
 
 if __name__ == '__main__':
-    print '''
+    print('''
 ----------------------------------------------------------------------------------------------------------------------------------
 
     
@@ -262,7 +262,7 @@ if __name__ == '__main__':
                        
 
 ----------------------------------------------------------------------------------------------------------------------------------
-'''    
+''')    
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
@@ -285,30 +285,30 @@ if __name__ == '__main__':
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
-    print " configuration file    =          ", opt.pycfg
-    print " inputFileCombine      =          ", opt.inputFileCombine
-    print " inputFile (for DATA)  =          ", opt.inputFile
-    print " outputFile            =          ", opt.outputFile
-    print " variable              =          ", opt.variable
-    print " cut                   =          ", opt.cut
-    print " kind                  =          ", opt.kind
-    print " getSignalFromPrefit   =          ", opt.getSignalFromPrefit
-    print " structureFile         =          ", opt.structureFile
+    print((" configuration file    =          ", opt.pycfg))
+    print((" inputFileCombine      =          ", opt.inputFileCombine))
+    print((" inputFile (for DATA)  =          ", opt.inputFile))
+    print((" outputFile            =          ", opt.outputFile))
+    print((" variable              =          ", opt.variable))
+    print((" cut                   =          ", opt.cut))
+    print((" kind                  =          ", opt.kind))
+    print((" getSignalFromPrefit   =          ", opt.getSignalFromPrefit))
+    print((" structureFile         =          ", opt.structureFile))
 
 
 
     if opt.cutNameInOriginal == '' :
       opt.cutNameInOriginal = opt.cut
-    print " cutNameInOriginal     =          ", opt.cutNameInOriginal
+    print((" cutNameInOriginal     =          ", opt.cutNameInOriginal))
 
 
     if not opt.debug:
         pass
     elif opt.debug == 2:
-        print 'Logging level set to DEBUG (%d)' % opt.debug
+        print(('Logging level set to DEBUG (%d)' % opt.debug))
         logging.basicConfig( level=logging.DEBUG )
     elif opt.debug == 1:
-        print 'Logging level set to INFO (%d)' % opt.debug
+        print(('Logging level set to INFO (%d)' % opt.debug))
         logging.basicConfig( level=logging.INFO )
 
     factory = Plow()
@@ -333,7 +333,7 @@ if __name__ == '__main__':
     # ~~~~
     structure = {}
     if opt.structureFile == None :
-       print " Please provide the datacard structure "
+       print(" Please provide the datacard structure ")
        #exit ()
 
     elif os.path.exists(opt.structureFile) :
@@ -348,7 +348,7 @@ if __name__ == '__main__':
     
     factory.makePostFitTable()
     
-    print '... and now closing ...'
+    print('... and now closing ...')
         
        
        

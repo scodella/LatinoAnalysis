@@ -42,7 +42,7 @@ class mcWeightsFiller(TreeCloner):
        
     def process(self,**kwargs):
 
-        print " starting ..."
+        print(" starting ...")
 
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -64,14 +64,14 @@ class mcWeightsFiller(TreeCloner):
 
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
 
         #what is self.itree? what is self.otree?
         itree     = self.itree
         otree     = self.otree
 
 
-        print '- Read histogram with weights'
+        print('- Read histogram with weights')
         
         myTreeWeight = self._getRootObj(self.ifile,'mcweight')
         
@@ -84,46 +84,46 @@ class mcWeightsFiller(TreeCloner):
 
         if nentriesWeight > 0 :
           myTreeWeight.GetEntry(0)
-          print 'Syst vec size: ',str(myTreeWeight.weightsLHE.size())
-          for isyst in xrange(myTreeWeight.weightsLHE.size()) :
+          print('Syst vec size: ',str(myTreeWeight.weightsLHE.size()))
+          for isyst in range(myTreeWeight.weightsLHE.size()) :
             bvector.push_back(0)
-        print 'Init done'
+        print('Init done')
 
         step = 5000
-        for i in xrange(nentriesWeight):
+        for i in range(nentriesWeight):
           myTreeWeight.GetEntry(i)
           if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
           weightSM   = myTreeWeight.weightSM          
           weightsLHE = myTreeWeight.weightsLHE
 
           if weightSM > 0 :
              mcWeight[0] += 1
              positive += 1
-             for isyst in xrange(weightsLHE.size()) : bvector[isyst] += weightsLHE.at(isyst) / weightSM
+             for isyst in range(weightsLHE.size()) : bvector[isyst] += weightsLHE.at(isyst) / weightSM
           elif weightSM < 0 :
              mcWeight[0] -= 1
              negative += 1
-             for isyst in xrange(weightsLHE.size()) : bvector[isyst] -= weightsLHE.at(isyst) / weightSM
+             for isyst in range(weightsLHE.size()) : bvector[isyst] -= weightsLHE.at(isyst) / weightSM
           
           #print list(bvector )
  
-        print ' weight = ',  mcWeight, " = ", positive, " - ", negative      
+        print(' weight = ',  mcWeight, " = ", positive, " - ", negative)      
         mcNegW[0] = 1. * (positive - negative) / (positive + negative)
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
 
-        for i in xrange(nentries):
+        for i in range(nentries):
         #for i in xrange(100):
 
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
 
             otree.Fill()
 
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 

@@ -34,11 +34,11 @@ if __name__ == '__main__':
     hwwtools.loadOptDefaults(parser)
     (opt, args) = parser.parse_args()
 
-    print " outputDirDatacard  = ", opt.outputDirDatacard
-    print " configuration file = ", opt.pycfg
-    print " AC config          = ", opt.accfg
-    print " Nuissances         = ", opt.nuisancesFile
-    print " Combination Cfg    = ", opt.combcfg
+    print((" outputDirDatacard  = ", opt.outputDirDatacard))
+    print((" configuration file = ", opt.pycfg))
+    print((" AC config          = ", opt.accfg))
+    print((" Nuissances         = ", opt.nuisancesFile))
+    print((" Combination Cfg    = ", opt.combcfg))
 
     samples = {}
     if os.path.exists(opt.samplesFile) :
@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
     nuisances = {}
     if opt.nuisancesFile == None :
-       print " Please provide the nuisances structure if you want to add nuisances "
+       print(" Please provide the nuisances structure if you want to add nuisances ")
 
     if os.path.exists(opt.nuisancesFile) :
       handle = open(opt.nuisancesFile,'r')
@@ -78,14 +78,14 @@ if __name__ == '__main__':
     exec(h)
 
     for iComb in combs :
-      print iComb
-      print combs[iComb]
+      print(iComb)
+      print((combs[iComb]))
       combDir  = opt.outputDirDatacard+'/'+iComb
       if not os.path.exists(combDir) : os.mkdir(combDir)
       for iDim in ['1D','2D','3D'] :
         if iDim in acoupling['ScanConfig'] and len(acoupling['ScanConfig'][iDim]) > 0 :
           for iScan in  acoupling['ScanConfig'][iDim]:
-            print iScan
+            print(iScan)
             combSubDir=opt.outputDirDatacard+'/'+iComb+'/comb_'+iScan.replace(":","_")
             if not os.path.exists(combSubDir) : os.mkdir(combSubDir)
 
@@ -136,5 +136,5 @@ if __name__ == '__main__':
             for iOp in iScan.split(":") :
               command+=' --PO range_'+iOp+'='+str(acoupling['operatorRange'][iOp][0])+','+str(acoupling['operatorRange'][iOp][1])
             os.system(command)
-            print command 
+            print(command) 
             

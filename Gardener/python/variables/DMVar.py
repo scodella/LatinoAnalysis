@@ -49,7 +49,7 @@ class DMVarFiller(TreeCloner):
         self.otree.Branch('mllStar'     , mllStar     , 'mllStar/F')
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
 
         #what is self.itree? what is self.otree?
         itree     = self.itree
@@ -62,15 +62,15 @@ class DMVarFiller(TreeCloner):
         except RuntimeError:
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/DMVar.C++g')
         #----------------------------------------------------------------------------------------------------
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
 
-        for i in xrange(nentries):
+        for i in range(nentries):
 
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
 
             pt1 = itree.pt1
             pt2 = itree.pt2
@@ -92,4 +92,4 @@ class DMVarFiller(TreeCloner):
             otree.Fill()
 
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')

@@ -43,7 +43,7 @@ class mcWeightsCounter(TreeCloner):
        
     def process(self,**kwargs):
 
-        print " starting ..."
+        print(" starting ...")
 
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -70,14 +70,14 @@ class mcWeightsCounter(TreeCloner):
         step = 5000
         nentries = 15000
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
 
         #what is self.itree? what is self.otree?
         itree     = self.itree
         otree     = self.otree
 
 
-        print '- Read histogram with weights'
+        print('- Read histogram with weights')
         
         myTreeWeight = self._getRootObj(self.ifile,'mcweight')
         if myTreeWeight.__nonzero__() :       
@@ -91,46 +91,46 @@ class mcWeightsCounter(TreeCloner):
   
           if nentriesWeight > 0 :
             myTreeWeight.GetEntry(0)
-            print 'Syst vec size: ',str(myTreeWeight.weightsLHE.size())
-            for isyst in xrange(myTreeWeight.weightsLHE.size()) :
+            print('Syst vec size: ',str(myTreeWeight.weightsLHE.size()))
+            for isyst in range(myTreeWeight.weightsLHE.size()) :
               bvector.push_back(0)
-          print 'Init done'
+          print('Init done')
   
-          for i in xrange(nentriesWeight):
+          for i in range(nentriesWeight):
             myTreeWeight.GetEntry(i)
             if i > 0 and i%step == 0.:
-                  print i,'events processed. / ',nentriesWeight
+                  print(i,'events processed. / ',nentriesWeight)
             weightSM   = myTreeWeight.weightSM          
             weightsLHE = myTreeWeight.weightsLHE
   
             if weightSM > 0 :
                mcWeight[0] += 1
                positive += 1
-               for isyst in xrange(weightsLHE.size()) : bvector[isyst] += weightsLHE.at(isyst) / weightSM
+               for isyst in range(weightsLHE.size()) : bvector[isyst] += weightsLHE.at(isyst) / weightSM
             elif weightSM < 0 :
                mcWeight[0] -= 1
                negative += 1
-               for isyst in xrange(weightsLHE.size()) : bvector[isyst] -= weightsLHE.at(isyst) / weightSM
+               for isyst in range(weightsLHE.size()) : bvector[isyst] -= weightsLHE.at(isyst) / weightSM
             
             #print list(bvector )
    
-          print ' weight = ',  mcWeight, " = ", positive, " - ", negative      
+          print(' weight = ',  mcWeight, " = ", positive, " - ", negative)      
           mcNegW[0] = 1. * (positive - negative) / (positive + negative)
   
-          print '- Starting eventloop'
+          print('- Starting eventloop')
   
           
-          for i in xrange(nentries):
+          for i in range(nentries):
           #for i in xrange(100):
   
               itree.GetEntry(i)
   
               if i > 0 and i%step == 0.:
-                  print i,'events processed.'
+                  print(i,'events processed.')
   
               otree.Fill()
   
-          print '- Eventloop completed'
+          print('- Eventloop completed')
   
           self.ofile.cd()
   
@@ -144,7 +144,7 @@ class mcWeightsCounter(TreeCloner):
           h_mcWhgt.Fill(0.5,mcWeight[0])
           h_mcWhgtPos.Fill(0.5,positive)
           h_mcWhgtNeg.Fill(0.5,negative)
-          for isyst in xrange(weightsLHE.size()) : h_mcWhgtLHE.Fill(isyst+0.5,bvector[isyst])        
+          for isyst in range(weightsLHE.size()) : h_mcWhgtLHE.Fill(isyst+0.5,bvector[isyst])        
  
           h_mcCount.Write() 
           h_mcWhgt.Write()
@@ -154,10 +154,10 @@ class mcWeightsCounter(TreeCloner):
 
         else:
           # Else we simply copy no to loose the tree .... but hopeffuly you don't call from here
-          for i in xrange(nentries):
+          for i in range(nentries):
             itree.GetEntry(i)
             if i > 0 and i%step == 0.:
-                  print i,'events processed.'
+                  print(i,'events processed.')
             otree.Fill() 
 
         self.disconnect(False)

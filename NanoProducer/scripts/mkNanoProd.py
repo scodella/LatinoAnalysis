@@ -15,7 +15,7 @@ from LatinoAnalysis.NanoProducer.NanoProdMaker import *
 # ------------------------------------------------------- MAIN --------------------------------------------
 
 if __name__ == '__main__':
-    print '''
+    print('''
 -----------------------------------------------------------------------------------
   _   _                     _____               _            _   _             
  | \ | |                   |  __ \             | |          | | (_)            
@@ -25,7 +25,7 @@ if __name__ == '__main__':
  |_| \_|\__,_|_| |_|\___/  |_|   |_|  \___/ \__,_|\__,_|\___|\__|_|\___/|_| |_|
 
 -----------------------------------------------------------------------------------
-'''
+''')
 
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
@@ -57,7 +57,7 @@ if __name__ == '__main__':
       handle.close()
       prodList = List_Filter(Productions,options.prods).get()
     else:
-      print 'ERROR: Please specify the input data config with -d <fileName>'
+      print('ERROR: Please specify the input data config with -d <fileName>')
       exit(1)  
 
 #   if os.path.exists(CMSSW+'/src/'+options.sitescfg):
@@ -69,9 +69,9 @@ if __name__ == '__main__':
 #     exit(1)
 
 
-    print " Productions : " , prodList
+    print(" Productions : " , prodList)
     if len(prodList) == 0 :
-      print 'ERROR: Please specify valid productions (-p <prodList>)'
+      print('ERROR: Please specify valid productions (-p <prodList>)')
       exit(1)
 
 # ---------------------------------------- And Here we go:

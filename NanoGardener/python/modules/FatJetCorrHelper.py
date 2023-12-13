@@ -73,7 +73,7 @@ def createFatjetCorrector(globalTag, dataYear, jetType="AK8PFPuppi", isMC=True, 
 
     archiveTag_ = archiveTagsDATA[dataYear]
 
-    print 'Jet type=', jetType, 'JEC=', globalTag, '\t JER=', jerTag_
+    print('Jet type=', jetType, 'JEC=', globalTag, '\t JER=', jerTag_)
 
     jmeCorrections = None
     #jme corrections

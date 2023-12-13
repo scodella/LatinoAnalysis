@@ -37,7 +37,7 @@ class RecoilCorr(Module):
             if variation==0: correctionFilename = "Type1_PFMET_"+str(self.year)+".root"
             else:            correctionFilename = "PFMETSys_"+str(self.year)+".root"
           else:
-            print 'No correction files for MET type "'+metType+'"!'
+            print('No correction files for MET type "'+metType+'"!')
             self.neglectMET.append(metType)
             continue
           if variation==0:

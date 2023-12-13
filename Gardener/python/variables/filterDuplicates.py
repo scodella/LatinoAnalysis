@@ -58,7 +58,7 @@ class FilterDuplicates(TreeCloner):
         self.otree.Branch('isDuplicate',  isDuplicate,  'isDuplicate/F')
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
         savedentries = 0
 
         # avoid dots to go faster
@@ -66,25 +66,25 @@ class FilterDuplicates(TreeCloner):
         otree     = self.otree
 
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
         
         # duplicate check
         DoubleChecker = {}
          
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
 
             ## print event count
             if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
 
             isDuplicate[0] = -9999.
             
             run_lumi = ( itree.run, itree.lumi )
-            if  run_lumi in DoubleChecker.keys() :
+            if  run_lumi in list(DoubleChecker.keys()) :
               if itree.event in DoubleChecker[run_lumi]:
-                print " already there! ", itree.run, ", ", itree.lumi, ", ", itree.event 
+                print(" already there! ", itree.run, ", ", itree.lumi, ", ", itree.event) 
                 isDuplicate[0] = 0
               else :
                 isDuplicate[0] = 1
@@ -100,7 +100,7 @@ class FilterDuplicates(TreeCloner):
         #print " DoubleChecker = ", DoubleChecker  
           
         self.disconnect()
-        print '- Eventloop completed'
-        print '   Saved: ', savedentries, ' events'
+        print('- Eventloop completed')
+        print('   Saved: ', savedentries, ' events')
 
 

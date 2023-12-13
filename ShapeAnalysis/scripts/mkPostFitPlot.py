@@ -37,11 +37,11 @@ class LawnMower:
     # _____________________________________________________________________________
     def makePostFitPlot(self):
 
-        print "========================="
-        print "==== makePostFitPlot ===="
-        print "========================="
+        print("=========================")
+        print("==== makePostFitPlot ====")
+        print("=========================")
         
-        print " self.inputFileCombine " , self._inputFileCombine
+        print((" self.inputFileCombine " , self._inputFileCombine))
         
         
         fileIn = ROOT.TFile(self._inputFileCombine, "READ")
@@ -67,13 +67,13 @@ class LawnMower:
         elif  self._kind == 'p' :
           folder_fit_name = "shapes_prefit"   # prefit
         else :
-          print " Seriously? What do you want from me? "
+          print(" Seriously? What do you want from me? ")
           return 
        
        
         template_histogram = 0
         
-        for sampleName, structureDef in self._structure.iteritems():
+        for sampleName, structureDef in list(self._structure.items()):
            if '/' in sampleName:
              cardName = sampleName.replace('/', '__')
              binName = sampleName[sampleName.find('/') + 1:]
@@ -89,9 +89,9 @@ class LawnMower:
            if not in_samples:
              # check if it is in subsamples
              in_subsample = False
-             for _sampleName, _sample in self._samples.items():
+             for _sampleName, _sample in list(self._samples.items()):
                if "subsamples" not in _sample: continue
-               for _subsam in  _sample["subsamples"].keys():
+               for _subsam in  list(_sample["subsamples"].keys()):
                  if _sampleName+"_"+ _subsam == sampleName:
                    in_subsample = True
                    break
@@ -108,15 +108,15 @@ class LawnMower:
            #
            if (self._getSignalFromPrefit == 1 and structureDef['isSignal'] == 1 ) or sampleName == "DATA" :
              
-             print "THISFILE:",self._inputFile
+             print(("THISFILE:",self._inputFile))
              fileInJustForDATA = ROOT.TFile(self._inputFile, "READ")
 
              self._outFile.cd (self._cutNameInOriginal+"/"+self._variable)
 
-             print shapeSource + "/histo_" + sampleName
+             print((shapeSource + "/histo_" + sampleName))
              histo = fileInJustForDATA.Get(shapeSource + "/histo_" + sampleName)
-             print histo
-             print 'histo_' + cardName
+             print(histo)
+             print(('histo_' + cardName))
              histo.SetName  ('histo_' + cardName)
              histo.SetTitle ('histo_' + cardName)
              if sampleName!="DATA" or not factory._getDataFromCombine: histo.Write()              
@@ -138,7 +138,7 @@ class LawnMower:
          
         totalFromDatacard = 0
 
-        for sampleName, structureDef in self._structure.iteritems():
+        for sampleName, structureDef in list(self._structure.items()):
            if '/' in sampleName:
              cardName = sampleName.replace('/', '__')
              binName = sampleName[sampleName.find('/') + 1:]
@@ -154,9 +154,9 @@ class LawnMower:
            if not in_samples:
             # check if it is in subsamples
             in_subsample = False
-            for _sampleName, _sample in self._samples.items():
+            for _sampleName, _sample in list(self._samples.items()):
                if "subsamples" not in _sample: continue
-               for _subsam in  _sample["subsamples"].keys():
+               for _subsam in  list(_sample["subsamples"].keys()):
                   if _sampleName+"_"+ _subsam == sampleName:
                      in_subsample = True
                      break
@@ -165,7 +165,7 @@ class LawnMower:
            if 'removeFromCuts' in structureDef and self._cutNameInOriginal in structureDef['removeFromCuts']:
              continue
 
-           print " sampleName = ", sampleName
+           print((" sampleName = ", sampleName))
            
            if sampleName != "DATA":
                if totalFromDatacard == 0:
@@ -179,7 +179,7 @@ class LawnMower:
            #if samples_key != "DATA" :
            if not ((self._getSignalFromPrefit == 1 and structureDef['isSignal'] == 1 ) or sampleName == "DATA"):
              if not (fileIn.Get(folder_fit_name + "/" + self._cut).GetListOfKeys().Contains(cardName) ):
-               print "Sample ", cardName, " does not exist in ", fileIn
+               print(("Sample ", cardName, " does not exist in ", fileIn))
                #
                # If for some reason this histogram is not available in the combine output
                # get the histogram from the input root file, the output of mkShape
@@ -206,7 +206,7 @@ class LawnMower:
              if not copied_from_original :  
                
                histo = fileIn.Get(folder_fit_name + "/" + self._cut + "/" + cardName)
-               print folder_fit_name + "/" + self._cut + "/" + cardName
+               print((folder_fit_name + "/" + self._cut + "/" + cardName))
                
                histo.SetName  ('histo_' + cardName)
                histo.SetTitle ('histo_' + cardName)
@@ -336,7 +336,7 @@ class LawnMower:
 if __name__ == '__main__':
     sys.argv = argv
     
-    print '''
+    print('''
 ----------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -348,7 +348,7 @@ if __name__ == '__main__':
  
 
 ----------------------------------------------------------------------------------------------------------------------------------
-'''    
+''')    
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
@@ -374,30 +374,30 @@ if __name__ == '__main__':
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
-    print " configuration file    =          ", opt.pycfg
-    print " inputFileCombine      =          ", opt.inputFileCombine
-    print " inputFile (for DATA)  =          ", opt.inputFile
-    print " outputFile            =          ", opt.outputFile
-    print " variable              =          ", opt.variable
-    print " cut                   =          ", opt.cut
-    print " kind                  =          ", opt.kind
-    print " getSignalFromPrefit   =          ", opt.getSignalFromPrefit
-    print " structureFile         =          ", opt.structureFile
-    print " getDataFromCombine    =          ", opt.getDataFromCombine
+    print((" configuration file    =          ", opt.pycfg))
+    print((" inputFileCombine      =          ", opt.inputFileCombine))
+    print((" inputFile (for DATA)  =          ", opt.inputFile))
+    print((" outputFile            =          ", opt.outputFile))
+    print((" variable              =          ", opt.variable))
+    print((" cut                   =          ", opt.cut))
+    print((" kind                  =          ", opt.kind))
+    print((" getSignalFromPrefit   =          ", opt.getSignalFromPrefit))
+    print((" structureFile         =          ", opt.structureFile))
+    print((" getDataFromCombine    =          ", opt.getDataFromCombine))
 
 
     if opt.cutNameInOriginal == '' :
       opt.cutNameInOriginal = opt.cut
-    print " cutNameInOriginal     =          ", opt.cutNameInOriginal
+    print((" cutNameInOriginal     =          ", opt.cutNameInOriginal))
 
 
     if not opt.debug:
         pass
     elif opt.debug == 2:
-        print 'Logging level set to DEBUG (%d)' % opt.debug
+        print(('Logging level set to DEBUG (%d)' % opt.debug))
         logging.basicConfig( level=logging.DEBUG )
     elif opt.debug == 1:
-        print 'Logging level set to INFO (%d)' % opt.debug
+        print(('Logging level set to INFO (%d)' % opt.debug))
         logging.basicConfig( level=logging.INFO )
 
     factory = LawnMower()
@@ -423,7 +423,7 @@ if __name__ == '__main__':
     # ~~~~
     structure = {}
     if opt.structureFile == None :
-       print " Please provide the datacard structure "
+       print(" Please provide the datacard structure ")
        #exit ()
 
     elif os.path.exists(opt.structureFile) :
@@ -440,7 +440,7 @@ if __name__ == '__main__':
     
     factory.makePostFitPlot()
     
-    print '... and now closing ...'
+    print('... and now closing ...')
         
        
        

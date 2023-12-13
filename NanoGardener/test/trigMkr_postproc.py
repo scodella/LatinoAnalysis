@@ -18,4 +18,4 @@ selection = None
 p=PostProcessor(".",files,cut=selection,branchsel=None,modules=[trigMkr_MC('Full2016')],postfix='_trigMkr',provenance=True,fwkJobReport=True)
 p.run()
 
-print "DONE"
+print("DONE")

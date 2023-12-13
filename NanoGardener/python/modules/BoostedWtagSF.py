@@ -118,7 +118,7 @@ class BoostedWtagSF(Module):
     
 
         # Apply the tau21 cut on all the fatjets passing the kinematical cuts
-        tau21cut = list(map(lambda t: t<=self.max_tau21, goodfatjet_tau21s))
+        tau21cut = list([t<=self.max_tau21 for t in goodfatjet_tau21s])
 
         if any(tau21cut):
             #  we have found at least one fatjet passing kin cuts and also tau21 ID --> high purity SF region

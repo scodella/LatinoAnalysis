@@ -86,7 +86,7 @@ class DNNvarFiller(TreeCloner):
         #self.createDNNvar()
         
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries
+        print('Total number of entries: ',nentries)
         
         # avoid dots to go faster
         itree     = self.itree
@@ -111,14 +111,14 @@ class DNNvarFiller(TreeCloner):
         
         Y_pred  = loaded_model.predict(X_test)
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
 
             ## print event count
             if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
 
             DNNvar[0] = Y_pred[i][0]
              
@@ -126,4 +126,4 @@ class DNNvarFiller(TreeCloner):
             
         otree.Write()
         self.disconnect()
-print '- Eventloop completed'
+print('- Eventloop completed')

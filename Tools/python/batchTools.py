@@ -206,7 +206,7 @@ class batchJobs :
        proc=subprocess.Popen(cmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
        out, err = proc.communicate()
        proxypath = " xxx "
-       for line in out.split('\n'):
+       for line in out.decode().split('\n'):
         if "path" in line:
           proxypath=line.split(':')[1]
        if 'cern' in hostName:
@@ -278,7 +278,7 @@ class batchJobs :
        else:
          subDirExtra =''
        jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','a')
-       command = 'python '+self.subDir+subDirExtra+'/'+jName+'.py'
+       command = 'python3 '+self.subDir+subDirExtra+'/'+jName+'.py'
        jFile.write(command+'\n')
        jFile.close()
 
@@ -288,7 +288,7 @@ class batchJobs :
        subDirExtra = '/' + jName.split('__')[3]
      else:
        subDirExtra =''
-     print 'Adding to ',self.subDir+subDirExtra+'/'+jName
+     print('Adding to ',self.subDir+subDirExtra+'/'+jName)
      pFile = open(self.subDir+subDirExtra+'/'+jName+'.py','a')
      pFile.write(command+'\n')
      pFile.close()
@@ -311,8 +311,8 @@ class batchJobs :
        flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
        runtimes = [20, 60, 120, 60 * 8, 60 * 24, 60 * 24 * 3, 60 * 24 * 7]
        if queue not in flavours:
-         print 'Queue', queue, 'is not defined for CERN HTCondor.'
-         print 'Allowed values:', flavours
+         print('Queue', queue, 'is not defined for CERN HTCondor.')
+         print('Allowed values:', flavours)
          raise RuntimeError('Undefined queue')
 
        MaxRunTime = (runtimes[flavours.index(queue)] - 1) * 60
@@ -327,7 +327,7 @@ class batchJobs :
        else:
          subDirExtra =''
        os.system('cd '+self.subDir+subDirExtra)
-       print self.subDir+subDirExtra+'/'+jName
+       print(self.subDir+subDirExtra+'/'+jName)
        if self.USE_SINGULARITY :
          jobFile=self.subDir+subDirExtra+'/'+jName+'_Sing.sh' 
        else:
@@ -338,7 +338,7 @@ class batchJobs :
        jFile = open(jobFile,'a')
        jFile.write('[ $? -eq 0 ] && mv '+jidFile+' '+jidFile.replace('.jid','.done') )
        jFile.close()
-       print 'Submit',jName, ' on ', queue
+       print('Submit',jName, ' on ', queue)
 
        if 'cern' in hostName:
          if CERN_USE_LSF:
@@ -371,11 +371,11 @@ class batchJobs :
          while nTry < 3 : 
            nTry+=1
            if self.USE_SINGULARITY :
-             print 'ssh m8 qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile
+             print('ssh m8 qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
              jobid=os.system('ssh m8 qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
            else:
              jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
-           print 'TRY #:', nTry , '--> Jobid : ' , jobid
+           print('TRY #:', nTry , '--> Jobid : ' , jobid)
            if jobid == 0 : nTry = 999
            else:  os.system('rm '+jidFile)
          if not jobid == 0 and optTodo :
@@ -392,14 +392,14 @@ class batchJobs :
          # mib farm
          if queue not in ['shortcms', 'longcms']:
            queue = 'shortcms'
-         print " hercules::queue = ", queue
-         print " hercules::outFile = ", outFile
-         print " hercules::errFile = ", errFile
-         print " hercules::jobFile = ", jobFile
-         print " hercules::jidFile = ", jidFile
+         print(" hercules::queue = ", queue)
+         print(" hercules::outFile = ", outFile)
+         print(" hercules::errFile = ", errFile)
+         print(" hercules::jobFile = ", jobFile)
+         print(" hercules::jidFile = ", jidFile)
          # queues: "shortcms" (2 days) and "longcms"
          #jobid=os.system('qsub -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
-         print 'qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' -q ' + queue+ ' > '+jidFile
+         print('qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' -q ' + queue+ ' > '+jidFile)
          jobid=os.system('qsub  -o '+outFile+' -e '+errFile+' '+jobFile+' -q ' +queue +' > '+jidFile)
        elif 'sdfarm' in hostName:
          jdsFileName=self.subDir+subDirExtra+'/'+jName+'.jds'
@@ -467,16 +467,15 @@ class batchJobs :
            subDirExtra = '' 
          jds += self.subDir+subDirExtra+'/'+jName + '\n'
        jds += ')\n'
-
        proc = subprocess.Popen(['condor_submit'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-       out, err = proc.communicate(jds)
+       out, err = proc.communicate(jds.encode())
        if proc.returncode != 0:
          sys.stderr.write(err)
          raise RuntimeError('Job submission failed.')
 
-       print out.strip()
+       print(out.strip())
 
-       matches = re.match('.*submitted to cluster ([0-9]*)\.', out.split('\n')[-2])
+       matches = re.match('.*submitted to cluster ([0-9]*)\.', out.decode().split('\n')[-2])
        if not matches:
          sys.stderr.write('Failed to retrieve the job id. Job submission may have failed.\n')
          for jName in self.jobsList:
@@ -571,7 +570,7 @@ def batchStatus():
               else: Runn[iStep]+=1
             elif 'ifca' in hostName or 'cloud' in hostName:	
               iStat = os.popen('qstat | grep \" qw \" |  awk \'{print $1 \" '+jidFile+'\"}\' | xargs -n 2 grep | awk \'{ print $2 }\' ').read()
-	      if 'job' in iStat : Pend[iStep]+=1
+              if 'job' in iStat : Pend[iStep]+=1
               else: Runn[iStep]+=1
             elif 'cern' in hostName and not CERN_USE_LSF:
               iStat = os.popen(r'cat '+jidFile+" | xargs -n 1 condor_q | tail -n1").read()
@@ -584,14 +583,14 @@ def batchStatus():
           FileRuns[iStep].append(iSample)
         else:
           Done[iStep]+=1
-      print '----------------------------'
-      print iDir+' : '
-      print '----------------------------'
+      print('----------------------------')
+      print(iDir+' : ')
+      print('----------------------------')
       for iStep in Done:
-        print '     --> '+iStep+' : PENDING= '+str(Pend[iStep])+' RUNNING= '+str(Runn[iStep])+' DONE= '+str(Done[iStep])+' CRAB= '+str(Crab[iStep])+' / TOTAL= '+str(Done[iStep]) +'/'+str(Tota[iStep])
-      print '   Samples not done:'
+        print('     --> '+iStep+' : PENDING= '+str(Pend[iStep])+' RUNNING= '+str(Runn[iStep])+' DONE= '+str(Done[iStep])+' CRAB= '+str(Crab[iStep])+' / TOTAL= '+str(Done[iStep]) +'/'+str(Tota[iStep]))
+      print('   Samples not done:')
       for iStep in Done:
-        print '     --> '+iStep+' : ',FileRuns[iStep]
+        print('     --> '+iStep+' : ',FileRuns[iStep])
 
 def batchClean():
     fileCmd = 'ls '+jobDir
@@ -607,12 +606,12 @@ def batchClean():
         doneFile=iFile.replace('.sh','.done')
         if os.path.isfile(doneFile):
           cleanFile=iFile.replace('.sh','.*')
-          print 'Clean',cleanFile
+          print('Clean',cleanFile)
           os.system('cd '+jobDir+'; rm '+cleanFile)
       try : 
         os.rmdir(jobDir+'/'+iDir) 
       except :
-        print 'Some jobs still ongoing in: '+ iDir
+        print('Some jobs still ongoing in: '+ iDir)
 
 def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00',optTodo=True):
     # jobDir imported from userConfig
@@ -633,8 +632,8 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
       flavours = ['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek']
       runtimes = [20, 60, 120, 60 * 8, 60 * 24, 60 * 24 * 3, 60 * 24 * 7]
       if queue not in flavours:
-        print 'Queue', queue, 'is not defined for CERN HTCondor.'
-        print 'Allowed values:', flavours
+        print('Queue', queue, 'is not defined for CERN HTCondor.')
+        print('Allowed values:', flavours)
         raise RuntimeError('Undefined queue')
 
       MaxRunTime = (runtimes[flavours.index(queue)] - 1) * 60
@@ -654,7 +653,7 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
         jidFile=iFile.replace('.todo','.jid')
         if 'iihe' in os.uname()[1]:
           jobid=os.system('bash '+iFile)
-          print 'Submitting ' , iFile
+          print('Submitting ' , iFile)
           if jobid == 0 : os.system('rm '+iFile)
           else          : os.system('rm '+jidFile)
 
@@ -681,12 +680,12 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
       for iFile in FileList:
         subDir = os.path.dirname(iFile)
         jName  = os.path.basename(iFile).split('.')[0]
-        print subDir , ' ---> ', jName
+        print(subDir , ' ---> ', jName)
         jobFile=subDir+'/'+jName+'.sh'
         errFile=subDir+'/'+jName+'.err'
         outFile=subDir+'/'+jName+'.out'
         jidFile=subDir+'/'+jName+'.jid'
-        print 'Submit',jName, ' on ', queue
+        print('Submit',jName, ' on ', queue)
 
         jobsList.append(jName)
 
@@ -719,7 +718,7 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
           while nTry < 3 :
             nTry+=1
             jobid=os.system('qsub '+QSOPT+' -N '+jName+' -q '+queue+' -o '+outFile+' -e '+errFile+' '+jobFile+' > '+jidFile)
-            print 'TRY #:', nTry , '--> Jobid : ' , jobid
+            print('TRY #:', nTry , '--> Jobid : ' , jobid)
             if jobid == 0 : nTry = 999
             else:  os.system('rm '+jidFile)
           if jobid == 0 : os.system('rm '+iFile)   
@@ -793,7 +792,7 @@ def batchResub(Dir='ALL',queue='longlunch',requestCpus=1,IiheWallTime='168:00:00
         if proc.returncode != 0:
           sys.stderr.write(err)
           raise RuntimeError('Job submission failed.')
-        print out.strip()
+        print(out.strip())
 
         matches = re.match('.*submitted to cluster ([0-9]*)\.', out.split('\n')[-2])
         if not matches:

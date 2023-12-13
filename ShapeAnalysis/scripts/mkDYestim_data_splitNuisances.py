@@ -34,18 +34,18 @@ if __name__ == '__main__':
     hwwtools.loadOptDefaults(parser)
     (opt, args) = parser.parse_args()
 
-    print " configuration file = ", opt.pycfg
-    print " DY estimation Cfg  = ", opt.dycfg
+    print((" configuration file = ", opt.pycfg))
+    print((" DY estimation Cfg  = ", opt.dycfg))
 
     # Set Input file
     if opt.inputFile == 'DEFAULT' :
       opt.inputFile = opt.outputDir+'/plots_'+opt.tag+'.root'
-    print " inputFile      =          ", opt.inputFile
+    print((" inputFile      =          ", opt.inputFile))
 
     # Set Output file
     if opt.outputFile == 'DEFAULT' :
       opt.outputFile = opt.outputDir+'/plots_'+opt.tag+'_'+opt.DYtag+'.root'
-    print " outputFile    =          ", opt.outputFile
+    print((" outputFile    =          ", opt.outputFile))
 
     # Create Needed dictionnary
     variables = {}
@@ -73,7 +73,7 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
 
-    print RAndKff
+    print(RAndKff)
 
     # Load C  
     cmssw_base = os.getenv('CMSSW_BASE')
@@ -105,18 +105,18 @@ if __name__ == '__main__':
       K_ff_data[iRAndKff]       = {}
       K_ff_data_value[iRAndKff] = {}
 
-      print iRAndKff
+      print(iRAndKff)
 
       # Input: dyestim.py file in configuration folder
       for iRegion in RAndKff[iRAndKff]['Regions']: 
-        print iRegion
+        print(iRegion)
 
         # Compute K and its uncertainty - using DATA
         # Open input rootfile
         K_ff_data[iRAndKff][iRegion] = {}
         K_ff_data_value[iRAndKff][iRegion] = {}
 
-        print 'K file = ', RAndKff[iRAndKff]['KffFile']
+        print(('K file = ', RAndKff[iRAndKff]['KffFile']))
         Kfile[iRAndKff]   = TFile(RAndKff[iRAndKff]['KffFile'])
         thelist[iRAndKff] = Kfile[iRAndKff].GetListOfKeys()
 
@@ -173,9 +173,9 @@ if __name__ == '__main__':
         K_ff_data_value[iRAndKff][iRegion]['err'] = 0.5 * math.sqrt(k_err_num*k_err_num + k_err_den*k_err_den) * K_ff_data_value[iRAndKff][iRegion]['val']
 
         print("DATA:")
-        print("k numerator   = {} )".format(K_ff_data[iRAndKff][iRegion]['kNum'].Integral() ) )
-        print("k denominator = {} )".format(K_ff_data[iRAndKff][iRegion]['kDen'].Integral() ) )
-        print 'K from data = ', K_ff_data_value[iRAndKff][iRegion]['val'], ' +/- ', K_ff_data_value[iRAndKff][iRegion]['err'] 
+        print(("k numerator   = {} )".format(K_ff_data[iRAndKff][iRegion]['kNum'].Integral() ) ))
+        print(("k denominator = {} )".format(K_ff_data[iRAndKff][iRegion]['kDen'].Integral() ) ))
+        print(('K from data = ', K_ff_data_value[iRAndKff][iRegion]['val'], ' +/- ', K_ff_data_value[iRAndKff][iRegion]['err'])) 
 
         # Store k value and uncertainty
         K_ff[iRAndKff][iRegion] = {} 
@@ -187,7 +187,7 @@ if __name__ == '__main__':
         Rinout[iRAndKff][iRegion] = {}
         DataR[iRAndKff][iRegion]  = {}
         # Open input rootfile
-        print 'file = ', RAndKff[iRAndKff]['RFile']
+        print(('file = ', RAndKff[iRAndKff]['RFile']))
         Rfile[iRAndKff] = TFile(RAndKff[iRAndKff]['RFile'])
         thelist[iRAndKff] = Rfile[iRAndKff].GetListOfKeys()
 
@@ -239,12 +239,12 @@ if __name__ == '__main__':
         DataR[iRAndKff][iRegion]['val'].Divide(DataR[iRAndKff][iRegion]['RNum'],DataR[iRAndKff][iRegion]['RDen'], 1, 1, "b")
         Rinout[iRAndKff][iRegion]['val'] = DataR[iRAndKff][iRegion]['val'].GetBinContent(1)
         Rinout[iRAndKff][iRegion]['err'] = DataR[iRAndKff][iRegion]['val'].GetBinError(1)
-        print 'R calc. Num = ',  DataR[iRAndKff][iRegion]['RNum'].Integral(), ' / Den = ', DataR[iRAndKff][iRegion]['RDen'].Integral(), ' | R(out/in) = ', Rinout[iRAndKff][iRegion]['val'], ' +/- ', Rinout[iRAndKff][iRegion]['err'] 
+        print(('R calc. Num = ',  DataR[iRAndKff][iRegion]['RNum'].Integral(), ' / Den = ', DataR[iRAndKff][iRegion]['RDen'].Integral(), ' | R(out/in) = ', Rinout[iRAndKff][iRegion]['val'], ' +/- ', Rinout[iRAndKff][iRegion]['err'])) 
 
-    print ' ----- Rinout -----'
-    print Rinout
-    print ' ----- K_ff -------'
-    print K_ff 
+    print(' ----- Rinout -----')
+    print(Rinout)
+    print(' ----- K_ff -------')
+    print(K_ff) 
 
 
     # ------------------- Apply Rinout and K_ff --------------------
@@ -295,9 +295,9 @@ if __name__ == '__main__':
                    if not hName == 'histo_' + DYestim[iDYestim]['DYProc'] + '_' + DYestim[iDYestim]['NPname'] + 'Up' and not hName == 'histo_' + DYestim[iDYestim]['DYProc'] + '_' + DYestim[iDYestim]['NPname'] + 'Down' and not "norm" in hName:
                     if hTmp.Integral() == 0 : 
                        nHisDummy = 0
-                       print '!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!',hName
-                       print '!!!!!!!!!!!!!!!!!!!!! Only works for 1 bin, see below !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-                       print '!!!!!!!!!!!!!!!!!!!!! nBin = ',hTmp.GetNbinsX()
+                       print(('!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!',hName))
+                       print('!!!!!!!!!!!!!!!!!!!!! Only works for 1 bin, see below !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                       print(('!!!!!!!!!!!!!!!!!!!!! nBin = ',hTmp.GetNbinsX()))
                        for iBin in range(1,hTmp.GetNbinsX()+1) : 
                           nHisDummy += 1.
                           hTmp.SetBinContent(iBin,0.00001)
@@ -309,7 +309,7 @@ if __name__ == '__main__':
                     if hName == 'histo_' + DYestim[iDYestim]['DYProc']:
                       hUp = hTmp.Clone('histo_' + DYestim[iDYestim]['DYProc'] + '_' + DYestim[iDYestim]['NPname'] + 'Up')
                       hDo = hTmp.Clone('histo_' + DYestim[iDYestim]['DYProc'] + '_' + DYestim[iDYestim]['NPname'] + 'Down')
-                    print '--------- DY' , baseDir , hName , len(DYestim[iDYestim]['DYProc'].split('_'))
+                    print(('--------- DY' , baseDir , hName , len(DYestim[iDYestim]['DYProc'].split('_'))))
                     
                     # Standard case - Nout NOT know a priori 
                     # Get yields and uncertainties
@@ -331,7 +331,7 @@ if __name__ == '__main__':
                           Nvv += inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+iMC).Integral()
                           ENvv = ENvv + pow(inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+iMC).GetBinError(1),2)
                         except:
-                          print "Empty"
+                          print("Empty")
                       ENvv   = math.sqrt(ENvv)   
 
                       # VV DF backgrounds IN ('VZ','Vg','VgS_L','VgS_H') --> Get them from MC, too
@@ -373,13 +373,13 @@ if __name__ == '__main__':
                       NDo  = max(Nout - Eout, Nout * 0.000000001)
 
                       # Printout different uncertainty sources
-                      print("N out = {}".format(Nout))
-                      print("Total uncertainty on N out = {} ({}%)".format(Eout, Eout/Nout*100))
+                      print(("N out = {}".format(Nout)))
+                      print(("Total uncertainty on N out = {} ({}%)".format(Eout, Eout/Nout*100)))
                       
                       # Get DY yields before correction (in OUT region?)
                       nHis = inputFile.Get(baseDir + '/' + subDir + '/histo_' + DYestim[iDYestim]['DYProc']).Integral()
                       if nHis == 0 : 
-                        print '!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!'
+                        print('!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!')
                         nHis = 0.00001
 
                       # Finally, the acceptance (scale factor) value  
@@ -400,7 +400,7 @@ if __name__ == '__main__':
 
                         #Forcing non null acceptance due to low stats
                         if Acc == 0 : 
-                          print 'LOW STATS FOR ACCEPTANCE! Setting Acc to 0.001 +/- 0.01'
+                          print('LOW STATS FOR ACCEPTANCE! Setting Acc to 0.001 +/- 0.01')
                           Acc  = 0.001
                           EAcc = 0.01
 
@@ -416,7 +416,7 @@ if __name__ == '__main__':
                           NDo = DYestim[iDYestim]['NDo']
                       nHis = inputFile.Get(baseDir + '/' + subDir + '/histo_' + DYestim[iDYestim]['DYProc']).Integral()
                       if nHis == 0 :  
-                        print '!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!'
+                        print('!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!')
                         nHis = 0.00001
                       Acc  = 1.
                       EAcc = 0.01
@@ -425,31 +425,31 @@ if __name__ == '__main__':
                     # Systematic uncertainties  
                     if 'asyst' in DYestim[iDYestim] : 
                         EAcc = math.sqrt(pow(EAcc, 2) + pow(DYestim[iDYestim]['asyst'], 2))
-                    print 'Acc = ', Acc, " +- ", EAcc
+                    print(('Acc = ', Acc, " +- ", EAcc))
 
                     # Print results to txt file
                     # txt_file.write('--------- DY {}, {}, {} \n'.format(baseDir, hName, len(DYestim[iDYestim]['DYProc'].split('_'))))
                     
                     # one nuisance correlated between ee and mm related to the N_eu part
                     Err_out_Neu = DYCalc.EN_DY(R , Nin , k , Neu, Nvv, 0, 0, 0, ENeu, 0)
-                    print("Uncertainty on N out due to N(e,mu) uncertainty = {} ({}%)".format(Err_out_Neu, Err_out_Neu/Nout*100))
+                    print(("Uncertainty on N out due to N(e,mu) uncertainty = {} ({}%)".format(Err_out_Neu, Err_out_Neu/Nout*100)))
                     out_string = "Uncertainty on N out due to N(e,mu) uncertainty = {} ({}%) \n".format(Err_out_Neu, Err_out_Neu/Nout*100)
                     #txt_file.write(out_string)
 
                     # one nuisance anti-correlated between ee and mm related to k (which wil be very small)
                     Err_out_k = DYCalc.EN_DY(R , Nin , k , Neu, Nvv, 0, 0, Ek, 0, 0)
-                    print("Uncertainty on N out due to k uncertainty = {} ({}%)".format(Err_out_k, Err_out_k/Nout*100))
+                    print(("Uncertainty on N out due to k uncertainty = {} ({}%)".format(Err_out_k, Err_out_k/Nout*100)))
                     out_string = "Uncertainty on N out due to k uncertainty = {} ({}%) \n".format(Err_out_k, Err_out_k/Nout*100)
                     #txt_file.write(out_string)
 
                     # one nuisance parameter uncorrelated between ee and mm related to the remaining uncertainties
                     Err_out_rest = DYCalc.EN_DY(R , Nin , k , Neu, Nvv, ER, ENin, 0, 0, ENvv)
-                    print("Uncertainty on N out due to other sources (except Acc) = {} ({}%)".format(Err_out_rest, Err_out_rest/Nout*100))
+                    print(("Uncertainty on N out due to other sources (except Acc) = {} ({}%)".format(Err_out_rest, Err_out_rest/Nout*100)))
                     out_string = "Uncertainty on N out due to other sources (except Acc) {} ({}%) \n".format(Err_out_rest, Err_out_rest/Nout*100)
                     #txt_file.write(out_string)
 
                     # Keep Acc separatd
-                    print("Uncertainty on DY yields in signal region due to Acc = {} ({}%)".format(EAcc/Acc, EAcc/Acc*100))
+                    print(("Uncertainty on DY yields in signal region due to Acc = {} ({}%)".format(EAcc/Acc, EAcc/Acc*100)))
                     out_string = "Uncertainty on DY yields in signal region due to Acc = {} ({}%) \n".format(EAcc/Acc, EAcc/Acc*100)
                     #txt_file.write(out_string)
 
@@ -466,19 +466,19 @@ if __name__ == '__main__':
                             add_to_title = DYestim[iDYestim]['njet'] + "_" + DYestim[iDYestim]['flavour'] + "_WW"
 
                     print("XDDDDDDDDDDDDDDDDDDDDDDDDD")
-                    print("Current basedir name: {}".format(baseDir))
+                    print(("Current basedir name: {}".format(baseDir)))
                     print("Now split it!")
                     baseDir_split = items = baseDir.split('_')
                     print(baseDir_split)
                     print("Add the last two items to the add_to_title string!")
-                    print("Add to title: {}_{}_{}".format(add_to_title,baseDir_split[-2],baseDir_split[-1]))
+                    print(("Add to title: {}_{}_{}".format(add_to_title,baseDir_split[-2],baseDir_split[-1])))
                     print("XDDDDDDDDDDDDDDDDDDDDDDDDD")
 
                     # Add more details to "add_to_title" to avoid repeated nuisances names
                     # Do this only in HTXS
                     if ("HTXS" in opt.dycfg or "STXS" in opt.dycfg):
                         add_to_title = add_to_title + "_" + baseDir
-                        print("Add to title in case of HTXS: {}".format(add_to_title))
+                        print(("Add to title in case of HTXS: {}".format(add_to_title)))
 
                     # k: anticorrelated between ee and mm
                     txt_file.write("nuisances['DYnorm_k_" + add_to_title + "'] = {\n")
@@ -533,7 +533,7 @@ if __name__ == '__main__':
                       # Scale --> correction to get Nout from nHis
                       Scale = Nout / nHis
                       if Scale < 0:
-                        print '----------  NEGATIVE SCALE = ', Scale, '. Setting scale to 1 ----------' 
+                        print(('----------  NEGATIVE SCALE = ', Scale, '. Setting scale to 1 ----------')) 
                         Scale = 1
                         Nout  = nHis
                       # print 'Nout = ', Nout, ' +- ', Eout, '(Nout_MC = ', nHis, ') -> Scale = ', Scale 
@@ -555,7 +555,7 @@ if __name__ == '__main__':
                       outputFile.cd(baseDir + '/' + subDir)
                       Scale = NUp / nHis
                       if Scale < 0 or math.isnan(NUp):
-                        print '----------  NEGATIVE SCALE = ', Scale, '. Setting scale to 1 ----------'
+                        print(('----------  NEGATIVE SCALE = ', Scale, '. Setting scale to 1 ----------'))
                         Scale = 1
                         NUp   = nHis
                       # print 'NUp = ' , NUp , '(Nout_MC = ', nHis, ') -> Scale = ', Scale
@@ -577,7 +577,7 @@ if __name__ == '__main__':
                       outputFile.cd(baseDir + '/' + subDir)
                       Scale = NDo / nHis
                       if Scale < 0 or math.isnan(NUp):
-                        print '----------  NEGATIVE SCALE = ', Scale ,'. Setting scale to 1 ----------'
+                        print(('----------  NEGATIVE SCALE = ', Scale ,'. Setting scale to 1 ----------'))
                         Scale = 1
                         NDo   = nHis
                       # print 'NDo = ' , NDo, '(Nout_MC = ', nHis, ') -> Scale = ', Scale

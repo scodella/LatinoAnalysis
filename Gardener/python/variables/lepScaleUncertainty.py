@@ -39,12 +39,12 @@ class LeppTScalerTreeMaker(TreeCloner):
         return group
 
     def checkOptions(self,opts):
-        print " >>  checkOptions "
+        print(" >>  checkOptions ")
         leppTscaler = {}     
 
         self.lepFlavourToChange = opts.lepFlavourToChange
         if opts.lepFlavourToChange == None :
-            print "please enter mu or ele=",opts.lepFlavourToChange
+            print("please enter mu or ele=",opts.lepFlavourToChange)
         self.cmssw=opts.cmssw
         cmssw_base = os.getenv('CMSSW_BASE')
 
@@ -55,7 +55,7 @@ class LeppTScalerTreeMaker(TreeCloner):
               elif opts.lepFlavourToChange == 'mu' :
                   opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_mu_80_remAOD.py'
               else:
-                  print "please select mu or ele"      
+                  print("please select mu or ele")      
 
         elif opts.cmssw == 'ICHEP2016' :
           if opts.Filewithleptscalevalues == None and  not opts.lepFlavourToChange ==None:
@@ -64,7 +64,7 @@ class LeppTScalerTreeMaker(TreeCloner):
               elif opts.lepFlavourToChange == 'mu' :
                   opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_mu_80_prompt.py'
               else:
-                  print "please select mu or ele"        
+                  print("please select mu or ele")        
 
         else :   # 2015
           if opts.Filewithleptscalevalues == None and  not opts.lepFlavourToChange ==None:
@@ -73,25 +73,25 @@ class LeppTScalerTreeMaker(TreeCloner):
               elif opts.lepFlavourToChange == 'mu' :
                   opts.Filewithleptscalevalues = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTscaler_mu_76_rereco.py'
               else:
-                  print "please select mu or ele"
-        print " opts.Filewithleptscalevalues = " , opts.Filewithleptscalevalues
+                  print("please select mu or ele")
+        print(" opts.Filewithleptscalevalues = " , opts.Filewithleptscalevalues)
 
 
         self.variation = opts.variation
         if opts.variation == None :
-            print "taking variations from file"
+            print("taking variations from file")
         else:
             self.variation    = 1.0 * float(opts.variation)
-        print " amount of variation = ", self.variation
+        print(" amount of variation = ", self.variation)
 
             
         if os.path.exists(opts.Filewithleptscalevalues) :
-          print " opts.Filewithleptscalevalues = " , opts.Filewithleptscalevalues
+          print(" opts.Filewithleptscalevalues = " , opts.Filewithleptscalevalues)
           handle = open(opts.Filewithleptscalevalues,'r')
           exec(handle)
           handle.close()
         else :
-          print "nothing ?"
+          print("nothing ?")
 
         self.leppTscaler = leppTscaler
         self.minpt = 0
@@ -131,7 +131,7 @@ class LeppTScalerTreeMaker(TreeCloner):
         if eta > self.maxeta:
           eta = self.maxeta
         
-        if kindLep in self.leppTscaler.keys() : 
+        if kindLep in list(self.leppTscaler.keys()) : 
             # get the scale values in bins of pT and eta
             for point in self.leppTscaler[kindLep] :
                 if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
@@ -172,7 +172,7 @@ class LeppTScalerTreeMaker(TreeCloner):
         self.connect(tree,input)
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
         savedevents = 0
 
         # met branches to be changed
@@ -201,7 +201,7 @@ class LeppTScalerTreeMaker(TreeCloner):
           self.oldBranchesToBeModifiedVector[bname] = bvector
          # print "debug 0 ", bname
          # connect branches for vectors
-        for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+        for bname, bvector in self.oldBranchesToBeModifiedVector.items():
           self.otree.Branch(bname,bvector)            
 
         self.oldBranchesToBeModifiedSimpleVariable = {}
@@ -210,22 +210,22 @@ class LeppTScalerTreeMaker(TreeCloner):
           self.oldBranchesToBeModifiedSimpleVariable[bname] = bvariable
 
         # now actually connect the branches for floats
-        for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems():
+        for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.items():
                         #print " bvariable = ", bvariable
             self.otree.Branch(bname,bvariable,bname+'/F')         
 
         # input tree  
         itree = self.itree
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
         #step = 1
 
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0.:
-              print i,'events processed :: ', nentries
+              print(i,'events processed :: ', nentries)
                 
             # scale lepton pt
             # Scale Up
@@ -260,7 +260,7 @@ class LeppTScalerTreeMaker(TreeCloner):
                 elif abs(itree.std_vector_lepton_flavour[i]) == 11:
                     kindLep = 'ele'
                 else:
-                    print "not a el or muon"
+                    print("not a el or muon")
 #                print"from input",self.lepFlavourToChange
                 if kindLep == self.lepFlavourToChange :
                     wt = self._getScale(kindLep,pt_lep,abs(eta_lep))
@@ -281,14 +281,14 @@ class LeppTScalerTreeMaker(TreeCloner):
                 # Recommended definition of newmet
                 if self.lepFlavourToChange == 'ele' :
                     if self.variation == 1.0 :
-                        print 'Elec Up'
+                        print('Elec Up')
                         newmetmodule = itree.metPfType1ElecEnUp
                         #newmetphi = itree.metPfRawPhiElecEnUp
                         myDelta = self.sgn_deltaphi(itree.metPfRawPhiElecEnUp, itree.metPfRawPhi)
                         newmetphi = self.sum_deltaphi(itree.metPfType1Phi,myDelta)
                         newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
                     elif self.variation == -1.0 :
-                        print 'Elec Down'
+                        print('Elec Down')
                         newmetmodule = itree.metPfType1ElecEnDn
                         #newmetphi = itree.metPfRawPhiElecEnDn
                         myDelta = self.sgn_deltaphi(itree.metPfRawPhiElecEnDn, itree.metPfRawPhi)
@@ -309,10 +309,10 @@ class LeppTScalerTreeMaker(TreeCloner):
                         newmet.SetPtEtaPhiM(newmetmodule, 0, newmetphi, 0)
                         
 
-            leptonOrder = sorted(range(len(leptonPtChanged)), key=lambda k: leptonPtChanged[k], reverse=True) 
+            leptonOrder = sorted(list(range(len(leptonPtChanged))), key=lambda k: leptonPtChanged[k], reverse=True) 
 
 
-            for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+            for bname, bvector in self.oldBranchesToBeModifiedVector.items():
                 bvector.clear()
              
                 if 'std_vector_lepton_pt' in bname:
@@ -334,5 +334,5 @@ class LeppTScalerTreeMaker(TreeCloner):
             
             
         self.disconnect()
-        print '- Eventloop completed'
-        print '- Saved:', savedevents, 'events'
+        print('- Eventloop completed')
+        print('- Saved:', savedevents, 'events')

@@ -25,4 +25,4 @@ selection = "nElectron + nMuon > 0"
 p=PostProcessor(".",files,cut=selection,branchsel=None,modules=[lepMkr(), lepSel('Full2016', 'Loose', 1)],postfix='_lepMkrSel',provenance=True,fwkJobReport=True)
 p.run()
 
-print "DONE"
+print("DONE")

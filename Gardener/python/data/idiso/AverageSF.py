@@ -19,7 +19,7 @@ import os
 
 
 if __name__ == '__main__':
-    print '''
+    print('''
 --------------------------------------------------------------------------------------------------
 
              \                                            \ \     /       |                    
@@ -29,7 +29,7 @@ if __name__ == '__main__':
                                          |___/                                                 
  
 --------------------------------------------------------------------------------------------------
-'''    
+''')    
 
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
      
       
-    print "list of trigger files"
+    print("list of trigger files")
     
     files_names_trigger = {}
 
@@ -61,9 +61,9 @@ if __name__ == '__main__':
     opt.outputFile = "ICHEP2016fullLumi/muons_iso_tight.txt"
 
 
-    print " outputFile       = ", opt.outputFile
+    print(" outputFile       = ", opt.outputFile)
 
-    print " files_names_trigger = ", files_names_trigger
+    print(" files_names_trigger = ", files_names_trigger)
     
     files_trigger = {}    
     for names in files_names_trigger :
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     outFile.write('#                                                 data                                                      MC                     \n')
     outFile.write('# etamin  etamax  ptmin   ptmax   eff     deff_high       deff_low                     eff          deff_high       deff_low       \n')
 
-    first_key = list_triggers.keys()[0] 
+    first_key = list(list_triggers.keys())[0] 
     
     for point in list_triggers[first_key]['values']:
       outFile.write( '  {0:.2f}  {1:.2f}  {2:.2f}  {3:.2f} '.format(float(point[0]), float(point[1]), float(point[2]), float(point[3])) )
@@ -172,6 +172,6 @@ if __name__ == '__main__':
     
       
   
-    print " outputFile       = ", opt.outputFile
+    print(" outputFile       = ", opt.outputFile)
 
 

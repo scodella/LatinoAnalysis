@@ -43,10 +43,10 @@ class genReweightHHHMaker(TreeCloner) :
 
     def checkOptions(self,opts) :
         self.cmssw = opts.cmssw
-        print " cmssw =", self.cmssw
+        print(" cmssw =", self.cmssw)
         
         self.productionkind = opts.productionkind
-        print " productionkind =", self.productionkind
+        print(" productionkind =", self.productionkind)
         
         
 
@@ -58,7 +58,7 @@ class genReweightHHHMaker(TreeCloner) :
         self.connect(tree,input)
 
         nentries = self.itree.GetEntries()
-        print ' - Input entries:', nentries 
+        print(' - Input entries:', nentries) 
         savedentries = 0
 
         # Create branches for otree, the ones that will be modified
@@ -93,10 +93,10 @@ class genReweightHHHMaker(TreeCloner) :
 
  
         #-----------------------------------------------------------------------
-        print ' - Starting event loop'
+        print(' - Starting event loop')
         step = 500
 
-        for i in xrange(nentries) :
+        for i in range(nentries) :
           itree.GetEntry(i)
 
           weightHHH[0] = 1.
@@ -110,5 +110,5 @@ class genReweightHHHMaker(TreeCloner) :
           savedentries+=1
           
         self.disconnect()
-        print ' - Event loop completed'
-        print ' - Saved entries:', savedentries
+        print(' - Event loop completed')
+        print(' - Saved entries:', savedentries)

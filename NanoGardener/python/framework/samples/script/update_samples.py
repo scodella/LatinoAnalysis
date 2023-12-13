@@ -1,5 +1,5 @@
 import os
-import commands
+import subprocess
 
 
 
@@ -19,7 +19,7 @@ campaign='RunIIFall17NanoAODv5'
 #campaign='RunIIAutumn18NanoAODv4'
 #######End of Setting###########
 
-print "@@"+inputfile+"@@"
+print("@@"+inputfile+"@@")
 
 f=open(inputfile,'r')
 lines=f.readlines()
@@ -120,7 +120,7 @@ for line in lines:
             #--get das output list
             while done==0:
                 try:
-                    status, output = commands.getstatusoutput(dascheck)
+                    status, output = subprocess.getstatusoutput(dascheck)
                     done=1
                 except:
                     done=0
@@ -136,7 +136,7 @@ for line in lines:
                         
         fnew.write("#--->Updated!#")
         fnew.write("##------choose one of the following samples-------##Noutput="+str(nsample)+"\n")
-        print key+" updated :)"
+        print(key+" updated :)")
         if nsample==1: ## only one corresponding sample
 
 
@@ -145,7 +145,7 @@ for line in lines:
             msg_vjhugen_change=''
             msg_ext=''
             if 'jhugen' in key.lower():
-                print "--> !!jhugen version is in latino sample alias...checking..."
+                print("--> !!jhugen version is in latino sample alias...checking...")
 
         
                 ##Check vJHUHen in DAS dataset name##
@@ -163,7 +163,7 @@ for line in lines:
                         vjhugen_alias=part.lower().replace('jhugen','').replace('v','')
                 ##if the two versions are not matched##        
                 if vjhugen_das!=vjhugen_alias :
-                    print "!!!!!!!!!Version is not matched. Alias should be fixed!!!.."+vjhugen_alias+"->"+vjhugen_das
+                    print("!!!!!!!!!Version is not matched. Alias should be fixed!!!.."+vjhugen_alias+"->"+vjhugen_das)
                     new_key=[]
                     for part in key.split('_'):
                         if 'jhugen' in part.lower() :
@@ -173,7 +173,7 @@ for line in lines:
                     msg_vjhugen_change='vjhugen is changed :'+vjhugen_alias+"->"+vjhugen_das
                 ##if the two version are matched
                 else :
-                    print '->OK'
+                    print('->OK')
             ##if extension sample
             if 'ext' in key:
                 if not 'ext' in output_list[0] : continue ##das name has no ext tag -> pass
@@ -212,6 +212,6 @@ fnew.close()
 #for byhand in by_hand_list:
 #    print byhand+"\n"
 
-print "!!!!!Please check ---->"+inputfile+"_new.py!!!!!"
+print("!!!!!Please check ---->"+inputfile+"_new.py!!!!!")
 
         

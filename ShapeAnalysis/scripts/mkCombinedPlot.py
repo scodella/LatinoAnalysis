@@ -35,9 +35,9 @@ class ShapeFactory:
     def makeCombinedPlot(self, outputDirPlots, cutsToMerge, plot, legend, groupPlot):
 
 
-        print "=========================="
-        print "==== makeCombinedPlot ===="
-        print "=========================="
+        print("==========================")
+        print("==== makeCombinedPlot ====")
+        print("==========================")
         
         self.defineStyle()
         
@@ -65,18 +65,18 @@ class ShapeFactory:
         list_files_integral_sig = {}
         list_files_weight_integral_sig = {}
         
-        for cutName, cutConfig in cutsToMerge.iteritems(): 
-          print " cutName = ", cutName , " ----> " , cutConfig['rootFile']
+        for cutName, cutConfig in list(cutsToMerge.items()): 
+          print((" cutName = ", cutName , " ----> " , cutConfig['rootFile']))
           temp_file = ROOT.TFile(cutConfig['rootFile'], "READ")
           list_files[cutName] = temp_file
           list_files_weights_sig [cutName] = temp_file.Get("histo_global_normalization").GetBinContent(1) 
           # global_normalization = totalSig / totalWeightedIntegralSig
 
         # loop over all the cuts (= phase spaces) you want to merge in one
-        for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
-          for cutName, cutConfig in cutsToMerge.iteritems():         
+        for sampleNameGroup, sampleConfiguration in list(groupPlot.items()):
+          for cutName, cutConfig in list(cutsToMerge.items()):         
             nameToBeUsed = cutName
-            if 'cutUsed' in cutConfig.keys() :
+            if 'cutUsed' in list(cutConfig.keys()) :
               nameToBeUsed = cutConfig['cutUsed']
             
             #name_histogram = 'h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
@@ -99,18 +99,18 @@ class ShapeFactory:
         totalIntegralSig = 0.
         totalWeightIntegralSig = 0.
          
-        for cutName, cutConfig in cutsToMerge.iteritems():         
+        for cutName, cutConfig in list(cutsToMerge.items()):         
           totalIntegralSig       += list_files_integral_sig[cutName] 
           totalWeightIntegralSig += (list_files_integral_sig[cutName] / list_files_weights_sig [cutName])
           list_files_weight_integral_sig[cutName] = (list_files_integral_sig[cutName] / list_files_weights_sig [cutName])
           
-        print " totalIntegralSig =       ", totalIntegralSig
-        print " totalWeightIntegralSig = ", totalWeightIntegralSig
+        print((" totalIntegralSig =       ", totalIntegralSig))
+        print((" totalWeightIntegralSig = ", totalWeightIntegralSig))
 
           
         # loop over all the cuts (= phase spaces) you want to merge in one
-        for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
-          for cutName, cutConfig in cutsToMerge.iteritems():         
+        for sampleNameGroup, sampleConfiguration in list(groupPlot.items()):
+          for cutName, cutConfig in list(cutsToMerge.items()):         
             #print " cutName = ", cutName , " ----> " , cutConfig['rootFile']
             #print 'h_weigth_X_' +  cutName + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + cutName + '_' +  self._variable + '_slice_0'
             
@@ -118,7 +118,7 @@ class ShapeFactory:
 
 
             nameToBeUsed = cutName
-            if 'cutUsed' in cutConfig.keys() :
+            if 'cutUsed' in list(cutConfig.keys()) :
               nameToBeUsed = cutConfig['cutUsed']
             
             #name_histogram = 'h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_group_' + sampleNameGroup + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
@@ -126,7 +126,7 @@ class ShapeFactory:
 
             if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] != 0 :
               if list_files[cutName].Get(name_histogram) :
-                if sampleNameGroup not in list_thsSignal.keys() :
+                if sampleNameGroup not in list(list_thsSignal.keys()) :
                   list_thsSignal [sampleNameGroup] = list_files[cutName].Get(name_histogram).Clone(name_histogram + '_' + cutName)
                   list_thsSignal [sampleNameGroup].Scale ( 1. * global_scale_factor )
                   
@@ -135,7 +135,7 @@ class ShapeFactory:
                   list_thsSignal [sampleNameGroup].Add( list_files[cutName].Get(name_histogram).Clone(name_histogram + '_' + cutName), 1. * global_scale_factor )
             else :
               if list_files[cutName].Get(name_histogram) :
-                if sampleNameGroup not in list_thsBackground.keys() :
+                if sampleNameGroup not in list(list_thsBackground.keys()) :
                   list_thsBackground [sampleNameGroup] = list_files[cutName].Get(name_histogram).Clone(name_histogram + '_' + cutName)
                   list_thsBackground [sampleNameGroup].Scale ( 1. * global_scale_factor )
                   #print 'type = ', type( list_thsBackground [sampleNameGroup]  )
@@ -143,21 +143,21 @@ class ShapeFactory:
                   list_thsBackground [sampleNameGroup].Add( list_files[cutName].Get(name_histogram).Clone(name_histogram + '_' + cutName) , 1. * global_scale_factor )
              
              
-        for cutName, cutConfig in cutsToMerge.iteritems():         
+        for cutName, cutConfig in list(cutsToMerge.items()):         
 
           global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_weight_integral_sig[cutName] / list_files_integral_sig[cutName]
 
           nameToBeUsed = cutName
-          if 'cutUsed' in cutConfig.keys() :
+          if 'cutUsed' in list(cutConfig.keys()) :
             nameToBeUsed = cutConfig['cutUsed']
 
           #name_histogram = 'h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_' + 'DATA' + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
           name_histogram = 'new_h_weigth_X_' +  nameToBeUsed + '_' + self._variable + '_new_histo_' + 'DATA' + '_' + nameToBeUsed + '_' +  self._variable + '_slice_0'
 
-          print " data:: ", name_histogram
+          print((" data:: ", name_histogram))
           
           if list_files[cutName].Get(name_histogram) :
-            if 'DATA' not in list_thsData.keys() :
+            if 'DATA' not in list(list_thsData.keys()) :
               list_thsData ['DATA'] = list_files[cutName].Get(name_histogram).Clone(name_histogram + '_' + cutName)
               list_thsData ['DATA'].Scale ( 1. * global_scale_factor )
             else :
@@ -171,10 +171,10 @@ class ShapeFactory:
         
         list_thsData ['DATA'] = self.FixBins(list_thsData ['DATA'])
         #print " max = ", (list_thsData ['DATA']).GetXaxis().GetBinCenter(list_thsData['DATA'].GetNbinsX()+1)
-        for histoname, histo in list_thsSignal.iteritems():
+        for histoname, histo in list(list_thsSignal.items()):
           list_thsSignal[histoname] = self.FixBins(histo)          
           #print " max = ", histo.GetXaxis().GetBinCenter(histo.GetNbinsX())
-        for histoname, histo in list_thsBackground.iteritems():
+        for histoname, histo in list(list_thsBackground.items()):
           list_thsBackground[histoname] = self.FixBins(histo)
           #print " max = ", histo.GetXaxis().GetBinCenter(histo.GetNbinsX())
    
@@ -185,9 +185,9 @@ class ShapeFactory:
  
         if self._divideByBinWidth == True:
           list_thsData ['DATA'].Scale(1,"width")
-          for histoname, histo in list_thsSignal.iteritems():
+          for histoname, histo in list(list_thsSignal.items()):
             list_thsSignal[histoname].Scale(1,"width")
-          for histoname, histo in list_thsBackground.iteritems():
+          for histoname, histo in list(list_thsBackground.items()):
             list_thsBackground[histoname].Scale(1,"width")
 
         #
@@ -197,7 +197,7 @@ class ShapeFactory:
         tgrSig  = ROOT.TGraphAsymmErrors()
         tgrSig.SetLineColor(ROOT.kRed)
         
-        for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+        for sampleNameGroup, sampleConfiguration in list(groupPlot.items()):
           if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] != 0 :  
             temp_histo = list_thsSignal[sampleNameGroup]
             if tgrSig.GetN() == 0 :
@@ -222,7 +222,7 @@ class ShapeFactory:
         tgrMC    = ROOT.TGraphAsymmErrors()
         tgrMC_noSig  = ROOT.TGraphAsymmErrors()
 
-        for cutName, cutConfig in cutsToMerge.iteritems():    
+        for cutName, cutConfig in list(cutsToMerge.items()):    
           temp_graph = list_files[cutName].Get("weight_X_tgrMC")
           
           global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_weight_integral_sig[cutName] / list_files_integral_sig[cutName]
@@ -254,13 +254,13 @@ class ShapeFactory:
                 tgrMC.SetPoint      (iBin, x_temp, temp_graph.GetY()[iBin]  * global_scale_factor  + y_temp )
                 tgrMC.SetPointError (iBin, exl_temp, exh_temp, self.SumQ(temp_graph.GetErrorYlow(iBin)* global_scale_factor, eyl_temp) , self.SumQ(temp_graph.GetErrorYhigh(iBin)* global_scale_factor, eyh_temp)  )
  
-        for cutName, cutConfig in cutsToMerge.iteritems():    
+        for cutName, cutConfig in list(cutsToMerge.items()):    
           temp_graph = list_files[cutName].Get("weight_X_tgrData")
           #print 'type = ', type( temp_graph )
 
           global_scale_factor = totalIntegralSig / totalWeightIntegralSig * list_files_weight_integral_sig[cutName] / list_files_integral_sig[cutName]
 
-          print " global_scale_factor]", cutName, "] = ", global_scale_factor
+          print((" global_scale_factor]", cutName, "] = ", global_scale_factor))
 
           if tgrData.GetN() == 0 :
             for iBin in range(temp_graph.GetN()) :
@@ -297,9 +297,9 @@ class ShapeFactory:
         weight_X_thsSignal     = ROOT.THStack ("weight_X_thsSignal",    "weight_X_thsSignal")
         weight_X_thsBackground = ROOT.THStack ("weight_X_thsBackground","weight_X_thsBackground")
 
-        for sampleName, histo in list_thsBackground.iteritems():
+        for sampleName, histo in list(list_thsBackground.items()):
           weight_X_thsBackground.Add(histo)
-        for sampleName, histo in list_thsSignal.iteritems():
+        for sampleName, histo in list(list_thsSignal.items()):
           weight_X_thsSignal.Add(histo)
           # the signal is added on top of the background
           # the signal has to be the last one in the dictionary!
@@ -346,7 +346,7 @@ class ShapeFactory:
         tlegend.SetLineColor(0)
         tlegend.SetShadowColor(0)
          
-        for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+        for sampleNameGroup, sampleConfiguration in list(groupPlot.items()):
           if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] != 0 :
             tlegend.AddEntry( list_thsSignal [sampleNameGroup] ,     sampleConfiguration['nameHR'], "F")          
           else :
@@ -369,9 +369,9 @@ class ShapeFactory:
         CMS_lumi.extraText = "Preliminary"
         CMS_lumi.relPosX = 0.12
         CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
-        if 'sqrt' in legend.keys() :
+        if 'sqrt' in list(legend.keys()) :
           CMS_lumi.lumi_sqrtS = legend['sqrt']
-        if 'lumi' in legend.keys() :
+        if 'lumi' in list(legend.keys()) :
           CMS_lumi.lumi_13TeV = legend['lumi']
         
         # Simple example of macro: plot with CMS name and lumi text
@@ -404,9 +404,9 @@ class ShapeFactory:
           maxXused = (list_thsData ['DATA']).GetXaxis().GetBinCenter( (list_thsData ['DATA']).GetNbinsX() ) + (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX()) ) /2.
        
         
-        print " minXused = ", minXused
-        print " maxXused = ", maxXused,  " = ", (list_thsData ['DATA']).GetXaxis().GetBinCenter( (list_thsData ['DATA']).GetNbinsX() ) , " + ", (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX()) )
-        print " maxYused = ", maxYused
+        print((" minXused = ", minXused))
+        print((" maxXused = ", maxXused,  " = ", (list_thsData ['DATA']).GetXaxis().GetBinCenter( (list_thsData ['DATA']).GetNbinsX() ) , " + ", (list_thsData ['DATA']).GetBinWidth( (list_thsData ['DATA'].GetNbinsX()) )))
+        print((" maxYused = ", maxYused))
         
         weight_X_canvasRatioNameTemplate = 'cratio_weight_X_' + self._variable
         weight_X_tcanvasRatio = ROOT.TCanvas(weight_X_canvasRatioNameTemplate, "weight_X_tcanvasRatio", 800, 800 )
@@ -545,7 +545,7 @@ class ShapeFactory:
           minYused *= 1.9
           minYused -= totalIntegralSig/4.
         
-        print " minYused = ", minYused
+        print((" minYused = ", minYused))
         
         bkgSub_weight_X_canvasRatioNameTemplate = 'cratio_bkgSub_weight_X_' + self._variable
         bkgSub_weight_X_tcanvasRatio = ROOT.TCanvas(bkgSub_weight_X_canvasRatioNameTemplate, "bkgSub_weight_X_tcanvasRatio", 800, 600 )
@@ -593,7 +593,7 @@ class ShapeFactory:
         tlegend_bkgsub.SetLineColor(0)
         tlegend_bkgsub.SetShadowColor(0)
          
-        for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+        for sampleNameGroup, sampleConfiguration in list(groupPlot.items()):
           if 'isSignal' in sampleConfiguration and sampleConfiguration['isSignal'] != 0 :
             tlegend_bkgsub.AddEntry( tgrSig ,  sampleConfiguration['nameHR'], "L")          
        
@@ -765,7 +765,7 @@ class ShapeFactory:
     # _____________________________________________________________________________
     def defineStyle(self):
 
-        print "=================="
+        print("==================")
         import LatinoAnalysis.ShapeAnalysis.tdrStyle as tdrStyle
         tdrStyle.setTDRStyle()
         
@@ -776,7 +776,7 @@ class ShapeFactory:
 
 
 if __name__ == '__main__':
-    print '''
+    print('''
 --------------------------------------------------------------------------------------------------
 
    _ \   |         |         \  |         |                
@@ -785,7 +785,7 @@ if __name__ == '__main__':
  _|     _| \___/  \__|     _|  _| \__,_| _|\_\ \___| _|   
  
 --------------------------------------------------------------------------------------------------
-'''    
+''')    
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
@@ -816,30 +816,30 @@ if __name__ == '__main__':
     ROOT.gROOT.SetBatch()
 
 
-    print " configuration file = ", opt.pycfg
-    print " lumi =               ", opt.lumi
+    print((" configuration file = ", opt.pycfg))
+    print((" lumi =               ", opt.lumi))
     
-    print " variable =           ", opt.variable
-    print " variableHR =         ", opt.variableHR
-    print " minvariable =        ", opt.minvariable
-    print " maxvariable =        ", opt.maxvariable
+    print((" variable =           ", opt.variable))
+    print((" variableHR =         ", opt.variableHR))
+    print((" minvariable =        ", opt.minvariable))
+    print((" maxvariable =        ", opt.maxvariable))
 
-    print " inputCutsList  =     ", opt.inputCutsList
-    print " outputDirPlots =     ", opt.outputDirPlots
+    print((" inputCutsList  =     ", opt.inputCutsList))
+    print((" outputDirPlots =     ", opt.outputDirPlots))
     
-    print " minLogC   =          ", opt.minLogC
-    print " maxLogC   =          ", opt.maxLogC
+    print((" minLogC   =          ", opt.minLogC))
+    print((" maxLogC   =          ", opt.maxLogC))
 
-    print " minLogCratio   =          ", opt.minLogCratio
-    print " maxLogCratio   =          ", opt.maxLogCratio
+    print((" minLogCratio   =          ", opt.minLogCratio))
+    print((" maxLogCratio   =          ", opt.maxLogCratio))
 
-    print " divideByBinWidth =        ", opt.divideByBinWidth
+    print((" divideByBinWidth =        ", opt.divideByBinWidth))
 
-    print " removeOverflow =        ", opt.removeOverflow
+    print((" removeOverflow =        ", opt.removeOverflow))
 
-    print " invertXY =        ", opt.invertXY
+    print((" invertXY =        ", opt.invertXY))
 
-    print " yAxisTitle =        ", opt.yAxisTitle
+    print((" yAxisTitle =        ", opt.yAxisTitle))
 
 
 
@@ -852,10 +852,10 @@ if __name__ == '__main__':
     if not opt.debug:
         pass
     elif opt.debug == 2:
-        print 'Logging level set to DEBUG (%d)' % opt.debug
+        print(('Logging level set to DEBUG (%d)' % opt.debug))
         logging.basicConfig( level=logging.DEBUG )
     elif opt.debug == 1:
-        print 'Logging level set to INFO (%d)' % opt.debug
+        print(('Logging level set to INFO (%d)' % opt.debug))
         logging.basicConfig( level=logging.INFO )
 
       
@@ -890,7 +890,7 @@ if __name__ == '__main__':
         handle = open(opt.variablesFile,'r')
         exec(handle)
         handle.close()
-      if factory._variable in  variables.keys() :
+      if factory._variable in  list(variables.keys()) :
         if 'range' in variables[factory._variable] :
           binning_possibly_in_2d = variables[factory._variable]['range']
           #
@@ -924,7 +924,7 @@ if __name__ == '__main__':
           factory._binning = now_1d_binning
 
      
-    print " binning = ", factory._binning
+    print((" binning = ", factory._binning))
     
     
     cutsToMerge = {}
@@ -944,6 +944,6 @@ if __name__ == '__main__':
    
     factory.makeCombinedPlot( opt.outputDirPlots, cutsToMerge, plot, legend, groupPlot)
     
-    print '... and now closing ...'
+    print('... and now closing ...')
         
        

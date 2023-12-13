@@ -40,11 +40,11 @@ sys.argv.append('-b')
 ROOT.gROOT.SetBatch()
 
 print("List of inputs:")
-print("Input rootfile:   {0}".format(opt.input_file))
-print("Cut:              {0}".format(opt.cut))
-print("Variable:         {0}".format(opt.variable))
-print("Output directory: {0}".format(opt.output_dir))
-print("Fit function:     {0}".format(opt.fit_func))
+print(("Input rootfile:   {0}".format(opt.input_file)))
+print(("Cut:              {0}".format(opt.cut)))
+print(("Variable:         {0}".format(opt.variable)))
+print(("Output directory: {0}".format(opt.output_dir)))
+print(("Fit function:     {0}".format(opt.fit_func)))
 
 # Assigning inputs to variables
 input_file = opt.input_file 
@@ -67,32 +67,32 @@ folders_list = my_file.GetListOfKeys()
 
 for folder in folders_list:
     if folder.GetName() == cut:
-        print("Cut: {}".format(folder.GetName()))
+        print(("Cut: {}".format(folder.GetName())))
         current_folder = folder.ReadObj()
         for var in current_folder.GetListOfKeys():
             if var.GetName() == variable:
                 current_var = var.ReadObj()
-                print("Variable: {}".format(var.GetName()))
+                print(("Variable: {}".format(var.GetName())))
 
                 # Get Data histogram
                 h_Data = my_file.Get(cut + "/" + variable + "/histo_DATA")
-                print("Data integral: {}".format(h_Data.Integral()))
+                print(("Data integral: {}".format(h_Data.Integral())))
                 for process in current_var.GetListOfKeys():
                     if not "histo_DY" in process.GetName() and not "histo_DATA" in process.GetName():
                         # Subtract from Data non-DY MC
-                        print(process.GetName())
+                        print((process.GetName()))
                         h_tmp = my_file.Get(cut + "/" + variable + "/" + process.GetName())
                         h_Data.Add(h_tmp, -1)
-                print("Data integral after MC subtraction: {}".format(h_Data.Integral()))
+                print(("Data integral after MC subtraction: {}".format(h_Data.Integral())))
 
                 # Get DY MC histogram
                 h_DY = my_file.Get(cut + "/" + variable + "/histo_DY")
-                print("DY MC integral: {}".format(h_DY.Integral()))
+                print(("DY MC integral: {}".format(h_DY.Integral())))
                 
                 # Prepare Data/MC histogram ratio
                 h_Ratio = TH1D.Clone(h_Data)
                 h_Ratio.Divide(h_DY)
-                print("Ratio integral: {}".format(h_Ratio.Integral()))
+                print(("Ratio integral: {}".format(h_Ratio.Integral())))
                 h_Ratio.Draw()
                 
                 # Define Fit range
@@ -110,15 +110,15 @@ for folder in folders_list:
                 fit_par_errors = []
 
                 # Get polX grade
-                grade = map(int, re.findall('\d+', fit_func))
-                print(grade[0])
+                grade = list(map(int, re.findall('\d+', fit_func)))
+                print((grade[0]))
 
                 # Get all fit parameters
                 grade_loop = 0
                 while grade_loop < grade[0]+1:
                     fit_parameters.append(fit_result.GetParameter(grade_loop))
                     fit_par_errors.append(fit_result.GetParError(grade_loop))
-                    print("Par {0}: {1:.3f} +/- {2:.3f}".format(grade_loop, fit_parameters[grade_loop], fit_par_errors[grade_loop]))
+                    print(("Par {0}: {1:.3f} +/- {2:.3f}".format(grade_loop, fit_parameters[grade_loop], fit_par_errors[grade_loop])))
                     grade_loop += 1
                 print(fit_parameters)
                 print(fit_par_errors)

@@ -17,7 +17,7 @@ from LatinoAnalysis.NanoGardener.framework.PostProcMaker import *
 # ------------------------------------------------------- MAIN --------------------------------------------
 
 if __name__ == '__main__':
-    print '''
+    print('''
 --------------------------------------------------------------------------------------------
    _  __                 ___           __    ___                           _          
   / |/ /__ ____  ___    / _ \___  ___ / /_  / _ \_______  _______ ___ ___ (_)__  ___ _
@@ -25,7 +25,7 @@ if __name__ == '__main__':
 /_/|_/\_,_/_//_/\___/ /_/   \___/___/\__/ /_/  /_/  \___/\__/\__/___/___/_/_//_/\_, / 
                                                                                /___/  
 --------------------------------------------------------------------------------------------
-'''
+''')
 
     sys.argv = argv
 
@@ -69,7 +69,7 @@ if __name__ == '__main__':
       handle.close()
       prodList = List_Filter(Productions,options.prods).get()
     else:
-      print 'ERROR: Please specify the input data config with -d <fileName>'
+      print('ERROR: Please specify the input data config with -d <fileName>')
       exit(1)  
 
     if os.path.exists(CMSSW+'/src/'+options.modcfg):
@@ -78,7 +78,7 @@ if __name__ == '__main__':
       handle.close()
       stepList = List_Filter(Steps,options.steps).get()
     else:
-      print 'ERROR: Please specify the input module config with -m <fileName>' 
+      print('ERROR: Please specify the input module config with -m <fileName>') 
       exit(1)
 
     if os.path.exists(CMSSW+'/src/'+options.sitescfg):
@@ -86,14 +86,14 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
     else:
-      print 'ERROR: Please specify the site config with -S <fileName>'
+      print('ERROR: Please specify the site config with -S <fileName>')
       exit(1)
 
 
-    print " Productions : " , prodList
-    print " Steps       : " , stepList
+    print(" Productions : " , prodList)
+    print(" Steps       : " , stepList)
     if len(prodList) == 0 or len(stepList) == 0 :
-      print 'ERROR: Please specify valid productions (-p <prodList>) and/or steps (-s <stepList>)'
+      print('ERROR: Please specify valid productions (-p <prodList>) and/or steps (-s <stepList>)')
       exit(1)
  
 

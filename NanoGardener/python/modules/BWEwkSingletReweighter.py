@@ -250,7 +250,7 @@ class BWEwkSingletReweighter(Module):
           with open(self.cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/data/BWShifts/BWShifts_'+self.productionProcess+'_'+self.finalState+'_'+self.year+'.txt') as shiftfile_stream:
              self.shifts = [line.rstrip().split() for line in shiftfile_stream if '#' not in line]
         except IOError:
-          print "Shiftfile not loaded! Result will not be normalized!"
+          print("Shiftfile not loaded! Result will not be normalized!")
           self.shifts = 0
 
         self.mH  = float(pattern.group(4))
@@ -270,7 +270,7 @@ class BWEwkSingletReweighter(Module):
           self.decayWeightFunction = interp1d(**allparams[str(int(self.mH))]["decayWeight"])
           self.minmass = min(allparams[str(int(self.mH))]["decayWeight"]['x'])
           self.maxmass = max(allparams[str(int(self.mH))]["decayWeight"]['x'])
-          print "decay weights for mass", str(int(self.mH)), "available between", self.minmass, "and", self.maxmass 
+          print("decay weights for mass", str(int(self.mH)), "available between", self.minmass, "and", self.maxmass) 
 
         self.out = wrappedOutputTree
         self.branchnames = []
@@ -393,39 +393,39 @@ class BWEwkSingletReweighter(Module):
             njet +=1
 
         if len(FinalStatePartIDs) != 4:
-          print "Not exactly 4 particles!"
-          print "Event no.:",event.event
+          print("Not exactly 4 particles!")
+          print("Event no.:",event.event)
 
           if self.finalState == "2L2Nu" and njet !=0:
-            print "Fixing..."
+            print("Fixing...")
             removethis = []
             for idx in FinalStatePartIDs:
               if abs(event.GenPart_pdgId[idx]) in [1,2,3,4,5,21]: removethis.append(idx)
             for rem in removethis:
               FinalStatePartIDs.remove(rem)
           elif self.finalState == "LNuQQ" and self.productionProcess == "VBF" and self.mH == 1000.0 and self.year == "2018" and njet >2 and event.event==81522: # This happens in a single event out of ALL mass/year samples
-            print "Fixing..."
+            print("Fixing...")
             removethis = [26,27]
             for rem in removethis:
               FinalStatePartIDs.remove(rem)
 
-          print FinalStatePartIDs
+          print(FinalStatePartIDs)
           for p in FinalStatePartIDs:
-            print p,": id",event.GenPart_pdgId[p],", mom:",event.GenPart_genPartIdxMother[p],", momid:",event.GenPart_pdgId[event.GenPart_genPartIdxMother[p]]#,", mom-mom:",event.GenPart_genPartIdxMother[event.GenPart_genPartIdxMother[p]],", mom-momid:",event.GenPart_pdgId[event.GenPart_genPartIdxMother[event.GenPart_genPartIdxMother[p]]]
+            print(p,": id",event.GenPart_pdgId[p],", mom:",event.GenPart_genPartIdxMother[p],", momid:",event.GenPart_pdgId[event.GenPart_genPartIdxMother[p]])#,", mom-mom:",event.GenPart_genPartIdxMother[event.GenPart_genPartIdxMother[p]],", mom-momid:",event.GenPart_pdgId[event.GenPart_genPartIdxMother[event.GenPart_genPartIdxMother[p]]]
 
         if not ((nlep == 2 and nneu == 2 and self.finalState == "2L2Nu") or (nlep == 1 and nneu == 1 and njet == 2 and self.finalState == "LNuQQ")):
-          print "Didn't get expected particles!"
-          print "Event no.:",event.event
-          print FinalStatePartIDs
-          print "nlep:",nlep,", nneu:",nneu,", njet:",njet
+          print("Didn't get expected particles!")
+          print("Event no.:",event.event)
+          print(FinalStatePartIDs)
+          print("nlep:",nlep,", nneu:",nneu,", njet:",njet)
 
         LHEFinalStateIDs = self.getLHE(event, FinalStatePartIDs)
 
         if len(LHEFinalStateIDs)!=4:
-          print "SOMETHING WENT WRONG!"
-          print "Event no.:",event.event
-          print LHEFinalStateIDs
-          print FinalStatePartIDs
+          print("SOMETHING WENT WRONG!")
+          print("Event no.:",event.event)
+          print(LHEFinalStateIDs)
+          print(FinalStatePartIDs)
 
         for ipart in LHEFinalStateIDs:
           l = ROOT.TLorentzVector()
@@ -495,16 +495,16 @@ class BWEwkSingletReweighter(Module):
           options = [o for o in parton_ids if o != 21] # Should usually contain 2 entries; There are _always_ 3 LHE jets because VBF samples are NLO
           if genid1==21 and genid2!=21:
             genid1 = options[0] + options[1] - genid2 # USUALLY Sum pdgIds incoming = Sum pdgIds outgoing (exception is 2.gen <-> 1.gen quark)
-            print "INFO: Replaced incoming particle ID1 to", genid1, "in event", event.event
+            print("INFO: Replaced incoming particle ID1 to", genid1, "in event", event.event)
           elif genid1!=21 and genid2==21:
             genid2 = options[0] + options[1] - genid1
-            print "INFO: Replaced incoming particle ID2 to", genid2, "in event", event.event
+            print("INFO: Replaced incoming particle ID2 to", genid2, "in event", event.event)
           elif genid1==21 and genid2==21: # Assuming qq -> ZZ -> H
             genid1 = options[0]
             genid2 = options[1]
-            print "INFO: Replaced incoming particle ID1 to", genid1, "_AND_ ID2 to", genid2, " in event", event.event
-          print "incoming:", [genid1, genid2]
-          print "outgoing:", parton_ids
+            print("INFO: Replaced incoming particle ID1 to", genid1, "_AND_ ID2 to", genid2, " in event", event.event)
+          print("incoming:", [genid1, genid2])
+          print("outgoing:", parton_ids)
           #if self.finalState == "2L2Nu" and self.mH == 800.0 and event.event == 180366: genid1 = 2   # An example
         motherIDs.push_back(genid1)
         motherIDs.push_back(genid2)
@@ -708,5 +708,5 @@ class BWEwkSingletReweighter(Module):
     def NANinfo(self, eventnr):
       if eventnr not in self.NANlist:
         self.NANlist.append(eventnr)
-        print "Got NAN! Event no.:",eventnr,"; current NAN percentage:", float(len(self.NANlist))/float(self.count)
+        print("Got NAN! Event no.:",eventnr,"; current NAN percentage:", float(len(self.NANlist))/float(self.count))
 

@@ -21,7 +21,7 @@ class MVAsplitter(Module):
       
         cmssw_base = os.getenv('CMSSW_BASE')
         var = {}
-        execfile(cmssw_base+'/src/'+cfg_path, var)
+        exec(compile(open(cmssw_base+'/src/'+cfg_path, "rb").read(), cmssw_base+'/src/'+cfg_path, 'exec'), var)
         self.training_fraction = 0.
         for sample_str in var['Fractions']:
             if sample_str in sample_name:

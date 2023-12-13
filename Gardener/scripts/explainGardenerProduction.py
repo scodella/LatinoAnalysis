@@ -14,7 +14,7 @@ parser.add_option("-t","--type",dest="type", help="MC/DATA", type='string', defa
 (options, args) = parser.parse_args()
 
 parts = options.prod.split("__")
-print parts
+print(parts)
 
 all_steps = []
 
@@ -28,17 +28,17 @@ def printStep(step, substep=0):
         return
     
     if step_conf["isChain"]:
-        print "\t"*substep, ">>> Chain: ", step
+        print("\t"*substep, ">>> Chain: ", step)
         for subs in step_conf["subTargets"]:
             printStep(subs, substep+1)
     else:
         if "command" in step_conf:
-            print "\t"*substep, "> Step: ", step, " | command: ", step_conf["command"]
+            print("\t"*substep, "> Step: ", step, " | command: ", step_conf["command"])
         all_steps.append(step)    
-    print "\t"*substep, '------------------------------------------------------'
+    print("\t"*substep, '------------------------------------------------------')
 
 
 for part in parts:
     printStep(part)
 
-print  "\nAll steps: \n", ",".join(all_steps)
+print("\nAll steps: \n", ",".join(all_steps))

@@ -39,7 +39,7 @@ class TrigMaker(Module):
 
         cmssw_base = os.getenv('CMSSW_BASE')
         var = {}
-        execfile(cmssw_base+'/src/'+cfg_path, var)
+        exec(compile(open(cmssw_base+'/src/'+cfg_path, "rb").read(), cmssw_base+'/src/'+cfg_path, 'exec'), var)
         if self.isData:
            self.typeStr = 'DATA'
            self.NewVar = var['NewVar_DATA_dict']
@@ -49,9 +49,9 @@ class TrigMaker(Module):
 
         self.Trigger = var['Trigger']
 
-        print('TrigMaker: CMSSW = ' + self.cmssw + ', isData = ' + str(self.isData) + ', keepRunPeriod = ' + str(self.keepRunP))
+        print(('TrigMaker: CMSSW = ' + self.cmssw + ', isData = ' + str(self.isData) + ', keepRunPeriod = ' + str(self.keepRunP)))
         if cfg_path != 'LatinoAnalysis/NanoGardener/python/data/TrigMaker_cfg.py':
-            print('TrigMaker: loaded trigger configuration from ' + cfg_path)
+            print(('TrigMaker: loaded trigger configuration from ' + cfg_path))
 
         self._branch_map = branch_map
  
@@ -159,7 +159,7 @@ class TrigMaker(Module):
               return iPeriod
            if toss_a_coin == 1.0:
               return len(self.RunFrac)-1
-        print "Run Period undefined"
+        print("Run Period undefined")
         return -1 
 
     def _get_LegEff(self, pt, eta, run_p, trig_name):

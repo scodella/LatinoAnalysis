@@ -15,7 +15,7 @@ from array import array
 from collections import OrderedDict
 import math
 import numpy as np
-import root_numpy as rnp
+#import root_numpy as rnp
 import re
 
 
@@ -60,9 +60,9 @@ class PlotFactory:
     # _____________________________________________________________________________
     def makePlot(self, inputFile, outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot):
 
-        print "=================="
-        print "==== makePlot ===="
-        print "=================="
+        print("==================")
+        print("==== makePlot ====")
+        print("==================")
         
         self.defineStyle()
         
@@ -141,20 +141,20 @@ class PlotFactory:
 
         #---- save one TCanvas for every cut and every variable
         for cutName in self._cuts :
-          print "cut =", cutName
-          for variableName, variable in self._variables.iteritems():
+          print(("cut =", cutName))
+          for variableName, variable in list(self._variables.items()):
             if 'cuts' in variable and cutName not in variable['cuts']:
               continue
 
-            if self._plotNormalizedCRratio and 'CRbins' not in variable.keys():
+            if self._plotNormalizedCRratio and 'CRbins' not in list(variable.keys()):
               continue
 
             if type(fileIn) is not dict and not fileIn.GetDirectory(cutName+"/"+variableName):
               continue
               
-            print "variableName =", variableName
+            print(("variableName =", variableName))
 
-            if not "divideByBinWidth" in variable.keys():
+            if not "divideByBinWidth" in list(variable.keys()):
               variable["divideByBinWidth"] = 0
   
             tcanvas            = ROOT.TCanvas( "cc" + cutName + "_" + variableName,      "cc"     , 800, 600 )
@@ -251,12 +251,12 @@ class PlotFactory:
 
             scaleCR = 1.
             if self._plotNormalizedCRratio:
-                if 'CRbins' in variable.keys():
+                if 'CRbins' in list(variable.keys()):
 
                     bNorm, dNorm = 0., 0.
 
                     CRbins = variable['CRbins']
-                    for sampleName, plotdef in plot.iteritems():
+                    for sampleName, plotdef in list(plot.items()):
                         if 'samples' in variable and sampleName not in variable['samples']: continue
                         shapeName = cutName+"/"+variableName+'/histo_' + sampleName
                         if type(fileIn) is dict:
@@ -271,22 +271,22 @@ class PlotFactory:
 
                     scaleCR = dNorm/bNorm
 
-            for sampleName, plotdef in plot.iteritems():
+            for sampleName, plotdef in list(plot.items()):
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
               if 'removeFromCuts' in samples[sampleName] and cutName in samples[sampleName]['removeFromCuts']:
                 continue
 
               shapeName = cutName+"/"+variableName+'/histo_' + sampleName
-              print '     -> shapeName = ', shapeName
+              print(('     -> shapeName = ', shapeName))
               if type(fileIn) is dict:
                 histo = fileIn[sampleName].Get(shapeName)
               else:
                 histo = fileIn.Get(shapeName)
                 if btvReview:
                     thsBackgroundBTV.Add(fileInBTV.Get(shapeName)) 
-              print ' --> ', histo
-              print 'new_histo_' + sampleName + '_' + cutName + '_' + variableName
+              print((' --> ', histo))
+              print(('new_histo_' + sampleName + '_' + cutName + '_' + variableName))
               histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
               
               #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
@@ -295,7 +295,7 @@ class PlotFactory:
 
               # allow arbitrary scaling in MC (and DATA??), if needed
               # for example to "see" a signal
-              if 'scale' in plotdef.keys() : 
+              if 'scale' in list(plotdef.keys()) : 
                 histos[sampleName].Scale(plotdef['scale'])
                 #print " >> scale ", sampleName, " to ", plotdef['scale']
               if scaleCR!=1.:
@@ -304,7 +304,7 @@ class PlotFactory:
 
               # apply cut dependent scale factors
               # for example when plotting different phase spaces
-              if 'cuts' in plotdef.keys() and cutName in plotdef['cuts']:
+              if 'cuts' in list(plotdef.keys()) and cutName in plotdef['cuts']:
                 histos[sampleName].Scale( float( plotdef['cuts'][cutName] ) )
      
               # data style
@@ -320,7 +320,7 @@ class PlotFactory:
                 histos[sampleName].SetLineColor(self._getColor(plotdef['color']))
                 
                 # blind data
-                if 'isBlind' in plotdef.keys() and plotdef['isBlind'] == 1:
+                if 'isBlind' in list(plotdef.keys()) and plotdef['isBlind'] == 1:
                   histos[sampleName].Reset()
 
                 # Per variable blinding
@@ -355,7 +355,7 @@ class PlotFactory:
                     tgrData_evx.append( histos[sampleName].GetBinWidth (iBin) / 2.)                  
                     tgrData_vy.append(  histos[sampleName].GetBinContent (iBin))
                     #print " plot[", sampleName, "].keys() = ", plotdef.keys()
-                    if ('isSignal' not in plotdef.keys() or plotdef['isSignal'] != 3) and not ('isBlind' in plotdef.keys() and plotdef['isBlind'] == 1) :
+                    if ('isSignal' not in list(plotdef.keys()) or plotdef['isSignal'] != 3) and not ('isBlind' in list(plotdef.keys()) and plotdef['isBlind'] == 1) :
                       if variable['divideByBinWidth'] == 1:
                         tgrData_evy_up.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) * histos[sampleName].GetBinWidth (iBin) , 0, 1) / histos[sampleName].GetBinWidth (iBin) )
                         tgrData_evy_do.append( self.GetPoissError(histos[sampleName].GetBinContent (iBin) * histos[sampleName].GetBinWidth (iBin) , 1, 0) / histos[sampleName].GetBinWidth (iBin) )
@@ -371,7 +371,7 @@ class PlotFactory:
                     tgrData_vx[iBin-1] = (  histos[sampleName].GetBinCenter (iBin))
                     tgrData_evx.append( histos[sampleName].GetBinWidth (iBin) / 2.)                  
                     tgrData_vy[iBin-1] += histos[sampleName].GetBinContent (iBin)
-                    if 'isSignal' not in plotdef.keys() or plotdef['isSignal'] == 3 :
+                    if 'isSignal' not in list(plotdef.keys()) or plotdef['isSignal'] == 3 :
                       if variable['divideByBinWidth'] == 1:
                         tgrData_evy_up[iBin-1] = SumQ ( tgrData_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) * histos[sampleName].GetBinWidth (iBin) , 0, 1) / histos[sampleName].GetBinWidth (iBin))
                         tgrData_evy_do[iBin-1] = SumQ ( tgrData_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) * histos[sampleName].GetBinWidth (iBin) , 1, 0) / histos[sampleName].GetBinWidth (iBin))
@@ -428,7 +428,7 @@ class PlotFactory:
 
                 # handle 'stat' nuisance to create the bin-by-bin list of nuisances
                 # "massage" the list of nuisances accordingly
-                for nuisanceName, nuisance in nuisances.iteritems():         
+                for nuisanceName, nuisance in list(nuisances.items()):         
                   if 'cuts' in nuisance and cutName not in nuisance['cuts']:
                     continue
                   # run only if this nuisance will affect the phase space defined in "cut"
@@ -436,15 +436,15 @@ class PlotFactory:
                   #print " nuisanceName = ", nuisanceName
                   if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
                     #print " nuisance = ", nuisance
-                    if 'samples' in nuisance.keys():
-                      if sampleName in nuisance['samples'].keys() :
+                    if 'samples' in list(nuisance.keys()):
+                      if sampleName in list(nuisance['samples'].keys()) :
                         #print " stat nuisances for ", sampleName
                         if nuisance['samples'][sampleName]['typeStat'] == 'uni' : # unified approach
-                          print 'In principle nothing to be done here ... just wait'
+                          print('In principle nothing to be done here ... just wait')
                         if nuisance['samples'][sampleName]['typeStat'] == 'bbb' : # bin-by-bin
                           # add N ad hoc nuisances, one for each bin
                           for iBin in range(1, histos[sampleName].GetNbinsX()+1):
-                            if ('ibin_' + str(iBin) + '_stat') not in mynuisances.keys() :   # if new, add the new nuisance
+                            if ('ibin_' + str(iBin) + '_stat') not in list(mynuisances.keys()) :   # if new, add the new nuisance
                               #  Name of the histogram:    histo_" + sampleName + "_ibin_" + str(iBin) + "_statUp"
                               #  Then the nuisance is "ibin_" + str(iBin) + "_stat"
                               mynuisances['ibin_' + str(iBin) + '_stat'] = {
@@ -453,8 +453,8 @@ class PlotFactory:
                             else :  # otherwise just add the new sample in the list of samples to be considered
                               mynuisances['ibin_' + str(iBin) + '_stat']['samples'][sampleName] = '1.00'
                   else :
-                    if nuisanceName not in mynuisances.keys() :
-                      if 'type' in nuisance.keys() and (nuisance['type'] == 'rateParam' or nuisance['type'] == 'lnU') :
+                    if nuisanceName not in list(mynuisances.keys()) :
+                      if 'type' in list(nuisance.keys()) and (nuisance['type'] == 'rateParam' or nuisance['type'] == 'lnU') :
                         pass
                         #print "skip this nuisance since 100 percent uncertainty :: ", nuisanceName
                       else :
@@ -462,7 +462,7 @@ class PlotFactory:
  
                 nuisanceHistos = ({}, {})
                  
-                for nuisanceName, nuisance in mynuisances.iteritems():
+                for nuisanceName, nuisance in list(mynuisances.items()):
                   # is this nuisance to be considered for this background?
                   if 'samples' in nuisance:
                     if sampleName not in nuisance['samples']:
@@ -490,7 +490,7 @@ class PlotFactory:
                       values = nuisance['value']
 
                     if '/' in values:
-                      variations = map(float, values.split('/'))
+                      variations = list(map(float, values.split('/')))
                     else:
                       variations = (float(values), 2. - float(values))
                       
@@ -511,7 +511,7 @@ class PlotFactory:
                       if histoVar != None :
                         nuisanceHistos[ivar][nuisanceName] = histoVar
                       elif not self._SkipMissingNuisance :
-                        print " This is bad, the nuisance ", nuisanceName, " is missing! You need to add it, maybe some jobs crashed?"
+                        print((" This is bad, the nuisance ", nuisanceName, " is missing! You need to add it, maybe some jobs crashed?"))
                         nuisanceHistos[ivar][nuisanceName] = histoVar
                       else :
                         # if you had self._SkipMissingNuisance set to true, put the variation the same as the nominal
@@ -520,7 +520,7 @@ class PlotFactory:
                         
 
                 for ivar, nuisances_vy in enumerate([nuisances_vy_up, nuisances_vy_do]):
-                  for nuisanceName, nuisance in mynuisances.iteritems():
+                  for nuisanceName, nuisance in list(mynuisances.items()):
                     try:
                       histoVar = nuisanceHistos[ivar][nuisanceName]
                     except KeyError:
@@ -546,29 +546,29 @@ class PlotFactory:
                     try:
                       vy = nuisances_vy[nuisanceName]
                     except KeyError:
-                      vy = nuisances_vy[nuisanceName] = np.zeros_like(rnp.hist2array(histo, copy=False))
+                      vy = nuisances_vy[nuisanceName] = np.zeros_like(self._hist2array(histo, copy=False))
 
                     # get the background sum
                     if plotdef['isSignal'] == 0:   # ---> add the signal too????? See ~ 20 lines below
-                      vy += rnp.hist2array(histoVar, copy=False)
+                      vy += self._hist2array(histoVar, copy=False)
 
               # create the group of histograms to plot
               # this has to be done after the scaling of the previous lines
               # andl also after all the rest, so that we inherit the style of the histograms
-              for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+              for sampleNameGroup, sampleConfiguration in list(groupPlot.items()):
                 if sampleName in sampleConfiguration['samples']:
-                  if sampleNameGroup in histos_grouped.keys() :
+                  if sampleNameGroup in list(histos_grouped.keys()) :
                     histos_grouped[sampleNameGroup].Add(histos[sampleName])
                   else :
                     histos_grouped[sampleNameGroup] = histos[sampleName].Clone('new_histo_group_' + sampleNameGroup + '_' + cutName + '_' + variableName)
 
             # end sample loop
 
-            if self._nuisanceVariations and len(mynuisances.keys())==0: continue
+            if self._nuisanceVariations and len(list(mynuisances.keys()))==0: continue
 
             # set the colors for the groups of samples
-            for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
-              if sampleNameGroup in histos_grouped.keys() :
+            for sampleNameGroup, sampleConfiguration in list(groupPlot.items()):
+              if sampleNameGroup in list(histos_grouped.keys()) :
                 histos_grouped[sampleNameGroup].SetLineColor(self._getColor(sampleConfiguration['color']))
                 if sampleConfiguration['isSignal'] == 0:
                   #histos_grouped[sampleNameGroup].SetFillStyle(1001)
@@ -594,13 +594,13 @@ class PlotFactory:
             #            
             if thsBackground.GetNhists() != 0:
               last = thsBackground.GetStack().Last()
-              tgrMC_vy = rnp.hist2array(last, copy=True)
+              tgrMC_vy = self._hist2array(last, copy=True)
               for iBin in range(1,thsBackground.GetStack().Last().GetNbinsX()+1):
                 tgrMC_vx .append(thsBackground.GetStack().Last().GetBinCenter(iBin))
                 tgrMC_evx.append(thsBackground.GetStack().Last().GetBinWidth(iBin) / 2.)
-              nuisances_err2_up = rnp.array(last.GetSumw2())[1:-1]
-              nuisances_err2_do = rnp.array(last.GetSumw2())[1:-1]
-              nuisances_stat_err2 = rnp.array(last.GetSumw2())[1:-1]
+              nuisances_err2_up = self._array(last.GetSumw2())[1:-1]
+              nuisances_err2_do = self._array(last.GetSumw2())[1:-1]
+              nuisances_stat_err2 = self._array(last.GetSumw2())[1:-1]
               if (self._removeMCStat) or self._nuisanceVariations:
                 nuisances_err2_up.fill(0)
                 nuisances_err2_do.fill(0)
@@ -613,7 +613,7 @@ class PlotFactory:
             # and now  let's add the signal on top of the background stack 
             # It is important to do this after setting (without signal) tgrMC_vy
             #
-            for sampleName, plotdef in plot.iteritems():
+            for sampleName, plotdef in list(plot.items()):
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
               if 'removeFromCuts' in samples[sampleName] and cutName in samples[sampleName]['removeFromCuts']:
@@ -644,7 +644,7 @@ class PlotFactory:
                 #    tgrBkg_evy_up[iBin-1] = SumQ ( tgrBkg_evy_up[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 0, 1) )
                 #    tgrBkg_evy_do[iBin-1] = SumQ ( tgrBkg_evy_do[iBin-1], self.GetPoissError(histos[sampleName].GetBinContent (iBin) , 1, 0) ) 
 
-            for nuisanceName in mynuisances.keys():
+            for nuisanceName in list(mynuisances.keys()):
               # now we need to tell wthether the variation is actually up or down ans sum in quadrature those with the same sign 
               up = nuisances_vy_up[nuisanceName]
               do = nuisances_vy_do[nuisanceName]
@@ -708,9 +708,9 @@ class PlotFactory:
               if self._postFit == 'p' or self._postFit == 's' or  self._postFit == 'b':
                   tgrDataOverPF.SetPoint(iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , histoPF.GetBinContent(iBin+1)) )
                   tgrDataOverPF.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], histoPF.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], last.GetBinContent(iBin+1)) )
-                  print "Pre-fit ratio: " + str(self.Ratio(tgrData_vy[iBin] , histoPF.GetBinContent(iBin+1)))
-                  print "Post-fit ratio: " + str(self.Ratio(tgrData_vy[iBin] , last.GetBinContent(iBin+1)))
-                  print iBin
+                  print(("Pre-fit ratio: " + str(self.Ratio(tgrData_vy[iBin] , histoPF.GetBinContent(iBin+1)))))
+                  print(("Post-fit ratio: " + str(self.Ratio(tgrData_vy[iBin] , last.GetBinContent(iBin+1)))))
+                  print(iBin)
               #
               # data - MC :
               #    MC could be background only
@@ -759,10 +759,10 @@ class PlotFactory:
 
             if variable['divideByBinWidth'] == 1 and histo_total != None:
               histo_total.Scale(1,"width")
-            print '--> histo_total = ', histo_total
+            print(('--> histo_total = ', histo_total))
             
             #                                  if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
+            if len(list(mynuisances.keys())) != 0 or histo_total!= None:
               tgrMC = ROOT.TGraphAsymmErrors()
               tgrMCup = ROOT.TGraphAsymmErrors()
               tgrMCdo = ROOT.TGraphAsymmErrors()
@@ -824,13 +824,13 @@ class PlotFactory:
                          
             
             tgrRatioList = {}
-            for samplesToRatioName, samplesToRatio in sigForAdditionalRatioList.iteritems() :
+            for samplesToRatioName, samplesToRatio in list(sigForAdditionalRatioList.items()) :
               tgrDataOverMCTemp = tgrData.Clone("tgrDataOverMC"+samplesToRatioName)
               for iBin in range(0, len(tgrData_vx)) : 
                 tgrDataOverMCTemp.SetPoint     (iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , samplesToRatio.GetBinContent(iBin+1)) )
                 tgrDataOverMCTemp.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], samplesToRatio.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], samplesToRatio.GetBinContent(iBin+1)) )
                 if variableName == 'events' :
-                   print ' >> ratio[', cutName, '][', samplesToRatioName, ']  = ', self.Ratio(tgrData_vy[0] , samplesToRatio.GetBinContent(0+1)) 
+                   print((' >> ratio[', cutName, '][', samplesToRatioName, ']  = ', self.Ratio(tgrData_vy[0] , samplesToRatio.GetBinContent(0+1)))) 
 
               tgrDataOverMCTemp.SetLineColor(samplesToRatio.GetLineColor())
               tgrDataOverMCTemp.SetMarkerColor(samplesToRatio.GetLineColor())
@@ -839,13 +839,13 @@ class PlotFactory:
               
 
             tgrDifferenceList = {}
-            for samplesToDifferenceName, samplesToDifference in sigForAdditionalDifferenceList.iteritems() :
+            for samplesToDifferenceName, samplesToDifference in list(sigForAdditionalDifferenceList.items()) :
               tgrDataMinusMCTemp = tgrData.Clone("tgrDataMinusMC"+samplesToDifferenceName)
               for iBin in range(0, len(tgrData_vx)) : 
                 tgrDataMinusMCTemp.SetPoint     (iBin, tgrData_vx[iBin], self.Difference(tgrData_vy[iBin] , samplesToDifference.GetBinContent(iBin+1)) )
                 tgrDataMinusMCTemp.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin] , tgrData_evy_up[iBin] )
                 if variableName == 'events' :
-                   print ' >> difference[', cutName, '][', samplesToDifferenceName, ']  = ', self.Difference(tgrData_vy[0] , samplesToDifference.GetBinContent(0+1)) 
+                   print((' >> difference[', cutName, '][', samplesToDifferenceName, ']  = ', self.Difference(tgrData_vy[0] , samplesToDifference.GetBinContent(0+1)))) 
 
               tgrDataMinusMCTemp.SetLineColor(samplesToDifference.GetLineColor())
               tgrDataMinusMCTemp.SetMarkerColor(samplesToDifference.GetLineColor())
@@ -855,19 +855,19 @@ class PlotFactory:
 
             groupFlag = False
             #---- prepare the grouped histograms
-            for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+            for sampleNameGroup, sampleConfiguration in list(groupPlot.items()):
               if 'samples' in variable and len(set(sampleConfiguration['samples']) & set(variable['samples'])) == 0:
                 continue
               if 'removeFromCuts' in sampleConfiguration and cutName in sampleConfiguration['removeFromCuts']:
                 continue
                   
               if sampleConfiguration['isSignal'] == 1 :
-                  print "############################################################## isSignal 1", sampleNameGroup, cutName
+                  print(("############################################################## isSignal 1", sampleNameGroup, cutName))
                   #
                   # if, for some reason, you want to scale only the overlaid signal
                   # for example to show the shape of the signal, without affecting the actual stacked (true) distribution
                   #
-                  if 'scaleMultiplicativeOverlaid' in sampleConfiguration.keys() : 
+                  if 'scaleMultiplicativeOverlaid' in list(sampleConfiguration.keys()) : 
                     # may this clone not mess up too much with "gDirectory", see TH1::Copy
                     temp_overlaid = histos_grouped[sampleNameGroup].Clone()
                     temp_overlaid.Scale(sampleConfiguration['scaleMultiplicativeOverlaid'])
@@ -875,7 +875,7 @@ class PlotFactory:
                   else :
                     thsSignal_grouped.Add(histos_grouped[sampleNameGroup])
               elif sampleConfiguration['isSignal'] == 2 :
-                  print "############################################################## isSignal 2", sampleNameGroup
+                  print(("############################################################## isSignal 2", sampleNameGroup))
                   groupFlag = True
                   sigSupList_grouped.append(histos_grouped[sampleNameGroup])
               # the signal is added on top of the background
@@ -888,12 +888,12 @@ class PlotFactory:
             #---- now plot
             
             if thsBackground.GetNhists() != 0:
-              print " MC   = ", thsBackground.GetStack().Last().Integral()
+              print((" MC   = ", thsBackground.GetStack().Last().Integral()))
               for ihisto in range(thsBackground.GetNhists()) :
-                print "     - ",ihisto, " - ", ((thsBackground.GetHists().At(ihisto))).GetName(), " = ", ((thsBackground.GetHists().At(ihisto))).Integral() 
+                print(("     - ",ihisto, " - ", ((thsBackground.GetHists().At(ihisto))).GetName(), " = ", ((thsBackground.GetHists().At(ihisto))).Integral())) 
                   
             if thsData.GetNhists() != 0:
-              print " DATA = ", thsData.GetStack().Last().Integral()
+              print((" DATA = ", thsData.GetStack().Last().Integral()))
                
              
                          
@@ -904,7 +904,7 @@ class PlotFactory:
             minYused = 1.
             maxYused = 1.
             
-            for sampleName, plotdef in plot.iteritems():
+            for sampleName, plotdef in list(plot.items()):
               if 'samples' in variable and sampleName not in variable['samples']:
                 continue
 
@@ -953,11 +953,11 @@ class PlotFactory:
             # setup axis names
             # New proposal (following https://twiki.cern.ch/twiki/bin/viewauth/CMS/Internal/PubGuidelines)
             # Set xaxis label if needed. Format should be variable name, followed by (units) or [units] if needed
-            if 'xaxis' in variable.keys() : 
+            if 'xaxis' in list(variable.keys()) : 
                 frame.GetXaxis().SetTitle(variable['xaxis'])
                 
             # If yaxis is set, we want to override normal conventions
-            if 'yaxis' in variable.keys():
+            if 'yaxis' in list(variable.keys()):
                 frame.GetYaxis().SetTitle(variable['yaxis'])
             else:
                 # Grab unit from x axis title -- capture part in () or [] brackets
@@ -983,7 +983,7 @@ class PlotFactory:
             #     - first the MC    
             #         before the background+signal, and then only the signal alone
             #
-            if len(groupPlot.keys()) == 0:          
+            if len(list(groupPlot.keys())) == 0:          
               if thsBackground.GetNhists() != 0:
                 thsBackground.Draw("hist same")
                  
@@ -1006,7 +1006,7 @@ class PlotFactory:
             
             # if there is a systematic band draw it
             #                               if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
+            if len(list(mynuisances.keys())) != 0 or histo_total!= None:
               tgrMC.SetLineColor(12)
               tgrMC.SetFillColor(12)
               tgrMC.SetLineWidth(2)
@@ -1056,7 +1056,7 @@ class PlotFactory:
             if tgrData.GetN() != 0:
               tgrData.Draw("P0")
             else : # never happening if at least one data histogram is provided
-              for sampleName, plotdef in plot.iteritems():
+              for sampleName, plotdef in list(plot.items()):
                 if 'samples' in variable and sampleName not in variable['samples']:
                   continue
                 if plotdef['isData'] == 1 :
@@ -1072,7 +1072,7 @@ class PlotFactory:
             reversedSampleNames = list(self._samples)
             reversedSampleNames.reverse()
             
-            if len(groupPlot.keys()) == 0:
+            if len(list(groupPlot.keys())) == 0:
               for sampleName in reversedSampleNames:
                 try:
                   plotdef = plot[sampleName]
@@ -1080,7 +1080,7 @@ class PlotFactory:
                   continue
 
                 if plotdef['isData'] == 0 :
-                  if 'nameHR' in plotdef.keys() :
+                  if 'nameHR' in list(plotdef.keys()) :
                     if plotdef['nameHR'] != '' :
                       if self._showIntegralLegend == 0 :
                         tlegend.AddEntry(histos[sampleName], plotdef['nameHR'], "F")
@@ -1107,7 +1107,7 @@ class PlotFactory:
                   continue
 
                 if plotdef['isData'] == 1 :
-                  if 'nameHR' in plotdef.keys() :
+                  if 'nameHR' in list(plotdef.keys()) :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], plotdef['nameHR'], "EPL")
                     else :
@@ -1127,7 +1127,7 @@ class PlotFactory:
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
             
             else :
-              for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+              for sampleNameGroup, sampleConfiguration in list(groupPlot.items()):
                 if 'samples' in variable and len(set(sampleConfiguration['samples']) & set(variable['samples'])) == 0:
                   continue
                 if 'removeFromCuts' in sampleConfiguration and cutName in sampleConfiguration['removeFromCuts']:
@@ -1154,7 +1154,7 @@ class PlotFactory:
                   continue
               
                 if plotdef['isData'] == 1 :
-                  if 'nameHR' in plotdef.keys() :
+                  if 'nameHR' in list(plotdef.keys()) :
                     if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(histos[sampleName], plotdef['nameHR'], "EPL")
                     else :
@@ -1162,7 +1162,7 @@ class PlotFactory:
                         nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width")
                       else:
                         nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
-                      print " nevents [", sampleName, "] = ", nevents
+                      print((" nevents [", sampleName, "] = ", nevents))
                       tlegend.AddEntry(histos[sampleName], plotdef['nameHR'] + " [" +  str(round(nevents,1)) + "]", "EPL")
                   else :
                     if self._showIntegralLegend == 0 :
@@ -1172,17 +1172,17 @@ class PlotFactory:
                         nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX(),"width")
                       else:
                         nevents = histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())
-                      print " nevents [", sampleName, "] = ", nevents
+                      print((" nevents [", sampleName, "] = ", nevents))
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
               
             # add "All MC" in the legend
             if not self._removeAllMC :
               #                     if there is "histo_total" there is no need of explicit nuisances
-              if len(mynuisances.keys()) != 0 or histo_total!= None:
+              if len(list(mynuisances.keys())) != 0 or histo_total!= None:
                   if self._showIntegralLegend == 0 :
                       tlegend.AddEntry(tgrMC, "All MC", "F")
                   else :
-                      print " nexpected  = ", nexpected
+                      print((" nexpected  = ", nexpected))
                       tlegend.AddEntry(tgrMC, "All MC [" + str(round(nexpected,1)) + "]", "F")
              
             tlegend.SetNColumns(2)
@@ -1200,9 +1200,9 @@ class PlotFactory:
               CMS_lumi.extraText = ""
             CMS_lumi.relPosX = 0.12
             CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
-            if 'sqrt' in legend.keys() :
+            if 'sqrt' in list(legend.keys()) :
               CMS_lumi.lumi_sqrtS = legend['sqrt']
-            if 'lumi' in legend.keys() :
+            if 'lumi' in list(legend.keys()) :
               CMS_lumi.lumi_13TeV = legend['lumi']
             else:
               CMS_lumi.lumi_13TeV = 'L = %.1f fb^{-1}' % self._lumi
@@ -1219,7 +1219,7 @@ class PlotFactory:
             CMS_lumi.CMS_lumi(tcanvas, iPeriod, iPos)    
 
     
-            print "- draw tlegend"
+            print("- draw tlegend")
             #---- the Legend (end)
             tlegend.Draw()
 
@@ -1249,7 +1249,7 @@ class PlotFactory:
 
             # ~~~~~~~~~~~~~~~~~~~~
             # plot with ratio plot            
-            print "- draw with ratio"
+            print("- draw with ratio")
             
             canvasRatioNameTemplate = 'cratio_' + cutName + "_" + variableName
             if scaleCR!=1.:
@@ -1276,11 +1276,11 @@ class PlotFactory:
             # setup axis names
             # New proposal (following https://twiki.cern.ch/twiki/bin/viewauth/CMS/Internal/PubGuidelines)
             # Set xaxis label if needed. Format should be variable name, followed by (units) or [units] if needed
-            if 'xaxis' in variable.keys() : 
+            if 'xaxis' in list(variable.keys()) : 
                 frameDistro.GetXaxis().SetTitle(variable['xaxis'])
                 
             # If yaxis is set, we want to override normal conventions
-            if 'yaxis' in variable.keys():
+            if 'yaxis' in list(variable.keys()):
                 frameDistro.GetYaxis().SetTitle(variable['yaxis'])
             else:
                 # Grab unit from x axis title -- capture part in () or [] brackets
@@ -1305,7 +1305,7 @@ class PlotFactory:
             frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
 
 
-            if len(groupPlot.keys()) == 0:          
+            if len(list(groupPlot.keys())) == 0:          
               if thsBackground.GetNhists() != 0:
                 thsBackground.Draw("hist same")
                  
@@ -1326,7 +1326,7 @@ class PlotFactory:
                   histo.Draw("hist same")
            
             #                               if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
+            if len(list(mynuisances.keys())) != 0 or histo_total!= None:
               if not self._nuisanceVariations:
                 tgrMC.Draw("2")
               else:
@@ -1426,7 +1426,7 @@ class PlotFactory:
             xAxisDistro = frameRatio.GetXaxis()
             xAxisDistro.SetNdivisions(6,5,0)
 
-            if 'xaxis' in variable.keys() : 
+            if 'xaxis' in list(variable.keys()) : 
               frameRatio.GetXaxis().SetTitle(variable['xaxis'])
             else :
               frameRatio.GetXaxis().SetTitle(variableName)
@@ -1451,7 +1451,7 @@ class PlotFactory:
               frameRatio.GetYaxis().SetRangeUser( 1.-2*yRange, 1+2*yRange )
             self.Pad2TAxis(frameRatio)
             #                               if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
+            if len(list(mynuisances.keys())) != 0 or histo_total!= None:
               if not self._nuisanceVariations:
                 tgrMCOverMC.Draw("2") 
               else:
@@ -1503,7 +1503,7 @@ class PlotFactory:
                     tlegendRatio.AddEntry(tgrDataOverPF, "post-fit", "PL")
  
                 totalInSamples = False
-                for sampleName, sample in self._samples.iteritems():
+                for sampleName, sample in list(self._samples.items()):
                     ##if sampleName.find('total') == 1: 
                     ## or sampleName == 'total_background_prefit' or sampleName == 'total_background_postfit_s' or sampleName == 'total_background_postfit_b':
                     if 'total' in sampleName:
@@ -1529,7 +1529,7 @@ class PlotFactory:
                     tlegendRatio.Draw("same")
             
             
-            for samplesToRatioGrName, samplesGrToRatio in tgrRatioList.iteritems() :
+            for samplesToRatioGrName, samplesGrToRatio in list(tgrRatioList.items()) :
               samplesGrToRatio.Draw("P")
 
             
@@ -1575,7 +1575,7 @@ class PlotFactory:
 
             # ~~~~~~~~~~~~~~~~~~~~
             # plot with difference plot            
-            print "- draw with difference"
+            print("- draw with difference")
             
             if self._showRelativeRatio :
               canvasDifferenceNameTemplate = 'cdifference_relative_' + cutName + "_" + variableName
@@ -1605,11 +1605,11 @@ class PlotFactory:
             # setup axis names
             # New proposal (following https://twiki.cern.ch/twiki/bin/viewauth/CMS/Internal/PubGuidelines)
             # Set xaxis label if needed. Format should be variable name, followed by (units) or [units] if needed
-            if 'xaxis' in variable.keys() : 
+            if 'xaxis' in list(variable.keys()) : 
                 frameDistro.GetXaxis().SetTitle(variable['xaxis'])
                 
             # If yaxis is set, we want to override normal conventions
-            if 'yaxis' in variable.keys():
+            if 'yaxis' in list(variable.keys()):
                 frameDistro.GetYaxis().SetTitle(variable['yaxis'])
             else:
                 # Grab unit from x axis title -- capture part in () or [] brackets
@@ -1634,7 +1634,7 @@ class PlotFactory:
             frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
 
 
-            if len(groupPlot.keys()) == 0:          
+            if len(list(groupPlot.keys())) == 0:          
               if thsBackground.GetNhists() != 0:
                 thsBackground.Draw("hist same")
                  
@@ -1655,7 +1655,7 @@ class PlotFactory:
                   histo.Draw("hist same")
            
             #                               if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
+            if len(list(mynuisances.keys())) != 0 or histo_total!= None:
               tgrMC.Draw("2")
              
             #     - then the superimposed MC
@@ -1706,7 +1706,7 @@ class PlotFactory:
             xAxisDistro = frameDifference.GetXaxis()
             xAxisDistro.SetNdivisions(6,5,0)
 
-            if 'xaxis' in variable.keys() : 
+            if 'xaxis' in list(variable.keys()) : 
               frameDifference.GetXaxis().SetTitle(variable['xaxis'])
             else :
               frameDifference.GetXaxis().SetTitle(variableName)
@@ -1719,7 +1719,7 @@ class PlotFactory:
               frameDifference.GetYaxis().SetRangeUser(  int (ROOT.TMath.MinElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) - 2 ),  int (ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) + 2 ) )
             self.Pad2TAxis(frameDifference)
             #                               if there is "histo_total" there is no need of explicit nuisances
-            if len(mynuisances.keys()) != 0 or histo_total!= None:
+            if len(list(mynuisances.keys())) != 0 or histo_total!= None:
               tgrMCMinusMC.SetLineColor(12)
               tgrMCMinusMC.SetFillColor(12)
               tgrMCMinusMC.SetLineWidth(2)
@@ -1733,7 +1733,7 @@ class PlotFactory:
             
             
             
-            for samplesToDifferenceGrName, samplesGrToDifference in tgrDifferenceList.iteritems() :
+            for samplesToDifferenceGrName, samplesGrToDifference in list(tgrDifferenceList.items()) :
               samplesGrToDifference.Draw("P")
 
             
@@ -1775,7 +1775,7 @@ class PlotFactory:
             #
             
             if self._plotFancy and not self._showRelativeRatio:
-              print "- draw with difference Fancy"
+              print("- draw with difference Fancy")
               
               canvasDifferenceNameTemplate = 'cdifference_' + cutName + "_" + variableName + "_Fancy"
   
@@ -1796,7 +1796,7 @@ class PlotFactory:
               xAxisDistro = frameDistro_Fancy.GetXaxis()
               xAxisDistro.SetNdivisions(6,5,0)
   
-              if 'xaxis' in variable.keys() :
+              if 'xaxis' in list(variable.keys()) :
                 frameDistro_Fancy.GetXaxis().SetTitle(variable['xaxis'])
                 if variable["divideByBinWidth"] == 1:
                   if "GeV" in variable['xaxis']: 
@@ -1805,7 +1805,7 @@ class PlotFactory:
                   else:
                     frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected dN/d"+variable['xaxis'])
                 else:
-                  if 'yaxis' in variable.keys() : 
+                  if 'yaxis' in list(variable.keys()) : 
                     frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected " + variable['yaxis'])
                   else :
                     frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected Events")
@@ -1814,7 +1814,7 @@ class PlotFactory:
                 if variable["divideByBinWidth"] == 1:
                   frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected dN/d"+variableName)
                 else:
-                  if 'yaxis' in variable.keys() : 
+                  if 'yaxis' in list(variable.keys()) : 
                     frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected " + variable['yaxis'])
                   else :
                     frameDistro_Fancy.GetYaxis().SetTitle("Data - Expected Events")
@@ -1822,7 +1822,7 @@ class PlotFactory:
                                                     int (ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetY()) + int ( ROOT.TMath.MaxElement(tgrDataMinusMC.GetN(),tgrDataMinusMC.GetEYhigh()) ) + 20 ) )
   
               #                               if there is "histo_total" there is no need of explicit nuisances
-              if len(mynuisances.keys()) != 0 or histo_total!= None:
+              if len(list(mynuisances.keys())) != 0 or histo_total!= None:
                 tgrMCMinusMC.SetLineColor(12)
                 tgrMCMinusMC.SetFillColor(12)
                 tgrMCMinusMC.SetLineWidth(2)
@@ -1875,9 +1875,9 @@ class PlotFactory:
             # draw weighted plot
             #
             
-            if 'doWeight' in variable.keys() : 
+            if 'doWeight' in list(variable.keys()) : 
               if variable['doWeight'] == 1 :
-                if 'binX' in variable.keys() and 'binY' in variable.keys() :
+                if 'binX' in list(variable.keys()) and 'binY' in list(variable.keys()) :
                   nbinX = variable['binX']
                   nbinY = variable['binY']
                   
@@ -1912,7 +1912,7 @@ class PlotFactory:
                     # is the expected signal + background yield
                     # --> or only background ?
                     #
-                    if len(groupPlot.keys()) == 0:          
+                    if len(list(groupPlot.keys())) == 0:          
                       totalBkg = thsBackground.GetStack().Last().Integral()
                       totalSig = thsSignal.GetStack().Last().Integral()
                     else :
@@ -1934,7 +1934,7 @@ class PlotFactory:
                       integral_bkg = 0.
                       #for ibin in range( thsBackground.GetStack().Last().GetNbinsX() )
                       for ibin in range( nbinY ) :
-                        if len(groupPlot.keys()) == 0:          
+                        if len(list(groupPlot.keys())) == 0:          
 
                           if self._invertXY :
                             integral_bkg += thsBackground.GetStack().Last().GetBinContent(ibin*nbinX +1 + sliceX)
@@ -1950,7 +1950,7 @@ class PlotFactory:
 
                       integral_sig = 0.
                       
-                      if len(groupPlot.keys()) == 0:          
+                      if len(list(groupPlot.keys())) == 0:          
                         for ibin in range( thsSignal.GetStack().Last().GetNbinsX() ) :
 
                           if self._invertXY :
@@ -1984,7 +1984,7 @@ class PlotFactory:
                       weight_X_list_weights.append(weight)
                       
                       
-                      if len(groupPlot.keys()) == 0:          
+                      if len(list(groupPlot.keys())) == 0:          
 
                           for ihisto in range(thsBackground.GetNhists()):
                              hentry = thsBackground.GetHists().At(ihisto)
@@ -2361,7 +2361,7 @@ class PlotFactory:
                     xAxisDistro = weight_X_frameDistro.GetXaxis()
                     xAxisDistro.SetNdivisions(6,5,0)
             
-                    if 'xaxis' in variable.keys() : 
+                    if 'xaxis' in list(variable.keys()) : 
                       weight_X_frameDistro.GetXaxis().SetTitle(variable['xaxis'])
                     else :
                       weight_X_frameDistro.GetXaxis().SetTitle(variableName)
@@ -2379,7 +2379,7 @@ class PlotFactory:
                       weight_X_thsSignal.Draw("hist same noclear")
                     
                     #                               if there is "histo_total" there is no need of explicit nuisances
-                    if len(mynuisances.keys()) != 0 or histo_total!= None:
+                    if len(list(mynuisances.keys())) != 0 or histo_total!= None:
                       weight_X_tgrMC.SetLineColor(12)
                       weight_X_tgrMC.SetFillColor(12)
                       weight_X_tgrMC.SetFillStyle(3004)
@@ -2422,7 +2422,7 @@ class PlotFactory:
                     xAxisDistro = weight_X_frameRatio.GetXaxis()
                     xAxisDistro.SetNdivisions(6,5,0)
             
-                    if 'xaxis' in variable.keys() : 
+                    if 'xaxis' in list(variable.keys()) : 
                       weight_X_frameRatio.GetXaxis().SetTitle(variable['xaxis'])
                     else :
                       weight_X_frameRatio.GetXaxis().SetTitle(variableName)
@@ -2431,7 +2431,7 @@ class PlotFactory:
                     self.Pad2TAxis(weight_X_frameRatio)
                     
                     #                               if there is "histo_total" there is no need of explicit nuisances
-                    if len(mynuisances.keys()) != 0 or histo_total!= None:
+                    if len(list(mynuisances.keys())) != 0 or histo_total!= None:
                       weight_X_tgrMCOverMC.SetLineColor(12)
                       weight_X_tgrMCOverMC.SetFillColor(12)
                       weight_X_tgrMCOverMC.SetFillStyle(3004)
@@ -2464,7 +2464,7 @@ class PlotFactory:
                     weight_X_tgrMCOverMC.Write()
                     weight_X_tgrDataOverMC.Write()
                     #                               if there is "histo_total" there is no need of explicit nuisances
-                    if len(mynuisances.keys()) != 0 or histo_total!= None:
+                    if len(list(mynuisances.keys())) != 0 or histo_total!= None:
                       weight_X_tgrMC.Write("weight_X_tgrMC")
                     if weight_X_tgrData.GetN() != 0:
                       weight_X_tgrData.Write("weight_X_tgrData")
@@ -2508,7 +2508,7 @@ class PlotFactory:
                     xAxisDistro = weight_X_frameRatio.GetXaxis()
                     xAxisDistro.SetNdivisions(6,5,0)
 
-                    if 'xaxis' in variable.keys() : 
+                    if 'xaxis' in list(variable.keys()) : 
                       weight_X_frameRatio.GetXaxis().SetTitle(variable['xaxis'])
                     else :
                       weight_X_frameRatio.GetXaxis().SetTitle(variableName)
@@ -2524,7 +2524,7 @@ class PlotFactory:
                     self.Pad2TAxis(weight_X_frameRatio)
 
                     #                               if there is "histo_total" there is no need of explicit nuisances
-                    if len(mynuisances.keys()) != 0 or histo_total!= None:
+                    if len(list(mynuisances.keys())) != 0 or histo_total!= None:
                       weight_X_tgrMCMinusMC.SetLineColor(12)
                       weight_X_tgrMCMinusMC.SetFillColor(12)
                       weight_X_tgrMCMinusMC.SetFillStyle(3004)
@@ -2568,7 +2568,7 @@ class PlotFactory:
   
               frameNorm.GetYaxis().SetRangeUser( 0, 1.5 )
               # setup axis names
-              if 'xaxis' in variable.keys() : 
+              if 'xaxis' in list(variable.keys()) : 
                 frameNorm.GetXaxis().SetTitle(variable['xaxis'])
               tcanvasSigVsBkg.RedrawAxis()
   
@@ -2606,7 +2606,7 @@ class PlotFactory:
               # include data only if required
 
               if self._plotNormalizedIncludeData : 
-                for sampleName, plotdef in plot.iteritems():
+                for sampleName, plotdef in list(plot.items()):
                   if plotdef['isData'] == 1 :
                     histos[sampleName].DrawNormalized("p, same")
 
@@ -2633,7 +2633,7 @@ class PlotFactory:
   
               frameNormTHstack.GetYaxis().SetRangeUser( 0, 1.5 )
               # setup axis names
-              if 'xaxis' in variable.keys() : 
+              if 'xaxis' in list(variable.keys()) : 
                 frameNormTHstack.GetXaxis().SetTitle(variable['xaxis'])
               tcanvasSigVsBkgTHstack.RedrawAxis()
   
@@ -2694,11 +2694,11 @@ class PlotFactory:
             #print " cleaning ..."
             #thsBackground_grouped.Delete()
             
-            print " >> end:", variableName
+            print((" >> end:", variableName))
             
-          print " >> all end"
+          print(" >> all end")
 
-        print " >> all but really all "
+        print(" >> all but really all ")
         
         
 
@@ -2828,7 +2828,7 @@ class PlotFactory:
     # _____________________________________________________________________________
     def defineStyle(self):
 
-        print "=================="
+        print("==================")
         import LatinoAnalysis.ShapeAnalysis.tdrStyle as tdrStyle
         tdrStyle.setTDRStyle()
         
@@ -2888,4 +2888,44 @@ class PlotFactory:
       elif type(color) == str:
         # hex string
         return ROOT.TColor.GetColor(color)
+
+    # root_numpy
+    @staticmethod
+    def _array(arr, copy=True):
+        return np.array(arr)
+
+    @staticmethod
+    def _hist2array(histo, include_overflow=False, copy=True, return_edges=False):
+        print(histo.GetNbinsX())
+        if 'TH1' in histo.ClassName():
+            if include_overflow:
+                y = histo.GetArray()
+                y.reshape((histo.GetNbinsX()+2,))
+            else:
+                auxh = ROOT.TH1D('aux','aux',histo.GetNbinsX()-2,0,histo.GetNbinsX()-2)
+                for ib in range(1,histo.GetNbinsX()+1): auxh.SetBinContent(ib-1,histo.GetBinContent(ib))                                                                                                                
+                y = auxh.GetArray()
+                y.reshape((auxh.GetNbinsX()+2,))
+            return PlotFactory._array(y, copy) 
+        elif 'TH2' in histo.ClassName():
+            aList = []
+            ibin, fbin = 1, histo.GetNbinsX()                                       
+            if include_overflow:                        
+                ibin, fbin = 0, histo.GetNbinsX()+1
+            for bx in range(ibin, fbin+1):  
+                nby = histo.GetNbinsY() if include_overflow else histo.GetNbinsY()-2
+                byOff = 0 if include_overflow else 1
+                auxh = ROOT.TH1D('aux'+str(bx),'aux'+str(bx),nby,0,nby)
+                for by in range(0, nby+2): auxh.SetBinContent(by,histo.GetBinContent(bx,by+byOff))
+                y = auxh.GetArray()
+                y.reshape((auxh.GetNbinsX()+2,))                            
+                aList.append(np.array(y))       
+            return np.array(aList)
+                 
+    @staticmethod
+    def _array2hist(array, hist, errors=None):                                                                                                                                                                              
+        for ib in range(1, hist.GetNbinsX()+1):
+            hist.SetBinContent(ib,array[ib-1])
+
+
 

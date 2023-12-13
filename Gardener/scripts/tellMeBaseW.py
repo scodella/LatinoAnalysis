@@ -9,7 +9,7 @@ import ROOT
 
 
 if __name__ == '__main__':
-    print '''
+    print('''
 --------------------------------------------------------------------------------------------------
    ___|                     |           |      __ )          |  | 
   |       __|  |   |   __|  __|   _` |  |      __ \    _` |  |  | 
@@ -17,7 +17,7 @@ if __name__ == '__main__':
  \____| _|    \__, | ____/ \__| \__,_| _|     ____/  \__,_| _| _| 
               ____/                                               
 --------------------------------------------------------------------------------------------------
-'''    
+''')    
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     ROOT.gROOT.SetBatch()
 
 
-    print " inputFile =               ", opt.inputFile
+    print(" inputFile =               ", opt.inputFile)
 
     if opt.inputFiles != None :
       samples = OrderedDict()
@@ -41,7 +41,7 @@ if __name__ == '__main__':
         exec(handle)
         handle.close()
 
-      for sampleName, sample in samples.iteritems():
+      for sampleName, sample in samples.items():
         #print '     -> sampleName = ', sampleName
         list_of_trees_to_connect = sample['name']      
         for file_name in list_of_trees_to_connect :
@@ -75,7 +75,7 @@ if __name__ == '__main__':
           xs = 1.
           if nEvt != 0 :
             baseW = float(xs)*1000./nEvt
-            print '[', sampleName, ']: file, N, nPos, nNeg -> W', file_name, ', ', nEvt , ', ', nPos , ', ', nNeg , ' , ', baseW , ' nTot= ', nTot
+            print('[', sampleName, ']: file, N, nPos, nNeg -> W', file_name, ', ', nEvt , ', ', nPos , ', ', nNeg , ' , ', baseW , ' nTot= ', nTot)
             
             
           
@@ -86,7 +86,7 @@ if __name__ == '__main__':
       nPos = 0
       nNeg = 0
 
-      print 'Opening: ',opt.inputFile
+      print('Opening: ',opt.inputFile)
       if opt.inputFile != None :
         fileIn = ROOT.TFile.Open(opt.inputFile, "READ")
         #fileIn.ls()
@@ -96,7 +96,7 @@ if __name__ == '__main__':
           nEvt += h_mcWeightPos.GetBinContent(1) - h_mcWeightNeg.GetBinContent(1)
           nPos += h_mcWeightPos.GetBinContent(1)
           nNeg += h_mcWeightNeg.GetBinContent(1) 
-          print 'Pos, Neg = ',h_mcWeightPos.GetBinContent(1),h_mcWeightNeg.GetBinContent(1)
+          print('Pos, Neg = ',h_mcWeightPos.GetBinContent(1),h_mcWeightNeg.GetBinContent(1))
         else:
           nEvt += fileIn.Get('totalEvents').GetBinContent(1)
           nPos += fileIn.Get('totalEvents').GetBinContent(1)
@@ -106,7 +106,7 @@ if __name__ == '__main__':
       
       xs = 1.
       baseW = float(xs)*1000./nEvt
-      print 'baseW: xs,N -> W', xs, ' , ', nEvt , ' , ', baseW , ' nTot= ', nTot
+      print('baseW: xs,N -> W', xs, ' , ', nEvt , ' , ', baseW , ' nTot= ', nTot)
     
     
     

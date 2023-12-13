@@ -23,8 +23,8 @@ from collections import OrderedDict
 class LeptonWP():
 
     def __init__ (self,cmssw,WPDic,WPType,WP):
-      print "-------- LeptonWP init() ---------"  
-      print WPType,WP
+      print("-------- LeptonWP init() ---------")  
+      print(WPType,WP)
       self.WPType = WPType
       self.WP     = WP
 
@@ -44,7 +44,7 @@ class LeptonWP():
 
         self.WP[iCond] = Cut    
 
-      print self.WP
+      print(self.WP)
 
     def passWP(self,itree,iLep):
 
@@ -75,7 +75,7 @@ class LeptonWP():
 
         pt_to_be_removed_from_overlap = 0
         isoConSize = 0.4
-        for jLep in xrange(len(itree.std_vector_lepton_pt)):
+        for jLep in range(len(itree.std_vector_lepton_pt)):
           if jLep != iLep and itree.std_vector_lepton_pt[jLep]>0 :
             if self.isAcloseToB(itree.std_vector_lepton_eta[jLep], itree.std_vector_lepton_phi[jLep],
                                 itree.std_vector_lepton_eta[iLep], itree.std_vector_lepton_phi[iLep],
@@ -103,16 +103,16 @@ class LeptonSel(TreeCloner):
     def checkOptions(self,opts):
         
         self.cmssw = opts.cmssw
-        print " cmssw = ", self.cmssw
+        print(" cmssw = ", self.cmssw)
         cmssw_base = os.getenv('CMSSW_BASE')
         self.WPdic = cmssw_base+'/src/'+opts.WPdic
-        print self.WPdic 
+        print(self.WPdic) 
         if os.path.exists(self.WPdic) :
           handle = open(self.WPdic,'r')
           exec(handle)
           handle.close()
         else:
-          print 'ERROR: No WP'
+          print('ERROR: No WP')
           exit()  
 
         # Lepton cleaning options
@@ -161,12 +161,12 @@ class LeptonSel(TreeCloner):
 
         # What to do if more than 1 Fake Obj definition ?
         if  len(self.FakeObjMuonWPs) > 1 or len(self.FakeObjElectronWPs) > 1 :
-          print 'ERROR: Can not handle more than 1 FakeObj definition'
+          print('ERROR: Can not handle more than 1 FakeObj definition')
           exit()
 
         # What to do if more than 1 WgStar Obj definition ?
         if  len(self.WgStarObjMuonWPs) > 1 or len(self.WgStarObjElectronWPs) > 1 :
-          print 'ERROR: Can not handle more than 1 WgStarObj definition'
+          print('ERROR: Can not handle more than 1 WgStarObj definition')
           exit()
 
 
@@ -257,7 +257,7 @@ class LeptonSel(TreeCloner):
         # maximum number of "single jet" variables to be saved
         maxnjets = 2 # 7 --> everything is available in form of std::vector -> these will be deprecated
         for jetVar in self.jetVariables:
-          for i in xrange(maxnjets):
+          for i in range(maxnjets):
             self.jetVarList.append("jet"+jetVar+str(i+1))
 
         # AND some variables we compute in this code like veto leptons
@@ -277,28 +277,28 @@ class LeptonSel(TreeCloner):
         for bname in self.namesNewBranchesVector:
           bvector =  ROOT.std.vector(float) ()
           self.newBranchesVector[bname] = bvector
-        for bname, bvector in self.newBranchesVector.iteritems(): self.otree.Branch(bname,bvector)        
+        for bname, bvector in self.newBranchesVector.items(): self.otree.Branch(bname,bvector)        
 
         # ... Old Branches: lepton and jets std_vector
         self.oldBranchesToBeModifiedVector = {}
         for bname in self.namesOldBranchesToBeModifiedVector:
           bvector =  ROOT.std.vector(float) ()
           self.oldBranchesToBeModifiedVector[bname] = bvector
-        for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems(): self.otree.Branch(bname,bvector)
+        for bname, bvector in self.oldBranchesToBeModifiedVector.items(): self.otree.Branch(bname,bvector)
 
         # .... jet Variables
         self.jetVarDic = OrderedDict()
         for bname in self.jetVarList:
           bvariable = numpy.ones(1, dtype=numpy.float32)
           self.jetVarDic[bname] = bvariable
-        for bname, bvariable in self.jetVarDic.iteritems(): self.otree.Branch(bname,bvariable,bname+'/F') 
+        for bname, bvariable in self.jetVarDic.items(): self.otree.Branch(bname,bvariable,bname+'/F') 
 
         # ... Special variables
         self.oldBranchesToBeModifiedSpecialSimpleVariable = {}
         for bname in self.namesOfSpecialSimpleVariable:
           bvariable = numpy.ones(1, dtype=numpy.float32)
           self.oldBranchesToBeModifiedSpecialSimpleVariable[bname] = bvariable
-        for bname, bvariable in self.oldBranchesToBeModifiedSpecialSimpleVariable.iteritems():  self.otree.Branch(bname,bvariable,bname+'/F')
+        for bname, bvariable in self.oldBranchesToBeModifiedSpecialSimpleVariable.items():  self.otree.Branch(bname,bvariable,bname+'/F')
 
         # input tree and output tree
         itree     = self.itree
@@ -307,19 +307,19 @@ class LeptonSel(TreeCloner):
 
         # Loop
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries
+        print('Total number of entries: ',nentries)
         savedentries = 0
 
         #----------------------------------------------------------------------------------------------------
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
 
-        for i in xrange(nentries):
+        for i in range(nentries):
 
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0.:
-                print i,'events processed :: ', nentries
+                print(i,'events processed :: ', nentries)
 
             # Gep Letpon Tags: 
 
@@ -330,7 +330,7 @@ class LeptonSel(TreeCloner):
             for iWP in self.TightObjMuonWPs     : LeptonTags['muon_'+iWP]     = [] 
             
             
-            for iLep in xrange(len(itree.std_vector_lepton_pt)) :
+            for iLep in range(len(itree.std_vector_lepton_pt)) :
               
                # Electron
                if    abs(self.itree.std_vector_lepton_flavour[iLep]) == 11 :
@@ -376,7 +376,7 @@ class LeptonSel(TreeCloner):
             if   self.kindLep == 2 : CleanTag = 'Loose'
             elif self.kindLep == 3 : CleanTag = 'WgStar'  
             else:
-              print 'ERROR: kindLep unavailable : ',self.kindLep
+              print('ERROR: kindLep unavailable : ',self.kindLep)
               exit() 
 
             # Lepton Cuts
@@ -398,8 +398,8 @@ class LeptonSel(TreeCloner):
               maxNumLeptons = len(itree.std_vector_lepton_pt)
 
               # Clean All vectors
-              for bname, bvector in self.newBranchesVector.iteritems()             : bvector.clear()
-              for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems() : bvector.clear()
+              for bname, bvector in self.newBranchesVector.items()             : bvector.clear()
+              for bname, bvector in self.oldBranchesToBeModifiedVector.items() : bvector.clear()
 
               # Link to good leptons
               goodLepLinks = []
@@ -416,14 +416,14 @@ class LeptonSel(TreeCloner):
               # Compute Veto and/or save Veto lepton pt,eta,phi,flavour +link to position in CleanTag
               for iLep in range(len(LeptonTags['Veto'])) :
                 if LeptonTags['Veto'][iLep] == 1 :                 
-                  for bname, bvector in self.newBranchesVector.iteritems() :
+                  for bname, bvector in self.newBranchesVector.items() :
                     if ("std_vector_vetolepton_pt"      == bname) : bvector.push_back(itree.std_vector_lepton_pt[iLep])
                     if ("std_vector_vetolepton_eta"     == bname) : bvector.push_back(itree.std_vector_lepton_eta[iLep])
                     if ("std_vector_vetolepton_phi"     == bname) : bvector.push_back(itree.std_vector_lepton_phi[iLep])
                     if ("std_vector_vetolepton_flavour" == bname) : bvector.push_back(itree.std_vector_lepton_flavour[iLep])
                     if ("std_vector_vetolepton_cleanId" == bname) : bvector.push_back(goodLepLinks[iLep])
               for remainingLep in range( maxNumLeptons - len(otree.std_vector_vetolepton_cleanId) ) :
-                  for bname, bvector in self.newBranchesVector.iteritems() :
+                  for bname, bvector in self.newBranchesVector.items() :
                     if ("std_vector_vetolepton_pt"      == bname) : bvector.push_back( -9999. )
                     if ("std_vector_vetolepton_eta"     == bname) : bvector.push_back( -9999. )
                     if ("std_vector_vetolepton_phi"     == bname) : bvector.push_back( -9999. )
@@ -431,11 +431,11 @@ class LeptonSel(TreeCloner):
                     if ("std_vector_vetolepton_cleanId" == bname) : bvector.push_back( -9999. )
           
               # Lepton cleaning
-              for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+              for bname, bvector in self.oldBranchesToBeModifiedVector.items():
                  if ("vector_lepton" in bname) or ("vector_electron" in bname) or ("vector_muon" in bname): self.changeOrder( bname, bvector, goodLeps )              
 
               # Save Lepton tags for cleaned leptons
-              for bname, bvector in self.newBranchesVector.iteritems():
+              for bname, bvector in self.newBranchesVector.items():
                 # Fake Obj
                 if ("std_vector_lepton_isLooseLepton" == bname) : 
                   for iLep in goodLeps : bvector.push_back(LeptonTags['Loose'][iLep])
@@ -461,7 +461,7 @@ class LeptonSel(TreeCloner):
 
               # jet cleaning
               goodJets = []
-              for iJet in xrange(len(itree.std_vector_jet_pt)) :
+              for iJet in range(len(itree.std_vector_jet_pt)) :
                 isLepton = False;
                 for iLep in goodLeps :
                   if itree.std_vector_lepton_pt[iLep] < self.jetCleaning_minpTLep:
@@ -473,7 +473,7 @@ class LeptonSel(TreeCloner):
                     goodJets.append(iJet)
 
               goodPuppiJets = []
-              for iJet in xrange(len(itree.std_vector_puppijet_pt)) :
+              for iJet in range(len(itree.std_vector_puppijet_pt)) :
                   isLepton = False;
                   for iLep in goodLeps :
                       if itree.std_vector_lepton_pt[iLep] < self.jetCleaning_minpTLep:
@@ -484,7 +484,7 @@ class LeptonSel(TreeCloner):
                     if abs(itree.std_vector_puppijet_eta[iJet]) <= self.jetCleaning_absEta :
                       goodPuppiJets.append(iJet)
 
-              for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+              for bname, bvector in self.oldBranchesToBeModifiedVector.items():
                    if (("vector_jet" in bname) or (("vector_puppijet") in bname)) and not (("vector_lepton" in bname) or ("vector_electron" in bname) or ("vector_muon" in bname)):
                        if "vector_puppijet" in bname:
                            self.changeOrder( bname, bvector, goodPuppiJets)
@@ -494,7 +494,7 @@ class LeptonSel(TreeCloner):
               # refill the single jet variables
               counter = 0
               varCounter = 0
-              for bname, bvariable in self.jetVarDic.iteritems():
+              for bname, bvariable in self.jetVarDic.items():
                   bvariable[0] = (getattr(self.otree, 'std_vector_jet_'+self.jetVariables[varCounter]))[counter]
                   counter += 1
                   if counter == maxnjets:
@@ -513,8 +513,8 @@ class LeptonSel(TreeCloner):
               # closest veto di-lepton mass to Z
               if self.cmssw == 'Full2016' :
                 dmll = 9999.
-                for i1 in xrange(len(otree.std_vector_vetolepton_pt)) :
-                    for i2 in xrange(i1+1, len(otree.std_vector_vetolepton_pt)) :
+                for i1 in range(len(otree.std_vector_vetolepton_pt)) :
+                    for i2 in range(i1+1, len(otree.std_vector_vetolepton_pt)) :
                         if otree.std_vector_vetolepton_pt[i2] < 10. :
                             break
                             
@@ -529,8 +529,8 @@ class LeptonSel(TreeCloner):
               otree.Fill()
 
         self.disconnect()
-        print '- Eventloop completed'
-        print '   Saved: ', savedentries, ' events'
+        print('- Eventloop completed')
+        print('   Saved: ', savedentries, ' events')
 
  
 

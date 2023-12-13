@@ -44,14 +44,14 @@ class allBtagPogScaleFactors(TreeCloner):
         efffile_path = cmssw_base+'/src/LatinoAnalysis/Gardener/python/'+effFile
 
         if effFile == None :
-          print " Please provide an input file with the MC efficiencies "
+          print(" Please provide an input file with the MC efficiencies ")
 
         elif os.path.exists(efffile_path) :
           handle = open(efffile_path,'r')
           exec(handle)
           handle.close()
         else:
-          print "cannot find file", effFile
+          print("cannot find file", effFile)
 
         self.efficiencyMC_CMVA = efficienciesMC_CMVA
         self.efficiencyMC_CSV = efficienciesMC_CSV
@@ -77,9 +77,9 @@ class allBtagPogScaleFactors(TreeCloner):
           self.csvSfFile = 'CSVv2_Moriond17_B_H.csv'
           self.deepCSVSfFile = 'DeepCSV_Moriond17_B_H.csv'
 
-        print "CMVA scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.cmvaSfFile
-        print "CSVv2 scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.csvSfFile
-        print "DeepCSV scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.deepCSVSfFile
+        print("CMVA scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.cmvaSfFile)
+        print("CSVv2 scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.csvSfFile)
+        print("DeepCSV scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.deepCSVSfFile)
 
         ROOT.gSystem.Load('libCondFormatsBTauObjects')
         ROOT.gSystem.Load('libCondToolsBTau')
@@ -105,7 +105,7 @@ class allBtagPogScaleFactors(TreeCloner):
           elif tagger == "deepCSV":
             self.calibs[tagger] = ROOT.BTagCalibration("DeepCSV", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.deepCSVSfFile)
           else:
-            print "Error: tagger not found!"
+            print("Error: tagger not found!")
             break
 
         self.reshape_sys = getattr(ROOT, 'vector<string>')()
@@ -158,11 +158,11 @@ class allBtagPogScaleFactors(TreeCloner):
           eta = self.maxeta
 
         if not (wp=='L' or wp=='M' or wp=='T'):
-          print "ERROR: wp ", wp, " do not exist or the format is wrong. Please provide a correct wp." 
-          print "Available wps are 'L', 'M' or 'T'."
+          print("ERROR: wp ", wp, " do not exist or the format is wrong. Please provide a correct wp.") 
+          print("Available wps are 'L', 'M' or 'T'.")
 
         if algo == "CMVA":
-          if (kindJet,wp) in self.efficiencyMC_CMVA.keys() : 
+          if (kindJet,wp) in list(self.efficiencyMC_CMVA.keys()) : 
             # get the efficiency
             for point in self.efficiencyMC_CMVA[(kindJet,wp)] : 
               #   pt           eta          eff 
@@ -172,11 +172,11 @@ class allBtagPogScaleFactors(TreeCloner):
                   return point[2]
 
             # default ... it should never happen!
-            print " default ???", pt, eta, kindJet
+            print(" default ???", pt, eta, kindJet)
             return 1.0
 
         elif algo == "CSV":
-          if (kindJet,wp) in self.efficiencyMC_CSV.keys() :
+          if (kindJet,wp) in list(self.efficiencyMC_CSV.keys()) :
             # get the efficiency
             for point in self.efficiencyMC_CSV[(kindJet,wp)] :
               #   pt           eta          eff 
@@ -188,11 +188,11 @@ class allBtagPogScaleFactors(TreeCloner):
                   return point[2]
 
             # default ... it should never happen!
-            print " default ???", pt, eta, kindJet
+            print(" default ???", pt, eta, kindJet)
             return 1.0
 
         elif algo == "deepCSV":
-          if (kindJet,wp) in self.efficiencyMC_DeepCSV.keys() :
+          if (kindJet,wp) in list(self.efficiencyMC_DeepCSV.keys()) :
             # get the efficiency
             for point in self.efficiencyMC_DeepCSV[(kindJet,wp)] :
               #   pt           eta          eff 
@@ -204,12 +204,12 @@ class allBtagPogScaleFactors(TreeCloner):
                   return point[2]
 
             # default ... it should never happen!
-            print " default ???", pt, eta, kindJet
+            print(" default ???", pt, eta, kindJet)
             return 1.0
 
         else: 
-          print "ERROR: algo ", algo, " is not available. Please specify a correct algo."  
-          print "Available algos are 'CMVA' and 'CSV'."
+          print("ERROR: algo ", algo, " is not available. Please specify a correct algo.")  
+          print("Available algos are 'CMVA' and 'CSV'.")
 
         # not a lepton ... like some default value
         return 1.0
@@ -312,19 +312,19 @@ class allBtagPogScaleFactors(TreeCloner):
             self.otree.Branch(namebranch,bPogSF_reshape[tagger][rvariation],namebranch+'/F')
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
                 
         # avoid dots to go faster
         itree     = self.itree
         otree     = self.otree
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
             ## print event count
             if i > 0 and i%step == 0.:
-              print i,'events processed.'
+              print(i,'events processed.')
 
             self.resetCounters()
   
@@ -335,7 +335,7 @@ class allBtagPogScaleFactors(TreeCloner):
 
             njet 	  = 0
 
-            for iJet in xrange(len(itree.std_vector_jet_pt)) :
+            for iJet in range(len(itree.std_vector_jet_pt)) :
              
               pt      = itree.std_vector_jet_pt [iJet]
               eta     = itree.std_vector_jet_eta [iJet]
@@ -381,7 +381,7 @@ class allBtagPogScaleFactors(TreeCloner):
                 kindJet = 'b'
                 idJet = 0
               else:
-                print "BIG PROBLEM! Hadron Flavor is neither 0, 4 or 5"
+                print("BIG PROBLEM! Hadron Flavor is neither 0, 4 or 5")
               #print "pt, eta, idJet, kindJet", pt, eta, idJet, kindJet 
               #print "~~~~~~~~~~~~~~~~ jet ", njet
 
@@ -467,5 +467,5 @@ class allBtagPogScaleFactors(TreeCloner):
             otree.Fill()
 
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 

@@ -29,7 +29,7 @@ class MappedEvent(object):
             else:
                 self._suffix = suffix
         
-        for key, value in mapping.iteritems():
+        for key, value in mapping.items():
             if key.startswith('@'):
                 self._collectionmap[key[1:]] = value
             else:

@@ -142,7 +142,7 @@ from LatinoAnalysis.Gardener.variables.VBSjjlnu_kin                  import VBSj
 
 if __name__ == '__main__':
 
-    print "gardener"
+    print("gardener")
     
     modules = ModuleManager()
     modules['filter']           = Pruner()

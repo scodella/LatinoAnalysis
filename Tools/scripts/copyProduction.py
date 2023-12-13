@@ -3,7 +3,7 @@
 from optparse import OptionParser
 import os,subprocess,re
 
-import threading, Queue
+import threading, queue
 import fcntl
 
 class Worker(threading.Thread):
@@ -34,13 +34,13 @@ class Worker(threading.Thread):
               #fcntl.flock(output, fcntl.LOCK_EX)
               output.write(inputFile+" "+targetFile+'\n')
               #fcntl.flock(output, fcntl.LOCK_UN)
-              print "committing transfer of file",inputFile
+              print("committing transfer of file",inputFile)
           elif (checksumin[1] != checksumout[1]):
             with open ("transfer.in", "a") as output:
               #fcntl.flock(output, fcntl.LOCK_EX)
               output.write(inputFile+" "+targetFile+'\n')
               #fcntl.flock(output, fcntl.LOCK_UN)
-              print "committing transfer of file",inputFile
+              print("committing transfer of file",inputFile)
         else:
           with open ("transfer.in", "a") as output:
             #fcntl.flock(output, fcntl.LOCK_EX)
@@ -48,11 +48,11 @@ class Worker(threading.Thread):
             #fcntl.flock(output, fcntl.LOCK_UN)
         self.queue.task_done()
         if (self.queue.qsize()%100 ==0 and self.queue.qsize()>0):
-          print self.queue.qsize(),"remaining tasks"
-      except Queue.Empty, e:
+          print(self.queue.qsize(),"remaining tasks")
+      except queue.Empty as e:
         break
-      except Exception, e:
-        print "Error: %s" % str(e)
+      except Exception as e:
+        print("Error: %s" % str(e))
 
 
 parser = OptionParser(usage="usage: %prog production_name destination_T2")
@@ -71,17 +71,17 @@ if opts.kind=='nano':
   commandLFN+="/HWWNano/"
 production=args[0]  
 inpath=base+"/"+production
-print commandLFN
+print(commandLFN)
 out = subprocess.Popen([commandLFN] , stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 stdout,stderr = out.communicate()
 #outpath="srm://stormfe1.pi.infn.it:8444/srm/managerv2?SFN=/cms/store/group/phys_higgs/cmshww/amassiro/"#stdout.split()[0]
 outpath=stdout.split()[0]
-print outpath
-print inpath
+print(outpath)
+print(inpath)
 transferFile = ''
 numThreads = int(os.sysconf('SC_NPROCESSORS_ONLN'))
-print "number of threads = ", numThreads
-queue = Queue.Queue()
+print("number of threads = ", numThreads)
+queue = queue.Queue()
 for i in range(numThreads):
   proc = Worker(queue)
   proc.daemon = True
@@ -92,14 +92,14 @@ for r,d,f in os.walk(inpath):
      targetpath=(os.path.join(r,dir).split(production))[1]
      commandMkdir = 'gfal-mkdir '+outpath+"/"+production+"/"+targetpath
      if opts.pretend:
-       print commandMkdir
+       print(commandMkdir)
      else:
        out = subprocess.Popen([commandMkdir] , stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
        stdout,stderr = out.communicate()
-       print stdout,stderr 
+       print(stdout,stderr) 
   for file in f:
     if (i%10)==0:
-      print "scanned",i,"files/",len(f)
+      print("scanned",i,"files/",len(f))
     filein='gsiftp://eoscmsftp.cern.ch/'+os.path.join(r, file)
     
     targetpath=production+"/"+os.path.join(r,file).split(production)[1]

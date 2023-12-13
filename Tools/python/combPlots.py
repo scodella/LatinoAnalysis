@@ -156,7 +156,7 @@ class combPlot :
        self.lumi.AddText(self.LumiText);
        self.lumi.SetBorderSize(0);
        self.lumi.Draw("same");
-       print self.LumiText 
+       print(self.LumiText) 
 
    def plotHorizCurve(self,Name='Curv',vX=[],vCent=[],Color=kBlack,Style=0,Width=2,Legend='None'):
        nP    = len(vX)
@@ -202,7 +202,7 @@ class combPlot :
        if len(vUp)   != nP : sys.error("plotHorizBand: size mismatch")   
        if len(vDown) != nP : sys.error("plotHorizBand: size mismatch")   
        obj = TGraphAsymmErrors( nP , array('d',vX) , array('d',vCent) , array('d',[0.]*nP), array('d',[0.]*nP) , array('d',[vCent[i]-vDown[i] for i in range(nP)]) , array('d',[vUp[i]-vCent[i] for i in range(nP)]) )
-       print obj.GetFillStyle()
+       print(obj.GetFillStyle())
        obj.SetFillStyle(Style)
        obj.SetFillColor(Color)
        obj.SetLineColor(Color) 
@@ -318,7 +318,7 @@ class combPlot :
          if (x[i] >= xmin and x[i] <= xmax): 
            if (y[i] < y[imin]):imin = i
 
-       print leftSide,imin,n
+       print(leftSide,imin,n)
        imatch = -1 
        if (leftSide) :
          for i in range(imin , 0 , -1):
@@ -336,7 +336,7 @@ class combPlot :
 
 
        if imatch >= 0 :
-         print imatch,x[imatch]
+         print(imatch,x[imatch])
          d1 = fabs(y[imatch] - threshold)
          d2 = fabs(y[imatch+1] - threshold) 
          return (x[imatch]*d2 + x[imatch+1]*d1)/(d1+d2) 
@@ -373,10 +373,10 @@ class combPlot :
              minXP=str(iDic['MinPlt'][0])
              maxXP=str(iDic['MaxPlt'][0])
 
-             print minX,maxX,minXP,maxXP
+             print(minX,maxX,minXP,maxXP)
 
              objName=iComb
-             print objName
+             print(objName)
 
              # Scan
              gROOT.ProcessLine('gROOT->cd()')
@@ -406,7 +406,7 @@ class combPlot :
              gROOT.ProcessLine('fTree->Close()') 
 
         except:
-             print 'WARNING: Specified root file doesn\'t exist --> Putting ZERO'
+             print('WARNING: Specified root file doesn\'t exist --> Putting ZERO')
  
    def MDF1D(self,plotName,PlotDic,LimFiles):
        y2Sigma=3.84
@@ -545,7 +545,7 @@ class combPlot :
        gROOT.ProcessLine('TGraph *gr0=0')
        gROOT.ProcessLine('TList* c68')
        gROOT.ProcessLine('TList* c95')
-       print 'h2d = treeToHist2D(tree,"'+keyX+'","'+keyY+'","'+objName+'",TCut(""),'+minX+','+maxX+','+minY+','+maxY+')'
+       print('h2d = treeToHist2D(tree,"'+keyX+'","'+keyY+'","'+objName+'",TCut(""),'+minX+','+maxX+','+minY+','+maxY+')')
        gROOT.ProcessLine('h2d = treeToHist2D(tree,"'+keyX+'","'+keyY+'","'+objName+'",TCut(""),'+minX+','+maxX+','+minY+','+maxY+')')
        #if iModel == 'cVcF' and iTarget== 'MDFGridObs' : ROOT.h2d.Fill(0.67,1.5399999,2.30)
        gROOT.ProcessLine('c68 = contourFromTH2(h2d,2.30)')
@@ -557,7 +557,7 @@ class combPlot :
        self.Obj2Plot['c68__'+objName] = { 'Obj' : ROOT.c68.Clone('c68'+objName) , 'Type' : 'TList' , 'Legend' : ''}
        self.Obj2Plot['c95__'+objName] = { 'Obj' : ROOT.c95.Clone('c95'+objName) , 'Type' : 'TList' , 'Legend' : ''}
        self.Obj2Plot['gr0__'+objName] = { 'Obj' : ROOT.gr0.Clone('gr0'+objName) , 'Type' : 'Point' , 'Legend' : ''}
-       print self.Obj2Plot['h2d__'+objName],self.Obj2Plot['h2d__'+objName]['Obj']
+       print(self.Obj2Plot['h2d__'+objName],self.Obj2Plot['h2d__'+objName]['Obj'])
        gROOT.ProcessLine('delete h2d')
        gROOT.ProcessLine('delete c68')
        gROOT.ProcessLine('delete c95')

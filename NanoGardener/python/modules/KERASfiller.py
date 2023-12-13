@@ -31,7 +31,7 @@ class KERASfiller(Module):
           exec(handle)
           self.mvaDic = mvaDic
           handle.close()
-        print self.mvaDic
+        print(self.mvaDic)
         self.mvaDic = mvaDic
 
         cmssw_base = os.getenv('CMSSW_BASE') 

@@ -88,7 +88,7 @@ p = PostProcessor(".", files,
 
 p.run()
 
-print "DONE"
+print("DONE")
 
 os.system("ls -lR")
 

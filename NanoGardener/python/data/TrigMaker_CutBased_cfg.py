@@ -673,6 +673,6 @@ NewVar_DATA_dict = {
 
 if __name__ == '__main__':
    for key in Trigger:
-      print(Trigger[key])
-   print(Trigger['Full2016'][6]['MC'])
+      print((Trigger[key]))
+   print((Trigger['Full2016'][6]['MC']))
 

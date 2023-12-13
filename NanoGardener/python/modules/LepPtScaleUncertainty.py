@@ -35,7 +35,7 @@ class LeppTScalerTreeMaker(Module) :
           exec(handle)
           handle.close()
         self.leppTscaler = leppTscaler
-        print self.leppTscaler 
+        print(self.leppTscaler) 
 
         # fix underflow and overflow
         self.minpt = 0.0
@@ -44,7 +44,7 @@ class LeppTScalerTreeMaker(Module) :
         for point in self.leppTscaler[lepFlavor]:
           if point[0][1] > self.maxpt  : self.maxpt  = point[0][1]
           if point[1][1] > self.maxeta : self.maxeta = point[1][1]
-        print 'maxpt = ',self.maxpt , ' , maxeta = ', self.maxeta
+        print('maxpt = ',self.maxpt , ' , maxeta = ', self.maxeta)
 
         # Add a suffix to the output branches instead of overwriting the existing ones
         self._suffix = suffix
@@ -78,13 +78,13 @@ class LeppTScalerTreeMaker(Module) :
         if eta < 0: eta = -1 * eta
         if eta > self.maxeta: eta = self.maxeta - 0.000001
         
-        if kindLep in self.leppTscaler.keys() : 
+        if kindLep in list(self.leppTscaler.keys()) : 
             # get the scale values in bins of pT and eta
             for point in self.leppTscaler[kindLep] :
                 if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
                     return point[2]
             # default ... it should never happen!
-            print "WARNING: Did not find scale factor for pt =",pt,"and eta =",eta,"; using 1.0 as default"
+            print("WARNING: Did not find scale factor for pt =",pt,"and eta =",eta,"; using 1.0 as default")
             return 1.0
            
         else:

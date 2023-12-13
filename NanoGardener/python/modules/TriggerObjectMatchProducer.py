@@ -45,7 +45,7 @@ class TriggerObjectMatchProducer(Module):
                 # print str(trigObject.eta) + ',' + str(lepton.eta)
                 # print HLT_IsoMu24
                 # print trigObject.filterBits
-                print ''
+                print('')
 
         outTriggMatched = []
         for lepton in leptons:

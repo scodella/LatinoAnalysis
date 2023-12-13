@@ -3,11 +3,11 @@ import sys
 import Steps_cfg as steps
 
 if len(sys.argv)>1:
-    output = { k:v for k, v in steps.Steps.items() if sys.argv[1] in k}
+    output = { k:v for k, v in list(steps.Steps.items()) if sys.argv[1] in k}
 else:
     output = steps.Steps
 
-for k, item in output.items():
+for k, item in list(output.items()):
     if "onlySample" in item:  item.pop("onlySample")
 
 

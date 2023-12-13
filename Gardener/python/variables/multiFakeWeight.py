@@ -26,12 +26,12 @@ class FakeWeight():
     def _getRootObj(self,d,name):
         o = d.Get(name)
         if not o.__nonzero__():
-            print 'Object '+name+' doesn\'t exist in '+d.GetName(), ' BE CAREFUL!'
+            print('Object '+name+' doesn\'t exist in '+d.GetName(), ' BE CAREFUL!')
         return o
 
     def __init__ (self,cmssw,eleWPDic,muWPDic,WPType,eleWP,muWP):
-        print  "-------- Fake Weight init() ---------"
-        print eleWP,muWP
+        print("-------- Fake Weight init() ---------")
+        print(eleWP,muWP)
 
         cmssw_base = os.getenv('CMSSW_BASE')
 
@@ -389,16 +389,16 @@ class multiFakeWeightFiller(TreeCloner):
     def checkOptions(self,opts):
         cmssw_base = os.getenv('CMSSW_BASE')
         self.cmssw = opts.cmssw
-        print " cmssw = ", self.cmssw
+        print(" cmssw = ", self.cmssw)
 
         self.WPdic = cmssw_base+'/src/'+opts.WPdic
-        print self.WPdic
+        print(self.WPdic)
         if os.path.exists(self.WPdic) :
           handle = open(self.WPdic,'r')
           exec(handle)
           handle.close()
         else:
-          print 'ERROR: No WP'
+          print('ERROR: No WP')
           exit()
 
         # Create Elecron and muon fakeW
@@ -413,10 +413,10 @@ class multiFakeWeightFiller(TreeCloner):
                 self.FakeWeights[Tag]['muWP']  = muWP
                 self.FakeWeights[Tag]['fakeW'] = FakeWeight(self.cmssw,ElectronWP,MuonWP,'TightObjWP',eleWP,muWP)
           else:
-            print 'ERROR: no TightObjWP in Ele/Mu WPDic'
+            print('ERROR: no TightObjWP in Ele/Mu WPDic')
             exit()
         else:
-          print 'ERROR: no CMSSW version ('+self.cmssw+') in Ele/Mu WPDic'
+          print('ERROR: no CMSSW version ('+self.cmssw+') in Ele/Mu WPDic')
           exit()
 
     def process(self,**kwargs):
@@ -438,7 +438,7 @@ class multiFakeWeightFiller(TreeCloner):
         self.fakeVarNames = [ ]
         for iTag in self.FakeWeights:
           for iVarExt in fakeVarExt : self.fakeVarNames.append('fakeW_'+iTag+iVarExt)
-        print self.fakeVarNames
+        print(self.fakeVarNames)
 
         # Clone the tree with new branches added
         self.clone(output, self.fakeVarNames)
@@ -448,7 +448,7 @@ class multiFakeWeightFiller(TreeCloner):
         for bname in self.fakeVarNames:
           bvariable = numpy.ones(1, dtype=numpy.float32)
           self.fakeVar [bname] = bvariable
-        for bname, bvariable in self.fakeVar.iteritems() : self.otree.Branch(bname,bvariable,bname+'/F')
+        for bname, bvariable in self.fakeVar.items() : self.otree.Branch(bname,bvariable,bname+'/F')
 
         # input tree and output tree
         itree     = self.itree
@@ -457,25 +457,25 @@ class multiFakeWeightFiller(TreeCloner):
 
         # Loop
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries
+        print('Total number of entries: ',nentries)
         savedentries = 0
 
         #----------------------------------------------------------------------------------------------------
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
 
-        for i in xrange(nentries):
+        for i in range(nentries):
 
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0.:
-                print i,'events processed :: ', nentries
+                print(i,'events processed :: ', nentries)
        
             # Prepare leptons 
             Leptons = {}
             for iTag in self.FakeWeights: Leptons[iTag] = {} 
             selectedLepton = 0
-            for iLep in xrange(len(itree.std_vector_lepton_pt)) :
+            for iLep in range(len(itree.std_vector_lepton_pt)) :
 
                 # get kinematic
                 pt      = itree.std_vector_lepton_pt     [iLep]
@@ -568,6 +568,6 @@ class multiFakeWeightFiller(TreeCloner):
             otree.Fill()
 
         self.disconnect()
-        print '- Eventloop completed'
-        print '   Saved: ', savedentries, ' events'
+        print('- Eventloop completed')
+        print('   Saved: ', savedentries, ' events')
 

@@ -21,12 +21,12 @@ if __name__ == '__main__':
     hwwtools.loadOptDefaults(parser)
     (opt, args) = parser.parse_args()
 
-    print " configuration file = ", opt.pycfg
-    print " lumi =               ", opt.lumi
+    print((" configuration file = ", opt.pycfg))
+    print((" lumi =               ", opt.lumi))
 
-    print " outputDirDatacard  = ", opt.outputDirDatacard
-    print " combineLocation    = ", opt.combineLocation  
-    print " Combination Cfg    = ", opt.combcfg
+    print((" outputDirDatacard  = ", opt.outputDirDatacard))
+    print((" combineLocation    = ", opt.combineLocation))  
+    print((" Combination Cfg    = ", opt.combcfg))
 
     # Filter fomList
 
@@ -58,8 +58,8 @@ if __name__ == '__main__':
       handle.close()
 
     for iComb in combs :
-      print iComb
-      print combs[iComb]
+      print(iComb)
+      print((combs[iComb]))
       combDir  = opt.outputDirDatacard+'/'+iComb
       if not os.path.exists(combDir)                : os.mkdir(combDir)
       if not os.path.exists(combDir+'/comb')        : os.mkdir(combDir+'/comb')
@@ -73,7 +73,7 @@ if __name__ == '__main__':
         command += ' '+iChannel+'='+card
       command += ' > '+combFile+'.tmp ; '
       command+='eval `scramv1 runtime -sh`'
-      print command
+      print(command)
       os.system(command)
       os.system('cat '+combFile +'.tmp | sed "s:datacards.*shapes:shapes:" > '+ combFile )
       os.system('rm '+combFile +'.tmp')

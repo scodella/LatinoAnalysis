@@ -26,7 +26,7 @@ def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db,baseWInfo,version='74x'):
   else:
     xs = db.get(iTarget) 
     if xs == '' : 
-      print 'WARNING: X-section not found for sample: ',iTarget,' !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+      print('WARNING: X-section not found for sample: ',iTarget,' !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
       baseWInfo['xs']     = ''
       baseWInfo['baseW']  = '-1'
       baseWInfo['nEvt']   = ''
@@ -39,7 +39,7 @@ def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db,baseWInfo,version='74x'):
       nPos = 0
       nNeg = 0
       for inTree in inTreeList: 
-        print 'Opening: ',inTree
+        print('Opening: ',inTree)
         #fileIn = ROOT.TFile.Open("dcap://maite.iihe.ac.be"+inTree, "READ")
         fileIn = ROOT.TFile.Open(inTree, "READ")
 #        fileIn.ls()
@@ -58,14 +58,14 @@ def GetBaseW(inTreeList,iTarget,id_iTarget,isData,db,baseWInfo,version='74x'):
             nEvt += h_mcWeightPos.GetBinContent(1) - h_mcWeightNeg.GetBinContent(1)
             nPos += h_mcWeightPos.GetBinContent(1)
             nNeg += h_mcWeightNeg.GetBinContent(1) 
-            print 'Pos, Neg = ',h_mcWeightPos.GetBinContent(1),h_mcWeightNeg.GetBinContent(1)
+            print('Pos, Neg = ',h_mcWeightPos.GetBinContent(1),h_mcWeightNeg.GetBinContent(1))
           else:
             nEvt += fileIn.Get('totalEvents').GetBinContent(1)
             nPos += fileIn.Get('totalEvents').GetBinContent(1)
         nTot += fileIn.Get('totalEvents').GetBinContent(1)
         fileIn.Close()
       baseW = float(xs)*1000./nEvt
-      print 'baseW: xs,N -> W', xs, nEvt , baseW , ' nTot= ', nTot
+      print('baseW: xs,N -> W', xs, nEvt , baseW , ' nTot= ', nTot)
       baseWInfo['xs']     = str(xs)
       baseWInfo['baseW']  = str(baseW) 
       baseWInfo['nEvt']   = str(nEvt)
@@ -125,9 +125,9 @@ if options.outputTarget != None:
   eosTargBaseOut=options.outputTarget
 
 
-print "eosProdBase    = ", eosProdBase
-print "eosTargBaseIn  = ", eosTargBaseIn
-print "eosTargBaseOut = ", eosTargBaseOut 
+print("eosProdBase    = ", eosProdBase)
+print("eosTargBaseIn  = ", eosTargBaseIn)
+print("eosTargBaseOut = ", eosTargBaseOut) 
 
 if 'knu' in os.uname()[1] or 'sdfarm' in os.uname()[1]:
   #inDirBase = options.inputTarget
@@ -155,7 +155,7 @@ if "/eos/cms" in eosTargBaseOut:
 
 # Compile all root macros before sending jobs
 if options.runBatch:
-  print "Batch mode"
+  print("Batch mode")
   pathRootMacro = CMSSW + '/src/LatinoAnalysis/Gardener/python/variables/'
   for fn in os.listdir(pathRootMacro):
     if os.path.isfile(pathRootMacro+fn) and ( fn.endswith('.C') or fn.endswith('.cc') ):
@@ -173,7 +173,7 @@ for iProd in prodList :
 
   samples = {}
   prodDir = 'NONE'
-  print '----------- Running on production: '+iProd
+  print('----------- Running on production: '+iProd)
 
   # Load sample DB
   prodFile=CMSSW+'/src/'+Productions[iProd]['samples']
@@ -233,11 +233,11 @@ for iProd in prodList :
     else:
       fileCmd = 'ls '+eosTargBaseIn+'/'+iProd+'/'+options.iniStep
 
-  print "input file fileCmd is: ", fileCmd
+  print("input file fileCmd is: ", fileCmd)
   proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
   out, err = proc.communicate()
   FileInList=string.split(out)
-  print "Listing input files: ", FileInList
+  print("Listing input files: ", FileInList)
 
   isFirstinChain = True
   replaceStep=''
@@ -247,7 +247,7 @@ for iProd in prodList :
   # Loop on Steps
   for iStep in stepList:
     if ( not Productions[iProd]['isData'] and Steps[iStep]['do4MC'] ) or ( Productions[iProd]['isData'] and Steps[iStep]['do4Data'] ) :
-      print '---------------- for Step : ',iStep
+      print('---------------- for Step : ',iStep)
       targetList={}
       # Validate targets tree
       if 'iihe' in os.uname()[1]:
@@ -270,7 +270,7 @@ for iProd in prodList :
           fileCmd = 'ls '+eosTargBaseOut+'/'+iProd+'/'+'Prod__'+iStep
         else:
           fileCmd = 'ls '+eosTargBaseOut+'/'+iProd+'/'+options.iniStep+'__'+iStep
-      print 'output file fileCmd', fileCmd
+      print('output file fileCmd', fileCmd)
       proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
       out, err = proc.communicate()
       FileExistList=string.split(out)
@@ -362,7 +362,7 @@ for iProd in prodList :
                   else:
                     targetList[iKey] = eosTargBaseIn+'/'+iProd+'/'+options.iniStep+'/'+iFile
 
-      print "targetList: ", targetList  
+      print("targetList: ", targetList)  
 
 
       # Safeguard against partial run on splitted samples -> Re-include all files from that sample
@@ -371,7 +371,7 @@ for iProd in prodList :
         targetListBaseW = copy.deepcopy(targetList)
         #print "printing targetListBaseW", targetListBaseW
         lSample = []
-        for iTarget in targetListBaseW.keys(): 
+        for iTarget in list(targetListBaseW.keys()): 
           if   '_000' in iTarget :
             aSample = iTarget.split('_000')[0]
             if not aSample in lSample : lSample.append(aSample)
@@ -390,8 +390,8 @@ for iProd in prodList :
               aSample = iKey.split('__part')[0] 
             #print aSample, iSample
             if aSample == iSample:
-              if not iKey in targetListBaseW.keys():
-                print 'Re-Adding split tree: ', iKey, iFile
+              if not iKey in list(targetListBaseW.keys()):
+                print('Re-Adding split tree: ', iKey, iFile)
 
                 if 'iihe' in os.uname()[1]:
                   if options.iniStep == 'Prod' :
@@ -424,11 +424,11 @@ for iProd in prodList :
       startingStep = options.iniStep
       if options.chain :
         if not isFirstinChain: 
-          print "Gone hacking targetList for chain"
-          print startingStep,replaceStep,previousStep
-          print 'targetList',targetList
+          print("Gone hacking targetList for chain")
+          print(startingStep,replaceStep,previousStep)
+          print('targetList',targetList)
           targetList = targetListKeep
-          print 'targetList',targetList
+          print('targetList',targetList)
           for i in targetList :
             if not replaceStep:
               if 'sdfarm' in os.uname()[1]:
@@ -446,12 +446,12 @@ for iProd in prodList :
       #   isNotFirstinChain = False
       #   targetList = targetListChain
       #targetListChain=targetList
-      print "targetList check 1: ", targetList
+      print("targetList check 1: ", targetList)
       #for i in targetList : print i
       #quit() 
       # Create Output Directory on eos
       if 'iihe' in os.uname()[1]:
-        print 'Using LCG ...'
+        print('Using LCG ...')
       elif 'knu' in os.uname()[1]:
         if iStep == 'UEPS' :
           for iUEPS in Steps[iStep]['cpMap'] :
@@ -487,7 +487,7 @@ for iProd in prodList :
       if iStep == 'hadd' :
         targetGroupList ={}
         targetGroupSize ={}
-        for iTarget in targetList.keys():
+        for iTarget in list(targetList.keys()):
           if '_000' in iTarget :
             iKey = iTarget.split('_000')[0]
           elif '__part' in iTarget :
@@ -548,8 +548,8 @@ for iProd in prodList :
         if not startingStep == 'Prod' : pidFile+='____'+startingStep
         pidFile+='.jid'
         if os.path.isfile(pidFile) :
-          print "pidFile", pidFile
-          print '--> Job Running already : '+iTarget
+          print("pidFile", pidFile)
+          print('--> Job Running already : '+iTarget)
           keysToDel.append(iTarget)
       for iTarget in keysToDel:
         del targetList[iTarget]
@@ -604,16 +604,16 @@ for iProd in prodList :
           for jFile in FileTarget : FileTargetStrip.append(os.path.basename(jFile))  
           for jFile in FileOriList:
             if not (os.path.basename(jFile)) in FileTargetStrip : 
-              print jFile , os.path.basename(jFile) , iTarget
+              print(jFile , os.path.basename(jFile) , iTarget)
               haddTest=False
           if not haddTest : keysToDel.append(iTarget)
         for iTarget in keysToDel:
           iKey = iTarget.split('_000')[0].split('__part')[0]
           if not iKey in Steps['hadd']['bigSamples'] or Steps['hadd']['SizeMethod']:
-            print '--> HADD: Some jobs stil running/not done : '+iTarget 
+            print('--> HADD: Some jobs stil running/not done : '+iTarget) 
             del targetList[iTarget]
 
-      print "targetList check 2: ", targetList
+      print("targetList check 2: ", targetList)
       # Create Jobs Dictionary
       list=[]
       list.append(iStep)
@@ -625,18 +625,18 @@ for iProd in prodList :
           if isFirstinChain:
             list=[iStep+'_Chain']
             stepBatch=iStep+'_Chain'
-            print "crating jobs :",'Gardening',iProd,list,targetList.keys(),options.batchSplit,bpostFix
-            jobs = batchJobs('Gardening',iProd,list,targetList.keys(),options.batchSplit,bpostFix)
+            print("crating jobs :",'Gardening',iProd,list,list(targetList.keys()),options.batchSplit,bpostFix)
+            jobs = batchJobs('Gardening',iProd,list,list(targetList.keys()),options.batchSplit,bpostFix)
 
         else:
           stepBatch=iStep
-          jobs = batchJobs('Gardening',iProd,list,targetList.keys(),options.batchSplit,bpostFix)
+          jobs = batchJobs('Gardening',iProd,list,list(targetList.keys()),options.batchSplit,bpostFix)
 
       # Do some preliminary actions for some Steps
 
       # And now do/create to job for each target
-      for iTarget in targetList.keys(): 
-        print "DOING : ",iTarget
+      for iTarget in list(targetList.keys()): 
+        print("DOING : ",iTarget)
         GarbageCollector=[]
         if '_000' in iTarget :
           iTargetOri = iTarget.split('_000')[0]
@@ -708,9 +708,9 @@ for iProd in prodList :
           for iUEPS in Steps[iStep]['cpMap'] :
             if iTarget in Steps[iStep]['cpMap'][iUEPS] :
               for i in range(len(Steps[iStep]['cpMap'][iUEPS][iTarget])):
-                print iUEPS, iTarget , '--->' , Steps[iStep]['cpMap'][iUEPS][iTarget][i]
+                print(iUEPS, iTarget , '--->' , Steps[iStep]['cpMap'][iUEPS][iTarget][i])
                 outTree = os.path.dirname(inTree)+'__'+iUEPS+'/'+'latino_'+Steps[iStep]['cpMap'][iUEPS][iTarget][i]+'.root'
-                print inTree , '--->', outTree 
+                print(inTree , '--->', outTree) 
                 command +='lcg-cp srm://maite.iihe.ac.be:8443'+inTree+' srm://maite.iihe.ac.be:8443'+outTree+' '
                 if i <  len(Steps[iStep]['cpMap'][iUEPS][iTarget])-1 : command += ' ; '
 
@@ -789,7 +789,7 @@ for iProd in prodList :
         if Productions[iProd]['isData'] : baseW = '1.'
         elif iStep == 'baseW' or ( 'isChain' in Steps[iStep] and Steps[iStep]['isChain'] and 'baseW' in Steps[iStep]['subTargets'] ): 
           oriTreeList = []
-          for kTarget in targetListBaseW.keys():
+          for kTarget in list(targetListBaseW.keys()):
             kTargetOri = kTarget
             if '_000' in kTarget :
               kTargetOri = kTarget.split('_000')[0]
@@ -803,7 +803,7 @@ for iProd in prodList :
           if baseW == '-1' : 
             #xsDB.Print()
             exit()
-          print baseWInfo
+          print(baseWInfo)
           f = open(wDir+'/baseWInfo.txt', 'a')
           f.write(iProd+' '+iTargetOri+' : ')
           f.write(str(baseWInfo))
@@ -823,7 +823,7 @@ for iProd in prodList :
           puData='/u/user/salee/Latino/PUdata/PileupHistogram_Full2016_271036-284044_69p2mb_31Jan17.root'
         if 'sdfarm' in os.uname()[1]:
           puData=puData.replace('/afs/cern.ch/user/x/xjanssen/public','/cms/ldap_home/salee/Latino/PUdata')
-        print 'PU Data : ', puData
+        print('PU Data : ', puData)
         command = command.replace('RPLME_puData',puData)  
 
         # Stage Out
@@ -885,7 +885,7 @@ for iProd in prodList :
         # Fix dcap for IIHE
         command = command.replace(' /pnfs/iihe',' dcap://maite.iihe.ac.be/pnfs/iihe')        
 
-        if options.pretend : print "The command is : ", command
+        if options.pretend : print("The command is : ", command)
         else :
           if  options.runBatch: jobs.Add(stepBatch,iTarget,command)
           else:
@@ -897,9 +897,9 @@ for iProd in prodList :
         previousStep=startingStep+'__'+iStep
         targetListKeep=targetList
       else:
-        print "Gone batching ..."
+        print("Gone batching ...")
         if options.runBatch and not options.pretend: jobs.Sub(options.queue,options.IiheWallTime)
 
   if options.chain :
-    print "Gone batching for Chain ..."
+    print("Gone batching for Chain ...")
     if options.runBatch and not options.pretend: jobs.Sub(options.queue,options.IiheWallTime)

@@ -23,12 +23,12 @@ if __name__ == '__main__':
     hwwtools.loadOptDefaults(parser)
     (opt, args) = parser.parse_args()
 
-    print " configuration file = ", opt.pycfg
-    print " lumi =               ", opt.lumi
+    print((" configuration file = ", opt.pycfg))
+    print((" lumi =               ", opt.lumi))
 
-    print " outputDirDatacard  = ", opt.outputDirDatacard
-    print " combineLocation    = ", opt.combineLocation  
-    print " Figures of Merit   = ", opt.fomList
+    print((" outputDirDatacard  = ", opt.outputDirDatacard))
+    print((" combineLocation    = ", opt.combineLocation))  
+    print((" Figures of Merit   = ", opt.fomList))
 
     # FOM methods 
     fomDic = {}
@@ -76,7 +76,7 @@ if __name__ == '__main__':
    
     for iVar in variables :
       for iCut in cutsVal:
-          print iVar,iCut
+          print((iVar,iCut))
           datacardDir=opt.outputDirDatacard+'/'+iCut+'/'+iVar
           command= 'cd '+opt.combineLocation+' ; eval `scramv1 runtime -sh` ; cd - ;'
           command+='cd '+datacardDir+' ;'

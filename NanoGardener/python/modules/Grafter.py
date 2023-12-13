@@ -33,7 +33,7 @@ class Grafter(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
-        for var  in self.variablesDecoded.keys():
+        for var  in list(self.variablesDecoded.keys()):
            self.out.fillBranch(var, self.variablesDecoded[var].EvalInstance())
 
         return True

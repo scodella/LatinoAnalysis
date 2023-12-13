@@ -117,22 +117,22 @@ class EffTrgFiller(TreeCloner):
           else :                          opts.triggerSpecialEleMuLegLowPt = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/ICHEP2016fullLumi/HLT_EleMuLegLowPt_BeforeRun274094.txt'
 
 
-        print 'opts.triggerDoubleEleLegHigPt = ', opts.triggerDoubleEleLegHigPt
-        print 'opts.triggerDoubleEleLegLowPt = ', opts.triggerDoubleEleLegLowPt
-        print 'opts.triggerSingleEle = ', opts.triggerSingleEle
-        print 'opts.triggerDoubleMuLegHigPt = ', opts.triggerDoubleMuLegHigPt
-        print 'opts.triggerDoubleMuLegLowPt = ', opts.triggerDoubleMuLegLowPt
-        print 'opts.triggerSingleMu = ', opts.triggerSingleMu
-        print 'opts.triggerMuEleLegHigPt = ', opts.triggerMuEleLegHigPt
-        print 'opts.triggerMuEleLegLowPt = ', opts.triggerMuEleLegLowPt
-        print 'opts.triggerEleMuLegHigPt = ', opts.triggerEleMuLegHigPt
-        print 'opts.triggerEleMuLegLowPt = ', opts.triggerEleMuLegLowPt
+        print('opts.triggerDoubleEleLegHigPt = ', opts.triggerDoubleEleLegHigPt)
+        print('opts.triggerDoubleEleLegLowPt = ', opts.triggerDoubleEleLegLowPt)
+        print('opts.triggerSingleEle = ', opts.triggerSingleEle)
+        print('opts.triggerDoubleMuLegHigPt = ', opts.triggerDoubleMuLegHigPt)
+        print('opts.triggerDoubleMuLegLowPt = ', opts.triggerDoubleMuLegLowPt)
+        print('opts.triggerSingleMu = ', opts.triggerSingleMu)
+        print('opts.triggerMuEleLegHigPt = ', opts.triggerMuEleLegHigPt)
+        print('opts.triggerMuEleLegLowPt = ', opts.triggerMuEleLegLowPt)
+        print('opts.triggerEleMuLegHigPt = ', opts.triggerEleMuLegHigPt)
+        print('opts.triggerEleMuLegLowPt = ', opts.triggerEleMuLegLowPt)
 
-        print 'opts.triggerSpecialDoubleMuLegHigPt = ', opts.triggerSpecialDoubleMuLegHigPt
-        print 'opts.triggerSpecialDoubleMuLegLowPt = ', opts.triggerSpecialDoubleMuLegLowPt
-        print 'opts.triggerSpecialSingleMu = ', opts.triggerSpecialSingleMu
-        print 'opts.triggerSpecialMuEleLegHigPt = ', opts.triggerSpecialMuEleLegHigPt
-        print 'opts.triggerSpecialEleMuLegLowPt = ', opts.triggerSpecialEleMuLegLowPt
+        print('opts.triggerSpecialDoubleMuLegHigPt = ', opts.triggerSpecialDoubleMuLegHigPt)
+        print('opts.triggerSpecialDoubleMuLegLowPt = ', opts.triggerSpecialDoubleMuLegLowPt)
+        print('opts.triggerSpecialSingleMu = ', opts.triggerSpecialSingleMu)
+        print('opts.triggerSpecialMuEleLegHigPt = ', opts.triggerSpecialMuEleLegHigPt)
+        print('opts.triggerSpecialEleMuLegLowPt = ', opts.triggerSpecialEleMuLegLowPt)
 
 
 
@@ -186,7 +186,7 @@ class EffTrgFiller(TreeCloner):
         self.cmssw = opts.cmssw
         self.fixMuonTriggerLumiRatio = opts.fixMuonTriggerLumiRatio
 
-        print " cmssw = ", self.cmssw
+        print(" cmssw = ", self.cmssw)
     
         self.minpt_mu = 10
         self.maxpt_mu = 200
@@ -896,7 +896,7 @@ class EffTrgFiller(TreeCloner):
     def _getNlWeight(self, nLep):
         def _curriedWeight(*args):
             if len(args)%3 != 0:
-                print "ERROR!! For each leg, 'kindLep pt eta' should be provides. Bad number of arguments."
+                print("ERROR!! For each leg, 'kindLep pt eta' should be provides. Bad number of arguments.")
                 return 1, 1, 1
             toss_a_coin = 1.
             if self.cmssw == "ICHEP2016" : 
@@ -974,10 +974,10 @@ class EffTrgFiller(TreeCloner):
                     double[keyname]['dz_eff']       = dz_eff
 
             getEff = {}
-            for keyname in double.keys():
+            for keyname in list(double.keys()):
                 getEff[keyname] = {}
                 getEff[keyname]['eff'], getEff[keyname]['eff_low'], getEff[keyname]['eff_high'] = self._getEff(double[keyname]['pt'],double[keyname]['eta'],double[keyname]['whichTrigger'])
-            for keyname in single.keys():
+            for keyname in list(single.keys()):
                 getEff[keyname] = {}
                 getEff[keyname]['eff'], getEff[keyname]['eff_low'], getEff[keyname]['eff_high'] = self._getEff(single[keyname]['pt'],single[keyname]['eta'],single[keyname]['whichTrigger'])
 
@@ -986,12 +986,12 @@ class EffTrgFiller(TreeCloner):
             if self.cmssw == "ICHEP2016" : 
                 for iLep in range(nLep):
                     if abs(kindLep[iLep])==13:
-                        for keyname in double.keys():
+                        for keyname in list(double.keys()):
                             if re.search("^(lead|trail)([0-9]+)(lead|trail)([0-9]+)$",keyname).group(2) == str(iLep):
                                 getEff[keyname]['eff']      *= 0.99
                                 getEff[keyname]['eff_low']  *= 0.98
                                 getEff[keyname]['eff_high'] *= 0.99
-                        for keyname in single.keys():
+                        for keyname in list(single.keys()):
                             if re.search("^single([0-9]+)$",keyname).group(1) == str(iLep):
                                 getEff[keyname]['eff']      *= 0.99
                                 getEff[keyname]['eff_low']  *= 0.98
@@ -1056,7 +1056,7 @@ class EffTrgFiller(TreeCloner):
           self.branches[bname] = bvariable
 
         # now actually connect the branches
-        for bname, bvariable in self.branches.iteritems():
+        for bname, bvariable in self.branches.items():
             #print " bname   = ", bname
             #print " bvariable = ", bvariable
             self.otree.Branch(bname,bvariable,bname+'/F')
@@ -1069,21 +1069,21 @@ class EffTrgFiller(TreeCloner):
         self.otree.Branch('std_vector_TrgEmulator',bvector_TrgEmulator)
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
         savedentries = 0
                 
         # avoid dots to go faster
         itree     = self.itree
         otree     = self.otree
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
 
             ## print event count
             if i > 0 and i%step == 0.:
-              print i,'events processed.'
+              print(i,'events processed.')
 
             self.branches['effTrigW']       [0] = 1.0
             self.branches['effTrigW_Up']    [0] = 1.0
@@ -1150,7 +1150,7 @@ class EffTrgFiller(TreeCloner):
             savedentries+=1
 
         self.disconnect()
-        print '- Eventloop completed'
-        print '   Saved: ', savedentries, ' events'
+        print('- Eventloop completed')
+        print('   Saved: ', savedentries, ' events')
 
 

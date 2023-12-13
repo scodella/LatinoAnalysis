@@ -62,19 +62,19 @@ class ChainSawFactory:
  
         # loop over cuts  
         for cutName in self._cuts :
-          print "cut = ", cutName #, " :: ", cuts[cutName]
+          print(("cut = ", cutName)) #, " :: ", cuts[cutName]
   
           # loop over variables
-          for variableName, variable in self._variables.iteritems():
-            print "variable = ", variableName  #, " :: ", variable
+          for variableName, variable in list(self._variables.items()):
+            print(("variable = ", variableName))  #, " :: ", variable
 
             tagNameToAppearInDatacard = cutName
             
             # copy the default root file for bookkeeping
             old_root_file_name = self._outputDirDatacard + "/" + cutName + "/" + variableName + "/shapes/" + "old_histos_" + tagNameToAppearInDatacard + ".root"
             new_root_file_name = self._outputDirDatacard + "/" + cutName + "/" + variableName + "/shapes/" + "histos_"     + tagNameToAppearInDatacard + ".root"
-            print " old_root_file_name = ", old_root_file_name
-            print " new_root_file_name = ", new_root_file_name
+            print((" old_root_file_name = ", old_root_file_name))
+            print((" new_root_file_name = ", new_root_file_name))
             
             os.system ("cp " + new_root_file_name + "   " + old_root_file_name ) 
            
@@ -94,19 +94,19 @@ class ChainSawFactory:
       
                     
             # loop over samples
-            for sampleName, sample in self._samples.iteritems():
+            for sampleName, sample in list(self._samples.items()):
  
               # loop over nuisances
-              for nuisanceName, nuisance in nuisances.iteritems():
+              for nuisanceName, nuisance in list(nuisances.items()):
 
-                if 'name' in nuisance.keys() :
+                if 'name' in list(nuisance.keys()) :
                   nameTempUp   = 'histo_' + str(sampleName) + '_CMS_' + (nuisance['name']) + 'Up'
                   nameTempDown = 'histo_' + str(sampleName) + '_CMS_' + (nuisance['name']) + 'Down'
                   nameTemp     = 'histo_' + str(sampleName)
                 
                   #print " nameTempUp = ", nameTempUp
                   
-                  if nameTempUp in histograms.keys() and  nameTempDown in histograms.keys() : 
+                  if nameTempUp in list(histograms.keys()) and  nameTempDown in list(histograms.keys()) : 
                     
                     
                     histo_nominal = histograms[nameTemp] 
@@ -161,7 +161,7 @@ class ChainSawFactory:
               # save all the histograms with different structure,
               # as the bbb histograms and the stats
               
-              for histoName, histo in histograms.iteritems() :
+              for histoName, histo in list(histograms.items()) :
                 match = re.search("_stat", histoName)
                 if match:
                   h.Write()
@@ -185,7 +185,7 @@ class ChainSawFactory:
 
 
 if __name__ == '__main__':
-   print '''
+   print('''
 --------------------------------------------------------------------------------------------------
 
             ___|  |            _)          ___|                            
@@ -194,7 +194,7 @@ if __name__ == '__main__':
           \____| _| |_| \__,_| _| _|  _| _____/  \__,_|   \_/\_/           
 
 --------------------------------------------------------------------------------------------------
-'''
+''')
 
    usage = 'usage: %prog [options]'
    parser = optparse.OptionParser(usage)
@@ -211,13 +211,13 @@ if __name__ == '__main__':
    hwwtools.loadOptDefaults(parser)
    (opt, args) = parser.parse_args()
 
-   print "opt.pycfg               = ", opt.pycfg
-   print "opt.threshold           = ", opt.threshold
-   print "opt.MCstatThreshold     = ", opt.MCstatThreshold
-   print "opt.inputConfiguration  = ", opt.nameFileConfiguration
-   print "opt.outputDirDatacard   = ", opt.outputDirDatacard
-   print "opt.nuisancesFile       = ", opt.nuisancesFile
-   print "opt.cardList            = ", opt.cardList
+   print(("opt.pycfg               = ", opt.pycfg))
+   print(("opt.threshold           = ", opt.threshold))
+   print(("opt.MCstatThreshold     = ", opt.MCstatThreshold))
+   print(("opt.inputConfiguration  = ", opt.nameFileConfiguration))
+   print(("opt.outputDirDatacard   = ", opt.outputDirDatacard))
+   print(("opt.nuisancesFile       = ", opt.nuisancesFile))
+   print(("opt.cardList            = ", opt.cardList))
 
 
 
@@ -249,9 +249,9 @@ if __name__ == '__main__':
          for iOptim in optim:
            newCuts.append(iCut+'_'+iOptim)
        opt.cardList = newCuts
-       print opt.cardList
+       print((opt.cardList))
      except:
-       print "No optim dictionary"
+       print("No optim dictionary")
      cut2del = []
      for iCut in cuts:
        if not iCut in opt.cardList : cut2del.append(iCut)
@@ -261,7 +261,7 @@ if __name__ == '__main__':
    # ~~~~
    nuisances = {}
    if opt.nuisancesFile == None :
-      print " Please provide the nuisances structure if you want to add nuisances "
+      print(" Please provide the nuisances structure if you want to add nuisances ")
       
    if os.path.exists(opt.nuisancesFile) :
      handle = open(opt.nuisancesFile,'r')

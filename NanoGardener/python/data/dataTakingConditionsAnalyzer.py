@@ -114,15 +114,15 @@ if __name__ == '__main__':
                                     lastRun  = max(lastRun,  runPeriods[year][prd][1])
                             periodYear = year if year not in period else ''
                             yearPeriods[periodYear+period] = [ firstRun, lastRun ]
-                    else: print 'Warning:', year, 'not in runPeriods'
+                    else: print('Warning:', year, 'not in runPeriods')
                 elif ':' in period:
                     periodname = period.split(':')[0]
                     periodrange = period.split(':')[1]
                     yearPeriods[periodname] = [ int(periodrange.split('To')[0]), int(periodrange.split('To')[1]) ]
-                else: print 'Warning:', period, 'has not a good period structure. It should be "PeriodName:FirstRunToLastRun"'
+                else: print('Warning:', period, 'has not a good period structure. It should be "PeriodName:FirstRunToLastRun"')
 
-        if len(yearPeriods.keys())==0: 
-            print 'Error: no run periods selected'
+        if len(list(yearPeriods.keys()))==0: 
+            print('Error: no run periods selected')
             exit()
 
         goodRuns = loadJSON(yearInfos['jsonFile'])
@@ -138,7 +138,7 @@ if __name__ == '__main__':
             if 'prescale' in opt.action.lower() or 'ps' in opt.action.lower():
 
                 if opt.hltPaths=='':
-                    print 'Error: need to specify an HLT path to compute the prescales'
+                    print('Error: need to specify an HLT path to compute the prescales')
                     exit()
 
                 periodPrescales = { }
@@ -187,7 +187,7 @@ if __name__ == '__main__':
                                             lastblock = int(otherblock)-1
                                 periodPrescales[hltPath][run][lumiblock]['lastblock'] = str(lastblock)
 
-                        if len(periodPrescales[hltPath].keys())==0:
+                        if len(list(periodPrescales[hltPath].keys()))==0:
                             del periodPrescales[hltPath]
                         elif opt.saveJSON:
                             with open(opt.outputDir+'/Prescales/TriggerPrescales_'+period+'_'+hltPath+'.json', 'w') as file:

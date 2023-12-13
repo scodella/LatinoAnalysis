@@ -54,7 +54,7 @@ def get_entrylist(selection, filename, variations_dict, basedir):
         total_tree = rfile.Get("Events")
         root_files.append(rfile)
     except:
-        print "ERROR! Cannot read file: ", os.path.join(basedir,variations_dict['nominal'],filename) 
+        print("ERROR! Cannot read file: ", os.path.join(basedir,variations_dict['nominal'],filename)) 
         exit(1)
    
     varied_selections = [] 
@@ -70,22 +70,22 @@ def get_entrylist(selection, filename, variations_dict, basedir):
         JES_sources = ["Absolute",  "Absolute_2018", "BBEC1", "BBEC1_2018","EC2",  "EC2_2018",
                         "FlavorQCD","HF", "HF_2018",  "RelativeBal",  "RelativeSample_2018"]
     
-    for variation_name, folder in variations_dict.items():
-        print variation_name
+    for variation_name, folder in list(variations_dict.items()):
+        print(variation_name)
         if variation_name in ['JESup','JESdo', 'fatjetJESup', 'fatjetJESdo']: 
             suffixed_selection = None
             # Apply mapping for all the JES sources
             for source in JES_sources:
                 mapping_key = variation_name.replace('JES', 'JES'+source)
                 tmp_suffixed_selection = format_selection_variation(selection, mapping_key)
-                print 'Variation: ', mapping_key, " --> ", tmp_suffixed_selection
+                print('Variation: ', mapping_key, " --> ", tmp_suffixed_selection)
                 if suffixed_selection == None:
                     suffixed_selection = "(" + tmp_suffixed_selection + ")"
                 else:
                     suffixed_selection += " || (" + tmp_suffixed_selection + ")"
         else:     
             suffixed_selection = format_selection_variation(selection, variation_name)
-            print 'Variation: ', variation_name, " --> ", suffixed_selection
+            print('Variation: ', variation_name, " --> ", suffixed_selection)
         
         #build the total list of selections
         varied_selections.append(suffixed_selection)
@@ -100,15 +100,15 @@ def get_entrylist(selection, filename, variations_dict, basedir):
             friend_tree = friend_file.Get("Events")
             total_tree.AddFriend(friend_tree)
         except:
-            print "ERROR! Cannot read file: ", os.path.join(basedir,folder,filename)
+            print("ERROR! Cannot read file: ", os.path.join(basedir,folder,filename))
             exit(1)
     
     if (total_tree.GetEntries() == 0):
-        print "WARNING: empty tree, creating empty TEntryList!"
+        print("WARNING: empty tree, creating empty TEntryList!")
         total_entrylist = R.TEventList("total_list","total_list")
     else:
         for vselection in varied_selections:
-            print "Applying selection --> ", vselection
+            print("Applying selection --> ", vselection)
             # Add the entries to the same total list to do an OR of the selections
             total_tree.Draw(">>+total_list", vselection)
     
@@ -131,13 +131,13 @@ def copy_trees(entrylist, filename, variations_dict, basedir, targetdir, branche
     - basedir:  folder containing nominal and variations folder
     - targetdir:  folder in which the resulting trees will be produced (usually temporary folder)
     '''
-    for variation_name, folder in variations_dict.items():
-        print 'Variation: ', variation_name 
+    for variation_name, folder in list(variations_dict.items()):
+        print('Variation: ', variation_name) 
         try:
             iFile = R.TFile.Open(os.path.join(basedir,folder,filename), "READ")
             oldTree = iFile.Get("Events")
         except:
-            print "ERROR! Cannot read file: ", os.path.join(basedir,folder,filename)
+            print("ERROR! Cannot read file: ", os.path.join(basedir,folder,filename))
             exit(1)
 
         # Set branches
@@ -165,7 +165,7 @@ def copy_trees(entrylist, filename, variations_dict, basedir, targetdir, branche
             iFile.Close()
 
         except:
-            print "ERROR! Cannot create file: ", os.path.join(targetdir,folder,filename)
+            print("ERROR! Cannot create file: ", os.path.join(targetdir,folder,filename))
             exit(1)
     
 class Skimmer:
@@ -194,34 +194,34 @@ class Skimmer:
 
     def compute_entrylist(self):
         for filename in self.filenames:
-            print "\n\n>>>>>>>>>>> Extracting entrylist on file: ", filename
+            print("\n\n>>>>>>>>>>> Extracting entrylist on file: ", filename)
             self.entrylists[filename] = get_entrylist(self.selection, filename, self.variations_dict, self.basedir)
             self.entrylists[filename].Print("all")
 
     def copy_trees(self):
-        for filename, entrylist in self.entrylists.items():
-            print "\n\n>>>>>>>>>>> Copying trees for file: ", filename
+        for filename, entrylist in list(self.entrylists.items()):
+            print("\n\n>>>>>>>>>>> Copying trees for file: ", filename)
             copy_trees(entrylist, filename, self.variations_dict, 
                         self.basedir, self.targetdir, 
                         branches_to_keep=self.branches_to_keep, branches_to_remove=self.branches_to_remove)
 
     def save_entrylists(self, outputdir):
         if not os.path.exists(outputdir): os.makedirs(outputdir)
-        for filename, entrylist in self.entrylists.items():
+        for filename, entrylist in list(self.entrylists.items()):
             try:
                 out = R.TFile.Open(os.path.join(outputdir, filename), "RECREATE")
                 entrylist.Write()
                 out.Close()
             except:
-                print "ERROR! Cannot create entrylist file: ", os.path.join(outputdir, filename)
+                print("ERROR! Cannot create entrylist file: ", os.path.join(outputdir, filename))
                 exit(1)
 
     def hadd(self, outputfolder, outputfilename, hadd_script):
-        for folder in self.variations_dict.values():
+        for folder in list(self.variations_dict.values()):
             #create destination folder
             if not os.path.exists(os.path.join(outputfolder, folder)):
                 os.makedirs(os.path.join(outputfolder, folder))
-            print "hadd ",folder
+            print("hadd ",folder)
             files = [os.path.join(self.targetdir, folder,f) for f in os.listdir(os.path.join(self.targetdir, folder))]
             cmd = " ".join(["python", hadd_script, os.path.join(outputfolder, folder, outputfilename)]+files)
             with open("hadd_script.sh","a") as script:

@@ -711,6 +711,6 @@ NewVar_DATA_dict = {
 
 if __name__ == '__main__':
    for key in Trigger:
-      print(Trigger[key])
-   print(Trigger['Full2017v5'])
+      print((Trigger[key]))
+   print((Trigger['Full2017v5']))
 

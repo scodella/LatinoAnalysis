@@ -60,8 +60,8 @@ def getVBSkinematics(vbsjets, vjets,lepton, met, other_jets_eta, other_jets_pts,
         vbs_phis.append(j.Phi())
         vbs_pts.append(j.Pt())
     if debug:
-        print "VBS pts", vbs_pts
-        print "VBS etas", vbs_etas
+        print("VBS pts", vbs_pts)
+        print("VBS etas", vbs_etas)
     deltaeta_vbs = abs(vbs_etas[0]- vbs_etas[1])
     mean_eta_vbs = sum(vbs_etas) / 2 
     output["vbs_pt_high"] = vbs_pts[0]
@@ -84,8 +84,8 @@ def getVBSkinematics(vbsjets, vjets,lepton, met, other_jets_eta, other_jets_pts,
         vjet_phis.append(j.Phi())
         vjet_pts.append(j.Pt())
     if debug:
-        print "Vjet pts", vjet_pts
-        print "Vjet etas", vjet_etas
+        print("Vjet pts", vjet_pts)
+        print("Vjet etas", vjet_etas)
     output["vjet_pt_high"] = vjet_pts[0]
     output["vjet_pt_low"] = vjet_pts[1]
     output["mjj_vjet"] = total_vjet.M()
@@ -214,7 +214,7 @@ class VBSjjlnu_kin(TreeCloner):
         self.ptmin_jet = float(opts.ptmin_jet)
 
     def process(self,**kwargs):
-        print module_name
+        print(module_name)
 
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -234,18 +234,18 @@ class VBSjjlnu_kin(TreeCloner):
        
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
 
         # avoid dots to go faster
         itree     = self.itree
         otree     = self.otree
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
             if i > 0 and i%step == 0.:
-                print i,'events processed :: ', nentries
+                print(i,'events processed :: ', nentries)
 
             # Check if we have at least 4 jets with pt > ptmin
             # and VBSjets and Vjets are all associated
@@ -255,8 +255,8 @@ class VBSjjlnu_kin(TreeCloner):
                     variables[var][0] = -9999
             else:
                 if self.debug:
-                    print "VBSjets", [i for i in itree.VBS_jets]
-                    print "Vjets", [j for j in itree.V_jets]
+                    print("VBSjets", [i for i in itree.VBS_jets])
+                    print("Vjets", [j for j in itree.V_jets])
 
                 vjets = utils.get_jets_byindex(itree, itree.V_jets, self.ptmin_jet, self.debug)
                 vbsjets = utils.get_jets_byindex(itree, itree.VBS_jets, self.ptmin_jet, self.debug)
@@ -280,13 +280,13 @@ class VBSjjlnu_kin(TreeCloner):
                                             other_jets_eta, other_jets_pts, self.debug)
 
                 if self.debug:
-                    print output
+                    print(output)
 
-                for vk, vvalue in variables.items():
+                for vk, vvalue in list(variables.items()):
                     vvalue[0] = output[vk]
                 
             otree.Fill()
   
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 

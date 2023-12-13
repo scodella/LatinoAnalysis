@@ -43,7 +43,7 @@ if __name__ == '__main__':
       handle.close()
       prodList = List_Filter(Productions,options.prods).get()
     else:
-      print 'ERROR: Please specify the input data config with -d <fileName>'
+      print('ERROR: Please specify the input data config with -d <fileName>')
       exit(1)  
 
     if os.path.exists(CMSSW+'/src/'+options.modcfg):
@@ -52,7 +52,7 @@ if __name__ == '__main__':
       handle.close()
       stepList = List_Filter(Steps,'baseW').get()
     else:
-      print 'ERROR: Please specify the input module config with -m <fileName>'
+      print('ERROR: Please specify the input module config with -m <fileName>')
       exit(1)
 
     if os.path.exists(CMSSW+'/src/'+options.sitescfg):
@@ -60,12 +60,12 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
     else:
-      print 'ERROR: Please specify the site config with -S <fileName>'
+      print('ERROR: Please specify the site config with -S <fileName>')
       exit(1)
 
-    print " Productions : " , prodList
+    print(" Productions : " , prodList)
     if len(prodList) == 0 :
-      print 'ERROR: Please specify valid productions'
+      print('ERROR: Please specify valid productions')
       exit(1)
 
     # Re-use factory ad minima

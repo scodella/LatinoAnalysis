@@ -35,13 +35,13 @@ class AddMCunc:
     # _____________________________________________________________________________
     def FixUncertainties(self):
 
-        print "=================="
-        print "==== AddMCunc ===="
-        print "=================="
+        print("==================")
+        print("==== AddMCunc ====")
+        print("==================")
         
-        print " self._inputFileHisto "       , self._inputFileHisto
-        print " self._outputFileHistoClone " , self._outputFileHistoClone
-        print " self._listOfFilesOriginal "  , self._listOfFilesOriginal
+        print((" self._inputFileHisto "       , self._inputFileHisto))
+        print((" self._outputFileHistoClone " , self._outputFileHistoClone))
+        print((" self._listOfFilesOriginal "  , self._listOfFilesOriginal))
  
         # copy the input root file        
         os.system ("cp " + self._inputFileHisto + "   " + self._outputFileHistoClone) 
@@ -57,13 +57,13 @@ class AddMCunc:
         
         for fileIn in self._listOfFilesOriginal:
             inputFile = ROOT.TFile.Open(fileIn,  "READ")
-            for sampleName, plotdef in self._plot.iteritems():
+            for sampleName, plotdef in list(self._plot.items()):
               if sampleName != 'DATA' :    # 'DATA' should not be added/stacked!
                 try:
                   histo = inputFile.Get("histo_" + sampleName)
                   hStackTotal.Add(histo)
                 except:
-                  print "missing histo: histo_" + sampleName
+                  print(("missing histo: histo_" + sampleName))
         
         
         #Final histogram -> get MC errors
@@ -72,7 +72,7 @@ class AddMCunc:
         err_do = numpy.sqrt(numpy.array(histo_sum.GetSumw2())[1:-1]) # GetSumw2 -> array of sum squares of weights
         
         nominal = root_numpy.hist2array(histo_sum, copy=False)
-        print "nominal ", nominal
+        print(("nominal ", nominal))
         
         # err_rel_up = err_up / nom 
         # err_rel_do = err_do / nom 
@@ -105,7 +105,7 @@ class AddMCunc:
         for iBin in range(1, histo_total.GetNbinsX()+1):
             old_err = histo_total.GetBinError(iBin)
             new_err = math.sqrt( histo_total.GetBinError(iBin)*histo_total.GetBinError(iBin) + h_err.GetBinError(iBin)*h_err.GetBinError(iBin) )
-            print " ", iBin, ") old err: ", old_err, " new err: ", new_err
+            print((" ", iBin, ") old err: ", old_err, " new err: ", new_err))
             histo_total.SetBinError(iBin, new_err)
             gr_total.SetPointError(iBin, 0, 0, -new_err, new_err)
         
@@ -128,7 +128,7 @@ def foo_callback(option, opt, value, parser):
 if __name__ == '__main__':
     sys.argv = argv
     
-    print '''
+    print('''
 ----------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -146,7 +146,7 @@ but not in the fit datacard (e.g. it's another variable an MC stat uncertainty c
 the nuisance should be added in quadrature
 
 ----------------------------------------------------------------------------------------------------------------------------------
-'''    
+''')    
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
@@ -165,18 +165,18 @@ the nuisance should be added in quadrature
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
-    print " inputFileHisto        =    ", opt.inputFileHisto
-    print " outputFileHistoClone  =    ", opt.outputFileHistoClone
-    print " listOfFilesOriginal   =    ", opt.listOfFilesOriginal
+    print((" inputFileHisto        =    ", opt.inputFileHisto))
+    print((" outputFileHistoClone  =    ", opt.outputFileHistoClone))
+    print((" listOfFilesOriginal   =    ", opt.listOfFilesOriginal))
     
 
     if not opt.debug:
         pass
     elif opt.debug == 2:
-        print 'Logging level set to DEBUG (%d)' % opt.debug
+        print(('Logging level set to DEBUG (%d)' % opt.debug))
         logging.basicConfig( level=logging.DEBUG )
     elif opt.debug == 1:
-        print 'Logging level set to INFO (%d)' % opt.debug
+        print(('Logging level set to INFO (%d)' % opt.debug))
         logging.basicConfig( level=logging.INFO )
 
     factory = AddMCunc()
@@ -201,7 +201,7 @@ the nuisance should be added in quadrature
     
     factory.FixUncertainties()
     
-    print '... and now closing ...'
+    print('... and now closing ...')
         
        
        

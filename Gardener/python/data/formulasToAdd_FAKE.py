@@ -27,9 +27,9 @@ if os.path.exists(btagfile) :
   exec(handle)
   handle.close()
 else:
-  print "!!! ERROR file ", btagfile, " does not exist."
+  print("!!! ERROR file ", btagfile, " does not exist.")
 
-for name,btags in tagger.iteritems():
+for name,btags in tagger.items():
   for wp in btags:
     if 'algo' in wp: continue
     formulas['bveto_'+name+wp] = '    ( event.std_vector_jet_pt[0] < 20 or event.std_vector_jet_'+btags['algo']+'[0] < '+str(btags[wp])+' ) \

@@ -43,7 +43,7 @@ VBSjjlnu_vector_branches = [
 ]
 
 VBSjjlnu_all_branches = [ ]
-for t,br in VBSjjlnu_branches.items():  VBSjjlnu_all_branches += br
+for t,br in list(VBSjjlnu_branches.items()):  VBSjjlnu_all_branches += br
 for d in VBSjjlnu_vector_branches:      VBSjjlnu_all_branches.append(d["name"])
 
 
@@ -76,8 +76,8 @@ def getVBSkin_resolved(vbsjets, vjets, lepton, met, reco_neutrino, other_jets, o
         vbs_pts.append(j.Pt())
         vbs_Es.append(j.E())
     if debug:
-        print "VBS pts", vbs_pts
-        print "VBS etas", vbs_etas
+        print("VBS pts", vbs_pts)
+        print("VBS etas", vbs_etas)
     deltaeta_vbs = abs(vbs_etas[0]- vbs_etas[1])
     mean_eta_vbs = sum(vbs_etas) / 2 
     output["vbs_0_pt"] = vbs_pts[0]
@@ -105,8 +105,8 @@ def getVBSkin_resolved(vbsjets, vjets, lepton, met, reco_neutrino, other_jets, o
         vjet_pts.append(j.Pt())
         vjet_Es.append(j.E())
     if debug:
-        print "Vjet pts", vjet_pts
-        print "Vjet etas", vjet_etas
+        print("Vjet pts", vjet_pts)
+        print("Vjet etas", vjet_etas)
     output["vjet_0_pt"] = vjet_pts[0]
     output["vjet_1_pt"] = vjet_pts[1]
     output["vjet_0_eta"] = vjet_etas[0]
@@ -212,8 +212,8 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, reco_neutrino, other_jets, o
         vbs_pts.append(j.Pt())
         vbs_Es.append(j.E())
     if debug:
-        print "VBS pts", vbs_pts
-        print "VBS etas", vbs_etas
+        print("VBS pts", vbs_pts)
+        print("VBS etas", vbs_etas)
     deltaeta_vbs = abs(vbs_etas[0]- vbs_etas[1])
     mean_eta_vbs = sum(vbs_etas) / 2 
     output["vbs_0_pt"] = vbs_pts[0]
@@ -233,8 +233,8 @@ def getVBSkin_boosted(vbsjets, fatjet, lepton, met, reco_neutrino, other_jets, o
     vjet_eta = fatjet.Eta()
     vjet_pt = fatjet.Pt()
     if debug:
-        print "Vjet pt", vjet_pt
-        print "Vjet eta", vjet_eta
+        print("Vjet pt", vjet_pt)
+        print("Vjet eta", vjet_eta)
     output["vjet_0_pt"] = vjet_pt
     output["vjet_0_eta"] = vjet_eta
     output["vjet_0_phi"] = fatjet.Phi()

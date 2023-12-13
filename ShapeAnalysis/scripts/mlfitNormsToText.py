@@ -25,8 +25,8 @@ prefit = file.Get("norm_prefit")
 fit_s = file.Get("norm_fit_s")
 fit_b = file.Get("norm_fit_b")
 if prefit == None: stderr.write("Missing fit_s in %s. Did you run FitDiagnostics in a recent-enough version of combine and with --saveNorm?\n" % file);
-if fit_s  == None: raise RuntimeError, "Missing fit_s in %s. Did you run FitDiagnostics with --saveNorm?" % file;
-if fit_b  == None: raise RuntimeError, "Missing fit_b in %s. Did you run FitDiagnostics with --saveNorm?" % file;
+if fit_s  == None: raise RuntimeError("Missing fit_s in %s. Did you run FitDiagnostics with --saveNorm?" % file);
+if fit_b  == None: raise RuntimeError("Missing fit_b in %s. Did you run FitDiagnostics with --saveNorm?" % file);
 
 iter = fit_s.createIterator()
 #Headline = "%-30s %-30s     pre-fit   signal+background Fit  bkg-only Fit"%("Channel","Process") if (prefit and errors) else "%-30s %-30s  signal+background Fit  bkg-only Fit"%("Channel","Process")
@@ -41,8 +41,8 @@ else :
  headline = ("{:40} {:25} {:>20} {:>20}").format(*headrow)
 
 line = "".join(["-" for i in range(len(headline))])
-print headline
-print line
+print(headline)
+print(line)
 
 while True:
     norm_s = iter.Next()
@@ -53,20 +53,20 @@ while True:
     proc_chan_name = (norm_s.GetName()).replace(".","_").replace(":","_").replace(",","_")
     m = re.match(r"(\w+)/(\w+)", proc_chan_name);
     if m == None: m = re.match(r"n_exp_(?:final_)?(?:bin)+(\.\w+)_proc_(\.\w+)", proc_chan_name);
-    if m == None: raise RuntimeError, "Non-conforming object name %s" % norm_s.GetName()
-    if norm_b == None: raise RuntimeError, "Missing normalization %s for background fit" % norm_s.GetName()
+    if m == None: raise RuntimeError("Non-conforming object name %s" % norm_s.GetName())
+    if norm_b == None: raise RuntimeError("Missing normalization %s for background fit" % norm_s.GetName())
     if prefit and norm_p and errors:
         row = ["%-40s"%m.group(1), "%-25s"%m.group(2), "%10.3f +/- %-10.3f"%(norm_p.getVal(), norm_p.getError()), "%10.3f +/- %-10.3f"%(norm_s.getVal(), norm_s.getError()),"%10.3f +/- %-10.3f"%(norm_b.getVal(), norm_b.getError())]
-	print("{:<40} {:25} {:10} {:10} {:10}").format(*row)
+	print((("{:<40} {:25} {:10} {:10} {:10}").format(*row)))
         #print "%-30s %-30s % 7.3f +/- % 7.3f % 7.3f +/- % 7.3f  % 7.3f +/- % 7.3f" % 
     else:
         if norm_p and prefit:
             row = ["%-40s"%m.group(1), "%-25s"%m.group(2), "%10.3f"%(norm_p.getVal()), "%10.3f"%(norm_s.getVal()),"%10.3f"%(norm_b.getVal())]
-	    print("{:<40} {:25} {:>20} {:>20} {:>20}").format(*row)
+	    print((("{:<40} {:25} {:>20} {:>20} {:>20}").format(*row)))
             #print "%-30s %-30s %7.3f %7.3f %7.3f" % (m.group(1), m.group(2), norm_p.getVal(),  norm_s.getVal(),  norm_b.getVal())
         else:
             row = ["%-40s"%m.group(1), "%-25s"%m.group(2), "%10.3f"%(norm_s.getVal()),"%10.3f"%(norm_b.getVal())]
-	    print("{:<40} {:25} {:>20} {:>20}").format(*row)
+	    print((("{:<40} {:25} {:>20} {:>20}").format(*row)))
             #print "%-30s %-30s %7.3f %7.3f" % (m.group(1), m.group(2), norm_s.getVal(), norm_b.getVal())
 
 # Get data
@@ -78,14 +78,14 @@ for cat in categories:
 
     if prefit and norm_p and errors:
         row = ["%-40s"%cat, "%-25s"%('Data'), "%10.3f +/- %-10.3f"%(data,0), "%10.3f +/- %-10.3f"%(data,0),"%10.3f +/- %-10.3f"%(data,0)]
-        print("{:<40} {:25} {:10} {:10} {:10}").format(*row)
+        print((("{:<40} {:25} {:10} {:10} {:10}").format(*row)))
     else:
         if norm_p and prefit:
             row = ["%-40s"%cat, "%-25s"%('Data'), "%10.3f"%(data), "%10.3f"%(data),"%10.3f"%(data)]
-            print("{:<40} {:25} {:>20} {:>20} {:>20}").format(*row)
+            print((("{:<40} {:25} {:>20} {:>20} {:>20}").format(*row)))
         else:
             row = ["%-40s"%cat, "%-25s"%('Data'), "%10.3f"%(data),"%10.3f"%(data)]
-            print("{:<40} {:25} {:>20} {:>20}").format(*row)
+            print((("{:<40} {:25} {:>20} {:>20}").format(*row)))
 
 
 

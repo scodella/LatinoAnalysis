@@ -117,13 +117,13 @@ class crabTool :
      self._UnpackCommands[iStep][iTarget]['rmGarbage'] = rmGarbage
 
    def Print(self):
-     print "--> Crab Cfg    = " , self._crabCfg
-     print "--> Crab Script = " , self._crabSh
-     print "--> Unpack File = " , self._UnpackFile 
+     print("--> Crab Cfg    = " , self._crabCfg)
+     print("--> Crab Script = " , self._crabSh)
+     print("--> Unpack File = " , self._UnpackFile) 
 
    def mkCrabCfg(self):
      if len(self._jobsList) == 0 :
-       print 'INFO: No jobs to run'
+       print('INFO: No jobs to run')
        return
 
      # Create SrcSandBox
@@ -131,7 +131,7 @@ class crabTool :
         self.createSrcSandBox()
         self.AddInputFile(self._srcSandbox)
 
-     print "Creating CRAB3 config" 
+     print("Creating CRAB3 config") 
      # Needed dummy FrameworkJobReport files
      self.AddInputFile(self._cmsswBasedir+'/src/LatinoAnalysis/Tools/test/FrameworkJobReport.xml')
 
@@ -248,9 +248,9 @@ class crabTool :
 
    def Sub(self):
       if len(self._jobsList) == 0 :
-        print 'INFO: No jobs to run'
+        print('INFO: No jobs to run')
         return
-      print "Submitting to CRAB:"
+      print("Submitting to CRAB:")
       self.Print()
       # Submit
       os.system('cd '+self._subDir+' ; source /cvmfs/cms.cern.ch/crab3/crab.sh ; crab submit -c '+os.path.basename(self._crabCfg))      
@@ -264,7 +264,7 @@ class crabTool :
           if 'Success: Your task has been delivered to the CRAB3 server' in line : succes=True
           if 'Task name:' in line:
             taskName=line.split()[5]
-      print 'Success = ',succes,' --> TaskName = ',taskName
+      print('Success = ',succes,' --> TaskName = ',taskName)
       # Make .jid files
       if succes:
         # Keep the task ID
@@ -347,26 +347,26 @@ class crabMon :
    def printStatus(self):
      self.getTaskList()
      for iTask in self._taskList:
-       print '------- CRAB Status for: ',self._taskList[iTask]['requestName']
+       print('------- CRAB Status for: ',self._taskList[iTask]['requestName'])
        self.getStatus(iTask)
-       print 'CRAB Server Status = ',self._currentTaskStatus['crabServerStatus']
-       print 'Scheduler Status   = ',self._currentTaskStatus['schedulerStatus']
-       print 'Job(s)    Status   : '
-       for iJob in self._currentTaskStatus['jobsStatus'] : print ' --> ',iJob
+       print('CRAB Server Status = ',self._currentTaskStatus['crabServerStatus'])
+       print('Scheduler Status   = ',self._currentTaskStatus['schedulerStatus'])
+       print('Job(s)    Status   : ')
+       for iJob in self._currentTaskStatus['jobsStatus'] : print(' --> ',iJob)
 
 # ------ UNPACKING
 
    def unpackAll(self):
      self.getTaskList()
      for iTask in self._taskList:
-       print '------- UNPACKING TASK: ',self._taskList[iTask]['requestName']
+       print('------- UNPACKING TASK: ',self._taskList[iTask]['requestName'])
        self.unpackTask(iTask)
 
    def unpackTask(self,iTask):
      self.getStatus(iTask)
-     print 'Scheduler Status   = ',self._currentTaskStatus['schedulerStatus']
+     print('Scheduler Status   = ',self._currentTaskStatus['schedulerStatus'])
      if not ( self._currentTaskStatus['schedulerStatus'] == 'COMPLETED' or self._currentTaskStatus['crabServerStatus'] == 'KILLED' ) :
-       print 'WARNING Task not FINISHED -> SKIPPING : STATUS = ',self._currentTaskStatus['schedulerStatus'] 
+       print('WARNING Task not FINISHED -> SKIPPING : STATUS = ',self._currentTaskStatus['schedulerStatus']) 
        return
      # Retrieving Info + Unpacking map
      self._requestName          = self._taskList[iTask]['requestName']
@@ -402,8 +402,8 @@ class crabMon :
             FileList=string.split(out)
             for iFile in self._Unpacker['unpackMap'][iJob]['Files'] :
               if not iFile in FileList : 
-                print 'WARNING: missing output = ',iFile
-                print '         --> Going to remove the jidFile anyway to be able to resubmit: ',jidFile
+                print('WARNING: missing output = ',iFile)
+                print('         --> Going to remove the jidFile anyway to be able to resubmit: ',jidFile)
                 FileCheck = False
             # STAGE OUT
             if FileCheck:
@@ -413,8 +413,8 @@ class crabMon :
               command += 'rm '+os.path.basename(storeFile)
               os.system(command)
           else:
-            print 'WARNING: storeFile not found = ',storeFile
-            print '         --> Going to remove the jidFile anyway to be able to resubmit: ',jidFile
+            print('WARNING: storeFile not found = ',storeFile)
+            print('         --> Going to remove the jidFile anyway to be able to resubmit: ',jidFile)
           # Move jidFile to DONE
           os.system('mv '+jidFile+' '+jidFile.replace('.jid','.done'))       
      # Move tidFile to DONE
@@ -428,11 +428,11 @@ class crabMon :
        self.cleanTask(iTask)
 
    def cleanTask(self,iTask):
-     print '------- CLEANING TASK: ',self._taskList[iTask]['requestName']
+     print('------- CLEANING TASK: ',self._taskList[iTask]['requestName'])
      self.getStatus(iTask)
-     print 'Scheduler Status   = ',self._currentTaskStatus['schedulerStatus']
+     print('Scheduler Status   = ',self._currentTaskStatus['schedulerStatus'])
      if not ( self._currentTaskStatus['schedulerStatus'] == 'COMPLETED' or self._currentTaskStatus['crabServerStatus'] == 'KILLED' ):
-       print 'WARNING Task not FINISHED -> SKIPPING : STATUS = ',self._currentTaskStatus['schedulerStatus']
+       print('WARNING Task not FINISHED -> SKIPPING : STATUS = ',self._currentTaskStatus['schedulerStatus'])
        return
      # Retrieving Info + Unpacking map
      self._requestName          = self._taskList[iTask]['requestName']
@@ -447,10 +447,10 @@ class crabMon :
      self._storeDir             = self._outLFNDirBase+'/'+self._outputPrimaryDataset+'/'+self._requestName+'/'+self._requestTime+'/'
      self._motherDir            = self._outLFNDirBase+'/'+self._outputPrimaryDataset+'/'+self._requestName
      if not '.done' in self._tidFile : 
-       print 'WARNING Task not UNPACKED -> SKIPPING : tidFile = ',self._tidFile 
+       print('WARNING Task not UNPACKED -> SKIPPING : tidFile = ',self._tidFile) 
        return
      
-     print ' ----------------------------------------------->'
+     print(' ----------------------------------------------->')
      if query_yes_no('DELETE '+self._storeDir+' ??? ') : 
        delDirSE(self._storeDir)
        lsCmd = lsListCommand(self._motherDir)

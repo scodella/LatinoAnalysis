@@ -60,8 +60,8 @@ class JERMaker(jetSmearer, object):
                                       jerUncertaintyInputFileName=self.jerUncertaintyInputFileName,\
                                       jmr_vals=jmr_vals\
                                      )
-       print("JERMaker: \n"+"    JetType = "+jetType+"\n"+"    JetColl = "+jetColl+"\n"+\
-             "    JER input = "+self.jerInputFileName+"\n"+"    JER SF input = "+self.jerUncertaintyInputFileName)
+       print(("JERMaker: \n"+"    JetType = "+jetType+"\n"+"    JetColl = "+jetColl+"\n"+\
+             "    JER input = "+self.jerInputFileName+"\n"+"    JER SF input = "+self.jerUncertaintyInputFileName))
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
@@ -158,7 +158,7 @@ class JERMaker(jetSmearer, object):
         # e.g. if pt is         [ 26, 24, 27 ]
         #      you get: order = [ 2, 0, 1]
         #
-        order = sorted(range(len(jets_pt_nom)), key=jets_pt_nom.__getitem__, reverse=True)
+        order = sorted(list(range(len(jets_pt_nom))), key=jets_pt_nom.__getitem__, reverse=True)
 
         #Save to updated branches to jet collection
         for typ in self.collBr:

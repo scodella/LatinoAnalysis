@@ -10,7 +10,7 @@ class JECMaker(jecUncertProducer, object):
        for typ in types:
            types_str += typ
            types_str += ', '
-       print('JECMaker: globaTag = ' + globalTag + ', ' + types_str + 'JetFlavour = ' + jetFlav)
+       print(('JECMaker: globaTag = ' + globalTag + ', ' + types_str + 'JetFlavour = ' + jetFlav))
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree

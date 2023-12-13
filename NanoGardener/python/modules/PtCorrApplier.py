@@ -74,13 +74,13 @@ class PtCorrApplier(Module):
                 massb = bcoll.capitalize() + '_mass'
                 if bname == massb: self.backup_coll.append(bcoll)
         if self.doMET and not self.has_mass and len(self.backup_coll) < 1: 
-            print('Warning PtCorrApplier: no mass found in ' + self.CollTC + ' collection, and no backup mass was found. Skipping sumEt correction')
+            print(('Warning PtCorrApplier: no mass found in ' + self.CollTC + ' collection, and no backup mass was found. Skipping sumEt correction'))
             self.skip_sumEt = True
         elif self.doMET and not self.has_mass:
             coll_str = self.backup_coll[0].capitalize()
             for coll in self.backup_coll[1:]:
                 coll_str += ', ' + coll.capitalize()
-            print('PtCorrApplier: no mass found in ' + self.CollTC + ', but backup collections found: ' + coll_str + ' using ' + self.backup_coll[0].capitalize() + '_mass[' + self.CollTC + '_' + self.backup_coll[0] +'Idx] as alternative mass' )
+            print(('PtCorrApplier: no mass found in ' + self.CollTC + ', but backup collections found: ' + coll_str + ' using ' + self.backup_coll[0].capitalize() + '_mass[' + self.CollTC + '_' + self.backup_coll[0] +'Idx] as alternative mass' ))
         #iBrList = inputTree.GetListOfBranches()
         #for br in iBrList:
         #    bname = br.GetName()
@@ -165,7 +165,7 @@ class PtCorrApplier(Module):
         # e.g. if pt is         [ 26, 24, 27 ]
         #      you get: order = [ 2, 0, 1]
         #
-        order = sorted(range(len(new_pt)), key=new_pt.__getitem__, reverse=True)
+        order = sorted(list(range(len(new_pt))), key=new_pt.__getitem__, reverse=True)
  
         # Fill branches
         for typ in self.CollBr:

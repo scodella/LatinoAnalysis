@@ -96,7 +96,7 @@ class WlepMaker(Module):
        Wlep_mt = -9999.0
 
 
-       for MET,METtype in self.metCollections.items():
+       for MET,METtype in list(self.metCollections.items()):
            #met_pt=float(self.met_var['MET_pt'])
            #met_phi=float(self.met_var['MET_phi'])
            #met_pt  = event.PuppiMET_pt

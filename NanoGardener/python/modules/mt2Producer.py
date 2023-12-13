@@ -91,7 +91,7 @@ class mt2Producer(Module):
         elif abs(pdgId)==13 :
             return 0.105658
         else :
-            print 'mt2llProducer: WARNING: unsupported lepton pdgId'
+            print('mt2llProducer: WARNING: unsupported lepton pdgId')
             return -1
         
     ###
@@ -137,7 +137,7 @@ class mt2Producer(Module):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
         if math.isnan(event.MET_pt): 
-            print 'mt2Producer warning: MET_pt is nan'
+            print('mt2Producer warning: MET_pt is nan')
             return False
 
         nLeptons = event.nLepton

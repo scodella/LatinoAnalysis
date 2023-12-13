@@ -26,12 +26,12 @@ class RunPeriod(Module):
 
         cmssw_base = os.getenv('CMSSW_BASE')
         var = {}
-        execfile(cmssw_base+'/src/'+cfg_path, var)
+        exec(compile(open(cmssw_base+'/src/'+cfg_path, "rb").read(), cmssw_base+'/src/'+cfg_path, 'exec'), var)
         self.Trigger = var['Trigger']
         self.NewVar  = { 'F': [ ], 'I': ['run_period'] }
 
-        print('RunPeriod: CMSSW = ' + self.cmssw + ', isData = ' + str(self.isData)) 
-        print('RunPeriod: loaded trigger configuration from ' + cfg_path)
+        print(('RunPeriod: CMSSW = ' + self.cmssw + ', isData = ' + str(self.isData))) 
+        print(('RunPeriod: loaded trigger configuration from ' + cfg_path))
 
  
     def beginJob(self): 
@@ -84,7 +84,7 @@ class RunPeriod(Module):
               return iPeriod
            if toss_a_coin == 1.0:
               return len(self.RunFrac)-1
-        print "Run Period undefined"
+        print("Run Period undefined")
         return -1 
 
     #_____Analyze

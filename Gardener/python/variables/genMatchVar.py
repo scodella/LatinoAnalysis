@@ -76,12 +76,12 @@ class GenMatchVarFiller(TreeCloner):
           self.oldBranchesToBeModifiedVector[bname] = bvector
 
         # now actually connect the branches
-        for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+        for bname, bvector in self.oldBranchesToBeModifiedVector.items():
             self.otree.Branch(bname,bvector)
 
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
 
         # avoid dots to go faster
         itree     = self.itree
@@ -89,20 +89,20 @@ class GenMatchVarFiller(TreeCloner):
 
         savedentries = 0
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
         #for i in xrange(1000):
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
 
             ## print event count
             if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
 
-            for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+            for bname, bvector in self.oldBranchesToBeModifiedVector.items():
                 bvector.clear()
             
-            for iLep in xrange(len(itree.std_vector_lepton_pt)) :
+            for iLep in range(len(itree.std_vector_lepton_pt)) :
 
               # default is not matched            
               isLeptonMatched = 0
@@ -110,7 +110,7 @@ class GenMatchVarFiller(TreeCloner):
 
               # check if the lepton is modified              
               if hasattr(itree, 'std_vector_leptonGen_pt') :
-                for iGenLep in xrange(len(itree.std_vector_leptonGen_pt)) :
+                for iGenLep in range(len(itree.std_vector_leptonGen_pt)) :
                   # if there is a gen lepton with pt>0 and status 1
                   if self.itree.std_vector_leptonGen_pt[iGenLep] > 0 \
                      and  self.itree.std_vector_leptonGen_status[iGenLep] == 1 \
@@ -124,7 +124,7 @@ class GenMatchVarFiller(TreeCloner):
                           isLeptonPromptMatched = 1
               
               # now save the variable
-              for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+              for bname, bvector in self.oldBranchesToBeModifiedVector.items():
                   if "prompt" in bname :
                     bvector.push_back ( isLeptonPromptMatched )
                   else :
@@ -137,8 +137,8 @@ class GenMatchVarFiller(TreeCloner):
             savedentries+=1
             
         self.disconnect()
-        print '- Eventloop completed'
-        print '   Saved: ', savedentries, ' events'
-        print '   Total: ', nentries 
+        print('- Eventloop completed')
+        print('   Saved: ', savedentries, ' events')
+        print('   Total: ', nentries) 
 
 

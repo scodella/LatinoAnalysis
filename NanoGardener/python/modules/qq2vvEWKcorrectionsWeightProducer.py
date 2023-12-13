@@ -32,7 +32,7 @@ class vvNLOEWKcorrectionWeightProducer(Module):
         #
         # "sample_type" should be ww, wz, zz
         #
-        print ' ------> vvNLOEWKcorrectionWeightProducer Init() ----'
+        print(' ------> vvNLOEWKcorrectionWeightProducer Init() ----')
         # change this part into correct path structure... 
         cmssw_base = os.getenv('CMSSW_BASE')
         try:
@@ -52,7 +52,7 @@ class vvNLOEWKcorrectionWeightProducer(Module):
 
         self.sample_type = sample_type
 
-        print " sample_type = " , sample_type
+        print(" sample_type = " , sample_type)
 
       
     def beginJob(self):

@@ -31,9 +31,9 @@ class BladeFactory:
     # _____________________________________________________________________________
     def makeBlade( self, inputFile, outputFile, variables, cuts, samples, structureFile, nuisances, removeNegativeBins, minValueBins):
     
-        print "==================="
-        print "==== makeBlade ===="
-        print "==================="
+        print("===================")
+        print("==== makeBlade ====")
+        print("===================")
         
         self._minValueBins = minValueBins
         
@@ -61,7 +61,7 @@ class BladeFactory:
         #
         for cutName in cuts:
           self._fileOut.mkdir ( cutName )
-          for variableName, variable in variables.iteritems():
+          for variableName, variable in list(variables.items()):
             self._fileOut.mkdir ( cutName + "/" + variableName)
 
 
@@ -85,7 +85,7 @@ class BladeFactory:
             for sampleName in samples:
             
               # loop over variables
-              for variableName, variable in variables.iteritems():
+              for variableName, variable in list(variables.items()):
                 
                 self._fileOut.cd ( cutName + "/" + variableName)
                 
@@ -137,25 +137,25 @@ class BladeFactory:
                   #
                   
                   if 'splitbin' in variable :
-                    if sampleName in variable['splitbin'].keys() :
-                      if 'all' in variable['splitbin'][sampleName].keys() or cutName in variable['splitbin'][sampleName].keys() : 
+                    if sampleName in list(variable['splitbin'].keys()) :
+                      if 'all' in list(variable['splitbin'][sampleName].keys()) or cutName in list(variable['splitbin'][sampleName].keys()) : 
                         name_phasespace = cutName
-                        if 'all' in variable['splitbin'][sampleName].keys():
+                        if 'all' in list(variable['splitbin'][sampleName].keys()):
                           name_phasespace = 'all'
   
-                        for bin_to_split in variable['splitbin'][sampleName][name_phasespace].keys():
+                        for bin_to_split in list(variable['splitbin'][sampleName][name_phasespace].keys()):
                       
                           value_to_share = histo.GetBinContent( bin_to_split )  # 19
                           uncertainty_on_value_to_share = histo.GetBinError( bin_to_split )
                           # you cannot share anything if it was already 0, com'on!
                           # set more properly the splitting in "variables.py"
                           if value_to_share > 0 :   # !=0 ?
-                            print " I am splitting ", variableName, " , " , sampleName, " , ", cutName , " , [", bin_to_split, "] --> ", variable['splitbin'][sampleName][name_phasespace][bin_to_split]
+                            print((" I am splitting ", variableName, " , " , sampleName, " , ", cutName , " , [", bin_to_split, "] --> ", variable['splitbin'][sampleName][name_phasespace][bin_to_split]))
                             relative_uncertainty_on_value_to_share = uncertainty_on_value_to_share/value_to_share
                             number_of_bins = len( variable['splitbin'][sampleName][name_phasespace][bin_to_split] )   # [19,20,21]
                             
-                            print "    number_of_bins = " , number_of_bins 
-                            print "    value_to_share (", value_to_share, ") --> " , value_to_share/number_of_bins
+                            print(("    number_of_bins = " , number_of_bins)) 
+                            print(("    value_to_share (", value_to_share, ") --> " , value_to_share/number_of_bins))
                             
                             for ibin in variable['splitbin'][sampleName][name_phasespace][bin_to_split] :
                               current_content = histo.GetBinContent( ibin )
@@ -163,7 +163,7 @@ class BladeFactory:
                               current_error = histo.GetBinError( ibin )
                               histo.SetBinError ( ibin, SumQ (current_error, relative_uncertainty_on_value_to_share * value_to_share/number_of_bins ) ) #  = uncertainty_on_value_to_share / number_of_bins
                           else :
-                            print " I am NOT splitting ", variableName, " , " , sampleName, " , ", cutName , " , [", bin_to_split, "] --> ", variable['splitbin'][sampleName][name_phasespace][bin_to_split]
+                            print((" I am NOT splitting ", variableName, " , " , sampleName, " , ", cutName , " , [", bin_to_split, "] --> ", variable['splitbin'][sampleName][name_phasespace][bin_to_split]))
                         
                 histo.Write()
                   
@@ -174,7 +174,7 @@ class BladeFactory:
                 #     Nuisances
                 #             
       
-                for nuisanceName, nuisance in nuisances.iteritems():
+                for nuisanceName, nuisance in list(nuisances.items()):
                   if 'type' not in nuisance:
                     raise RuntimeError('Nuisance ' + nuisanceName + ' is missing the type specification')
       
@@ -198,13 +198,13 @@ class BladeFactory:
                     if histoUp != None:
   
                       if 'splitbin' in variable :
-                        if sampleName in variable['splitbin'].keys() :
-                          if 'all' in variable['splitbin'][sampleName].keys() or cutName in variable['splitbin'][sampleName].keys() : 
+                        if sampleName in list(variable['splitbin'].keys()) :
+                          if 'all' in list(variable['splitbin'][sampleName].keys()) or cutName in list(variable['splitbin'][sampleName].keys()) : 
                             name_phasespace = cutName
-                            if 'all' in variable['splitbin'][sampleName].keys():
+                            if 'all' in list(variable['splitbin'][sampleName].keys()):
                               name_phasespace = 'all'
                           
-                            for bin_to_split in variable['splitbin'][sampleName][name_phasespace].keys():
+                            for bin_to_split in list(variable['splitbin'][sampleName][name_phasespace].keys()):
                           
                               value_to_share = histoUp.GetBinContent( bin_to_split )  # 19
                               uncertainty_on_value_to_share = histoUp.GetBinError( bin_to_split )
@@ -230,13 +230,13 @@ class BladeFactory:
                     #
                     if histoDown != None :
                       if 'splitbin' in variable :
-                        if sampleName in variable['splitbin'].keys() :
-                          if 'all' in variable['splitbin'][sampleName].keys() or cutName in variable['splitbin'][sampleName].keys() : 
+                        if sampleName in list(variable['splitbin'].keys()) :
+                          if 'all' in list(variable['splitbin'][sampleName].keys()) or cutName in list(variable['splitbin'][sampleName].keys()) : 
                             name_phasespace = cutName
-                            if 'all' in variable['splitbin'][sampleName].keys():
+                            if 'all' in list(variable['splitbin'][sampleName].keys()):
                               name_phasespace = 'all'
                           
-                            for bin_to_split in variable['splitbin'][sampleName][name_phasespace].keys():
+                            for bin_to_split in list(variable['splitbin'][sampleName][name_phasespace].keys()):
                           
                               value_to_share = histoDown.GetBinContent( bin_to_split )  # 19
                               uncertainty_on_value_to_share = histoDown.GetBinError( bin_to_split )
@@ -266,7 +266,7 @@ class BladeFactory:
             for sampleName in samples:
             
               # loop over variables
-              for variableName, variable in variables.iteritems():
+              for variableName, variable in list(variables.items()):
                 
                 self._fileOut.cd ( cutName + "/" + variableName)
 
@@ -303,7 +303,7 @@ class BladeFactory:
                 #     Nuisances
                 #             
       
-                for nuisanceName, nuisance in nuisances.iteritems():
+                for nuisanceName, nuisance in list(nuisances.items()):
                   if 'type' not in nuisance:
                     raise RuntimeError('Nuisance ' + nuisanceName + ' is missing the type specification')
       
@@ -347,13 +347,13 @@ class BladeFactory:
                       histoDown.Write()
 
         self._fileOut.Close()
-        print "-------------------------"
-        print " outputFile written : " , outputFile
-        print "-------------------------"
+        print("-------------------------")
+        print((" outputFile written : " , outputFile))
+        print("-------------------------")
             
 
         if type(self._fileIn) is dict:
-          for source in self._fileIn.values():
+          for source in list(self._fileIn.values()):
             source.Close()
         else:
           self._fileIn.Close()
@@ -387,7 +387,7 @@ class BladeFactory:
 if __name__ == '__main__':
     sys.argv = argv
     
-    print '''
+    print('''
 --------------------------------------------------------------------------------------------------
     
     
@@ -398,7 +398,7 @@ if __name__ == '__main__':
                                                                             
                                                                            
 --------------------------------------------------------------------------------------------------
-'''   
+''')   
 
 #
 #     This code is run between mkShape and mkDatacard/mkPlot
@@ -424,27 +424,27 @@ if __name__ == '__main__':
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
-    print " configuration file = ", opt.pycfg
+    print((" configuration file = ", opt.pycfg))
     
-    print " inputFile  =          ", opt.inputFile
-    print " outputFile =          ", opt.outputFile
-    print " removeNegativeBins =  ", opt.removeNegativeBins
-    print " minValueBins =        ", opt.minValueBins
+    print((" inputFile  =          ", opt.inputFile))
+    print((" outputFile =          ", opt.outputFile))
+    print((" removeNegativeBins =  ", opt.removeNegativeBins))
+    print((" minValueBins =        ", opt.minValueBins))
  
     if not opt.debug:
       pass
     elif opt.debug == 2:
-      print 'Logging level set to DEBUG (%d)' % opt.debug
+      print(('Logging level set to DEBUG (%d)' % opt.debug))
       logging.basicConfig( level=logging.DEBUG )
     elif opt.debug == 1:
-      print 'Logging level set to INFO (%d)' % opt.debug
+      print(('Logging level set to INFO (%d)' % opt.debug))
       logging.basicConfig( level=logging.INFO )
 
     if opt.nuisancesFile == None :
-      print " Please provide the nuisances structure if you want to add nuisances "
+      print(" Please provide the nuisances structure if you want to add nuisances ")
 
     if opt.structureFile == None :
-      print " Please provide the datacard structure "
+      print(" Please provide the datacard structure ")
       exit ()
 
     ROOT.TH1.SetDefaultSumw2(True)
@@ -503,9 +503,9 @@ if __name__ == '__main__':
           for iOptim in optim:
             newCuts.append(iCut+'_'+iOptim)
         opt.cardList = newCuts
-        print opt.cardList
+        print((opt.cardList))
       except:
-        print "No optim dictionary"
+        print("No optim dictionary")
       cut2del = []
       for iCut in cuts:
         if not iCut in opt.cardList : cut2del.append(iCut)

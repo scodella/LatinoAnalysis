@@ -25,18 +25,18 @@ if __name__ == '__main__':
     hwwtools.loadOptDefaults(parser)
     (opt, args) = parser.parse_args()
 
-    print " configuration file = ", opt.pycfg
-    print " DY estimation Cfg  = ", opt.dycfg
+    print((" configuration file = ", opt.pycfg))
+    print((" DY estimation Cfg  = ", opt.dycfg))
 
     # Set Input file
     if opt.inputFile == 'DEFAULT' :
       opt.inputFile = opt.outputDir+'/plots_'+opt.tag+'.root'
-    print " inputFile      =          ", opt.inputFile
+    print((" inputFile      =          ", opt.inputFile))
 
     # Set Output file
     if opt.outputFile == 'DEFAULT' :
       opt.outputFile = opt.outputDir+'/plots_'+opt.tag+'_'+opt.DYtag+'.root'
-    print " outputFile    =          ", opt.outputFile
+    print((" outputFile    =          ", opt.outputFile))
 
     # Create Needed dictionnary
 
@@ -65,7 +65,7 @@ if __name__ == '__main__':
       exec(handle)
       handle.close()
 
-    print RAndKff
+    print(RAndKff)
 
     # Load C  
     cmssw_base = os.getenv('CMSSW_BASE')
@@ -85,10 +85,10 @@ if __name__ == '__main__':
       Rinout[iRAndKff] = {}
       K_ff[iRAndKff] = {}
 
-      print iRAndKff
+      print(iRAndKff)
 
       for iRegion in RAndKff[iRAndKff]['Regions']: 
-        print iRegion
+        print(iRegion)
 #       print iRegion ,' k = ' , DYCalc.k_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen']),' +/- ', DYCalc.Ek_MC(RAndKff[iRAndKff]['KffFile'],RAndKff[iRAndKff]['Regions'][iRegion]['kNum'],RAndKff[iRAndKff]['Regions'][iRegion]['kDen'])
 #       print iRegion ,' R = ' , DYCalc.R_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen']),' +/- ', DYCalc.ER_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen'])
         K_ff[iRAndKff][iRegion] = {}
@@ -97,12 +97,12 @@ if __name__ == '__main__':
         Rinout[iRAndKff][iRegion] = {} 
         Rinout[iRAndKff][iRegion]['val'] = DYCalc.R_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen'])
         Rinout[iRAndKff][iRegion]['err'] = DYCalc.ER_outin_MC(RAndKff[iRAndKff]['RFile'],RAndKff[iRAndKff]['Regions'][iRegion]['RNum'],RAndKff[iRAndKff]['Regions'][iRegion]['RDen'])
-        print 'R calc. Num = ',  RAndKff[iRAndKff]['Regions'][iRegion]['RNum'], ' / Den = ', RAndKff[iRAndKff]['Regions'][iRegion]['RDen']
+        print(('R calc. Num = ',  RAndKff[iRAndKff]['Regions'][iRegion]['RNum'], ' / Den = ', RAndKff[iRAndKff]['Regions'][iRegion]['RDen']))
 
-    print ' ----- Rinout -----'
-    print Rinout
-    print ' ----- K_ff -------'
-    print K_ff 
+    print(' ----- Rinout -----')
+    print(Rinout)
+    print(' ----- K_ff -------')
+    print(K_ff) 
 
     # ------------------- Apply Rinout and K_ff --------------------
     # Create Ouput file 
@@ -138,9 +138,9 @@ if __name__ == '__main__':
                    if not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up' and not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down' :
                     if hTmp.Integral() == 0 : 
                        nHisDummy = 0
-                       print '!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!',hName
-                       print '!!!!!!!!!!!!!!!!!!!!! Only works for 1 bin, see below !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-                       print '!!!!!!!!!!!!!!!!!!!!! nBin = ',hTmp.GetNbinsX()
+                       print(('!!!!!!!!!!!!!!!!!!!!! WARNING: Empty histogram -> Setting dummy input !!!!!!!!!!!!!!!!!!!!!!',hName))
+                       print('!!!!!!!!!!!!!!!!!!!!! Only works for 1 bin, see below !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                       print(('!!!!!!!!!!!!!!!!!!!!! nBin = ',hTmp.GetNbinsX()))
                        for iBin in range(1,hTmp.GetNbinsX()+1) : 
                           nHisDummy += 1.
                           hTmp.SetBinContent(iBin,1.)
@@ -148,7 +148,7 @@ if __name__ == '__main__':
                     if hName == 'histo_'+DYestim[iDYestim]['DYProc']:
                       hUp = hTmp.Clone('histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up')
                       hDo = hTmp.Clone('histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down')
-                    print '--------- DY' , baseDir , hName , len(DYestim[iDYestim]['DYProc'].split('_'))
+                    print(('--------- DY' , baseDir , hName , len(DYestim[iDYestim]['DYProc'].split('_'))))
                     if not 'Nout' in DYestim[iDYestim] :
                       Nin = inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+DYestim[iDYestim]['SFinDa']).Integral()
                       ENin = inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+DYestim[iDYestim]['SFinDa']).GetBinError(1)
@@ -161,7 +161,7 @@ if __name__ == '__main__':
                           Nvv+= inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+iMC).Integral()
                           ENvv= ENvv + pow(inputFile.Get(DYestim[iDYestim]['SFin']+'/events/histo_'+iMC).GetBinError(1),2)
                         except:
-                          print "Empty"
+                          print("Empty")
                       ENvv = math.sqrt(ENvv)   
                       Nvvdf = 0
                       ENvvdf = 0
@@ -179,9 +179,9 @@ if __name__ == '__main__':
                       k  = K_ff[rinout][tag]['val']
                       Ek = K_ff[rinout][tag]['err']
                       if 'ksyst' in DYestim[iDYestim] : Ek = math.sqrt(pow(Ek,2)+pow(DYestim[iDYestim]['ksyst'],2))
-                      print 'R = ',R,' +- ',ER
-                      print 'k = ',k,' +- ',Ek
-                      print 'Nin =',Nin,' Neu = ',Neu,' Nvv = ',Nvv
+                      print(('R = ',R,' +- ',ER))
+                      print(('k = ',k,' +- ',Ek))
+                      print(('Nin =',Nin,' Neu = ',Neu,' Nvv = ',Nvv))
                       Nout = DYCalc.N_DY(R , Nin , k , Neu, Nvv )
                       #print R , Nin , k , Neu, Nvv, ER, ENin, Ek, ENeu, ENvv
                       Eout = DYCalc.EN_DY(R , Nin , k , Neu, Nvv, ER, ENin, Ek, ENeu, ENvv )
@@ -212,16 +212,16 @@ if __name__ == '__main__':
                       EAcc = 0.
                       Eout = 0.5*((Nout-NDo)+(NUp-Nout))
                     if 'asyst' in DYestim[iDYestim] : EAcc = math.sqrt(pow(EAcc,2)+pow(DYestim[iDYestim]['asyst'],2)) 
-                    print 'Acc = ',Acc," +- ",EAcc
+                    print(('Acc = ',Acc," +- ",EAcc))
                     # Central value or systematics not related to DY ESTIM
                     if not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Up' and not hName == 'histo_'+DYestim[iDYestim]['DYProc']+'_'+DYestim[iDYestim]['NPname']+'Down' :
                       Scale = Nout / nHis
                       if Scale < 0:
-                        print '----------  NEGATIVE SCALE = ', Scale ,'. Setting scale to 1 ----------' 
+                        print(('----------  NEGATIVE SCALE = ', Scale ,'. Setting scale to 1 ----------')) 
                         Scale = 1
                         Nout = nHis
-                      print 'Nout= ' , Nout , ' +- ',Eout, '(Nout_MC = ',nHis,') -> Scale = ',Scale 
-                      print 'Nout*Acc= ' , Nout*Acc , iDYestim
+                      print(('Nout= ' , Nout , ' +- ',Eout, '(Nout_MC = ',nHis,') -> Scale = ',Scale)) 
+                      print(('Nout*Acc= ' , Nout*Acc , iDYestim))
                       for iBin in range(0,hTmp.GetNbinsX()+2) :
                         BinContent = hTmp.GetBinContent(iBin)
                         NewBinContent = BinContent*Scale*Acc
@@ -234,15 +234,15 @@ if __name__ == '__main__':
                         #print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError 
                     # Compute Syst Error
                     if hName == 'histo_'+DYestim[iDYestim]['DYProc']:
-                      print '---  UP  ---' 
+                      print('---  UP  ---') 
                       outputFile.cd(baseDir+'/'+subDir)
                       Scale = NUp / nHis
                       if Scale < 0:
-                        print '----------  NEGATIVE SCALE = ', Scale ,'. Setting scale to 1 ----------'
+                        print(('----------  NEGATIVE SCALE = ', Scale ,'. Setting scale to 1 ----------'))
                         Scale = 1
                         NUp = nHis
-                      print 'NUp= ' , NUp , '(Nout_MC = ',nHis,') -> Scale = ',Scale
-                      print 'NUp*Acc = ' , NUp*(Acc+EAcc)
+                      print(('NUp= ' , NUp , '(Nout_MC = ',nHis,') -> Scale = ',Scale))
+                      print(('NUp*Acc = ' , NUp*(Acc+EAcc)))
                       for iBin in range(0,hUp.GetNbinsX()+2) :
                         BinContent = hUp.GetBinContent(iBin)
                         NewBinContent = BinContent*Scale*(Acc+EAcc)
@@ -254,18 +254,18 @@ if __name__ == '__main__':
                         #print 'BinContent= ' , BinContent , ', NewBinContent = ',NewBinContent
                         #print 'BinError  = ' , BinError   , ', NewBinError   = ',NewBinError
                       hUp.Write()
-                      print '---  DOWN  ---'
+                      print('---  DOWN  ---')
                       outputFile.cd(baseDir+'/'+subDir)
                       Scale = NDo / nHis
                       if Scale < 0:
-                        print '----------  NEGATIVE SCALE = ', Scale ,'. Setting scale to 1 ----------'
+                        print(('----------  NEGATIVE SCALE = ', Scale ,'. Setting scale to 1 ----------'))
                         Scale = 1
                         NDo = nHis
-                      print 'NDo= ' , NDo , '(Nout_MC = ',nHis,') -> Scale = ',Scale
+                      print(('NDo= ' , NDo , '(Nout_MC = ',nHis,') -> Scale = ',Scale))
                       accDown = Acc-EAcc
                       if (Acc-EAcc) < 0:
                         accDown = 0.0001
-                      print 'NDo*Acc= ' , NDo*accDown
+                      print(('NDo*Acc= ' , NDo*accDown))
                       for iBin in range(0,hDo.GetNbinsX()+2) :
                         BinContent = hDo.GetBinContent(iBin)
                         NewBinContent = BinContent*Scale*accDown

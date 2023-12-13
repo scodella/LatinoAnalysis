@@ -41,55 +41,55 @@ def associate_vectors(jets, partons, dist):
     
 def mjj_pairs(vectors):
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         l.append( ([i,k], (vectors[i]+ vectors[k]).M() ))
     l = sorted(l, key=itemgetter(1), reverse=True)
     return l
 
 def deltaeta_pairs(vectors):
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         l.append( ([i,k], abs(vectors[i].Eta()- vectors[k].Eta()) ) )
     l = sorted(l, key=itemgetter(1), reverse=True)
     return l
 
 def deltaR_pairs(vectors):
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         l.append( ([i,k], vectors[i].DeltaR(vectors[k])) )
     l = sorted(l, key=itemgetter(1), reverse=True)
     return l
 
 def max_deltaeta_pair(vectors):
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         l.append( ([i,k], abs(vectors[i].Eta() - vectors[k].Eta())))
     l = sorted(l, key=itemgetter(1), reverse=True)
     return l[0][0]
 
 def max_mjj_pair(vectors):
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         l.append( ([i,k], (vectors[i]+ vectors[k]).M() ))
     l = sorted(l, key=itemgetter(1), reverse=True)
     return l[0][0]
 
 def max_mjj_pair_minpt(vectors, minpt):
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         # exclude the pair if both jets have pt less than the minimum
         if (vectors[i].Pt() - minpt) < -0.001 and (vectors[k].Pt() - minpt) < -0.001: continue
         l.append( ([i,k], (vectors[i]+ vectors[k]).M() ))
     l = sorted(l, key=itemgetter(1), reverse=True)
     if len(l) == 0:
-        print ">>> No pairs found!"
+        print(">>> No pairs found!")
         return [-1,-1]
     return l[0][0]
 
 def max_pt_sum(vectors):
     ''' Returns the pair with highest Pt'''
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         l.append(( [i,k], (vectors[i]+ vectors[k]).Pt() ))
     l = sorted(l, key=itemgetter(1), reverse=True)
     return l[0][0]
@@ -106,7 +106,7 @@ def nearest_mass_pair(vectors, mass):
     ''' Returns the pair of vectors with invariant mass nearest to 
     the given mass '''
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         l.append(([i,k], abs(mass - (vectors[i]+ vectors[k]).M() )))  
     l = sorted(l, key=itemgetter(1))
     return l[0][0]
@@ -115,7 +115,7 @@ def nearest_masses_pair(vectors, masses):
     ''' Returns the pair of vectors with invariant mass nearest to one of the 
     masses in the parameter'''
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         distances= [abs(mass - (vectors[i]+ vectors[k]).M() ) for mass in masses]
         l.append(([i,k], min(distances)))  
     l = sorted(l, key=itemgetter(1))
@@ -126,7 +126,7 @@ def mass_of_nearest_mass_pair(vectors, mass):
     the given mass'''
     l = []
     pair_mass = 0
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         pair_mass = (vectors[i]+ vectors[k]).M()
         l.append(([i,k], abs(mass - pair_mass ), pair_mass))  
     l = sorted(l, key=itemgetter(1))
@@ -134,7 +134,7 @@ def mass_of_nearest_mass_pair(vectors, mass):
 
 def nearest_R_pair(vectors):
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         l.append(([i,k], vectors[i].DeltaR(vectors[k]) ))  
     l = sorted(l, key=itemgetter(1), reverse=True)
     return l[0][0]
@@ -142,7 +142,7 @@ def nearest_R_pair(vectors):
 def get_nearest_vector(target, vectors):
     ''' Return the nearest vector from target in the vectors list'''
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         l.append(([i,k], vectors[i].DeltaR(target) ))  
     l = sorted(l, key=itemgetter(1), reverse=True)
     return l[0][0][0]
@@ -175,7 +175,7 @@ def nearest_mass_pair_notH(vectors, mass, hpair):
     ''' Returns the pair of vectors with invariant mass nearest to 
     the given mass, checking if it isn't the bb pair '''
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         l.append(([i,k], abs(mass - (vectors[i]+ vectors[k]).M() )))  
     l = sorted(l, key=itemgetter(1))
     for i in range(len(l)):
@@ -186,7 +186,7 @@ def nearest_mass_pair_notH(vectors, mass, hpair):
 def max_pt_pair_notH(vectors, hpair):
     ''' Returns the pair with highest Pt, , checking that it isn't the bb pair'''
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         l.append(( [i,k], (vectors[i]+ vectors[k]).Pt() ))
     l = sorted(l, key=itemgetter(1), reverse=True)
     l = sorted(l, key=itemgetter(1))
@@ -197,7 +197,7 @@ def max_pt_pair_notH(vectors, hpair):
 
 def min_deltaeta_pairs_notH(vectors, hpair):
     l = []
-    for i ,k  in combinations(range(len(vectors)),2):
+    for i ,k  in combinations(list(range(len(vectors))),2):
         l.append( ([i,k], abs(vectors[i].Eta()- vectors[k].Eta()) ) )
     l = sorted(l, key=itemgetter(1))
     for i in range(len(l)):

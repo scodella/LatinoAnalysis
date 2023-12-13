@@ -46,11 +46,11 @@ class FakeWeightFiller(TreeCloner):
 
 
     def checkOptions(self,opts):
-	cmssw_base = os.getenv('CMSSW_BASE')
+        cmssw_base = os.getenv('CMSSW_BASE')
         self.cmssw = opts.cmssw
-        print " cmssw = ", self.cmssw
+        print(" cmssw = ", self.cmssw)
         self.idEleKind = opts.idEleKind
-        print " idEleKind = ", self.idEleKind
+        print(" idEleKind = ", self.idEleKind)
 
         if self.cmssw == 'Full2016' and self.idEleKind in ['cut_WP_Tight80X'] :   
 
@@ -499,27 +499,27 @@ class FakeWeightFiller(TreeCloner):
         self.otree.Branch('fakeW4lstatElDown', fakeW4lstatElDown, 'fakeW4lstatElDown/F')
 
         nentries = self.itree.GetEntries()
-        print ' - Input entries:', nentries
+        print(' - Input entries:', nentries)
         savedentries = 0
                 
         # avoid dots to go faster
         itree = self.itree
         otree = self.otree
 
-        print ' - Starting event loop'
+        print(' - Starting event loop')
         step = 5000
 
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
 
             # print event count
-            if (i > 0 and i%step == 0.) : print i,'events processed'
+            if (i > 0 and i%step == 0.) : print(i,'events processed')
 
             Leptons = {}
             
             selectedLepton = 0
          
-            for iLep in xrange(len(itree.std_vector_lepton_pt)) :
+            for iLep in range(len(itree.std_vector_lepton_pt)) :
  
                 # get kinematic
                 pt      = itree.std_vector_lepton_pt     [iLep]
@@ -602,5 +602,5 @@ class FakeWeightFiller(TreeCloner):
             savedentries += 1
 
         self.disconnect()
-        print ' - Event loop completed'
-        print '   Saved entries:', savedentries
+        print(' - Event loop completed')
+        print('   Saved entries:', savedentries)

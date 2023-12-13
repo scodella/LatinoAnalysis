@@ -46,7 +46,7 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
         self.mcsample = opts.mcsample
 
         self.cmssw = opts.cmssw
-        print " cmssw =", self.cmssw
+        print(" cmssw =", self.cmssw)
 
 
     def process(self,**kwargs):
@@ -82,7 +82,7 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
                            cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/wwresum/scale_down.dat'
                            )
 
-        print " starting ..."
+        print(" starting ...")
 
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -113,22 +113,22 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
         self.otree.Branch('gen_ptww' , gen_ptww  , 'gen_ptww/F')
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
 
         #what is self.itree? what is self.otree?
         itree     = self.itree
         otree     = self.otree
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
 
-        for i in xrange(nentries):
+        for i in range(nentries):
         #for i in xrange(100):
 
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
 
             number1 = -1
             number2 = -1
@@ -215,7 +215,7 @@ class wwNLLcorrectionWeightFiller(TreeCloner):
             otree.Fill()
 
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 
 
 

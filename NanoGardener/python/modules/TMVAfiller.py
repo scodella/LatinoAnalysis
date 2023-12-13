@@ -28,7 +28,7 @@ class TMVAfiller(Module):
           exec(handle)
           self.mvaDic = mvaDic
           handle.close()
-        print self.mvaDic
+        print(self.mvaDic)
         self.mvaDic = mvaDic
         self._branch_map = branch_map
 

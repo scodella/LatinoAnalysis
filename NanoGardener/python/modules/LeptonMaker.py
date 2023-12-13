@@ -16,12 +16,12 @@ class LeptonMaker(Module):
     '''
     def __init__(self, min_lep_pt = [10]):
         self.min_lep_pt = min_lep_pt
-        self.min_lep_pt_idx = range(len(min_lep_pt))
+        self.min_lep_pt_idx = list(range(len(min_lep_pt)))
         print_str = ''
         for idx in self.min_lep_pt_idx:
             print_str += 'Lepton_pt[' + str(idx) + '] > ' + str(min_lep_pt[idx])
             if not idx == self.min_lep_pt_idx[-1]: print_str += ', '
-        print('LeptonMaker: ' + print_str)
+        print(('LeptonMaker: ' + print_str))
 
     def beginJob(self): 
         pass

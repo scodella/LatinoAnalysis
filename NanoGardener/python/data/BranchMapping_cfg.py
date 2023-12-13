@@ -660,7 +660,7 @@ _MupT_branches.extend(NewVar_MC_dict['F'])
 ## DYMVA and MonoHiggsMVA
 for cfg in ["DYMVA_2016_cfg", "DYMVA_2017_cfg", "DYMVA_2018_cfg", "MonoHiggsMVA_cfg"]:
   mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
-  for key in mod.mvaDic.iterkeys():
+  for key in mod.mvaDic.keys():
     if key not in _ElepT_branches:
       _ElepT_branches.append(key)
     if key not in _MupT_branches:
@@ -674,7 +674,7 @@ for cfg in ["DYMVA_2016_cfg", "DYMVA_2017_cfg", "DYMVA_2018_cfg", "MonoHiggsMVA_
 
 for cfg in ["DYMVA_2016_alt_cfg", "DYMVA_2017_alt_cfg", "DYMVA_2018_alt_cfg"]:
   mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
-  for key in mod.mvaDic.iterkeys():
+  for key in mod.mvaDic.keys():
     if key not in _ElepT_branches:
       _ElepT_branches.append(key)
     if key not in _MupT_branches:
@@ -693,7 +693,7 @@ for branches in [_ElepT_branches,_MupT_branches, _MET_branches, _JES_branches,_J
 ## formulas MC
 for cfg in ['formulasToAdd_MC_Full2016v6', 'formulasToAdd_MC_Full2016v7', 'formulasToAdd_MC_Full2017v6', 'formulasToAdd_MC_Full2017v7', 'formulasToAdd_MC_Full2018v6', 'formulasToAdd_MC_Full2018v7', 'formulasToAdd_MC_MonoH']:
   mod = importlib.import_module('LatinoAnalysis.NanoGardener.data.' + cfg)
-  for key in mod.formulas.iterkeys():
+  for key in mod.formulas.keys():
     if key == "METFilter_MC": continue
     if "XS" not in key and key not in _ElepT_branches:
       _ElepT_branches.append(key)
@@ -705,13 +705,13 @@ for cfg in ['formulasToAdd_MC_Full2016v6', 'formulasToAdd_MC_Full2016v7', 'formu
 ## LeptonSF
 var = importlib.import_module("LatinoAnalysis.NanoGardener.data.LeptonSel_cfg")
 wp_sf_pf = ['_IdIsoSF', '_IdIsoSF_Up', '_IdIsoSF_Down', '_IdIsoSF_Syst', '_TotSF', '_TotSF_Up', '_TotSF_Down']
-for version in var.ElectronWP.keys():
+for version in list(var.ElectronWP.keys()):
   for wp in var.ElectronWP[version]['TightObjWP']:
     for postfix in wp_sf_pf:
       key = 'Lepton_tightElectron_'+wp + postfix
       if key not in _ElepT_branches:
         _ElepT_branches.append(key)
-for version in var.MuonWP.keys():
+for version in list(var.MuonWP.keys()):
   for wp in var.MuonWP[version]['TightObjWP']:
     for postfix in wp_sf_pf:
       if key not in _MupT_branches:

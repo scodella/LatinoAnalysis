@@ -49,8 +49,8 @@ class FilterJSON(TreeCloner):
         else :
           self.run_lumi_json = {}
           
-        print "---------------------------------------"
-        print " self.run_lumi_json =", self.run_lumi_json
+        print("---------------------------------------")
+        print(" self.run_lumi_json =", self.run_lumi_json)
         
           
     def process(self,**kwargs):
@@ -67,7 +67,7 @@ class FilterJSON(TreeCloner):
         self.otree.Branch('isJsonOk',  isJsonOk,  'isJsonOk/F')
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
         savedentries = 0
 
         # avoid dots to go faster
@@ -75,22 +75,22 @@ class FilterJSON(TreeCloner):
         otree     = self.otree
 
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
         
          
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
 
             ## print event count
             if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
 
             isJsonOk[0] = 0
             
             #print " self.run_lumi_json = ", self.run_lumi_json
             #print "run, lumi = ", itree.run, " , ", itree.lumi
-            if str(itree.run) in self.run_lumi_json.keys() :
+            if str(itree.run) in list(self.run_lumi_json.keys()) :
               lumi_blocks = self.run_lumi_json[str(itree.run)]     # example:   "273158": [[1, 1279]]
               #print " lumi_blocks = ", lumi_blocks
               for ilumi_block in lumi_blocks :
@@ -109,8 +109,8 @@ class FilterJSON(TreeCloner):
         #print " DoubleChecker = ", DoubleChecker  
           
         self.disconnect()
-        print '- Eventloop completed'
-        print '   Passing tag: ', savedentries, ' events out of', nentries
+        print('- Eventloop completed')
+        print('   Passing tag: ', savedentries, ' events out of', nentries)
 
 
 

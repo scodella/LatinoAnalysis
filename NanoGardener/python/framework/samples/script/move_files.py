@@ -31,14 +31,14 @@ for prod, year in zip(prods,["2016","2017","2018"]):
         ystep = step.format(year)
         path = os.path.join(basepath, prod, ystep) 
         for s in samples:
-            print path+"/nanoLatino_"+s+"__part*.root"
+            print(path+"/nanoLatino_"+s+"__part*.root")
             files = glob.glob(path+"/nanoLatino_"+s+"__part*.root")
             for f in files: 
                 try:
                     if not os.path.exists(trash+"/"+ ystep+ "/"): os.makedirs(trash+"/"+ ystep+ "/")
                     shutil.move(f, trash+"/"+ ystep+ "/")
                 except Exception as e:
-                    print e
+                    print(e)
 
 for prod, year in zip(prods,["2016","2017","2018"]):
     for sys in systs:
@@ -46,11 +46,11 @@ for prod, year in zip(prods,["2016","2017","2018"]):
             step = "MCl1loose{0}v7__MCCorr{0}v7__MCCombJJLNu{0}".format(year)+"_"+sys + d
             path = os.path.join(basepath, prod, step) 
             for s in samples:
-                print path+"/nanoLatino_"+s+"__part*.root"
+                print(path+"/nanoLatino_"+s+"__part*.root")
                 files = glob.glob(path+"/nanoLatino_"+s+"__part*.root")
                 for f in files: 
                     try:
                         if not os.path.exists(trash+"/"+ step+ "/"): os.makedirs(trash+"/"+ step+ "/")
                         shutil.move(f, trash+"/"+ step+ "/")
                     except Exception as e:
-                        print e
+                        print(e)

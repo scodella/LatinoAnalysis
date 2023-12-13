@@ -50,7 +50,7 @@ class SusyWeightsProducer(Module):
             chain.Add(self.sourcedir + '/' + inputFileName)
             nInputTrees = 1
 
-        print 'SusyWeightsProducer: read', nInputTrees, 'input susyGen files with', chain.GetEntries(), 'events'
+        print('SusyWeightsProducer: read', nInputTrees, 'input susyGen files with', chain.GetEntries(), 'events')
 
         self.massPointN = { }
 
@@ -108,7 +108,7 @@ class SusyWeightsProducer(Module):
                         self.massPointN[idPrompt][str(xb-1)+"-"+str(yb-1)] = {}
                         self.massPointN[idPrompt][str(xb-1)+"-"+str(yb-1)]['events'] = histoISR.GetEntries()
                         self.massPointN[idPrompt][str(xb-1)+"-"+str(yb-1)]['isrW'] = normFactor
-                        print 'SusyWeightsProducer: overall ISR normalization factor for mass point (',str(idPrompt),',',str(xb-1),',',str(yb-1),'):', normFactor
+                        print('SusyWeightsProducer: overall ISR normalization factor for mass point (',str(idPrompt),',',str(xb-1),',',str(yb-1),'):', normFactor)
                         
     ###    
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -124,7 +124,7 @@ class SusyWeightsProducer(Module):
         baseW = 1000.*Xsec/nevents
 
         isrW = self.massPointN[int(event.susyIDprompt)][str(int(event.susyMprompt))+"-"+str(int(event.susyMLSP))]['isrW']
-        for ib in reversed(xrange(self.isrBins+1)) :
+        for ib in reversed(range(self.isrBins+1)) :
             if getattr(event, self.isrObservable) >= self.isrEdge[ib] :
                 isrW *= self.isrCorrection[ib]
                 break

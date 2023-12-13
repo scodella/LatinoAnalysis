@@ -41,7 +41,7 @@ class ggHtoMINLOMaker(TreeCloner) :
 
     def checkOptions(self,opts) :
         self.cmssw = opts.cmssw
-        print " cmssw =", self.cmssw
+        print(" cmssw =", self.cmssw)
 
     def process(self,**kwargs) :
         tree   = kwargs['tree']
@@ -51,7 +51,7 @@ class ggHtoMINLOMaker(TreeCloner) :
         self.connect(tree,input)
 
         nentries = self.itree.GetEntries()
-        print ' - Input entries:', nentries 
+        print(' - Input entries:', nentries) 
         savedentries = 0
 
         # Create branches for otree, the ones that will be modified
@@ -82,10 +82,10 @@ class ggHtoMINLOMaker(TreeCloner) :
 
  
         #-----------------------------------------------------------------------
-        print ' - Starting event loop'
+        print(' - Starting event loop')
         step = 500
 
-        for i in xrange(nentries) :
+        for i in range(nentries) :
           itree.GetEntry(i)
 
           weight2MINLO[0] = 1.
@@ -122,5 +122,5 @@ class ggHtoMINLOMaker(TreeCloner) :
           savedentries+=1
           
         self.disconnect()
-        print ' - Event loop completed'
-        print ' - Saved entries:', savedentries
+        print(' - Event loop completed')
+        print(' - Saved entries:', savedentries)

@@ -9,7 +9,7 @@ import optparse
 
 
 if __name__ == '__main__':
-    print '''
+    print('''
 --------------------------------------------------------------------------------------------------
 
   __ \                               \  |        _)                                       
@@ -18,7 +18,7 @@ if __name__ == '__main__':
  ____/  _|   \__,_|   \_/\_/       _| \_| \__,_| _| ____/ \__,_| _|  _| \___| \___| ____/ 
                                                                                           
 --------------------------------------------------------------------------------------------------
-'''    
+''')    
 
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
@@ -40,16 +40,16 @@ if __name__ == '__main__':
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
-    print " inputFile =           ", opt.inputFile
-    print " nuisancesFile =       ", opt.nuisancesFile
-    print " samplesFile =         ", opt.samplesFile
-    print " outputDirPlots =      ", opt.outputDirPlots
-    print " cutName =             ", opt.cutName
-    print " splitStat =           ", opt.splitStat
-    print " dryRun  =             ", opt.dryRun
-    print " drawYields  =         ", opt.drawYields
-    print " joinSubsamples  =     ", opt.joinSubsamples
-    print " onlySample  =         ", opt.onlySample
+    print((" inputFile =           ", opt.inputFile))
+    print((" nuisancesFile =       ", opt.nuisancesFile))
+    print((" samplesFile =         ", opt.samplesFile))
+    print((" outputDirPlots =      ", opt.outputDirPlots))
+    print((" cutName =             ", opt.cutName))
+    print((" splitStat =           ", opt.splitStat))
+    print((" dryRun  =             ", opt.dryRun))
+    print((" drawYields  =         ", opt.drawYields))
+    print((" joinSubsamples  =     ", opt.joinSubsamples))
+    print((" onlySample  =         ", opt.onlySample))
 
     
     
@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
     if opt.joinSubsamples == '0':
       subsamples = {}
-      for sampleName, sample in samples.items():
+      for sampleName, sample in list(samples.items()):
         if "subsamples" in sample: 
           for subs in sample["subsamples"]:
             subsamples[sampleName+"_"+subs] = {}
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     texOutputFile.write('\n')
 
     # loop over nuisances
-    for sampleName, sample in samples.iteritems():
+    for sampleName, sample in list(samples.items()):
       if opt.onlySample and opt.onlySample not in sampleName: continue
     
       nameNominal = 'histo_' + sampleName
@@ -96,7 +96,7 @@ if __name__ == '__main__':
         histoNominal = ROOTinputFile.Get(nameNominal)
         nbins = histoNominal.GetNbinsX()
 
-      print " nbins = ", nbins
+      print((" nbins = ", nbins))
 
       texOutputFile.write('\n')      
       texOutputFile.write('\n')
@@ -105,10 +105,10 @@ if __name__ == '__main__':
 
       counterNuisance = 0
 
-      for nuisanceName, nuisance in nuisances.iteritems(): 
+      for nuisanceName, nuisance in list(nuisances.items()): 
         #print " nuisanceName = ", nuisanceName
         #print " nuisance = ", nuisance
-        if 'name' in nuisance.keys() :
+        if 'name' in list(nuisance.keys()) :
           
           if 'skipCMS' in nuisance and nuisance['skipCMS'] == 1:
             entryName = nuisance['name']
@@ -118,12 +118,12 @@ if __name__ == '__main__':
           nameDown = 'histo_' + sampleName + '_' + entryName + 'Down'
           nameUp   = 'histo_' + sampleName + '_' + entryName + 'Up'          
           
-          print " nameDown = ", nameDown
-          print " nameUp   = ", nameUp
+          print((" nameDown = ", nameDown))
+          print((" nameUp   = ", nameUp))
           
           if nameDown in ROOTinputFile.GetListOfKeys() :
 
-            print ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\",\\\"' + opt.drawYields + '\\\"\) ')
+            print(('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\",\\\"' + opt.drawYields + '\\\"\) '))
             if opt.dryRun == None :
               os.system ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\",\\\"' + opt.drawYields + '\\\"\) ')
 
@@ -137,22 +137,22 @@ if __name__ == '__main__':
 
         else :
           if nuisanceName == 'stat' : # 'stat' has a separate treatment, it's the MC/data statistics
-            if 'samples' in nuisance.keys():
-              if sampleName in nuisance['samples'].keys() :
+            if 'samples' in list(nuisance.keys()):
+              if sampleName in list(nuisance['samples'].keys()) :
                 if opt.splitStat == None :  
                   nameDown = 'histo_' + sampleName + '_CMS_' + opt.cutName + '_' + sampleName + '_ibin_'
                   nameUp   = 'histo_' + sampleName + '_CMS_' + opt.cutName + '_' + sampleName + '_ibin_'
-                  print ('root -b -q DrawNuisancesStat.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\",\\\"' + opt.drawYields + '\\\"\) ')
+                  print(('root -b -q DrawNuisancesStat.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\",\\\"' + opt.drawYields + '\\\"\) '))
                   if opt.dryRun == None :
                     os.system ('root -b -q DrawNuisancesStat.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\",\\\"' + opt.drawYields + '\\\"\) ')
 
                 else :
                   for iBin in range(1, nbins): # max number of bins
-                    print iBin
+                    print(iBin)
                     nameDown = 'histo_' + sampleName + '_CMS_' + opt.cutName + '_' + sampleName + '_ibin_' + str(iBin) + '_stat' + 'Down'
                     nameUp   = 'histo_' + sampleName + '_CMS_' + opt.cutName + '_' + sampleName + '_ibin_' + str(iBin) + '_stat' + 'Up'         
                     if nameDown in ROOTinputFile.GetListOfKeys() :
-                      print ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
+                      print(('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) '))
                       if opt.dryRun == None :
                         os.system ('root -b -q DrawNuisances.cxx\(\\\"' + opt.inputFile + '\\\",\\\"' + nameNominal + '\\\",\\\"' + nameUp + '\\\",\\\"' + nameDown + '\\\",\\\"' + opt.outputDirPlots + '\\\"\) ')
                       

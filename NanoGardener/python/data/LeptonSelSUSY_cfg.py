@@ -2584,23 +2584,23 @@ if __name__ == '__main__':
     print('_______________ElectronWP_______________')
     print('')
     for key in ElectronWP:
-        print('__________' + key + '__________')
+        print(('__________' + key + '__________'))
         print('')
         for typ in ElectronWP[key]:
-            print('_____' + typ + '_____')
+            print(('_____' + typ + '_____'))
             for entr in ElectronWP[key][typ]:
-                print(entr + ' =')
-                print(ElectronWP[key][typ][entr]['cuts'])
+                print((entr + ' ='))
+                print((ElectronWP[key][typ][entr]['cuts']))
                 print('')
     print('_______________MuonWP___________________')
     print('')
     for key in MuonWP:
-        print('__________' + key + '__________')
+        print(('__________' + key + '__________'))
         print('')
         for typ in MuonWP[key]:
-            print('_____' + typ + '_____')
+            print(('_____' + typ + '_____'))
             for entr in MuonWP[key][typ]:
-                print(entr + ' =')
-                print(MuonWP[key][typ][entr]['cuts'])
+                print((entr + ' ='))
+                print((MuonWP[key][typ][entr]['cuts']))
                 print('')
 

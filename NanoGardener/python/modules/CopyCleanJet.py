@@ -56,7 +56,7 @@ class CopyCleanJet(Module):
                     cutparts = [cut.split(symbol)[0], symbol, cut.split(symbol)[1]]
                     break
             if cutparts == []:
-                print "Error identifying cut",cut
+                print("Error identifying cut",cut)
                 continue
             for i in range(ncleanjets):
                 variable = "jet_dict[cutparts[0]][i]"

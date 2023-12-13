@@ -14,12 +14,12 @@ class HMlnjjVarsGenClass(Module):
 
     def __init__(self,dataMc):
         self.DataMc = dataMc
-	self.GenH_v4  = ROOT.TLorentzVector()
-	self.gSingleLept_v4 = ROOT.TLorentzVector()
-	self.gMet_v4  = ROOT.TLorentzVector()
-	self.gW_Lept_v4 = ROOT.TLorentzVector()
-	self.gW_Ak8_v4 = ROOT.TLorentzVector()
-	self.gW_Ak4_v4 = ROOT.TLorentzVector()
+        self.GenH_v4  = ROOT.TLorentzVector()
+        self.gSingleLept_v4 = ROOT.TLorentzVector()
+        self.gMet_v4  = ROOT.TLorentzVector()
+        self.gW_Lept_v4 = ROOT.TLorentzVector()
+        self.gW_Ak8_v4 = ROOT.TLorentzVector()
+        self.gW_Ak4_v4 = ROOT.TLorentzVector()
 
     def beginJob(self):
         pass
@@ -83,20 +83,20 @@ class HMlnjjVarsGenClass(Module):
         #nOrgJets = getattr(event, "nJet")
         #OrgJets = Collection(event, "Jet")
 
-	# initialize
-	self.GenH_v4.SetPtEtaPhiM(0,0,0,0)
-	self.gSingleLept_v4.SetPtEtaPhiM(0,0,0,0)
-	self.gMet_v4.SetPtEtaPhiM(0,0,0,0)
-	self.gW_Lept_v4.SetPtEtaPhiM(0,0,0,0)
-	self.gW_Ak8_v4.SetPtEtaPhiM(0,0,0,0)
-	self.gW_Ak4_v4.SetPtEtaPhiM(0,0,0,0)
+        # initialize
+        self.GenH_v4.SetPtEtaPhiM(0,0,0,0)
+        self.gSingleLept_v4.SetPtEtaPhiM(0,0,0,0)
+        self.gMet_v4.SetPtEtaPhiM(0,0,0,0)
+        self.gW_Lept_v4.SetPtEtaPhiM(0,0,0,0)
+        self.gW_Ak8_v4.SetPtEtaPhiM(0,0,0,0)
+        self.gW_Ak4_v4.SetPtEtaPhiM(0,0,0,0)
 
 
         if self.DataMc == 'MC':
           genSemiLeptFatJetEvt = False
           genSemiLeptResolvEvt = False
-	  genIsAk8_B_evt = False
-	  genIsAk4_B_evt = False
+          genIsAk8_B_evt = False
+          genIsAk4_B_evt = False
           # accepted jet idx
           fidJetIdx = []
           gAk4_idx0 = 999
@@ -176,10 +176,10 @@ class HMlnjjVarsGenClass(Module):
               gW_Ak8_mass  = GenAK8_col[igAk8]['mass']
               if gW_Ak8_pt < 200: continue
               if abs(gW_Ak8_eta) > 2.4: continue
-	      if gW_Ak8_mass > 105: continue
-	      if gW_Ak8_mass < 65: continue
+              if gW_Ak8_mass > 105: continue
+              if gW_Ak8_mass < 65: continue
               dRAk8Lept = self.getDeltaR(gW_Ak8_phi,  gW_Ak8_eta, gSingleLept_phi, gSingleLept_eta)
-	      if dRAk8Lept < 0.8: continue
+              if dRAk8Lept < 0.8: continue
               genSemiLeptFatJetEvt = True
 
               # passing b-veto
@@ -190,11 +190,11 @@ class HMlnjjVarsGenClass(Module):
                 gAk4_id         = GenAK4_col[igAk4]['partonFlavour']
                 if abs(gAk4_eta) > 2.4: continue
                 dRAk8Ak4 = self.getDeltaR(gW_Ak8_phi,  gW_Ak8_eta, gAk4_phi, gAk4_eta)
-	        # b-veto for W_Ak8 evet
-		if dRAk8Ak4 > 0.8 and abs(gAk4_id) == 5 and gAk4_pt > 20:
-		  genSemiLeptFatJetEvt = False
-		  break
-	      if genSemiLeptFatJetEvt:
+                # b-veto for W_Ak8 evet
+                if dRAk8Ak4 > 0.8 and abs(gAk4_id) == 5 and gAk4_pt > 20:
+                    genSemiLeptFatJetEvt = False
+                    break
+              if genSemiLeptFatJetEvt:
                 for igAk4 in range(GenAK4_col._len):
                   gAk4_pt 	= GenAK4_col[igAk4]['pt']
                   gAk4_eta        = GenAK4_col[igAk4]['eta']
@@ -204,8 +204,8 @@ class HMlnjjVarsGenClass(Module):
                   if gAk4_pt < 30: continue
                   dRAk8Ak4 = self.getDeltaR(gW_Ak8_phi,  gW_Ak8_eta, gAk4_phi, gAk4_eta)
                   dRAk8Ak4_list.append( dRAk8Ak4 )
-		# done for selecting Ak8 #############
-		break
+                # done for selecting Ak8 #############
+                break
 		
 
 
@@ -238,18 +238,18 @@ class HMlnjjVarsGenClass(Module):
                     dM = abs(WhadMass - Wmass)
                     gAk4_idx0 = idx
                     gAk4_idx1 = jdx
-	      # Check if b-event
+	          # Check if b-event
               for idx in range(GenAK4_col._len):
                 gAk4_0_pt       = GenAK4_col[idx]['pt']
                 gAk4_0_eta      = GenAK4_col[idx]['eta']
                 gAk4_0_id       = GenAK4_col[idx]['partonFlavour']
-		if idx == gAk4_idx0 or idx == gAk4_idx1: continue
+                if idx == gAk4_idx0 or idx == gAk4_idx1: continue
                 if gAk4_0_pt < 20: continue
                 if abs(gAk4_0_eta) > 2.4: continue
                 if abs(gAk4_0_id) == 5:
-		  genIsAk4_B_evt = True
+                  genIsAk4_B_evt = True
                   genSemiLeptResolvEvt = False
-		  break
+                  break
 
               if genSemiLeptResolvEvt:
                 gResJet_0_pt    = GenAK4_col[gAk4_idx0]['pt']
@@ -264,7 +264,7 @@ class HMlnjjVarsGenClass(Module):
                 gResJet_1_mass  = GenAK4_col[gAk4_idx1]['mass']
                 gW_Ak4_v4_1 = ROOT.TLorentzVector()
                 gW_Ak4_v4_1.SetPtEtaPhiM(gResJet_1_pt, gResJet_1_eta, gResJet_1_phi, gResJet_1_mass)
-		self.gW_Ak4_v4 = gW_Ak4_v4_0 + gW_Ak4_v4_1
+                self.gW_Ak4_v4 = gW_Ak4_v4_0 + gW_Ak4_v4_1
                 dRAk4Lept[0] = self.getDeltaR(gResJet_0_phi,  gResJet_0_eta, gSingleLept_phi, gSingleLept_eta)
                 dRAk4Lept[1] = self.getDeltaR(gResJet_0_phi,  gResJet_0_eta, gSingleLept_phi, gSingleLept_eta)
 
@@ -305,7 +305,7 @@ class HMlnjjVarsGenClass(Module):
             self.out.fillBranch("GenH_phi", self.GenH_v4.Phi() )
             self.out.fillBranch("GenH_mass",self.GenH_v4.M() )
             self.out.fillBranch("GenW_Ak4_mass", self.gW_Ak4_v4.M())
-	  else :
+          else :
             self.out.fillBranch("GenEvtFlag", 0)
 
 

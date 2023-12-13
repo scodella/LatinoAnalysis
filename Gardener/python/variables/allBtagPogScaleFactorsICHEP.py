@@ -47,14 +47,14 @@ class allBtagPogScaleFactorsICHEP(TreeCloner):
         efffile_path = cmssw_base+'/src/LatinoAnalysis/Gardener/python/'+effFile
 
         if effFile == None :
-          print " Please provide an input file with the MC efficiencies "
+          print(" Please provide an input file with the MC efficiencies ")
 
         elif os.path.exists(efffile_path) :
           handle = open(efffile_path,'r')
           exec(handle)
           handle.close()
         else:
-          print "cannot find file", effFile
+          print("cannot find file", effFile)
 
         self.efficiencyMC_CMVA = efficienciesMC_CMVA
         self.efficiencyMC_CSV = efficienciesMC_CSV
@@ -85,8 +85,8 @@ class allBtagPogScaleFactorsICHEP(TreeCloner):
         except RuntimeError:
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/BTagCalibrationStandalone.cc++g')
         #ROOT.gROOT.ProcessLine('.L BTagCalibrationStandaloneStandalone.cc+') 
-        print "CMVA scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.cmvaSfFile
-        print "CSVv2 scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.csvSfFile
+        print("CMVA scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.cmvaSfFile)
+        print("CSVv2 scale factors from", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.csvSfFile)
         ### Readers for cMVAv2 re-shaping (1 nominal + 9 Up variations + 9 Down variations)
         self.calibCMVA = ROOT.BTagCalibrationStandalone("cMVAv2", cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/'+self.cmvaSfFile)
         if self.cmssw != "ICHEP2016": 
@@ -178,11 +178,11 @@ class allBtagPogScaleFactorsICHEP(TreeCloner):
           eta = self.maxeta
 
         if not (wp=='L' or wp=='M' or wp=='T'):
-          print "ERROR: wp ", wp, " do not exist or the format is wrong. Please provide a correct wp." 
-          print "Available wps are 'L', 'M' or 'T'."
+          print("ERROR: wp ", wp, " do not exist or the format is wrong. Please provide a correct wp.") 
+          print("Available wps are 'L', 'M' or 'T'.")
 
         if algo == "CMVA":
-          if (kindJet,wp) in self.efficiencyMC_CMVA.keys() : 
+          if (kindJet,wp) in list(self.efficiencyMC_CMVA.keys()) : 
             # get the efficiency
             for point in self.efficiencyMC_CMVA[(kindJet,wp)] : 
               #   pt           eta          eff 
@@ -192,11 +192,11 @@ class allBtagPogScaleFactorsICHEP(TreeCloner):
                   return point[2]
 
             # default ... it should never happen!
-            print " default ???", pt, eta, kindJet
+            print(" default ???", pt, eta, kindJet)
             return 1.0
 
         elif algo == "CSV":
-          if (kindJet,wp) in self.efficiencyMC_CSV.keys() :
+          if (kindJet,wp) in list(self.efficiencyMC_CSV.keys()) :
             # get the efficiency
             for point in self.efficiencyMC_CSV[(kindJet,wp)] :
               #   pt           eta          eff 
@@ -208,11 +208,11 @@ class allBtagPogScaleFactorsICHEP(TreeCloner):
                   return point[2]
 
             # default ... it should never happen!
-            print " default ???", pt, eta, kindJet
+            print(" default ???", pt, eta, kindJet)
             return 1.0
         else: 
-          print "ERROR: algo ", algo, " is not available. Please specify a correct algo."  
-          print "Available algos are 'CMVA' and 'CSV'."
+          print("ERROR: algo ", algo, " is not available. Please specify a correct algo.")  
+          print("Available algos are 'CMVA' and 'CSV'.")
 
         # not a lepton ... like some default value
         return 1.0
@@ -399,19 +399,19 @@ class allBtagPogScaleFactorsICHEP(TreeCloner):
 
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
                 
         # avoid dots to go faster
         itree     = self.itree
         otree     = self.otree
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
             ## print event count
             if i > 0 and i%step == 0.:
-              print i,'events processed.'
+              print(i,'events processed.')
   
             self.resetCounters()
             if self.cmssw != "ICHEP2016":  
@@ -460,7 +460,7 @@ class allBtagPogScaleFactorsICHEP(TreeCloner):
 
             njet 	  = 0
 
-            for iJet in xrange(len(itree.std_vector_jet_pt)) :
+            for iJet in range(len(itree.std_vector_jet_pt)) :
              
               pt      = itree.std_vector_jet_pt [iJet]
               eta     = itree.std_vector_jet_eta [iJet]
@@ -491,7 +491,7 @@ class allBtagPogScaleFactorsICHEP(TreeCloner):
                   kindJet = 'b'
                   idJet = 0
                 else:
-                  print "BIG PROBLEM! Hadron Flavor is neither 0, 4 or 5"
+                  print("BIG PROBLEM! Hadron Flavor is neither 0, 4 or 5")
                 #print "pt, eta, idJet, kindJet", pt, eta, idJet, kindJet 
                 #print "~~~~~~~~~~~~~~~~ jet ", njet
                 if self.cmssw != "ICHEP2016": 
@@ -673,6 +673,6 @@ class allBtagPogScaleFactorsICHEP(TreeCloner):
             otree.Fill()
 
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 
 

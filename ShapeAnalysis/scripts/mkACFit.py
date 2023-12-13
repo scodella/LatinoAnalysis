@@ -29,12 +29,12 @@ if __name__ == '__main__':
     # Set Input file
     if opt.inputFile == 'DEFAULT' :
       opt.inputFile = opt.outputDir+'/plots_'+opt.tag+'.root'
-    print " inputFile      =          ", opt.inputFile
+    print((" inputFile      =          ", opt.inputFile))
 
     # Set Output file
     if opt.outputFile == 'DEFAULT' :
       opt.outputFile = opt.outputDir+'/plots_'+opt.tag+'_'+'ACCoupling'+'.root'
-    print " outputFile    =          ", opt.outputFile
+    print((" outputFile    =          ", opt.outputFile))
 
     # Create Needed dictionnary
 
@@ -49,7 +49,7 @@ if __name__ == '__main__':
         if not iVar in opt.varList : var2del.append(iVar)
       for iVar in var2del : del variables[iVar]
 
-    print variables
+    print(variables)
 
     samples = {}
     if os.path.exists(opt.samplesFile) :
@@ -76,23 +76,23 @@ if __name__ == '__main__':
     for key in inputFile.GetListOfKeys() :
       if key.IsFolder() and key.GetName() in cuts :
         baseDir = key.GetName()
-        print 'baseDir= ', baseDir
+        print(('baseDir= ', baseDir))
         outputFile.mkdir(baseDir) 
         inputFile.cd(baseDir)
         for skey in ROOT.gDirectory.GetListOfKeys() :
           if skey.IsFolder() and skey.GetName() in variables :        
             subDir = skey.GetName()
             iVar   = subDir
-            print 'subDir= ',subDir
+            print(('subDir= ',subDir))
             outputFile.mkdir(baseDir+'/'+subDir)
             inputFile.cd(baseDir+'/'+subDir)
             #for iVar in variables:
             if True:
-              print 'iVar= ',iVar
+              print(('iVar= ',iVar))
               # 1D Scan
               if '1D' in acoupling['ScanConfig'] and len(acoupling['ScanConfig']['1D']) > 0 :
                 for iScan in acoupling['Scans']['1D']:
-                  operatorValues = sorted(acoupling['Scans']['1D'][iScan].keys(),key=float)
+                  operatorValues = sorted(list(acoupling['Scans']['1D'][iScan].keys()),key=float)
                   operatorValuesFloat = [float(x) for x in operatorValues] 
                   # ... Get AC binning (and check)
                   idxSM = operatorValuesFloat.index(0.)
@@ -104,7 +104,7 @@ if __name__ == '__main__':
                   for i in range(len(operatorValuesFloat)-1) :
                     if not operatorValuesFloat[i]+binWOp == operatorValuesFloat[i+1] : check_binW=False
                   if not check_binW:
-                    print 'AC Grid Bin Width Error -> Exit !!!!'
+                    print('AC Grid Bin Width Error -> Exit !!!!')
                     exit()
                   
                   # ... Get All input histograms + binning
@@ -143,8 +143,8 @@ if __name__ == '__main__':
               # 2D Scan
               if '2D' in acoupling['ScanConfig'] and len(acoupling['ScanConfig']['2D']) > 0 :
                 for iScan in acoupling['Scans']['2D']:
-                  operatorValuesX = sorted(set([x.split(":")[0] for x in acoupling['Scans']['2D'][iScan].keys()]),key=float)
-                  operatorValuesY = sorted(set([x.split(":")[1] for x in acoupling['Scans']['2D'][iScan].keys()]),key=float)
+                  operatorValuesX = sorted(set([x.split(":")[0] for x in list(acoupling['Scans']['2D'][iScan].keys())]),key=float)
+                  operatorValuesY = sorted(set([x.split(":")[1] for x in list(acoupling['Scans']['2D'][iScan].keys())]),key=float)
                   operatorValuesFloatX = [float(x) for x in operatorValuesX]
                   operatorValuesFloatY = [float(x) for x in operatorValuesY]
                   # ... Get AC binning (and check) --> X=1st operator 
@@ -157,7 +157,7 @@ if __name__ == '__main__':
                   for i in range(len(operatorValuesFloatX)-1) :
                     if not operatorValuesFloatX[i]+binWOpX == operatorValuesFloatX[i+1] : check_binW=False
                   if not check_binW:
-                    print 'AC Grid Bin Width Error -> Exit !!!!'
+                    print('AC Grid Bin Width Error -> Exit !!!!')
                     exit()
                   # ... Get AC binning (and check) --> Y=2nd operator
                   idxSMY  = operatorValuesFloatY.index(0.)
@@ -169,7 +169,7 @@ if __name__ == '__main__':
                   for i in range(len(operatorValuesFloatY)-1) :
                     if not operatorValuesFloatY[i]+binWOpY == operatorValuesFloatY[i+1] : check_binW=False
                   if not check_binW:
-                    print 'AC Grid Bin Width Error -> Exit !!!!'
+                    print('AC Grid Bin Width Error -> Exit !!!!')
                     exit()
                   # ... Get All input histograms + binning
                   inputHistos = []
@@ -215,9 +215,9 @@ if __name__ == '__main__':
               # 3D Scan
               if '3D' in acoupling['ScanConfig'] and len(acoupling['ScanConfig']['3D']) > 0 :
                 for iScan in acoupling['Scans']['3D']:
-                  operatorValuesX = sorted(set([x.split(":")[0] for x in acoupling['Scans']['3D'][iScan].keys()]),key=float)
-                  operatorValuesY = sorted(set([x.split(":")[1] for x in acoupling['Scans']['3D'][iScan].keys()]),key=float)
-                  operatorValuesZ = sorted(set([x.split(":")[2] for x in acoupling['Scans']['3D'][iScan].keys()]),key=float)
+                  operatorValuesX = sorted(set([x.split(":")[0] for x in list(acoupling['Scans']['3D'][iScan].keys())]),key=float)
+                  operatorValuesY = sorted(set([x.split(":")[1] for x in list(acoupling['Scans']['3D'][iScan].keys())]),key=float)
+                  operatorValuesZ = sorted(set([x.split(":")[2] for x in list(acoupling['Scans']['3D'][iScan].keys())]),key=float)
                   operatorValuesFloatX = [float(x) for x in operatorValuesX]
                   operatorValuesFloatY = [float(x) for x in operatorValuesY]
                   operatorValuesFloatZ = [float(x) for x in operatorValuesZ]
@@ -231,7 +231,7 @@ if __name__ == '__main__':
                   for i in range(len(operatorValuesFloatX)-1) :
                     if not operatorValuesFloatX[i]+binWOpX == operatorValuesFloatX[i+1] : check_binW=False
                   if not check_binW:
-                    print 'AC Grid Bin Width Error -> Exit !!!!'
+                    print('AC Grid Bin Width Error -> Exit !!!!')
                     exit()
                   # ... Get AC binning (and check) --> Y=2nd operator
                   idxSMY  = operatorValuesFloatY.index(0.)
@@ -243,7 +243,7 @@ if __name__ == '__main__':
                   for i in range(len(operatorValuesFloatY)-1) :
                     if not operatorValuesFloatY[i]+binWOpY == operatorValuesFloatY[i+1] : check_binW=False
                   if not check_binW:
-                    print 'AC Grid Bin Width Error -> Exit !!!!'
+                    print('AC Grid Bin Width Error -> Exit !!!!')
                     exit()
                   # ... Get AC binning (and check) --> Z=3rd operator
                   idxSMZ  = operatorValuesFloatZ.index(0.)
@@ -255,7 +255,7 @@ if __name__ == '__main__':
                   for i in range(len(operatorValuesFloatZ)-1) :
                     if not operatorValuesFloatZ[i]+binWOpZ == operatorValuesFloatZ[i+1] : check_binW=False
                   if not check_binW:
-                    print 'AC Grid Bin Width Error -> Exit !!!!'
+                    print('AC Grid Bin Width Error -> Exit !!!!')
                     exit()
                   # ... Get All input histograms + binning
                   inputHistos = []
@@ -278,7 +278,7 @@ if __name__ == '__main__':
                          #  Fix = acoupling['ScansFix']['3D'][iScan][opValX+':'+opValY+':'+opValZ]
                          #  print 'Missing point: ',opValX+':'+opValY+':'+opValZ,'--> Taking: ',Fix
                          #except:
-                            print 'Missing point: ',opValX+':'+opValY+':'+opValZ,'--> Please provide acoupling[ScansFix] !!!!'
+                            print(('Missing point: ',opValX+':'+opValY+':'+opValZ,'--> Please provide acoupling[ScansFix] !!!!'))
                             exit()
                          #hName = 'histo_'+acoupling['sigName'].replace('${iWeight}',str(acoupling['Scans']['3D'][iScan][Fix]))
                          #inputHistos[iX][iY].append(inputFile.Get(baseDir+'/'+subDir+'/'+hName).Clone())

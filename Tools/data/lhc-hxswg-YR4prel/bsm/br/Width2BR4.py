@@ -13,7 +13,7 @@ def file2map(x):
                 headers = [i.strip() for i in cols[1:]]
             else:
                 fields = [ float(i) for i in cols ]
-                ret[fields[0]] = dict(zip(headers,fields[1:]))
+                ret[fields[0]] = dict(list(zip(headers,fields[1:])))
         return ret
 
 

@@ -57,7 +57,7 @@ class WW2jVarFiller(TreeCloner):
         self.otree.Branch('Ml2j2' , Ml2j2 , 'Ml2j2/F')
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
 
         #what is self.itree? what is self.otree?
         itree     = self.itree
@@ -70,15 +70,15 @@ class WW2jVarFiller(TreeCloner):
         except RuntimeError:
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/Gardener/python/variables/WW2jVar.C++g')
         #----------------------------------------------------------------------------------------------------
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
 
-        for i in xrange(nentries):
+        for i in range(nentries):
 
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
 
             pt1 = itree.pt1
             pt2 = itree.pt2
@@ -106,4 +106,4 @@ class WW2jVarFiller(TreeCloner):
             otree.Fill()
 
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')

@@ -147,7 +147,7 @@ class EmbedWeights(Module):
           else:
             embed_hltSF[wp] = numerator/denominator
           if embed_hltSF[wp] == 0 and ((trg_muonelectron_mu12ele23==1) or (trg_muonelectron_mu23ele12==1)):
-            print "Weird trigger SF: Numerator",numerator,", Denominator",denominator
+            print("Weird trigger SF: Numerator",numerator,", Denominator",denominator)
 
           self.out.fillBranch("embed_hltSF_"+wp, embed_hltSF[wp])
 
@@ -158,32 +158,32 @@ class EmbedWeights(Module):
           embed_total[wp] = embed_norm * embed_mu_isoSF * embed_el_isoSF[wp] * embed_mu_idSF * embed_el_idSF[wp] * embed_hltSF[wp]
 
           if embed_total[wp]>1000:
-            print '=========='
-            print "Too large weight!", embed_total[wp]
+            print('==========')
+            print("Too large weight!", embed_total[wp])
 
             if ( trg_muonelectron_mu23ele12 and (getattr(event, 'Electron_pt')[ele_id]<12 or getattr(event, 'Muon_pt')[mu_id]<23) ) or ( trg_muonelectron_mu12ele23 and (getattr(event, 'Electron_pt')[ele_id]<23 or getattr(event, 'Muon_pt')[mu_id]<12) ):
-              print "...because of Trigger SF" # The Trigger SF is always the reason for too large weights; occurs from few events where the lepton pT is smaller than Trigger leg requirement -> Should be cut in analysis
+              print("...because of Trigger SF") # The Trigger SF is always the reason for too large weights; occurs from few events where the lepton pT is smaller than Trigger leg requirement -> Should be cut in analysis
               embed_total[wp] = embed_total[wp] / embed_hltSF[wp] # ... but remove the weight anyway, just in case
             elif embed_el_idSF[wp]>100:
-              print "...because of Ele ID" # Few bins unfortunately have low statistics in T&P, especially in the problematic phi regions.
+              print("...because of Ele ID") # Few bins unfortunately have low statistics in T&P, especially in the problematic phi regions.
               #embed_total[wp] = embed_total[wp] / embed_el_idSF[wp] # ... remove phi dependent part
             else:
-              print "Don't know why!" # This doesn't occur, last I checked
-              print "Norm  :", embed_norm
-              print "El ID :", embed_el_idSF[wp]
-              print "El Iso:", embed_el_isoSF[wp]
-              print "Mu ID :", embed_mu_idSF
-              print "Mu Iso:", embed_mu_isoSF
-              print "Triggr:", embed_hltSF[wp]
+              print("Don't know why!") # This doesn't occur, last I checked
+              print("Norm  :", embed_norm)
+              print("El ID :", embed_el_idSF[wp])
+              print("El Iso:", embed_el_isoSF[wp])
+              print("Mu ID :", embed_mu_idSF)
+              print("Mu Iso:", embed_mu_isoSF)
+              print("Triggr:", embed_hltSF[wp])
               if trg_muonelectron_mu23ele12==1:
-                print "ME TRIG"
+                print("ME TRIG")
               if trg_muonelectron_mu12ele23==1:
-                print "EM TRIG"
-              print "e_pT: ",getattr(event, 'Electron_pt')[ele_id]
-              print "e_eta:",getattr(event, 'Electron_eta')[ele_id]
-              print "e_phi:",getattr(event, 'Electron_phi')[ele_id]
-              print "m_pT: ",getattr(event, 'Muon_pt')[mu_id]
-              print "m_eta:",getattr(event, 'Muon_eta')[mu_id]
+                print("EM TRIG")
+              print("e_pT: ",getattr(event, 'Electron_pt')[ele_id])
+              print("e_eta:",getattr(event, 'Electron_eta')[ele_id])
+              print("e_phi:",getattr(event, 'Electron_phi')[ele_id])
+              print("m_pT: ",getattr(event, 'Muon_pt')[mu_id])
+              print("m_eta:",getattr(event, 'Muon_eta')[mu_id])
 
 
 
@@ -222,7 +222,7 @@ class EmbedWeights(Module):
           recoleps[i]["eta"] = lep.eta
           recoleps[i]["phi"] = lep.phi
         if len(recoleps) == 0:
-          print "There aren't even any leptons? In event",getattr(event, 'event')
+          print("There aren't even any leptons? In event",getattr(event, 'event'))
           return -1
 
         DeltaR = 99
@@ -240,5 +240,5 @@ class EmbedWeights(Module):
         if DeltaR < 0.4: 
           lep_id = UseThisIndex
         else:
-          print "Too large deltaR after manual genmatching:",DeltaR,"; not considering event",getattr(event, 'event')
+          print("Too large deltaR after manual genmatching:",DeltaR,"; not considering event",getattr(event, 'event'))
       return lep_id

@@ -66,7 +66,7 @@ class TreeCloner(object):
     def _getRootObj(self,d,name):
         o = d.Get(name)
         if not o.__nonzero__():
-            print 'Object '+name+' doesn\'t exist in '+d.GetName(), ' BE CAREFUL!'
+            print('Object '+name+' doesn\'t exist in '+d.GetName(), ' BE CAREFUL!')
             #raise NameError('Object '+name+' doesn\'t exist in '+d.GetName())
         return o
 
@@ -89,7 +89,7 @@ class TreeCloner(object):
             self.histos2keep.append(iObj)
         
         if self.auxiliaryFile != None:
-          print "Using auxiliary file ", self.auxiliaryFile
+          print("Using auxiliary file ", self.auxiliaryFile)
           self.friendFile = self._openRootFile(self.auxiliaryFile)
           self.friendTree = self._getRootObj(self.friendFile, self.itree.GetName())  
           self.friendTreeSkimmed = self.friendTree
@@ -148,25 +148,26 @@ class TreeCloner(object):
            hist.Write()
 
         self.ofile.Close()
-	if cleanUp:
-          self.ifile.Close()
 
-          self.ifile = None
-          self.itree = None
-          self.ofile = None
-          self.otree = None
+        if cleanUp:
+            self.ifile.Close()
+
+            self.ifile = None
+            self.itree = None
+            self.ofile = None
+            self.otree = None
         
-          # cleaning
-          self.otreeMC = None
-          self.otreePU = None
-          self.ohistoTotalEvents = None
-          self.ohistoTotalEventsTriggers = None
-          self.ohistoMcWeightExplainedOrdered = None
-          self.itreeMC = None
-          self.itreePU = None
-          self.itreeTotalEvents = None
-          self.itreeTotalEventsTriggers = None
-          self.histos2keep = []  
+            # cleaning
+            self.otreeMC = None
+            self.otreePU = None
+            self.ohistoTotalEvents = None
+            self.ohistoTotalEventsTriggers = None
+            self.ohistoMcWeightExplainedOrdered = None
+            self.itreeMC = None
+            self.itreePU = None
+            self.itreeTotalEvents = None
+            self.itreeTotalEventsTriggers = None
+            self.histos2keep = []  
           
 #    ___                       
 #   / _ \______ _____  ___ ____
@@ -212,7 +213,7 @@ class Pruner(TreeCloner):
         self.eventListOutput = getattr(opts,'eventListOutput')
 
     def process(self, **kwargs ):
-        print 'Filtering \''+self.filter+'\''
+        print('Filtering \''+self.filter+'\'')
 
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -220,20 +221,20 @@ class Pruner(TreeCloner):
 
         self.connect(tree,input)
 
-        print 'Initial entries:',self.itree.GetEntries()
+        print('Initial entries:',self.itree.GetEntries())
         evlist = ROOT.TEventList('prunerlist')
         self.itree.Draw('>>prunerlist',self.filter)
-        print 'Filtered Entries',evlist.GetN()
+        print('Filtered Entries',evlist.GetN())
 
         if self.dryrun:
-            print 'Dryrun: eventloops skipped'
+            print('Dryrun: eventloops skipped')
             return
 
         if self.eventListOutput:
           self.ofile = self._openRootFile(output, 'recreate')
           self.ofile.cd()
           evlist.Write()
-          print '- Eventloop completed'
+          print('- Eventloop completed')
           return 
         #algebra to revert the 'keeps' options
 
@@ -260,21 +261,21 @@ class Pruner(TreeCloner):
                     keeps_string += lines
 
             if (keeps_string.at(0) == "*"):
-                print 'You are keeping all the branches, I will not do anything'
+                print('You are keeping all the branches, I will not do anything')
                 return
                 
             missingBranch = 0
-            for q in xrange(keeps_string.size()):
+            for q in range(keeps_string.size()):
                 checkBranchExists = 0
-                for j in xrange(branches.size()):
+                for j in range(branches.size()):
                     if (keeps_string.at(q)==branches.at(j)):
-                        print 'keep this:', keeps_string.at(q)
+                        print('keep this:', keeps_string.at(q))
                         branches.erase(branches.begin()+j)
                         missingBranch += 1
                         checkBranchExists = 1
                         break
                 if checkBranchExists == 0:
-                    print 'I cannot find branch ' + str(keeps_string.at(q)) + '. Be aware that you may create an empty tree!'
+                    print('I cannot find branch ' + str(keeps_string.at(q)) + '. Be aware that you may create an empty tree!')
 
             # if (missingBranch < keeps_string.size()):
             #     print 'I cannot find one or more branches you want to keep, or you inserted the same branch twice. Please check.'
@@ -299,9 +300,9 @@ class Pruner(TreeCloner):
         itree = self.itree
         otree = self.otree
         step = 5000
-        for i in xrange(evlist.GetN()):
+        for i in range(evlist.GetN()):
             if i > 0 and i%step == 0:
-                print i,' events processed.'
+                print(i,' events processed.')
 
             itree.GetEntry(evlist.GetEntry(i))
 
@@ -311,7 +312,7 @@ class Pruner(TreeCloner):
           #ofileeventlist.cd()
 
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 
 
 #    ___                    __   _____         _____         
@@ -369,15 +370,15 @@ class Grafter(TreeCloner):
 
         self.connect(tree,input)
 
-        vars = [ ( value, type, ROOT.TTreeFormula(name,formula, self.itree)) for name, (value, type, formula) in self.variables.iteritems() ]
+        vars = [ ( value, type, ROOT.TTreeFormula(name,formula, self.itree)) for name, (value, type, formula) in self.variables.items() ]
 
 
-        print 'Adding/replacing the following branches'
+        print('Adding/replacing the following branches')
         template=' {0:10} | {1:^3} | "{2}"'
         for name  in sorted(self.variables):
             (value, type, formula) = self.variables[name]
-            print template.format(name,type,formula)
-        print
+            print(template.format(name,type,formula))
+        print()
 
 
         oldbranches = [ b.GetName() for b in self.itree.GetListOfBranches() ]
@@ -390,13 +391,13 @@ class Grafter(TreeCloner):
             btype = self.variables[bname][1]
             newtitle = bname+'/'+btype
             if ( branch.GetTitle() != newtitle ):
-                print 'WARNING: Branch mutation detected: from',branch.GetTitle(),'to',newtitle
+                print('WARNING: Branch mutation detected: from',branch.GetTitle(),'to',newtitle)
                 hasMutation = True
 
         if hasMutation:
             confirm('Mutation detected. Do you _really_ want to continue?') or sys.exit(0)
 
-        self.clone(output,self.variables.keys())
+        self.clone(output,list(self.variables.keys()))
 
         for (val,type,formula) in vars:
             name = formula.GetName()
@@ -404,18 +405,18 @@ class Grafter(TreeCloner):
             self.otree.Branch(name,val,title)
 
         nentries = self.itree.GetEntries()
-        print 'Entries:',nentries
+        print('Entries:',nentries)
 
         # avoid dots in the loop
         itree = self.itree
         otree = self.otree
 
         step = 5000
-        for i in xrange(0,nentries):
+        for i in range(0,nentries):
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0:
-                print str(i)+' events processed.'
+                print(str(i)+' events processed.')
 
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
@@ -425,7 +426,7 @@ class Grafter(TreeCloner):
             otree.Fill()
         
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 
       
 
@@ -450,7 +451,7 @@ class AliasGrafter(Grafter):
         self.connect(tree,input)
         self.clone(output)
 
-        for name, (value, type, formula) in self.variables.iteritems():
+        for name, (value, type, formula) in self.variables.items():
             self.otree.SetAlias(name,formula)
 
         self.disconnect()
@@ -503,11 +504,11 @@ class RootWeighter(TreeCloner):
     def _makeWgtExtractor(obj):
         
         if isinstance(obj, ROOT.TH1):
-            print 'TH1 detected'
+            print('TH1 detected')
             return H1Weighter.H1WgtExtractor( obj )
         
         elif isinstance(obj, ROOT.TF1):
-            print 'TF1 detected'
+            print('TF1 detected')
             return H1Weighter.F1WgtExtractor( obj )
         else:
             raise RuntimeError('cannot work with '+type(obj))
@@ -515,14 +516,14 @@ class RootWeighter(TreeCloner):
 #     @staticmethod
     def _getBoundaries(self,obj):
         
-        print type(obj)
+        print(type(obj))
         if isinstance(obj, ROOT.TH1):
-            print 'TH1 detected'
+            print('TH1 detected')
             xlo = obj.GetXaxis().GetXmin()
             xhi = obj.GetXaxis().GetXmax()
 
         elif isinstance(obj, ROOT.TF1):
-            print 'TF1 detected'
+            print('TF1 detected')
             xlo = obj.GetXmin()
             xhi = obj.GetXmax()
         else:
@@ -587,19 +588,19 @@ class RootWeighter(TreeCloner):
         self.otree.Branch(self.branch,weight,self.branch+'/F')
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
                 
         # avoid dots to go faster
         itree     = self.itree
         otree     = self.otree
 
         step = 5000
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
 
             ## print event count
             if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
 
 #             weight.value = self._getWeight( getattr(itree,self.key), self.bounds )
             weight.value = self._wgtEx( getattr(itree, self.key) )
@@ -607,7 +608,7 @@ class RootWeighter(TreeCloner):
             otree.Fill()
 
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 
 
 
@@ -627,17 +628,17 @@ class ModuleManager(odict.OrderedDict):
 def execute(module,tree,iofiles):
     nfiles=len(iofiles)
     for i,(ifile,ofile) in enumerate(iofiles):
-        print '-'*80
-        print 'Entry {0}/{1} | {2}'.format(i+1,nfiles,ifile)
-        print '-'*80
+        print('-'*80)
+        print('Entry {0}/{1} | {2}'.format(i+1,nfiles,ifile))
+        print('-'*80)
         odir  = os.path.dirname(ofile)
         if odir and not os.path.exists(odir):
            os.system('mkdir -p '+odir)
-           print file,ofile
+           print(file,ofile)
 
-        print 'Input: ',ifile
-        print 'Output:',ofile
-        print '-'*80
+        print('Input: ',ifile)
+        print('Output:',ofile)
+        print('-'*80)
     
         module.process( input=ifile, output=ofile, tree=tree )
 
@@ -652,7 +653,7 @@ def gardener_cli( modules ):
     In the latter case the directory tree in dirin is rebuilt in dirout
 
     Valid commands:
-        '''+', '.join(modules.keys()+['help'])+'''
+        '''+', '.join(list(modules.keys())+['help'])+'''
 
     Type %prog <command> -h for the command specific help
     '''
@@ -679,11 +680,11 @@ def gardener_cli( modules ):
         
         module = sys.argv[2]
         if module not in modules:
-            print 'Help: command',module,'not known'
-            print 'The available commands are',', '.join(modules.keys())
+            print('Help: command',module,'not known')
+            print('The available commands are',', '.join(list(modules.keys())))
             sys.exit(0)
         
-        print 'Help for module',module+':'
+        print('Help for module',module+':')
         modules[module].help()
         modules[module].addMainOptions(parser)
         modules[module].addOptions(parser)
@@ -692,8 +693,8 @@ def gardener_cli( modules ):
 
 
     if modname not in modules:
-        print 'Command',modname,'unknown'
-        print 'The available commands are',modules.keys()
+        print('Command',modname,'unknown')
+        print('The available commands are',list(modules.keys()))
         sys.exit(0)
 
     module = modules[modname]
@@ -704,7 +705,7 @@ def gardener_cli( modules ):
 
     (opt, args) = parser.parse_args()
 
-    print opt,args
+    print(opt,args)
 
     sys.argv.append('-b')
 
@@ -712,14 +713,14 @@ def gardener_cli( modules ):
         module.checkMainOptions(opt)        
         module.checkOptions(opt)
     except Exception as e:
-        print 'Error in module',module.label
+        print('Error in module',module.label)
 #         print '*'*80
 #         print 'Fatal exception '+type(e).__name__+': '+str(e)
 #         print '*'*80
 #         exc_type, exc_value, exc_traceback = sys.exc_info()
 #         traceback.print_tb(exc_traceback, file=sys.stdout)
 #         print '*'*80
-        print e
+        print(e)
         sys.exit(1)
 
     tree = opt.tree
@@ -734,7 +735,7 @@ def gardener_cli( modules ):
         inputs = args[:-1]
         output = args[-1]
 
-        print inputs
+        print(inputs)
         
         # sanitise output
         output = output if output[-1]=='/' else output+'/'
@@ -750,7 +751,7 @@ def gardener_cli( modules ):
         # recursiveness here
         if os.path.isdir(input):
             if not opt.recursive:
-                print input,'is a directory. Use -r to go recursive'
+                print(input,'is a directory. Use -r to go recursive')
                 sys.exit(0)
 
             # sanitize the input/output
@@ -758,7 +759,7 @@ def gardener_cli( modules ):
             output = output if output[-1]=='/' else output+'/'
 
             if os.path.exists(output) and not os.path.isdir(output):
-                print output,'exists and is not a directory!'
+                print(output,'exists and is not a directory!')
                 sys.exit(0)
 
             fileList = []
@@ -767,10 +768,10 @@ def gardener_cli( modules ):
                     if not file.endswith('.root'): continue
                     fileList.append(os.path.join(root,file))
 
-            print 'The directory tree',input,'will be gardened and copied to',output
-            print 'The following files will be copied:'
-            print '\n'.join(fileList)
-            print 'for a grand total of',len(fileList),'files'
+            print('The directory tree',input,'will be gardened and copied to',output)
+            print('The following files will be copied:')
+            print('\n'.join(fileList))
+            print('for a grand total of',len(fileList),'files')
             opt.force or ( confirm('Do you want to continue?') or sys.exit(0) )
 
             iofiles = [ (f,f.replace(input,output)) for f in fileList ]

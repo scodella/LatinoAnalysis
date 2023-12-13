@@ -69,7 +69,7 @@ class PUpper(TreeCloner):
             self.datahistRun.append( self._getRootObj(self.datafileRun[0],opts.histname) )
             self.datahistRun.append( self._getRootObj(self.datafileRun[1],opts.histname) )
           else:
-            print '[ERROR] PU Weight : period unknown = ',opts.cmssw 
+            print('[ERROR] PU Weight : period unknown = ',opts.cmssw) 
             exit() 
         else:
           self.minRun.append(1)
@@ -82,7 +82,7 @@ class PUpper(TreeCloner):
           self.mcdist     = self._getRootObj(self.mcfile, opts.histname)
           self.getMCpuFromTree = False
         else :
-          print 'measure pu from MC sample tree'
+          print('measure pu from MC sample tree')
           self.getMCpuFromTree = True
           
 
@@ -101,7 +101,7 @@ class PUpper(TreeCloner):
         puScaleDATA   = []
         puScaleMC     = []
         for iRun in range(0,len(self.minRun)):
-          print iRun
+          print(iRun)
 
           data_nBin     = self.datahistRun[iRun].GetNbinsX()
           data_minValue = self.datahistRun[iRun].GetXaxis().GetXmin()
@@ -129,7 +129,7 @@ class PUpper(TreeCloner):
 #         maxValue = data_maxValue
           dValue   = data_dValue
    
-          print "Data/MC bin Ratio:",ratio
+          print("Data/MC bin Ratio:",ratio)
    
           if (ratio - int(ratio)) != 0 :
               raise RuntimeError(" ERROR: incompatible intervals!")
@@ -138,7 +138,7 @@ class PUpper(TreeCloner):
           puScaleMC     .append( numpy.ones(nBin, dtype=numpy.float32) )
           puScaleMCtemp = numpy.ones(nBin, dtype=numpy.float32)
   
-          for iBin in xrange(0, nBin):
+          for iBin in range(0, nBin):
               puScaleDATA[iRun][iBin] = self.datahistRun[iRun].GetBinContent(iBin+1)
               mcbin = int(math.floor(iBin / ratio))
               puScaleMCtemp[iBin] = self.mcdist.GetBinContent(mcbin+1)
@@ -151,29 +151,29 @@ class PUpper(TreeCloner):
               integralDATA += puScaleDATA[iRun][iBin]
               integralMC   += puScaleMCtemp[iBin]
   
-          print "Integrals: data = %.3f, mc = %3f" % (integralDATA,integralMC)
+          print("Integrals: data = %.3f, mc = %3f" % (integralDATA,integralMC))
    
-          for iBin in xrange(nBin):
+          for iBin in range(nBin):
               puScaleMC[iRun][iBin] =  puScaleMCtemp[iBin] * integralDATA / integralMC
 
         # start loop on tree
  
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries
+        print('Total number of entries: ',nentries)
         
         # this is for speed
         leaf = self.kind 
         itree = self.itree
         otree = self.otree
         
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
 
             ## print event count
             if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
 
             nRun = 0
             if self.run:
@@ -194,6 +194,6 @@ class PUpper(TreeCloner):
             otree.Fill()
 
         self.disconnect(False)
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 
 

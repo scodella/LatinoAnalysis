@@ -48,7 +48,7 @@ class JetPairingVBS(TreeCloner):
         self.mode = int(opts.mode)
 
     def process(self,**kwargs):
-        print module_name
+        print(module_name)
 
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -65,18 +65,18 @@ class JetPairingVBS(TreeCloner):
         self.otree.Branch('VBS_jets',       VBS_jets,       'VBS_jets[2]/I')
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
 
         # avoid dots to go faster
         itree     = self.itree
         otree     = self.otree
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
             if i > 0 and i%step == 0.:
-                print i,'events processed :: ', nentries
+                print(i,'events processed :: ', nentries)
 
             jets = utils.get_jets(itree, self.ptmin_jet, self.debug)
             vpair   = [-1,-1]
@@ -96,7 +96,7 @@ class JetPairingVBS(TreeCloner):
                         vbspair = [remaining_jets[i][0] for i in vbspair_newindexes]
                                                                 
                     elif self.debug:
-                        print "Less than 4 jets available"
+                        print("Less than 4 jets available")
 
             elif self.mode == 1:
 
@@ -112,7 +112,7 @@ class JetPairingVBS(TreeCloner):
                         vpair = [remaining_jets[i][0] for i in vpair_newindexes]
                                                                 
                     elif self.debug:
-                        print "Less than 4 jets available"
+                        print("Less than 4 jets available")
 
 
             V_jets[0], V_jets[1] = vpair
@@ -121,5 +121,5 @@ class JetPairingVBS(TreeCloner):
             otree.Fill()
   
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 

@@ -11,7 +11,7 @@ class runDependentPuW(Module):
         self.cmssw = cmssw
         cmssw_base = os.getenv('CMSSW_BASE')
         var = {}
-        execfile(cmssw_base+'/src/'+PUWeight_cfg, var)
+        exec(compile(open(cmssw_base+'/src/'+PUWeight_cfg, "rb").read(), cmssw_base+'/src/'+PUWeight_cfg, 'exec'), var)
         self.PUWeightCfg = var['PUCfg'][self.cmssw]
 
         self.targeth = {}
@@ -55,9 +55,9 @@ class runDependentPuW(Module):
         #Load it via ROOT ACLIC. NB: this creates the object file in the CMSSW directory,
         #causing problems if many jobs are working from the same CMSSW directory
         except Exception as e:
-            print "Could not load module via python, trying via ROOT", e
+            print("Could not load module via python, trying via ROOT", e)
             if "/WeightCalculatorFromHistogram_cc.so" not in ROOT.gSystem.GetLibraries():
-                print "Load C++ Worker"
+                print("Load C++ Worker")
                 ROOT.gROOT.ProcessLine(".L %s/src/PhysicsTools/NanoAODTools/src/WeightCalculatorFromHistogram.cc++" % os.environ['CMSSW_BASE'])
             dummy = ROOT.WeightCalculatorFromHistogram
 
@@ -76,7 +76,7 @@ class runDependentPuW(Module):
         self.out = wrappedOutputTree
         if self.autoPU :
            self.myh.Reset()
-           print "Computing PU profile for this file"
+           print("Computing PU profile for this file")
            ROOT.gROOT.cd()
            inputFile.Get("Events").Project("autoPU",self.nvtxVar)#doitfrom inputFile
            if outputFile : 

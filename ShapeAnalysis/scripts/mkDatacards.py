@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import json
 import sys
@@ -32,9 +32,9 @@ class DatacardFactory:
     # _____________________________________________________________________________
     def makeDatacards( self, inputFile, outputDirDatacard, variables, cuts, samples, structureFile, nuisances):
     
-        print "======================="
-        print "==== makeDatacards ===="
-        print "======================="
+        print("=======================")
+        print("==== makeDatacards ====")
+        print("=======================")
         
         if os.path.isdir(inputFile):
           # ONLY COMPATIBLE WITH OUTPUTS MERGED TO SAMPLE LEVEL!!
@@ -71,17 +71,17 @@ class DatacardFactory:
             background_ids[sampleName] = ibkg
             ibkg += 1
 
-        print "Number of Signals:             " + str(len(signal_ids))
-        print "Number of Alternative Signals: " + str(len(alternative_signals) - 1)
-        print "Number of Cumulative Signals:  " + str(len(cumulative_signals))
-        print "Number of Backgrounds:         " + str(len(background_ids))
+        print(("Number of Signals:             " + str(len(signal_ids))))
+        print(("Number of Alternative Signals: " + str(len(alternative_signals) - 1)))
+        print(("Number of Cumulative Signals:  " + str(len(cumulative_signals))))
+        print(("Number of Backgrounds:         " + str(len(background_ids))))
 
         if not os.path.isdir(outputDirDatacard + "/") :
           os.mkdir(outputDirDatacard + "/")
 
         # loop over cuts. One directory per cut will be created
         for cutName in cuts:
-          print "cut = ", cutName
+          print(("cut = ", cutName))
           try:
             shutil.rmtree(outputDirDatacard + "/" + cutName)
           except OSError:
@@ -98,18 +98,18 @@ class DatacardFactory:
             for sampleName in idmap:
               if 'removeFromCuts' in structureFile[sampleName] and cutName in structureFile[sampleName]['removeFromCuts']:
                 # remove from the list
-                print ' remove ', sampleName, ' from ', cutName
+                print((' remove ', sampleName, ' from ', cutName))
               else:
                 snameList.append(sampleName)
 
-          print "  sampleNames = ", cut_signals + cut_backgrounds
+          print(("  sampleNames = ", cut_signals + cut_backgrounds))
           
           # loop over variables
-          for variableName, variable in variables.iteritems():
+          for variableName, variable in list(variables.items()):
             if 'cuts' in variable and cutName not in variable['cuts']:
               continue
               
-            print "  variableName = ", variableName
+            print(("  variableName = ", variableName))
             tagNameToAppearInDatacard = cutName
             # e.g.    hww2l2v_13TeV_of0j
             #         to be defined in cuts.py
@@ -183,7 +183,7 @@ class DatacardFactory:
 
               processes = signals + cut_backgrounds
              
-              print "    Alternative signal: " + str(signalName)
+              print(("    Alternative signal: " + str(signalName)))
               alternativeSignalName  = str(signalName)
               alternativeSignalTitle = ""
               if alternativeSignalName != "":
@@ -191,10 +191,10 @@ class DatacardFactory:
 
               # start creating the datacard 
               cardPath = outputDirDatacard + "/" + cutName + "/" + variableName  + "/datacard" + alternativeSignalTitle + ".txt"
-              print '    Writing to ' + cardPath 
+              print(('    Writing to ' + cardPath)) 
               card = open( cardPath ,"w")
 
-              print '      headers..'
+              print('      headers..')
               card.write('## Shape input card\n')
         
               card.write('imax 1 number of channels\n')
@@ -232,7 +232,7 @@ class DatacardFactory:
                     columndef = len(name) + 7
 
 
-              print '      processes and rates..'
+              print('      processes and rates..')
             
               card.write('bin'.ljust(80))
               card.write(''.join([tagNameToAppearInDatacard.ljust(columndef)] * (len(signals) + len(cut_backgrounds)))+'\n')
@@ -254,12 +254,12 @@ class DatacardFactory:
 
               card.write('-'*100+'\n')
 
-              print '      nuisances..'
+              print('      nuisances..')
 
               nuisanceGroups = collections.defaultdict(list)
 
               # add normalization and shape nuisances
-              for nuisanceName, nuisance in nuisances.iteritems():
+              for nuisanceName, nuisance in list(nuisances.items()):
                 if 'type' not in nuisance:
                   raise RuntimeError('Nuisance ' + nuisanceName + ' is missing the type specification')
 
@@ -275,19 +275,19 @@ class DatacardFactory:
                   # why is adding CMS_ not the default for lnN/lnU? (Y.I. 2019.11.06)
 
                   entryName = nuisance['name']
-                  if 'perRecoBin' in nuisance.keys() and  nuisance['perRecoBin'] == True:
+                  if 'perRecoBin' in list(nuisance.keys()) and  nuisance['perRecoBin'] == True:
                     entryName += "_"+cutName
 
                   card.write(entryName.ljust(80-20))
 
                   if 'AsShape' in nuisance and float(nuisance['AsShape']) >= 1.:
-                    print ">>>>>", nuisance['name'], " was derived as a lnN uncertainty but is being treated as a shape"
+                    print((">>>>>", nuisance['name'], " was derived as a lnN uncertainty but is being treated as a shape"))
                     card.write(('shape').ljust(20))
                     for sampleName in processes:
                       if 'cuts_samples' in nuisance and sampleName in nuisance['cuts_samples'] and cutName not in nuisance['cuts_samples'][sampleName]:
                         # If the cuts_samples options is there and the sample is inserted in the dictionary
                         # check if the current cutName is included. Excluded the cuts not in the list
-                        print "Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName
+                        print(("Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName))
                         card.write(('-').ljust(columndef))
                       elif ('all' in nuisance and nuisance['all'] == 1) or \
                               ('samples' in nuisance and sampleName in nuisance['samples']):
@@ -353,19 +353,19 @@ class DatacardFactory:
                   else:
                     entryName = 'CMS_' + nuisance['name']
 
-                  if 'perRecoBin' in nuisance.keys() and  nuisance['perRecoBin'] == True:
+                  if 'perRecoBin' in list(nuisance.keys()) and  nuisance['perRecoBin'] == True:
                     entryName += "_"+cutName
 
                   card.write(entryName.ljust(80-20))
 
                   if 'AsLnN' in nuisance and float(nuisance['AsLnN']) >= 1.:
-                    print ">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN"
+                    print((">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN"))
                     card.write(('lnN').ljust(20))
                     for sampleName in processes:
                       if 'cuts_samples' in nuisance and sampleName in nuisance['cuts_samples'] and cutName not in nuisance['cuts_samples'][sampleName]:
                         # If the cuts_samples options is there and the sample is inserted in the dictionary
                         # check if the current cutName is included. Excluded the cuts not in the list
-                        print "Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName
+                        print(("Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName))
                         card.write(('-').ljust(columndef))
                       elif ('all' in nuisance and nuisance['all'] == 1) or \
                               ('samples' in nuisance and sampleName in nuisance['samples']):
@@ -374,7 +374,7 @@ class DatacardFactory:
                         histoDown = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Down')
 
                         if (not histoUp or not histoDown):
-                          print 'Histogram for nuisance', nuisance['name'], 'on sample', sampleName, 'missing'
+                          print(('Histogram for nuisance', nuisance['name'], 'on sample', sampleName, 'missing'))
 
                           if self._skipMissingNuisance:
                             card.write(('-').ljust(columndef)) 
@@ -435,18 +435,18 @@ class DatacardFactory:
                       if 'cuts_samples' in nuisance and sampleName in nuisance['cuts_samples'] and cutName not in nuisance['cuts_samples'][sampleName]:
                         # If the cuts_samples options is there and the sample is inserted in the dictionary
                         # check if the current cutName is included. Excluded the cuts not in the list
-                        print "Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName
+                        print(("Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName))
                         card.write(('-').ljust(columndef))
                       elif ('all' in nuisance and nuisance ['all'] == 1) or \
                               ('samples' in nuisance and sampleName in nuisance['samples']):
                         # save the nuisance histograms in the root file
-                        if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1:
+                        if ('skipCMS' in list(nuisance.keys())) and nuisance['skipCMS'] == 1:
                           suffixOut = None
                         else:
                           suffixOut = '_CMS_' + nuisance['name']
 
-                        if 'perRecoBin' in nuisance.keys() and  nuisance['perRecoBin'] == True:
-                          if ('skipCMS' in nuisance.keys()) and nuisance['skipCMS'] == 1:
+                        if 'perRecoBin' in list(nuisance.keys()) and  nuisance['perRecoBin'] == True:
+                          if ('skipCMS' in list(nuisance.keys())) and nuisance['skipCMS'] == 1:
                             suffixOut = "_"+nuisance['name']
                           else:
                             suffixOut = '_CMS_' + nuisance['name']
@@ -469,7 +469,7 @@ class DatacardFactory:
                 if 'group' in nuisance:
                   nuisanceGroups[nuisance['group']].append(entryName)
 
-              for group in sorted(nuisanceGroups.iterkeys()):
+              for group in sorted(nuisanceGroups.keys()):
                 card.write('%s group = %s\n' % (group, ' '.join(nuisanceGroups[group])))
                 
               # done with normalization and shape nuisances.
@@ -551,7 +551,7 @@ class DatacardFactory:
               # see: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsWG/SWGuideNonStandardCombineUses#Rate_Parameters
               # 'rateParam' has a separate treatment -> it's just a line at the end of the datacard. It defines "free floating" samples
               # I do it here and not before because I want the freee floating parameters at the end of the datacard
-              for nuisance in nuisances.itervalues():
+              for nuisance in list(nuisances.values()):
                 if nuisance['type'] != 'rateParam':
                   continue
 
@@ -566,17 +566,17 @@ class DatacardFactory:
                 if len(nuisance['samples']) != 1:
                   raise RuntimeError('Invalid rateParam: number of samples != 1')
 
-                sampleName, initialValue = nuisance['samples'].items()[0]
+                sampleName, initialValue = list(nuisance['samples'].items())[0]
                 if sampleName not in samples:
                   raise RuntimeError('Invalid rateParam: unknown sample %s' % sampleName)
 
                 card.write(sampleName.ljust(25))
-                if 'bond' not in nuisance.keys():
+                if 'bond' not in list(nuisance.keys()):
                     card.write(('%-.4f' % float(initialValue)).ljust(columndef))
-                    if 'limits' in nuisance.keys():
+                    if 'limits' in list(nuisance.keys()):
                         card.write(nuisance['limits'].ljust(20))
                 else:
-                    bondFormula, bondParameters = nuisance['bond'][cutName][variableName].items()[0]
+                    bondFormula, bondParameters = list(nuisance['bond'][cutName][variableName].items())[0]
                     card.write(bondFormula.ljust(40))
                     card.write(bondParameters.ljust(20))
                 card.write('\n')
@@ -589,12 +589,12 @@ class DatacardFactory:
               card.write('\n')
               card.close()
 
-              print '      done.'
+              print('      done.')
 
             self._outFile.Close()
 
         if type(self._fileIn) is dict:
-          for source in self._fileIn.values():
+          for source in list(self._fileIn.values()):
             source.Close()
         else:
           self._fileIn.Close()
@@ -605,7 +605,7 @@ class DatacardFactory:
         histoDown = self._getHisto(cutName, variableName, sampleName, suffixIn + 'Down')
 
         if not histoUp or not histoDown:
-          print 'Up/down histogram for', cutName, variableName, sampleName, suffixIn, 'missing'
+          print(('Up/down histogram for', cutName, variableName, sampleName, suffixIn, 'missing'))
           if self._skipMissingNuisance:
             return False
           # else let ROOT raise
@@ -659,7 +659,7 @@ class DatacardFactory:
             histo = self._fileIn.Get(shapeName)
 
         if not histo:
-            print shapeName, 'not found'
+            print((shapeName, 'not found'))
 
         if opt.blindData:
             if 'DATA' in sampleName:
@@ -678,7 +678,7 @@ class DatacardFactory:
 if __name__ == '__main__':
     sys.argv = argv
     
-    print '''
+    print('''
 --------------------------------------------------------------------------------------------------
 
   __ \          |                                 |       \  |         |                
@@ -687,7 +687,7 @@ if __name__ == '__main__':
  ____/  \__,_| \__| \__,_| \___| \__,_| _|   \__,_|     _|  _| \__,_| _|\_\ \___| _|    
                                                                                 
 --------------------------------------------------------------------------------------------------
-'''    
+''')    
 
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
@@ -711,25 +711,25 @@ if __name__ == '__main__':
     ROOT.gROOT.SetBatch()
 
 
-    print " configuration file = ", opt.pycfg
+    print((" configuration file = ", opt.pycfg))
     
-    print " inputFile =                  ", opt.inputFile
-    print " outputDirDatacard =          ", opt.outputDirDatacard
+    print((" inputFile =                  ", opt.inputFile))
+    print((" outputDirDatacard =          ", opt.outputDirDatacard))
  
     if not opt.debug:
       pass
     elif opt.debug == 2:
-      print 'Logging level set to DEBUG (%d)' % opt.debug
+      print(('Logging level set to DEBUG (%d)' % opt.debug))
       logging.basicConfig( level=logging.DEBUG )
     elif opt.debug == 1:
-      print 'Logging level set to INFO (%d)' % opt.debug
+      print(('Logging level set to INFO (%d)' % opt.debug))
       logging.basicConfig( level=logging.INFO )
 
     if opt.nuisancesFile == None :
-      print " Please provide the nuisances structure if you want to add nuisances "
+      print(" Please provide the nuisances structure if you want to add nuisances ")
 
     if opt.structureFile == None :
-      print " Please provide the datacard structure "
+      print(" Please provide the datacard structure ")
       exit ()
 
     ROOT.TH1.SetDefaultSumw2(True)
@@ -790,9 +790,9 @@ if __name__ == '__main__':
           for iOptim in optim:
             newCuts.append(iCut+'_'+iOptim)
         opt.cardList = newCuts
-        print opt.cardList
+        print((opt.cardList))
       except:
-        print "No optim dictionary"
+        print("No optim dictionary")
       cut2del = []
       for iCut in cuts:
         if not iCut in opt.cardList : cut2del.append(iCut)

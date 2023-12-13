@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 argv = sys.argv
@@ -23,7 +23,7 @@ from LatinoAnalysis.ShapeAnalysis.PlotFactory import PlotFactory
 if __name__ == '__main__':
     sys.argv = argv
 
-    print '''
+    print('''
 --------------------------------------------------------------------------------------------------
 
    _ \   |         |         \  |         |                
@@ -32,7 +32,7 @@ if __name__ == '__main__':
  _|     _| \___/  \__|     _|  _| \__,_| _|\_\ \___| _|   
  
 --------------------------------------------------------------------------------------------------
-'''    
+''')    
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
@@ -93,34 +93,34 @@ if __name__ == '__main__':
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
-    print ""
-    print "          configuration file =", opt.pycfg
-    print "                        lumi =", opt.lumi
-    print "                   inputFile =", opt.inputFile
-    print "              outputDirPlots =", opt.outputDirPlots
-    print "       plotNormalizedCRratio =", opt.plotNormalizedCRratio
-    print " plotNormalizedDistributions =", opt.plotNormalizedDistributions
-    print "   plotNormalizedIncludeData =", opt.plotNormalizedIncludeData  
-    print " plotNormalizedDistributionsTHstack =", opt.plotNormalizedDistributionsTHstack
-    print "          showIntegralLegend =", opt.showIntegralLegend
-    print "                 scaleToPlot =", opt.scaleToPlot
-    print "                     minLogC =", opt.minLogC
-    print "                     maxLogC =", opt.maxLogC
-    print "                minLogCratio =", opt.minLogCratio
-    print "                maxLogCratio =", opt.maxLogCratio
-    print "           showRelativeRatio =", opt.showRelativeRatio
-    print "           showDataVsBkgOnly =", opt.showDataVsBkgOnly
-    print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly 
-    print "                removeWeight =", opt.removeWeight
-    print "                    invertXY =", opt.invertXY    
-    print "        skipMissingNuisance  =", opt.skipMissingNuisance
-    print "                    postFit  =", opt.postFit
-    print "               removeMCStat  =", opt.removeMCStat
-    print "         nuisanceVariations  =", opt.nuisanceVariations
-    print "                  plotFancy  =", opt.plotFancy
-    print "              NoPreliminary  =", opt.NoPreliminary   
-    print "                RemoveAllMC  =", opt.RemoveAllMC   
-    print ""
+    print("")
+    print(("          configuration file =", opt.pycfg))
+    print(("                        lumi =", opt.lumi))
+    print(("                   inputFile =", opt.inputFile))
+    print(("              outputDirPlots =", opt.outputDirPlots))
+    print(("       plotNormalizedCRratio =", opt.plotNormalizedCRratio))
+    print((" plotNormalizedDistributions =", opt.plotNormalizedDistributions))
+    print(("   plotNormalizedIncludeData =", opt.plotNormalizedIncludeData))  
+    print((" plotNormalizedDistributionsTHstack =", opt.plotNormalizedDistributionsTHstack))
+    print(("          showIntegralLegend =", opt.showIntegralLegend))
+    print(("                 scaleToPlot =", opt.scaleToPlot))
+    print(("                     minLogC =", opt.minLogC))
+    print(("                     maxLogC =", opt.maxLogC))
+    print(("                minLogCratio =", opt.minLogCratio))
+    print(("                maxLogCratio =", opt.maxLogCratio))
+    print(("           showRelativeRatio =", opt.showRelativeRatio))
+    print(("           showDataVsBkgOnly =", opt.showDataVsBkgOnly))
+    print(("        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly)) 
+    print(("                removeWeight =", opt.removeWeight))
+    print(("                    invertXY =", opt.invertXY))    
+    print(("        skipMissingNuisance  =", opt.skipMissingNuisance))
+    print(("                    postFit  =", opt.postFit))
+    print(("               removeMCStat  =", opt.removeMCStat))
+    print(("         nuisanceVariations  =", opt.nuisanceVariations))
+    print(("                  plotFancy  =", opt.plotFancy))
+    print(("              NoPreliminary  =", opt.NoPreliminary))   
+    print(("                RemoveAllMC  =", opt.RemoveAllMC))   
+    print("")
 
     opt.scaleToPlot = float(opt.scaleToPlot)
     opt.minLogC = float(opt.minLogC)
@@ -132,10 +132,10 @@ if __name__ == '__main__':
     if not opt.debug:
         pass
     elif opt.debug == 2:
-        print 'Logging level set to DEBUG (%d)' % opt.debug
+        print(('Logging level set to DEBUG (%d)' % opt.debug))
         logging.basicConfig( level=logging.DEBUG )
     elif opt.debug == 1:
-        print 'Logging level set to INFO (%d)' % opt.debug
+        print(('Logging level set to INFO (%d)' % opt.debug))
         logging.basicConfig( level=logging.INFO )
 
       
@@ -194,7 +194,7 @@ if __name__ == '__main__':
     #samples = {}
     samples = OrderedDict()
     if opt.samplesFile == None :
-      print " Please provide the samples structure (not strictly needed in mkPlot, since list of samples read from plot.py) "    
+      print(" Please provide the samples structure (not strictly needed in mkPlot, since list of samples read from plot.py) ")    
     elif os.path.exists(opt.samplesFile) :
       # This line is needed for mkplot not to look for samples in eos.
       # Imagine the samples have been removed in eos, but the file with histograms
@@ -202,27 +202,27 @@ if __name__ == '__main__':
       # NB: in samples.py the function "nanoGetSampleFiles" must handle this, if needed
       _samples_noload = True
       handle = open(opt.samplesFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     cuts = {}
     if os.path.exists(opt.cutsFile) :
       handle = open(opt.cutsFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     variables = {}
     if os.path.exists(opt.variablesFile) :
       handle = open(opt.variablesFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     nuisances = {}
     if opt.nuisancesFile == None :
-      print " Please provide the nuisances structure if you want to add nuisances "
+      print(" Please provide the nuisances structure if you want to add nuisances ")
     elif os.path.exists(opt.nuisancesFile) :
       handle = open(opt.nuisancesFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     if opt.nuisanceVariations:
@@ -233,7 +233,7 @@ if __name__ == '__main__':
         elif nuisances[nuisance]['name'] not in nuisanceNames:
           nuisanceNames.append(nuisances[nuisance]['name'])
       if len(nuisanceNames)!=1:
-        print 'Error: using nuisanceVariations with', len(nuisanceNames), 'nuisances'
+        print(('Error: using nuisanceVariations with', len(nuisanceNames), 'nuisances'))
         exit
 
     import LatinoAnalysis.ShapeAnalysis.utils as utils
@@ -251,32 +251,32 @@ if __name__ == '__main__':
     
     if opt.onlyVariable != None :
       list_to_remove = []
-      for variableName, variable in variables.iteritems():
+      for variableName, variable in list(variables.items()):
          if variableName != opt.onlyVariable :
            list_to_remove.append(variableName)
       for toRemove in list_to_remove:
         del variables[toRemove]
            
-      print  " variables = ", variables
+      print((" variables = ", variables))
 
     if opt.onlyCut != None :
       list_to_remove = []
-      for cutName, cutExtended in cuts.iteritems():
+      for cutName, cutExtended in list(cuts.items()):
          if cutName != opt.onlyCut :
            list_to_remove.append(cutName)
       for toRemove in list_to_remove:
         del cuts[toRemove]
 
-      print  " cuts = ", cuts
+      print((" cuts = ", cuts))
        
     groupPlot = OrderedDict()
     plot = {}
     legend = {}
     if os.path.exists(opt.plotFile) :
       handle = open(opt.plotFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
    
     factory.makePlot( opt.inputFile ,opt.outputDirPlots, variables, cuts, samples, plot, nuisances, legend, groupPlot)
     
-    print '... and now closing ...'
+    print('... and now closing ...')

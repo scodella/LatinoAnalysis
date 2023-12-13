@@ -69,7 +69,7 @@ class l3KinProducer(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map)
 
-        for nameBranchKey, newBranchOpt in self.newbranches.items() :
+        for nameBranchKey, newBranchOpt in list(self.newbranches.items()) :
             self.out.branch(nameBranchKey, *newBranchOpt[0], **newBranchOpt[1]);
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -333,7 +333,7 @@ class l3KinProducer(Module):
         self.ZH3l_isOk = self._ZH3l_setXLepton()
         self.ZH3l_CleanJet_4vecId = [ j for j in self.CleanJet_4vecId if j[0].Pt() > 30 and abs(j[0].Eta()) < 4.7]
 
-        for nameBranchKey in self.newbranches.keys():
+        for nameBranchKey in list(self.newbranches.keys()):
             self.out.fillBranch(nameBranchKey, getattr(self, nameBranchKey)());
 
         return True

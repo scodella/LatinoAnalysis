@@ -101,9 +101,9 @@ def plot_fits():
                 if 'TH' in  obj.ClassName() : toPlot[int(obj.GetName().split(separator)[1])] = obj
                 if 'TF' in  obj.ClassName() : Fits[int(obj.GetName().split(separator)[1])] = obj
 
-              print toPlot
+              print(toPlot)
               for iBin in range(1,nBins+1):
-                print iBin
+                print(iBin)
                 c1 = TCanvas("c1","c1",700,700)
                 c1.cd()
                 c1.SetRightMargin(0.05)
@@ -244,9 +244,9 @@ def plot_plots():
         sigName = iSample
         nSignal+=1
     if nSignal == 1 : 
-      print '---> sigName = ',sigName 
+      print(('---> sigName = ',sigName)) 
     else:
-      print '---> No signal FOUND !!!!'
+      print('---> No signal FOUND !!!!')
       exit()
 
     # ... Clone histograms 
@@ -254,7 +254,7 @@ def plot_plots():
     for iCut in cuts:
       fOut.mkdir(iCut)
       for iVar in variables :
-        print '-------------- ',iCut,iVar
+        print(('-------------- ',iCut,iVar))
         fOut.mkdir(iCut+'/'+iVar)
         fInPlot.cd(iCut+'/'+iVar)
         keyList = ROOT.gDirectory.GetListOfKeys()
@@ -271,7 +271,7 @@ def plot_plots():
           for iDim in ['1D','2D'] :
             if iDim in acoupling['PlotConfig'] and len(acoupling['PlotConfig'][iDim]) > 0 :
               for iPlot in acoupling['PlotConfig'][iDim]:
-                print '---> Creating: ',iPlot,' : ',acoupling['PlotConfig'][iDim][iPlot]
+                print(('---> Creating: ',iPlot,' : ',acoupling['PlotConfig'][iDim][iPlot]))
                 if iDim == '1D' : 
                    hName  = 'histo_ACSig_'+iPlot+str(acoupling['PlotConfig'][iDim][iPlot][0]).replace('.','p').replace('-','m')
                    Legend = acoupling['operatorLatex'][iPlot]+' = '+str(acoupling['PlotConfig'][iDim][iPlot][0])+' '+acoupling['operatorUnit'][iPlot]  
@@ -336,16 +336,16 @@ def plot_plots():
 #                             'samples'  : [iSig]
 #                            }
 
-    print samples2plot
-    print plot2plot
-    print groupPlot2plot
+    print(samples2plot)
+    print(plot2plot)
+    print(groupPlot2plot)
 
     # Create the PlotFactory and execute it
 
     ROOT.gROOT.SetBatch()
 
     for iSig in SigNames:
-      print iSig , ' ' , SigNames[iSig]
+      print((iSig , ' ' , SigNames[iSig]))
       samples2plot[iSig] = {}
       plot2plot[iSig] = {
                          'color'    : SigNames[iSig]['Color'],
@@ -437,14 +437,14 @@ if __name__ == '__main__':
     if opt.inputPlotFile == 'DEFAULT' and opt.type == 'plots' :
       opt.inputPlotFile = opt.outputDir+'/plots_'+opt.tag+'.root'
     if opt.type == 'plots' :
-      print " inputPlotFile      =          ", opt.inputPlotFile
+      print((" inputPlotFile      =          ", opt.inputPlotFile))
 
     if opt.inputFitFile == 'DEFAULT' and opt.type == 'fits' :
       opt.inputFitFile = opt.outputDir+'/plots_'+opt.tag+'_ACCoupling.root'
     if opt.inputFitFile == 'DEFAULT' : 
-       print 'Please specify --inputFitFile <FileName>'
+       print('Please specify --inputFitFile <FileName>')
        exit()
-    print " inputFitFile      =          ", opt.inputFitFile
+    print((" inputFitFile      =          ", opt.inputFitFile))
 
     # Create Needed dictionnary
 
@@ -491,27 +491,27 @@ if __name__ == '__main__':
           if len(acoupling['ScanConfig'][iDim]) == 0 : dim2del.append(iDim)
       for iDim in dim2del : del acoupling['ScanConfig'][iDim]
 
-    print " Cuts               = " , cuts.keys()
-    print " Variables          = " , variables.keys()
+    print((" Cuts               = " , list(cuts.keys())))
+    print((" Variables          = " , list(variables.keys())))
     for iDim in ['1D','2D'] :
-      if iDim in acoupling['ScanConfig'] : print ' ', iDim , ' Scans  : '  , acoupling['ScanConfig'][iDim]
+      if iDim in acoupling['ScanConfig'] : print((' ', iDim , ' Scans  : '  , acoupling['ScanConfig'][iDim]))
 
     # Need more dictionaries for plots
     if opt.type == 'plots'  : 
 
-      print ""
-      print " plotNormalizedDistributions =", opt.plotNormalizedDistributions
-      print "          showIntegralLegend =", opt.showIntegralLegend
-      print "                 scaleToPlot =", opt.scaleToPlot
-      print "                     minLogC =", opt.minLogC
-      print "                     maxLogC =", opt.maxLogC
-      print "                minLogCratio =", opt.minLogCratio
-      print "                maxLogCratio =", opt.maxLogCratio
-      print "           showRelativeRatio =", opt.showRelativeRatio
-      print "        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly
-      print "                removeWeight =", opt.removeWeight
-      print "                    invertXY =", opt.invertXY
-      print ""
+      print("")
+      print((" plotNormalizedDistributions =", opt.plotNormalizedDistributions))
+      print(("          showIntegralLegend =", opt.showIntegralLegend))
+      print(("                 scaleToPlot =", opt.scaleToPlot))
+      print(("                     minLogC =", opt.minLogC))
+      print(("                     maxLogC =", opt.maxLogC))
+      print(("                minLogCratio =", opt.minLogCratio))
+      print(("                maxLogCratio =", opt.maxLogCratio))
+      print(("           showRelativeRatio =", opt.showRelativeRatio))
+      print(("        showDataMinusBkgOnly =", opt.showDataMinusBkgOnly))
+      print(("                removeWeight =", opt.removeWeight))
+      print(("                    invertXY =", opt.invertXY))
+      print("")
 
       # ~~~~
       groupPlot = OrderedDict()
@@ -525,7 +525,7 @@ if __name__ == '__main__':
       # ~~~~
       structure = {}
       if opt.structureFile == None :
-         print " Please provide the datacard structure "
+         print(" Please provide the datacard structure ")
          exit ()
 
       if os.path.exists(opt.structureFile) :
@@ -536,7 +536,7 @@ if __name__ == '__main__':
       # ~~~~
       nuisances = {}
       if opt.nuisancesFile == None :
-         print " Please provide the nuisances structure if you want to add nuisances "
+         print(" Please provide the nuisances structure if you want to add nuisances ")
       else:
         if os.path.exists(opt.nuisancesFile) :
           handle = open(opt.nuisancesFile,'r')
@@ -547,13 +547,13 @@ if __name__ == '__main__':
       opt.outputDirPlots+="_ACFits"
       if not os.path.exists(opt.outputDirPlots) : os.mkdir(opt.outputDirPlots)
 
-    print " "
-    print " ----------------------- Plot Type = " , opt.type , " ----------------------------"
-    print " "
+    print(" ")
+    print((" ----------------------- Plot Type = " , opt.type , " ----------------------------"))
+    print(" ")
 
     if   opt.type == 'fits'   :  plot_fits()
     elif opt.type == 'plots'  :  plot_plots()
     else:
-      print "STEP UNKNOWN !!!!!"
+      print("STEP UNKNOWN !!!!!")
   
            

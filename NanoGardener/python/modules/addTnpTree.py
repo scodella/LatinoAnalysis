@@ -48,7 +48,7 @@ class addTnpTree(Module):
         self.out = wrappedOutputTree
         ## Dump electron / muon variables
         _brlist = inputTree.GetListOfBranches()
-        branches = [( _brlist.At(i).GetName(), _brlist.At(i).FindLeaf(_brlist.At(i).GetName()).GetTypeName()) for i in xrange(_brlist.GetEntries())]
+        branches = [( _brlist.At(i).GetName(), _brlist.At(i).FindLeaf(_brlist.At(i).GetName()).GetTypeName()) for i in range(_brlist.GetEntries())]
         self.lepBranches = []
         for brname, brtype in branches:
             if brname.startswith(self.flavor + "_"):

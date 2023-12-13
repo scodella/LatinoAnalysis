@@ -15,7 +15,7 @@ class HiggsXSection:
                 headers = [i.strip() for i in cols[1:]]
             else:
                 fields = [ float(i) for i in cols ]
-                ret[fields[0]] = dict(zip(headers,fields[1:]))
+                ret[fields[0]] = dict(list(zip(headers,fields[1:])))
         return ret
 
    def __init__(self):
@@ -118,7 +118,7 @@ class HiggsXSection:
           self._YR[YRversion][model]['br']['ff'] = self.file2map(self._basepath+'lhc-hxswg-'+YRversion+'/bsm/br/BR4.txt')
 
    def printYR(self):
-      print self._YR
+      print(self._YR)
 
    def GetYR(self):
      return self._YR
@@ -130,7 +130,7 @@ class HiggsXSection:
        if not Key in YRDic[iMass] : return 0.
        return YRDic[iMass][Key]
      else:
-       n=len(YRDic.keys())
+       n=len(list(YRDic.keys()))
        x=[]
        y=[]
        for jMass in sorted(YRDic.keys()):
@@ -339,7 +339,7 @@ class HiggsXSection:
 
      # Final X-Section
      HiggsXS['xs'] =  HiggsProdXS * HiggsBR * FinalStateBR    
-     print HiggsXS
+     print(HiggsXS)
      return HiggsXS
 
 ### Below some examples of usage :

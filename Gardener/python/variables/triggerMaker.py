@@ -21,9 +21,9 @@ from LatinoAnalysis.Gardener.gardening import TreeCloner
 
 class triggerCalculator():
     def __init__ (self,Trigger,cmssw,iPeriod,isData=False):
-       print "-------- triggerCalculator init() ---------", cmssw , iPeriod , isData
+       print("-------- triggerCalculator init() ---------", cmssw , iPeriod , isData)
        self.EMTFBug = Trigger[cmssw][iPeriod]['EMTFBug']
-       print 'EMTF Bug : ' ,self.EMTFBug
+       print('EMTF Bug : ' ,self.EMTFBug)
 
        if isData: 
          self.EleMu     = copy.deepcopy(Trigger[cmssw][iPeriod]['DATA']['EleMu']) 
@@ -31,11 +31,11 @@ class triggerCalculator():
          self.SingleMu  = copy.deepcopy(Trigger[cmssw][iPeriod]['DATA']['SingleMu']) 
          self.DoubleEle = copy.deepcopy(Trigger[cmssw][iPeriod]['DATA']['DoubleEle']) 
          self.SingleEle = copy.deepcopy(Trigger[cmssw][iPeriod]['DATA']['SingleEle']) 
-         print 'EleMu     = ' , self.EleMu
-         print 'DoubleMu  = ' , self.DoubleMu
-         print 'SingleMu  = ' , self.SingleMu
-         print 'DoubleEle = ' , self.DoubleEle
-         print 'SingleEle = ' , self.SingleEle
+         print('EleMu     = ' , self.EleMu)
+         print('DoubleMu  = ' , self.DoubleMu)
+         print('SingleMu  = ' , self.SingleMu)
+         print('DoubleEle = ' , self.DoubleEle)
+         print('SingleEle = ' , self.SingleEle)
 
        else:
          if 'MC' in Trigger[cmssw][iPeriod] :
@@ -44,26 +44,26 @@ class triggerCalculator():
            self.SingleMu  = copy.deepcopy(Trigger[cmssw][iPeriod]['MC']['SingleMu'])
            self.DoubleEle = copy.deepcopy(Trigger[cmssw][iPeriod]['MC']['DoubleEle'])
            self.SingleEle = copy.deepcopy(Trigger[cmssw][iPeriod]['MC']['SingleEle'])
-           print 'EleMu     = ' , self.EleMu
-           print 'DoubleMu  = ' , self.DoubleMu
-           print 'SingleMu  = ' , self.SingleMu
-           print 'DoubleEle = ' , self.DoubleEle
-           print 'SingleEle = ' , self.SingleEle
+           print('EleMu     = ' , self.EleMu)
+           print('DoubleMu  = ' , self.DoubleMu)
+           print('SingleMu  = ' , self.SingleMu)
+           print('DoubleEle = ' , self.DoubleEle)
+           print('SingleEle = ' , self.SingleEle)
 
          self.list_triggers = {}
          cmssw_base = os.getenv('CMSSW_BASE')
-         print "DoubleEleLegHigPt : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['DoubleEleLegHigPt']
-         print "DoubleEleLegLowPt : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['DoubleEleLegLowPt']
-         print "SingleEle         : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['SingleEle']
+         print("DoubleEleLegHigPt : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['DoubleEleLegHigPt'])
+         print("DoubleEleLegLowPt : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['DoubleEleLegLowPt'])
+         print("SingleEle         : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['SingleEle'])
   
-         print "DoubleMuLegHigPt  : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['DoubleMuLegHigPt']
-         print "DoubleMuLegLowPt  : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['DoubleMuLegLowPt']
-         print "SingleMu          : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['SingleMu']
+         print("DoubleMuLegHigPt  : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['DoubleMuLegHigPt'])
+         print("DoubleMuLegLowPt  : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['DoubleMuLegLowPt'])
+         print("SingleMu          : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['SingleMu'])
   
-         print "MuEleLegHigPt     : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['MuEleLegHigPt']
-         print "MuEleLegLowPt     : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['MuEleLegLowPt']
-         print "EleMuLegHigPt     : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['EleMuLegHigPt']
-         print "EleMuLegLowPt     : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['EleMuLegLowPt']
+         print("MuEleLegHigPt     : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['MuEleLegHigPt'])
+         print("MuEleLegLowPt     : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['MuEleLegLowPt'])
+         print("EleMuLegHigPt     : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['EleMuLegHigPt'])
+         print("EleMuLegLowPt     : " , cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['EleMuLegLowPt'])
   
   
          file_triggerDoubleEleLegHigPt = open (cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/'+Trigger[cmssw][iPeriod]['LegEff']['DoubleEleLegHigPt'])
@@ -110,10 +110,10 @@ class triggerCalculator():
          self.DZEff_MuEle     = Trigger[cmssw][iPeriod]['DZEff']['MuEle'] 
          self.DZEff_EleMu     = Trigger[cmssw][iPeriod]['DZEff']['EleMu'] 
 
-         print 'DZ Eff DoubleEle = ' , self.DZEff_DoubleEle
-         print 'DZ Eff DoubleMu  = ' , self.DZEff_DoubleMu 
-         print 'DZ Eff MuEle     = ' , self.DZEff_MuEle    
-         print 'DZ Eff EleMu     = ' , self.DZEff_EleMu
+         print('DZ Eff DoubleEle = ' , self.DZEff_DoubleEle)
+         print('DZ Eff DoubleMu  = ' , self.DZEff_DoubleMu) 
+         print('DZ Eff MuEle     = ' , self.DZEff_MuEle)    
+         print('DZ Eff EleMu     = ' , self.DZEff_EleMu)
 
 
          self.trkSFMu = copy.deepcopy(Trigger[cmssw][iPeriod]['trkSFMu'])
@@ -864,7 +864,7 @@ class triggerCalculator():
             return _getWeight
         def _curriedWeight(*args):
             if len(args)%3 != 0:
-                print "ERROR!! For each leg, 'kindLep pt eta' should be provides. Bad number of arguments."
+                print("ERROR!! For each leg, 'kindLep pt eta' should be provides. Bad number of arguments.")
                 return 1, 1, 1
             toss_a_coin = ROOT.gRandom.Rndm()
 
@@ -938,15 +938,15 @@ class triggerCalculator():
 
             # Fill efficiency for all possible legs.
             getEff = {}
-            for keyname in double.keys():
+            for keyname in list(double.keys()):
                 getEff[keyname] = {}
                 getEff[keyname]['eff'], getEff[keyname]['eff_low'], getEff[keyname]['eff_high'] = self._getEff(double[keyname]['pt'],double[keyname]['eta'],double[keyname]['whichTrigger'])
-            for keyname in single.keys():
+            for keyname in list(single.keys()):
                 getEff[keyname] = {}
                 getEff[keyname]['eff'], getEff[keyname]['eff_low'], getEff[keyname]['eff_high'] = self._getEff(single[keyname]['pt'],single[keyname]['eta'],single[keyname]['whichTrigger'])
 
             # Add 5% syst to SnglEle
-            for keyname in single.keys():
+            for keyname in list(single.keys()):
                 if single[keyname]['whichTrigger'] == "triggerSingleEle":
                     systdown = getEff[keyname]['eff']-getEff[keyname]['eff_low']
                     systdown_new = math.sqrt(systdown*systdown + 0.05*0.05)
@@ -958,12 +958,12 @@ class triggerCalculator():
             # Tracker Muon SF
             for iLep in range(nLep):
                 if abs(kindLep[iLep])==13:
-                    for keyname in double.keys():
+                    for keyname in list(double.keys()):
                         if re.search("^(lead|trail)([0-9]+)(lead|trail)([0-9]+)$",keyname).group(2) == str(iLep):
                             getEff[keyname]['eff']      *= self.trkSFMu[0]
                             getEff[keyname]['eff_high'] *= self.trkSFMu[1]
                             getEff[keyname]['eff_low']  *= self.trkSFMu[2]
-                    for keyname in single.keys():
+                    for keyname in list(single.keys()):
                         if re.search("^single([0-9]+)$",keyname).group(1) == str(iLep):
                             getEff[keyname]['eff']      *= self.trkSFMu[0]
                             getEff[keyname]['eff_high'] *= self.trkSFMu[1]
@@ -1082,7 +1082,7 @@ class triggerMaker(TreeCloner):
         
         # Define Luminosity and run periods              
         if opts.pycfg == "DEFAULT" : opts.pycfg = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/trigger/Trigger_cfg.py'
-        print 'Loading Trigger config : ' , opts.pycfg
+        print('Loading Trigger config : ' , opts.pycfg)
         Trigger = {}
         if os.path.exists(opts.pycfg) : 
           handle = open(opts.pycfg,'r')
@@ -1094,7 +1094,7 @@ class triggerMaker(TreeCloner):
     
         # Compute Lumi fractions
         self.keepRun  = opts.keepRun 
-        self.nPeriods = len(Trigger.keys())
+        self.nPeriods = len(list(Trigger.keys()))
         LumiTot=0.
         for iPeriod in Trigger[opts.cmssw] : LumiTot += Trigger[opts.cmssw][iPeriod]['lumi']
         fSum = 0.
@@ -1108,13 +1108,13 @@ class triggerMaker(TreeCloner):
            fSum += Trigger[opts.cmssw][iPeriod]['lumi']/LumiTot
            self.fPeriods.append(fSum)
         
-        print '------- Cfg for : ', opts.cmssw
-        print Trigger[opts.cmssw]
-        print '--------Lumi Frac -----------' 
-        print 'Keep Run Period: ',self.keepRun
-        print self.runPeriods
-        print self.fPeriods
-        print '---------------------' 
+        print('------- Cfg for : ', opts.cmssw)
+        print(Trigger[opts.cmssw])
+        print('--------Lumi Frac -----------') 
+        print('Keep Run Period: ',self.keepRun)
+        print(self.runPeriods)
+        print(self.fPeriods)
+        print('---------------------') 
         self.triggerCalculators = []
         for iPeriod in Trigger[opts.cmssw] : self.triggerCalculators.append(triggerCalculator(Trigger,opts.cmssw,iPeriod,self.isData))
 
@@ -1193,7 +1193,7 @@ class triggerMaker(TreeCloner):
           self.branches[bname] = bvariable
 
         # now actually connect the branches
-        for bname, bvariable in self.branches.iteritems():
+        for bname, bvariable in self.branches.items():
             #print " bname   = ", bname
             #print " bvariable = ", bvariable
             self.otree.Branch(bname,bvariable,bname+'/F')
@@ -1203,21 +1203,21 @@ class triggerMaker(TreeCloner):
           self.otree.Branch('std_vector_TrgEmulator',bvector_TrgEmulator)
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
         savedentries = 0
                 
         # avoid dots to go faster
         itree     = self.itree
         otree     = self.otree
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
 
             ## print event count
             if i > 0 and i%step == 0.:
-              print i,'events processed.'
+              print(i,'events processed.')
 
 
             # Get run period
@@ -1349,7 +1349,7 @@ class triggerMaker(TreeCloner):
             savedentries+=1
 
         self.disconnect()
-        print '- Eventloop completed'
-        print '   Saved: ', savedentries, ' events'
+        print('- Eventloop completed')
+        print('   Saved: ', savedentries, ' events')
 
 

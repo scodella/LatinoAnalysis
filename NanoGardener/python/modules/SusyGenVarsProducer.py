@@ -50,7 +50,7 @@ class SusyGenVarsProducer(Module):
                         self.susyModel = model
 
             if self.susyProcess=='' :
-                print 'SusyGenVarsProducer WARNING: SUSY process not found for input file', inputFile.GetName()
+                print('SusyGenVarsProducer WARNING: SUSY process not found for input file', inputFile.GetName())
 
                 for model in SUSYCrossSections[process]['susyModels'] :
                     if model in outputFile.GetName() :
@@ -58,7 +58,7 @@ class SusyGenVarsProducer(Module):
                         self.susyModel = model
 
                 if self.susyProcess=='' :
-                    print 'SusyGenVarsProducer WARNING: SUSY process not found for output file', outputFile.GetName()
+                    print('SusyGenVarsProducer WARNING: SUSY process not found for output file', outputFile.GetName())
             
             if self.susyProcess!='' and self.susyProcess!='Slepton' :
                 self.susyModelIsSet = True
@@ -84,7 +84,7 @@ class SusyGenVarsProducer(Module):
         
         isusyMass = int(susyMass)
         
-        if str(isusyMass) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
+        if str(isusyMass) in list(SUSYCrossSections[susyProcess]['massPoints'].keys()) :
         
             susyXsec = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value'])
 
@@ -117,7 +117,7 @@ class SusyGenVarsProducer(Module):
                     isusyMass1 =  900
                     isusyMass2 = 1000
 
-            if str(isusyMass1) in SUSYCrossSections[susyProcess]['massPoints'].keys() and str(isusyMass2) in SUSYCrossSections[susyProcess]['massPoints'].keys() :
+            if str(isusyMass1) in list(SUSYCrossSections[susyProcess]['massPoints'].keys()) and str(isusyMass2) in list(SUSYCrossSections[susyProcess]['massPoints'].keys()) :
 
                 susyXsec1 = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass1)]['value'])
                 susyXsec2 = float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass2)]['value'])
@@ -213,7 +213,7 @@ class SusyGenVarsProducer(Module):
             else:
                 raise Exception('SusyGenVarsProducer ERROR: SUSY process not set from gen particle inspection either')
             if self.susyProcess=='StopSbottom' or self.susyProcess=='WinoC1C1':
-                print 'SusyGenVarsProducer WARNING: SUSY process set to', self.susyProcess, 'from gen particle inspection'
+                print('SusyGenVarsProducer WARNING: SUSY process set to', self.susyProcess, 'from gen particle inspection')
                 self.susyModelIsSet = True
                 
     
@@ -223,7 +223,7 @@ class SusyGenVarsProducer(Module):
         if nSusyParticles==2 :
             ptISR = (susyParticle1+susyParticle2).Pt()
         else :
-            print 'SusyGenVarsProducer WARNING:', nSusyParticles, 'SUSY particles found for pt ISR computation'
+            print('SusyGenVarsProducer WARNING:', nSusyParticles, 'SUSY particles found for pt ISR computation')
 
         # Adapted from (check for updates for nanoAOD):
         # https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/plugins/bmaker_full.cc#L1268-L1295

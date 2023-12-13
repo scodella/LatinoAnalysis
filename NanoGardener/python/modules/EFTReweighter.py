@@ -13,7 +13,7 @@ import os.path
 
 class EFTReweighter(Module):
     def __init__(self, sample):
-        print '####################', sample
+        print('####################', sample)
         self.sample = sample
         self.cmssw_base = os.getenv('CMSSW_BASE')
         self.cmssw_arch = os.getenv('SCRAM_ARCH')
@@ -56,7 +56,7 @@ class EFTReweighter(Module):
         else:
           raise NameError(self.sample, "is an unrecognised simulation")
 
-        print("Running MELA EFT reweighter with " + self.productionProcess + " sample")
+        print(("Running MELA EFT reweighter with " + self.productionProcess + " sample"))
 
         self.out = wrappedOutputTree
 
@@ -118,7 +118,7 @@ class EFTReweighter(Module):
         LHEHFinalState = self.getLHE(event, HFinalStateIdx) 
 
         if len(LHEHFinalState)!=4:
-          print "SOMETHING WENT WRONG!, WW final state", len(LHEHFinalState), LHEHFinalState
+          print("SOMETHING WENT WRONG!, WW final state", len(LHEHFinalState), LHEHFinalState)
 
         for ipart in LHEHFinalState:
           d = ROOT.TLorentzVector()
@@ -131,10 +131,10 @@ class EFTReweighter(Module):
         if self.sample is "H0L1f05_ToWWTo2L2Nu" :
          if abs(daughterIDs[0]) in [11,13,15] and abs(daughterIDs[1]) in [12,14,16] and abs(daughterIDs[2]) in [12,14,16] and abs(daughterIDs[3]) in [11,13,15] :
           if self.MatchLNuIDs(daughterIDs[0], daughterIDs[1]) is False : 
-           print "1st Lep-Nu pair IDs not matching : ", daughterIDs[0], daughterIDs[1]
+           print("1st Lep-Nu pair IDs not matching : ", daughterIDs[0], daughterIDs[1])
            daughterIDs[1]  = -1*numpy.sign(daughterIDs[0])*(abs(daughterIDs[0])+1)        
           if self.MatchLNuIDs(daughterIDs[3], daughterIDs[2]) is False : 
-           print "2nd Lep-Nu pair IDs not matching : ", daughterIDs[3], daughterIDs[2]
+           print("2nd Lep-Nu pair IDs not matching : ", daughterIDs[3], daughterIDs[2])
            daughterIDs[2]  = -1*numpy.sign(daughterIDs[3])*(abs(daughterIDs[3])+1)
           
         mothers = ROOT.vector('TLorentzVector')()
@@ -187,7 +187,7 @@ class EFTReweighter(Module):
          LHEVFinalState = self.getLHE(event, VFinalStateIdx) 
 
          if len(LHEVFinalState)!=2:
-          print "SOMETHING WENT WRONG!, V final state ", len(LHEVFinalState), VFinalStateIdx
+          print("SOMETHING WENT WRONG!, V final state ", len(LHEVFinalState), VFinalStateIdx)
 
          for ipart in LHEVFinalState:
           add = ROOT.TLorentzVector()
@@ -213,7 +213,7 @@ class EFTReweighter(Module):
           addIDs.push_back(int(event.LHEPart_pdgId[ijet]))
 
          if len(adds) !=2 : 
-          print "SOMETHING WENT WRONG!, VBF associated partons ", len(adds)
+          print("SOMETHING WENT WRONG!, VBF associated partons ", len(adds))
 
         elif self.productionProcess == "GluGlujj" : 
 
@@ -233,7 +233,7 @@ class EFTReweighter(Module):
           addIDs.push_back(int(event.LHEPart_pdgId[ijet]))
 
          if len(adds) !=2 : 
-          print "SOMETHING WENT WRONG!, GluGlujj associated partons ", len(adds)
+          print("SOMETHING WENT WRONG!, GluGlujj associated partons ", len(adds))
 
         # Get MEs from MELA
 
@@ -311,8 +311,8 @@ class EFTReweighter(Module):
          self.out.fillBranch( 'gen_pme_hm',     gen_pme_hm )
          self.out.fillBranch( 'gen_pme_mixhm',  gen_pme_mixhm )
 
-        if math.isnan(gen_pme_hsm) : print "SOMETHING WENT WRONG?, Production ME is nan "
-        if math.isnan(gen_dme_hsm) : print "SOMETHING WENT WRONG?, Decay ME is nan "
+        if math.isnan(gen_pme_hsm) : print("SOMETHING WENT WRONG?, Production ME is nan ")
+        if math.isnan(gen_dme_hsm) : print("SOMETHING WENT WRONG?, Decay ME is nan ")
 
         self.mela.resetInputEvent()
 
@@ -337,8 +337,8 @@ class EFTReweighter(Module):
 
     def FromH(self, event, pid): # Iterate over mothers to find Higgs
       while event.GenPart_genPartIdxMother[pid] != -1:
-	pid = event.GenPart_genPartIdxMother[pid]
-	if event.GenPart_pdgId[pid] == 25: return True
+          pid = event.GenPart_genPartIdxMother[pid]
+          if event.GenPart_pdgId[pid] == 25: return True
       return False
 
     def RemoveGammaW(self, event, FinalStateIdx): # Remove W -> gamma W -> e+ e- W   

@@ -54,7 +54,7 @@ class ElectronsVarFiller(TreeCloner):
             branch = self.itree.GetBranch(bname)
             newtitle = bname
             if ( branch.GetTitle() != newtitle ):
-                print 'WARNING: Branch mutation detected: from',branch.GetTitle(),'to',newtitle
+                print('WARNING: Branch mutation detected: from',branch.GetTitle(),'to',newtitle)
                 hasMutation = True
 
         if hasMutation:
@@ -70,33 +70,33 @@ class ElectronsVarFiller(TreeCloner):
           newbranchesVecotor[bname] = bvector
 
 
-        for bname, bvector in newbranchesVecotor.iteritems():
-            print " bname   = ", bname
-            print " bvector = ", bvector
+        for bname, bvector in newbranchesVecotor.items():
+            print(" bname   = ", bname)
+            print(" bvector = ", bvector)
             self.otree.Branch(bname,bvector)
             #self.otree.Branch(str(bname),"vector<int>",bvector)
             #self.otree.Branch(bname,"vector<int>",bvector)
             #self.otree.Branch(str(bname),"vector<int>",ROOT.AddressOf(bvector))
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
 
         #what is self.itree? what is self.otree?
         itree     = self.itree
         otree     = self.otree
 
         #----------------------------------------------------------------------------------------------------
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
 
-        for i in xrange(nentries):
+        for i in range(nentries):
 
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
 
-            for bname, bvector in newbranchesVecotor.iteritems():
+            for bname, bvector in newbranchesVecotor.items():
               bvector.clear()
                 
             vectorLength = (getattr(itree, "std_vector_lepton_pt")).size()
@@ -104,14 +104,14 @@ class ElectronsVarFiller(TreeCloner):
             for i in range(0, vectorLength):
               if ((getattr(itree, "std_vector_lepton_eta")).at(i)) < 1.2345 :
               #if ((getattr(itree, "std_vector_electron_deltaEtaIn")).at(i)) < 1.2345 :
-                for bname, bvector in newbranchesVecotor.iteritems():
+                for bname, bvector in newbranchesVecotor.items():
                   bvector.push_back(1)
               else :
-                for bname, bvector in newbranchesVecotor.iteritems():
+                for bname, bvector in newbranchesVecotor.items():
                   bvector.push_back(0)
 
 
             otree.Fill()
 
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')

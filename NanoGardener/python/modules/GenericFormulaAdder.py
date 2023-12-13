@@ -29,7 +29,7 @@ class GenericFormulaAdder(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = mappedOutputTree(wrappedOutputTree, mapname=self._branch_map) 
         self.itree = inputTree
-        for key in self.formulas.keys():
+        for key in list(self.formulas.keys()):
           self.formulas[key] = eval('lambda event:'+self.formulas[key])
           self.out.branch(key,  'F');
     
@@ -39,7 +39,7 @@ class GenericFormulaAdder(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         event = mappedEvent(event, mapname=self._branch_map)
-        for key in self.formulas.keys():
+        for key in list(self.formulas.keys()):
           self.out.fillBranch(key, self.formulas[key](event))
 
         return True

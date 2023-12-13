@@ -34,7 +34,7 @@ class qq2vvEWKcorrectionsWeightFiller(TreeCloner):
         self.otree.Branch('ewkW'  , ewkW  , 'ewkW/F')
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries
+        print('Total number of entries: ',nentries)
 
         itree     = self.itree
         otree     = self.otree
@@ -48,13 +48,13 @@ class qq2vvEWKcorrectionsWeightFiller(TreeCloner):
 
         qq2vvEWKcorrections = ROOT.qq2vvEWKcorrections(cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/out_qqbww_EW_L8_200_forCMS.dat')
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
 
             ptl1 = itree.std_vector_LHElepton_pt[0]
             ptl2 = itree.std_vector_LHElepton_pt[1]
@@ -91,4 +91,4 @@ class qq2vvEWKcorrectionsWeightFiller(TreeCloner):
             otree.Fill()
 
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')

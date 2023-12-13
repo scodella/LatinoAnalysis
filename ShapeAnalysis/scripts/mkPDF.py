@@ -42,7 +42,7 @@ class ShapeFactory:
     def _connectInputs(self, samples, inputDir, skipMissingFiles):
         inputs = {}
         histoName = 'list_vectors_weights'
-        for process,filenames in samples.iteritems():
+        for process,filenames in list(samples.items()):
           histo = self._buildchainHisto(histoName,[ (inputDir + '/' + f) for f in filenames], skipMissingFiles)
           inputs[process] = histo 
           #print ' process -> ', process, ' => ', inputs[process]
@@ -59,7 +59,7 @@ class ShapeFactory:
             self._logger.debug('     '+str(os.path.exists(path))+' '+path)
             if "eos.cern.ch" not in path and "eosuser.cern.ch" not in path:
               if not os.path.exists(path):
-                print 'File '+path+' doesn\'t exists'
+                print(('File '+path+' doesn\'t exists'))
                 doesFileExist = False
                 if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')
             else:
@@ -68,7 +68,7 @@ class ShapeFactory:
                 if not skipMissingFiles : raise RuntimeError('File '+path+' doesn\'t exists')
             if doesFileExist :
               fileIn = ROOT.TFile(path)
-              print " path = ", path
+              print((" path = ", path))
               if isFirstOne :
                 self._outFile.cd()
                 histoSum = (fileIn.Get(histoName)).Clone()   
@@ -94,9 +94,9 @@ class ShapeFactory:
     # _____________________________________________________________________________
     def makePDF(self, inputFile, outputDirPDF, cuts, samples, inputDir, structureFile):
 
-        print "================="
-        print "==== makePDF ===="
-        print "================="
+        print("=================")
+        print("==== makePDF ====")
+        print("=================")
 
         # NB: the samples have to be OF THE SAME GENERATOR
         #     you cannot get pdf/qcd uncertainty mixing different samples
@@ -118,16 +118,16 @@ class ShapeFactory:
 
         # get the pre-any-cut histogram
         list_of_trees_to_connect = {}
-        for sampleName, sample in self._samples.iteritems():
+        for sampleName, sample in list(self._samples.items()):
           list_of_trees_to_connect[sampleName] = sample['name']
               
         #                                                                    skipMissingFiles
         preCutsHistograms = self._connectInputs( list_of_trees_to_connect, inputDir, False)
         
-        print ' preCutsHistograms = ', preCutsHistograms
+        print((' preCutsHistograms = ', preCutsHistograms))
         
         for cutName in self._cuts :
-          print "cut = ", cutName, " :: ", cuts[cutName]
+          print(("cut = ", cutName, " :: ", cuts[cutName]))
           
           # creating qqbar files
           summaryNuisanceFileQCDqq = open(self._outputDirPDF + '/summary_nuisance_qcd_qq_' + cutName + '.py', 'w')
@@ -201,7 +201,7 @@ class ShapeFactory:
           summaryNuisanceFileAlphaPDFgg.write("    'samples'  : { \n")
 
 
-          for sampleName, sample in self._samples.iteritems():
+          for sampleName, sample in list(self._samples.items()):
             
               #if structureFile[sampleName]['isFromGluons'] == 0 :
               tcanvas  = ROOT.TCanvas( "c_unc_" + cutName + "_" + sampleName,      "cc"     , 800, 600 )
@@ -240,9 +240,9 @@ class ShapeFactory:
                               high_qcd = totalWeighted/denominator/nominalRatio
                               #print 'high_qcd = ' + str(high_qcd)
                           elif denominator == 0 :
-                              print 'Denominator is 0 !!!!'
+                              print('Denominator is 0 !!!!')
                           elif nominalRatio == 0:
-                              print 'nominalRatio is 0 !!!!'
+                              print('nominalRatio is 0 !!!!')
 
               string_to_write = "         '" +  sampleName +  "': '%4.3f/%4.3f' ,\n" %(low_qcd, high_qcd)
               if structureFile[sampleName]['isFromGluons'] == 0 :
@@ -272,9 +272,9 @@ class ShapeFactory:
                           elif ipdf == 110:
                               high_alpha = totalWeighted/denominator/nominalRatio
                           elif denominator == 0 : 
-                              print 'Denominator is 0 !!!!'
+                              print('Denominator is 0 !!!!')
                           elif nominalRatio == 0:
-                              print 'nominalRatio is 0 !!!!'
+                              print('nominalRatio is 0 !!!!')
                 
               string_to_write = "         '" +  sampleName +  "': '%4.3f/%4.3f' ,\n" %(low_alpha, high_alpha)
               if structureFile[sampleName]['isFromGluons'] == 0 :
@@ -299,7 +299,7 @@ class ShapeFactory:
                   if denominator != 0 and nominalRatio != 0 :
                       histoRatioPDF.Fill(totalWeighted/denominator/nominalRatio)
                   elif denominator == 0 :
-                      print 'Denominator is 0 !!!!'
+                      print('Denominator is 0 !!!!')
                       
 
               histoRatioPDF.Draw()
@@ -415,7 +415,7 @@ class ShapeFactory:
                 os.system('rm ' + fname)
 
 
-        print " >> all but really all "
+        print(" >> all but really all ")
         
 
 
@@ -458,7 +458,7 @@ class ShapeFactory:
     # _____________________________________________________________________________
     def defineStyle(self):
 
-        print "=================="
+        print("==================")
         import LatinoAnalysis.ShapeAnalysis.tdrStyle as tdrStyle
         tdrStyle.setTDRStyle()
         
@@ -469,7 +469,7 @@ class ShapeFactory:
 
 
 if __name__ == '__main__':
-    print '''
+    print('''
 --------------------------------------------------------------------------------------------------
 
 
@@ -482,7 +482,7 @@ if __name__ == '__main__':
 
  
 --------------------------------------------------------------------------------------------------
-'''    
+''')    
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
@@ -500,19 +500,19 @@ if __name__ == '__main__':
     ROOT.gROOT.SetBatch()
 
 
-    print " configuration file = ", opt.pycfg
+    print((" configuration file = ", opt.pycfg))
     
-    print " inputFile          = ", opt.inputFile
-    print " outputDirPDF       = ", opt.outputDirPDF
-    print " inputDir           = ", opt.inputDir
+    print((" inputFile          = ", opt.inputFile))
+    print((" outputDirPDF       = ", opt.outputDirPDF))
+    print((" inputDir           = ", opt.inputDir))
      
     if not opt.debug:
         pass
     elif opt.debug == 2:
-        print 'Logging level set to DEBUG (%d)' % opt.debug
+        print(('Logging level set to DEBUG (%d)' % opt.debug))
         logging.basicConfig( level=logging.DEBUG )
     elif opt.debug == 1:
-        print 'Logging level set to INFO (%d)' % opt.debug
+        print(('Logging level set to INFO (%d)' % opt.debug))
         logging.basicConfig( level=logging.INFO )
 
       
@@ -534,7 +534,7 @@ if __name__ == '__main__':
     # ~~~~
     structure = {}
     if opt.structureFile == None :
-       print " Please provide the datacard structure "
+       print(" Please provide the datacard structure ")
        exit ()
        
     if os.path.exists(opt.structureFile) :
@@ -545,6 +545,6 @@ if __name__ == '__main__':
 
     factory.makePDF( opt.inputFile ,opt.outputDirPDF, cuts, samples, opt.inputDir, structure)
     
-    print '... and now closing ...'
+    print('... and now closing ...')
         
        

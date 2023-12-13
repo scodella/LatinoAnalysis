@@ -42,7 +42,7 @@ class VBSjjlnu_kin(Module):
         self.out = mappedOutputTree(wrappedOutputTree, suffix=suffix)
 
         # New Branches
-        for typ, branches in vbs_vars.VBSjjlnu_branches.items():
+        for typ, branches in list(vbs_vars.VBSjjlnu_branches.items()):
             for var in branches:
                 self.out.branch(var, typ)
         for vec_branch in vbs_vars.VBSjjlnu_vector_branches:
@@ -75,7 +75,7 @@ class VBSjjlnu_kin(Module):
         if category not in [0,1]:
             output = vbs_vars.getDefault() 
             # Fill the branches
-            for var, val in output.items():
+            for var, val in list(output.items()):
                 self.out.fillBranch(var, val)         
             return True
 
@@ -125,7 +125,7 @@ class VBSjjlnu_kin(Module):
                                 other_jets, other_jets_ind, debug=self.debug )
         
         # Fill the branches
-        for var, val in output.items():
+        for var, val in list(output.items()):
             self.out.fillBranch(var, val)        
 
         """return True (go to next module) or False (fail, go to next event)"""
@@ -153,7 +153,7 @@ class VBSjjlnu_kin(Module):
             vec.SetPtEtaPhiM(pt, eta, phi, mass)
             # check if different from the previous one
             if self.debug:
-                print "Jet index: ", jetindex, "> pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass
+                print("Jet index: ", jetindex, "> pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass)
             jets.append(vec)
             coll_ids.append(jetindex)
         return jets, coll_ids

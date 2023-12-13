@@ -27,7 +27,7 @@ from LatinoAnalysis.Tools.batchTools  import *
 
 # get list of samples name
 samples = [ f.strip() for f in open(args.samples_file).readlines() if not f.startswith("#")]
-print samples
+print(samples)
 
 filesPerJob = args.files_per_job
 
@@ -40,7 +40,7 @@ def makeTargetList(samples):
   a 2-tuple (sample name, fileblock)
   """
   targetList=[]
-  for sam_k, sam_v in samples.iteritems():
+  for sam_k, sam_v in samples.items():
 
     nFiles = len(sam_v)
     nFileBlocks = int(math.ceil(float(nFiles) / filesPerJob))
@@ -65,8 +65,8 @@ if targetList[0] != 'ALL':
   batchSplit.append('Targets')
 
 # ...Check job status and remove duplicates
-print "stepList", stepList
-print "targetList", targetList
+print("stepList", stepList)
+print("targetList", targetList)
 for iStep in stepList:
   for iTarget in targetList:
     if type(iTarget) is tuple:
@@ -76,7 +76,7 @@ for iStep in stepList:
     pidFile = jobDir+'mkShapes__skim/mkShapes__'+args.tag+'__'+iStep+'__'+tname+'.jid'
     #print pidFile
     if os.path.isfile(pidFile) :
-      print '--> Job aready created : '+iStep+'__'+tname
+      print('--> Job aready created : '+iStep+'__'+tname)
       exit()
 
 

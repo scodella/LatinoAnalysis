@@ -20,17 +20,17 @@ class rochester_corr(Module):
     def __init__(self,isdata = False , year=2016 , lepColl="Lepton",metColls=['MET','PuppiMET','RawMET','TkMET','ChsMET']):
         cmssw_base = os.getenv('CMSSW_BASE')
         self.isdata = isdata
-        print "Loading macros from "+cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR_NG.cc"
+        print("Loading macros from "+cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR_NG.cc")
         try:
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR_NG.cc+g')                                                                    
         except RuntimeError: 
             ROOT.gROOT.LoadMacro(cmssw_base+'/src/LatinoAnalysis/NanoGardener/python/modules/RoccoR_NG.cc++g')      
-        print "Loaded"  
+        print("Loaded")  
      
         if year == 2016 : rochester_path=cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/data/RoccoR2016.txt"
         if year == 2017 : rochester_path=cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/data/RoccoR2017.txt"        
         if year == 2018 : rochester_path=cmssw_base+"/src/LatinoAnalysis/NanoGardener/python/data/RoccoR2018.txt"        
-        print "scale factors from", rochester_path
+        print("scale factors from", rochester_path)
         rc=ROOT.RoccoR_NG(rochester_path)
         self.rc= rc        
 
@@ -114,7 +114,7 @@ class rochester_corr(Module):
         #dataSFerr_vec=[]        
         #mcSFerr_vec=[]        
 
-        for iLep in xrange(nLep) :
+        for iLep in range(nLep) :
             pt = lepton_col[iLep].pt
             flavour = lepton_col[iLep].pdgId
             eta = lepton_col[iLep].eta
@@ -140,7 +140,7 @@ class rochester_corr(Module):
                     matchedgenpt = -1
                     nl =int(muon_col[lepton_col[iLep].muonIdx].nTrackerLayers)
                     u1 =random.random()
-                    for iGenLep in xrange(ngenLep) :
+                    for iGenLep in range(ngenLep) :
                         if genlepton_col[iGenLep].pt > 0 \
                                 and  genlepton_col[iGenLep].status == 1 \
                                 and  (abs(genlepton_col[iGenLep].pdgId) == 13)   :
@@ -188,7 +188,7 @@ class rochester_corr(Module):
         # e.g. if pt is         [ 26, 24, 27 ]
         #      you get: order = [ 2, 0, 1]
         #
-        order = sorted(range(len(newpt_vec)), key=newpt_vec.__getitem__, reverse=True)
+        order = sorted(list(range(len(newpt_vec))), key=newpt_vec.__getitem__, reverse=True)
 
         # Fill branches
         for typ in self.CollBr: 

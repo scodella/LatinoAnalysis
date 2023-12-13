@@ -45,19 +45,19 @@ class TLorentzVectorCreator(TreeCloner):
         if not opts.variables:
             raise ValueError('No variables defined?!?')
 
-        print " opts.variables: ", opts.variables
+        print(" opts.variables: ", opts.variables)
         for s in opts.variables:
             r = self.regex.match(s)
             if not r:
                 raise RuntimeError('Malformed option '+s)
             name = r.group(1)
-            print " name = ", name
+            print(" name = ", name)
             pt  = r.group(2)
-            print " pt   = ", pt
+            print(" pt   = ", pt)
             eta = r.group(3)
-            print " eta  = ", eta
+            print(" eta  = ", eta)
             phi = r.group(4)
-            print " phi  = ", phi
+            print(" phi  = ", phi)
 
             #print "self.regex = ", self.regex
             #print "s = ", s
@@ -69,7 +69,7 @@ class TLorentzVectorCreator(TreeCloner):
             else :
               en = "DUMMY"
               
-            print " en = ", en
+            print(" en = ", en)
             #-v 'TLlep=std_variable_vector_lepton_pt,std_variable_vector_lepton_eta,std_variable_vector_lepton_phi' \
 
             TL = ROOT.std.vector(ROOT.TLorentzVector) ()
@@ -84,23 +84,23 @@ class TLorentzVectorCreator(TreeCloner):
 
         self.connect(tree,input)
 
-        print " begin ... "
+        print(" begin ... ")
 
         #vars = [ ( value, type, ROOT.TTreeFormula(name,formula, self.itree)) for name, (value, type, formula) in self.variables.iteritems() ]
-        vars = [ (name, TL, pt, eta, phi, en) for name, (TL, pt, eta, phi, en) in self.variables.iteritems() ]
+        vars = [ (name, TL, pt, eta, phi, en) for name, (TL, pt, eta, phi, en) in self.variables.items() ]
         #TL, pt, eta, phi, en
         
         #vector<TLorentzVector> theJets;
         #tcal.Branch("theJets",&theJets);
 
 
-        print 'Adding/replacing the following branches'
+        print('Adding/replacing the following branches')
         template=' {0:10} | "{2}" | "{2}" | "{2}" | "{2}" '
         for name  in sorted(self.variables):
             (TL, pt, eta, phi, en) = self.variables[name]
-            print template.format(name, pt, eta, phi, en)
-            print pt, "-", eta, "-", phi, "-", en
-        print
+            print(template.format(name, pt, eta, phi, en))
+            print(pt, "-", eta, "-", phi, "-", en)
+        print()
 
 
 
@@ -113,13 +113,13 @@ class TLorentzVectorCreator(TreeCloner):
             branch = self.itree.GetBranch(bname)
             newtitle = bname
             if ( branch.GetTitle() != newtitle ):
-                print 'WARNING: Branch mutation detected: from',branch.GetTitle(),'to',newtitle
+                print('WARNING: Branch mutation detected: from',branch.GetTitle(),'to',newtitle)
                 hasMutation = True
 
         if hasMutation:
             confirm('Mutation detected. Do you _really_ want to continue?') or sys.exit(0)
 
-        self.clone(output,self.variables.keys())
+        self.clone(output,list(self.variables.keys()))
 
         for (name, TL, pt, eta, phi, en) in vars:
             #title = name
@@ -128,18 +128,18 @@ class TLorentzVectorCreator(TreeCloner):
             #self.otree.Branch(str(name),"vector<TLorentzVector>",ROOT.AddressOf(TL))
 
         nentries = self.itree.GetEntries()
-        print 'Entries:',nentries
+        print('Entries:',nentries)
 
         # avoid dots in the loop
         itree = self.itree
         otree = self.otree
 
         step = 5000
-        for i in xrange(0,nentries):
+        for i in range(0,nentries):
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0:
-                print str(i)+' events processed.'
+                print(str(i)+' events processed.')
 
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
@@ -151,7 +151,7 @@ class TLorentzVectorCreator(TreeCloner):
                     for i in range(0, vectorLength):
                        singleTL = ROOT.TLorentzVector()
                        if en != "DUMMY" :
-                         print "not dummy??"
+                         print("not dummy??")
                          singleTL.SetPtEtaPhiE((getattr(itree, pt)).at(i), (getattr(itree, eta)).at(i), (getattr(itree, phi)).at(i), (getattr(itree, en)).at(i))
                        else:
                          # massless
@@ -163,6 +163,6 @@ class TLorentzVectorCreator(TreeCloner):
             otree.Fill()
         
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
         
         

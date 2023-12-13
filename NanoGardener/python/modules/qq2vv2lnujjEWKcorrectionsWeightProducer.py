@@ -36,7 +36,7 @@ class qq2vv2lnujjEWKcorrectionsWeightProducer(Module):
         #self.type_mass = {
         #    'ww': = [80.385, 80.385]
         #}
-        print " sample_type = " , sample_type
+        print(" sample_type = " , sample_type)
         self.mass_dict = {
             #pdgId: mass[GeV],
             1: 0.0047,
@@ -216,9 +216,9 @@ class qq2vv2lnujjEWKcorrectionsWeightProducer(Module):
             del lhe_W[w]
 
         # If there are more then 2 Vbosons filter out worst LHE Gen pt matches 
-        if len(lhe_W.keys()) != 2: 
+        if len(list(lhe_W.keys())) != 2: 
             prt = True 
-            while len(lhe_W.keys()) > 2: 
+            while len(list(lhe_W.keys())) > 2: 
                 worst_dpt_key = -1
                 worst_dpt_sum = 0
                 for w in lhe_W:
@@ -233,7 +233,7 @@ class qq2vv2lnujjEWKcorrectionsWeightProducer(Module):
         V_sgn = []
         for w in lhe_W:
             if len(lhe_W[w]['idx']) != 2: 
-                print('Warning: V has '+str(len(lhe_W[w]['idx']))+' quark or lepton daughters! Dropping this V')
+                print(('Warning: V has '+str(len(lhe_W[w]['idx']))+' quark or lepton daughters! Dropping this V'))
                 continue
             V = ROOT.TLorentzVector()
             for d in lhe_W[w]['idx']:

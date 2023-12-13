@@ -37,7 +37,7 @@ class genericFormulaAdder(TreeCloner):
        
     def process(self,**kwargs):
 
-        print " starting ..."
+        print(" starting ...")
 
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -55,43 +55,43 @@ class genericFormulaAdder(TreeCloner):
           exec(handle)
           handle.close()
         else:
-         print "cannot find file", formulasFile_path
+         print("cannot find file", formulasFile_path)
 
         #now convert the formulas to lambdas, so that we don't need to do eval on every event
-        for key in formulas.keys():
+        for key in list(formulas.keys()):
           formulas[key] = eval('lambda event:'+formulas[key])
 
         #prepare a new branch with the formula key name for each formula to add  
         newbranches={}
-        for key in formulas.keys():
+        for key in list(formulas.keys()):
           newbranches[key] = numpy.ones(1, dtype=numpy.float32)
 
         # does that work so easily and give new variable itree and otree?
         self.connect(tree,input)
-        self.clone(output,newbranches.keys())
+        self.clone(output,list(newbranches.keys()))
 
 
-        for key in formulas.keys():
+        for key in list(formulas.keys()):
           self.otree.Branch(key  , newbranches[key]  , key+'/F')
    
         
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
 
         itree     = self.itree
         otree     = self.otree
 
 
       
-        print '- start event loop'
+        print('- start event loop')
         i = 0
         step=5000
         for event in itree:
 
             if i > 0 and i%step == 0.:
-                print i,'events processed.'
+                print(i,'events processed.')
             
-            for key in formulas.keys():
+            for key in list(formulas.keys()):
               newbranches[key][0] = formulas[key](event)
               
 
@@ -100,5 +100,5 @@ class genericFormulaAdder(TreeCloner):
             i+=1
 
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 

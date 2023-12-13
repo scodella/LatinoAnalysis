@@ -41,17 +41,17 @@ class LawnMower:
     # _____________________________________________________________________________
     def makePostFitCombinedPlot(self):
 
-        print "================================="
-        print "==== makePostFitCombinedPlot ===="
-        print "================================="
+        print("=================================")
+        print("==== makePostFitCombinedPlot ====")
+        print("=================================")
  
-        print "                                                                                       "
-        print "     ____|      |                  __ __|     _)                                       "
-        print "     __|     _` |   _` |   _ \        |   __|  |  __ `__ \   __ `__ \    _ \   __|     "
-        print "     |      (   |  (   |   __/        |  |     |  |   |   |  |   |   |   __/  |        "
-        print "    _____| \__,_| \__, | \___|       _| _|    _| _|  _|  _| _|  _|  _| \___| _|        "
-        print "                  |___/                                                                "    
-        print "                                                                                       "
+        print("                                                                                       ")
+        print("     ____|      |                  __ __|     _)                                       ")
+        print("     __|     _` |   _` |   _ \        |   __|  |  __ `__ \   __ `__ \    _ \   __|     ")
+        print("     |      (   |  (   |   __/        |  |     |  |   |   |  |   |   |   __/  |        ")
+        print("    _____| \__,_| \__, | \___|       _| _|    _| _|  _|  _| _|  _|  _| \___| _|        ")
+        print("                  |___/                                                                ")    
+        print("                                                                                       ")
         
 
         #
@@ -83,7 +83,7 @@ class LawnMower:
         #    - varible name 
         #
         
-        print " self.inputFilePostFitShapesFromWorkspace " , self._inputFilePostFitShapesFromWorkspace
+        print((" self.inputFilePostFitShapesFromWorkspace " , self._inputFilePostFitShapesFromWorkspace))
         
         
         fileIn = ROOT.TFile(self._inputFilePostFitShapesFromWorkspace, "READ")
@@ -114,7 +114,7 @@ class LawnMower:
               cuts.append (obj.GetName().replace("_"+folder_fit_name, "")) # because "_postfit" has a character more
               folders.append(obj)
               
-        print " cuts = ", cuts
+        print((" cuts = ", cuts))
         
         #
         # prepare output file
@@ -145,11 +145,11 @@ class LawnMower:
                  obj.InheritsFrom("TH1")
                ) :
               if obj.GetName() != "data_obs" and obj.GetName() != "TotalBkg" and obj.GetName() != "TotalProcs" and obj.GetName() != "TotalSig":
-                if (obj.GetName() in histos.keys()) :
+                if (obj.GetName() in list(histos.keys())) :
                   histos[obj.GetName()].Add(obj)
                 else :
                   histos[obj.GetName()] = obj
-        print " histos selected = ", histos
+        print((" histos selected = ", histos))
         total_MC = self._AddHistos(histos, "histo_total")
         
         
@@ -225,13 +225,13 @@ class LawnMower:
           
           for fileInMkShape in self._listOfFilesOriginal:
               inputFile = ROOT.TFile.Open(fileInMkShape,  "READ")
-              for sampleName, plotdef in plot.iteritems():
+              for sampleName, plotdef in list(plot.items()):
                 if sampleName != 'DATA' :    # 'DATA' should not be added/stacked!
                   try:
                     histo = inputFile.Get("histo_" + sampleName)
                     hStackTotal.Add(histo)
                   except:
-                    print "missing histo: histo_" + sampleName
+                    print(("missing histo: histo_" + sampleName))
           
           
           #Final histogram -> get MC errors
@@ -258,7 +258,7 @@ class LawnMower:
         # now save
         #
 
-        for histoName, histo in histos.iteritems():
+        for histoName, histo in list(histos.items()):
           histo.SetName("histo_" + histo.GetName())
         total_data.SetName ("histo_DATA")
         total_MC_gr.SetName ("gr_total")
@@ -280,7 +280,7 @@ class LawnMower:
           self._outFile.cd ( self._cutName + "/" + self._variable )
         total_data.Write()
 
-        for histoName, histo in histos.iteritems():
+        for histoName, histo in list(histos.items()):
           if self._signal=='' or histo.GetName()!="histo_"+self._signal:
             histo.Write()
           else:
@@ -412,7 +412,7 @@ class LawnMower:
     # _____________________________________________________________________________
     def _AddHistos(self, histos, nameHisto): 
 
-        list_histo = [histo for histoName, histo in histos.iteritems()]
+        list_histo = [histo for histoName, histo in list(histos.items())]
         new_histo = list_histo[0].Clone(nameHisto)
         
         for i in range(len(list_histo)-1) :
@@ -431,7 +431,7 @@ def foo_callback(option, opt, value, parser):
 if __name__ == '__main__':
     sys.argv = argv
     
-    print '''
+    print('''
 ----------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -442,7 +442,7 @@ if __name__ == '__main__':
                                                                                                                                        
                                                                                                                                        
 ----------------------------------------------------------------------------------------------------------------------------------
-'''    
+''')    
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
 
@@ -467,21 +467,21 @@ if __name__ == '__main__':
     sys.argv.append( '-b' )
     ROOT.gROOT.SetBatch()
 
-    print " configuration file    =          ", opt.pycfg
-    print " inputFilePostFitShapesFromWorkspace      =          ", opt.inputFilePostFitShapesFromWorkspace
-    print " outputFile            =          ", opt.outputFile
-    print " update                =          ", opt.update
-    print " variable              =          ", opt.variable
-    print " kind                  =          ", opt.kind
-    print " cutName               =          ", opt.cutName
-    print " signal                =          ", opt.signal
-    print " inputForData          =          ", opt.inputForData
-    print " structureFile         =          ", opt.structureFile
-    print " plotFile              =          ", opt.plotFile
-    print " lumiText              =          ", opt.lumiText
-    print " nonFitVariable        =          ", opt.nonFitVariable
+    print((" configuration file    =          ", opt.pycfg))
+    print((" inputFilePostFitShapesFromWorkspace      =          ", opt.inputFilePostFitShapesFromWorkspace))
+    print((" outputFile            =          ", opt.outputFile))
+    print((" update                =          ", opt.update))
+    print((" variable              =          ", opt.variable))
+    print((" kind                  =          ", opt.kind))
+    print((" cutName               =          ", opt.cutName))
+    print((" signal                =          ", opt.signal))
+    print((" inputForData          =          ", opt.inputForData))
+    print((" structureFile         =          ", opt.structureFile))
+    print((" plotFile              =          ", opt.plotFile))
+    print((" lumiText              =          ", opt.lumiText))
+    print((" nonFitVariable        =          ", opt.nonFitVariable))
     if opt.nonFitVariable :
-      print " listOfFilesOriginal   =    ", opt.listOfFilesOriginal
+      print((" listOfFilesOriginal   =    ", opt.listOfFilesOriginal))
   
 
 
@@ -489,10 +489,10 @@ if __name__ == '__main__':
     if not opt.debug:
         pass
     elif opt.debug == 2:
-        print 'Logging level set to DEBUG (%d)' % opt.debug
+        print(('Logging level set to DEBUG (%d)' % opt.debug))
         logging.basicConfig( level=logging.DEBUG )
     elif opt.debug == 1:
-        print 'Logging level set to INFO (%d)' % opt.debug
+        print(('Logging level set to INFO (%d)' % opt.debug))
         logging.basicConfig( level=logging.INFO )
 
     factory = LawnMower()
@@ -513,7 +513,7 @@ if __name__ == '__main__':
  
     factory.makePostFitCombinedPlot()
     
-    print '... and now closing ...'
+    print('... and now closing ...')
         
        
        

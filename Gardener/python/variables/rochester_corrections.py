@@ -29,7 +29,7 @@ class rochester_corr(TreeCloner):
     def checkOptions(self,opts):
 
         self.cmssw = opts.cmssw
-        print " cmssw = ", self.cmssw
+        print(" cmssw = ", self.cmssw)
         cmssw_base = os.getenv('CMSSW_BASE')
         self.isdata = int(opts.isdata)
 
@@ -76,10 +76,10 @@ class rochester_corr(TreeCloner):
         self.namesOldBranchesToBeModifiedVector = []
         vectorsToChange = ['std_vector_lepton_']
         for b in self.itree.GetListOfBranches():
-	    branchName = b.GetName()
-	    for subString in vectorsToChange:
-		if subString in branchName:
-		    self.namesOldBranchesToBeModifiedVector.append(branchName)
+            branchName = b.GetName()
+            for subString in vectorsToChange:
+                if subString in branchName:
+                    self.namesOldBranchesToBeModifiedVector.append(branchName)
 
         self.metvar1 = 'metPfType1'
         self.metvar2= 'metPfType1Phi' 
@@ -104,33 +104,33 @@ class rochester_corr(TreeCloner):
         for bname in self.namesOldBranchesToBeModifiedVector:
           bvector =  ROOT.std.vector(float) ()
           self.oldBranchesToBeModifiedVector[bname] = bvector
-        for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems(): self.otree.Branch(bname,bvector)
+        for bname, bvector in self.oldBranchesToBeModifiedVector.items(): self.otree.Branch(bname,bvector)
 
         self.oldBranchesToBeModifiedSimpleVariable = {}
         for bname in self.namesOldBranchesToBeModifiedSimpleVariable:
             bvariable = numpy.ones(1, dtype=numpy.float32)
             self.oldBranchesToBeModifiedSimpleVariable[bname] = bvariable
-        for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.iteritems(): self.otree.Branch(bname,bvariable,bname+'/F') 
+        for bname, bvariable in self.oldBranchesToBeModifiedSimpleVariable.items(): self.otree.Branch(bname,bvariable,bname+'/F') 
 
         # New branches
         self.newBranchesToBeAddedVector = {}
         for bname in self.namesNewBranchesToBeAddedVector:
           bvector =  ROOT.std.vector(float) ()
           self.newBranchesToBeAddedVector[bname] = bvector
-        for bname, bvector in self.newBranchesToBeAddedVector.iteritems(): self.otree.Branch(bname,bvector)
+        for bname, bvector in self.newBranchesToBeAddedVector.items(): self.otree.Branch(bname,bvector)
 
         cmssw_base = os.getenv('CMSSW_BASE')
         rochester_path = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/rcdata.2016.v3'
-        print "scale factors from", rochester_path
+        print("scale factors from", rochester_path)
         rc=ROOT.RoccoR(rochester_path)
 
         # Loop
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries
+        print('Total number of entries: ',nentries)
         savedentries = 0
 
         #----------------------------------------------------------------------------------------------------
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 10000
 
         # input tree and output tree
@@ -139,11 +139,11 @@ class rochester_corr(TreeCloner):
         s=0
         m=0
        
-        for i in xrange(nentries):
+        for i in range(nentries):
 
             itree.GetEntry(i)
             if i > 0 and i%step == 0.:
-                print i,'events processed :: ', nentries
+                print(i,'events processed :: ', nentries)
 
             leptonPtChanged = []
             MCSFlist = []
@@ -155,7 +155,7 @@ class rochester_corr(TreeCloner):
             newmet = ROOT.TLorentzVector()
             newmet = met_org
 
-            for iLep in xrange(len(itree.std_vector_lepton_pt)) :
+            for iLep in range(len(itree.std_vector_lepton_pt)) :
 
                 if not (itree.std_vector_lepton_pt[iLep] > 0):
                     continue
@@ -188,7 +188,7 @@ class rochester_corr(TreeCloner):
                         # Look for the Gen lepton that best matches 
                         minimumdR2 = 10
                         matchedgenpt = -1
-                        for iGenLep in xrange(len(itree.std_vector_leptonGen_pt)) :
+                        for iGenLep in range(len(itree.std_vector_leptonGen_pt)) :
                             if self.itree.std_vector_leptonGen_pt[iGenLep] > 0 \
                                     and  self.itree.std_vector_leptonGen_status[iGenLep] == 1 \
                                     and  (abs(self.itree.std_vector_leptonGen_pid[iGenLep]) == 13)   : 
@@ -233,9 +233,9 @@ class rochester_corr(TreeCloner):
 
                 newmet = self._corMET(newmet,l1_org,l1)
 
-            leptonOrder = sorted(range(len(leptonPtChanged)), key=lambda k: leptonPtChanged[k], reverse=True) 
+            leptonOrder = sorted(list(range(len(leptonPtChanged))), key=lambda k: leptonPtChanged[k], reverse=True) 
 
-            for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+            for bname, bvector in self.oldBranchesToBeModifiedVector.items():
                 bvector.clear()
              
                 if 'std_vector_lepton_pt' in bname:
@@ -246,7 +246,7 @@ class rochester_corr(TreeCloner):
                 else:
                     self.changeOrder( bname, bvector, leptonOrder)
 
-            for bname, bvector in self.newBranchesToBeAddedVector.iteritems():
+            for bname, bvector in self.newBranchesToBeAddedVector.items():
                 bvector.clear()
              
                 if 'MC' in bname:
@@ -268,8 +268,8 @@ class rochester_corr(TreeCloner):
             savedentries+=1
 
         self.disconnect()
-        print '- Eventloop completed'
-        print '   Saved: ', savedentries, ' events'
+        print('- Eventloop completed')
+        print('   Saved: ', savedentries, ' events')
      
         
         

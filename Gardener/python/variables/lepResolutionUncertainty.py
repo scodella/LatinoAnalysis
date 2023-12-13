@@ -37,27 +37,27 @@ class LeptonResolutionTreeMaker(TreeCloner):
         return group
 
     def checkOptions(self,opts):
-        print " >>  checkOptions "
+        print(" >>  checkOptions ")
         leppTresolution = {}
         self.kind            = 1.0 * float(opts.kind)
-        print " amount of variation = ", self.kind
+        print(" amount of variation = ", self.kind)
 
         cmssw_base = os.getenv('CMSSW_BASE')
         if opts.resolutionFile == None :
           opts.resolutionFile = cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/lepton_scale_n_smear/leppTresolution_el_76_rereco.py'
 
-        print " opts.resolutionFile = " , opts.resolutionFile
+        print(" opts.resolutionFile = " , opts.resolutionFile)
 
         if opts.resolutionFile == None :
-          print " Using the default one"
+          print(" Using the default one")
 
         elif os.path.exists(opts.resolutionFile) :
-          print " opts.resolutionFile = " , opts.resolutionFile
+          print(" opts.resolutionFile = " , opts.resolutionFile)
           handle = open(opts.resolutionFile,'r')
           exec(handle)
           handle.close()
         else :
-          print "nothing ?"
+          print("nothing ?")
 
         self.leppTresolution = leppTresolution
         self.minpt = 0
@@ -78,7 +78,7 @@ class LeptonResolutionTreeMaker(TreeCloner):
         if eta > self.maxeta:
           eta = self.maxeta
 
-        if kindLep in self.leppTresolution.keys() :
+        if kindLep in list(self.leppTresolution.keys()) :
             for point in self.leppTresolution[kindLep] :
                 if (pt >= point[0][0] and pt < point[0][1] and eta >= point[1][0] and eta < point[1][1]) :
                     sigma=point[2]
@@ -119,7 +119,7 @@ class LeptonResolutionTreeMaker(TreeCloner):
         self.connect(tree,input)
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
         savedentries = 0
 
         #
@@ -149,24 +149,24 @@ class LeptonResolutionTreeMaker(TreeCloner):
           self.oldBranchesToBeModifiedVector[bname] = bvector
 
         # now actually connect the branches
-        for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+        for bname, bvector in self.oldBranchesToBeModifiedVector.items():
           self.otree.Branch(bname,bvector)            
 
         # input tree  
         itree = self.itree
 
         #----------------------------------------------------------------------------------------------------
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
         #step = 1
 
 
         #for i in xrange(2000):
-        for i in xrange(nentries):
+        for i in range(nentries):
           itree.GetEntry(i)
 
           if i > 0 and i%step == 0.:
-            print i,'events processed :: ', nentries
+            print(i,'events processed :: ', nentries)
               
           # smear lepton pt, the core of this module
           leptonPtChanged = []            
@@ -190,15 +190,15 @@ class LeptonResolutionTreeMaker(TreeCloner):
 
  
           # sorting in descending order and storing index
-          leptonOrder = sorted(range(len(leptonPtChanged)), key = lambda k: leptonPtChanged[k], reverse=True)
+          leptonOrder = sorted(list(range(len(leptonPtChanged))), key = lambda k: leptonPtChanged[k], reverse=True)
           # leptonOrder is the list of indexes "pt" ordered
           
           # now save into the tree the new pt "std_vector_lepton_pt" variable
           # and reorder all th eother variables, to keep the correct order of leptons
-          for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+          for bname, bvector in self.oldBranchesToBeModifiedVector.items():
               bvector.clear()
               if 'std_vector_lepton_pt' in bname:
-                  print bname
+                  print(bname)
                   for i in range( len(leptonOrder) ) :
                       bvector.push_back (leptonPtChanged[leptonOrder[i]] )
                       # and if for any reason the list of leptonPtChanged (that is leptonOrder) is smaller than
@@ -215,7 +215,7 @@ class LeptonResolutionTreeMaker(TreeCloner):
           
           
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
         #print '   Saved: ', savedentries, ' events'
             
 

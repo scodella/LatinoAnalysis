@@ -50,7 +50,7 @@ class JetPairingGenHH(TreeCloner):
         self.bWP = opts.bWP
 
     def process(self,**kwargs):
-        print module_name
+        print(module_name)
 
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -69,19 +69,19 @@ class JetPairingGenHH(TreeCloner):
         self.otree.Branch('PartonJetMatchFlag', PartonJetMatchFlag, 'PartonJetMatchFlag/I')
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
 
         # avoid dots to go faster
         itree     = self.itree
         otree     = self.otree
-        print "Matching radius:", self.radius
+        print("Matching radius:", self.radius)
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
             if i > 0 and i%step == 0.:
-                print i,'events processed :: ', nentries
+                print(i,'events processed :: ', nentries)
             hpair = [-1,-1]
             wpair = [-1,-1]
 
@@ -116,5 +116,5 @@ class JetPairingGenHH(TreeCloner):
             otree.Fill()
   
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 

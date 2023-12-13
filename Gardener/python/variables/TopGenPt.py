@@ -57,15 +57,15 @@ class TopGenPt(TreeCloner):
           newbranchesVecotor[bname] = bvariable
 
 
-        for bname, bvariable in newbranchesVecotor.iteritems():
-            print " bname   = ", bname
-            print " bvariable = ", bvariable
+        for bname, bvariable in newbranchesVecotor.items():
+            print(" bname   = ", bname)
+            print(" bvariable = ", bvariable)
             self.otree.Branch(bname,bvariable,bname+'/F')
 
 
   
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
 
         # input tree and output tree
         itree     = self.itree
@@ -73,16 +73,16 @@ class TopGenPt(TreeCloner):
         numTOP=0.
         numAntiTOP=0.
         #----------------------------------------------------------------------------------------------------
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
 
         #for i in xrange(5000):
-        for i in xrange(nentries):
+        for i in range(nentries):
 
           itree.GetEntry(i)
 
           if i > 0 and i%step == 0.:
-              print i,'events processed.'
+              print(i,'events processed.')
 
           #for bname, bvector in newbranchesVecotor.iteritems():
           #    bvector.clear()
@@ -97,7 +97,7 @@ class TopGenPt(TreeCloner):
           ibAntiTop = -1;
           
            #over Leptons
-          for i in xrange(0,3): 
+          for i in range(0,3): 
             if ( (getattr(itree, "std_vector_LHElepton_id")).at(i)== 11  or (getattr(itree, "std_vector_LHElepton_id")).at(i)== 13 or (getattr(itree, "std_vector_LHElepton_id")).at(i)== 15):
               ilAntiTop = i;
               #print "std_vector_LHElepton_id-AntiTOP=", i,"  ",  (getattr(itree, "std_vector_LHElepton_id")).at(i)
@@ -107,7 +107,7 @@ class TopGenPt(TreeCloner):
 
             
           #over neutrinos
-          for i in xrange(0,3): 
+          for i in range(0,3): 
             if ( (getattr(itree, "std_vector_LHEneutrino_id")).at(i)== -12  or (getattr(itree, "std_vector_LHEneutrino_id")).at(i)== -14 or (getattr(itree, "std_vector_LHEneutrino_id")).at(i)== -16):
               inAntiTop = i;
               #print "std_vector_LHEneutrino_id-AntiTOP=", i,"  ",  (getattr(itree, "std_vector_LHEneutrino_id")).at(i)
@@ -116,7 +116,7 @@ class TopGenPt(TreeCloner):
               #print "std_vector_LHEneutrino_id-TOP=", i,"  ",  (getattr(itree, "std_vector_LHEneutrino_id")).at(i)
 
          #over Top
-          for i in xrange(0,3): 
+          for i in range(0,3): 
             if ( (getattr(itree, "std_vector_LHEparton_id")).at(i)== -5):
                ibAntiTop = i;
             if ( (getattr(itree, "std_vector_LHEparton_id")).at(i)== 5):
@@ -139,7 +139,7 @@ class TopGenPt(TreeCloner):
            massDiffTop=9999.0
            index=11
 
-           for i in xrange(0,3): 
+           for i in range(0,3): 
                if ((getattr(itree, "std_vector_LHEparton_id")).at(i) == 5):
                    bTop = ROOT.TLorentzVector()
                    bTop.SetPtEtaPhiM((getattr(itree, "std_vector_LHEparton_pt")).at(i), (getattr(itree, "std_vector_LHEparton_eta")).at(i), (getattr(itree, "std_vector_LHEparton_phi")).at(i), 4.8) #chiedere a giulio
@@ -166,7 +166,7 @@ class TopGenPt(TreeCloner):
 
            massDiffAntiTop=9999.0
 
-           for i in xrange(0,4): 
+           for i in range(0,4): 
                if ((getattr(itree, "std_vector_LHEparton_id")).at(i) == 5 and index!=i):
                    #print i
                    bTop = ROOT.TLorentzVector()
@@ -196,7 +196,7 @@ class TopGenPt(TreeCloner):
            #newbranchesVecotor["LHEquark_top_pt"] = LHEquark_top_pt  
  
            
-          for bname, bvariable in newbranchesVecotor.iteritems():              
+          for bname, bvariable in newbranchesVecotor.items():              
 
               if(bname == "LHEquark_top_pt"): 
                   bvariable[0] = LHEquark_top_pt  
@@ -221,7 +221,7 @@ class TopGenPt(TreeCloner):
           otree.Fill()
 
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 
 
 

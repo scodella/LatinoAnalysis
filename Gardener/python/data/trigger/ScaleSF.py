@@ -19,7 +19,7 @@ import os
 
 
 if __name__ == '__main__':
-    print '''
+    print('''
 --------------------------------------------------------------------------------------------------
 
                ___|                |           \ \     /       |                    
@@ -28,7 +28,7 @@ if __name__ == '__main__':
              _____/  \___| \__,_| _| \___|        \_/  \__,_| _| \__,_| \___| ____/ 
                                                                                     
 --------------------------------------------------------------------------------------------------
-'''    
+''')    
 
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
@@ -44,8 +44,8 @@ if __name__ == '__main__':
     ROOT.gROOT.SetBatch()
 
 
-    print " inputFile        = ", opt.inputFile
-    print " outputFile       = ", opt.outputFile
+    print(" inputFile        = ", opt.inputFile)
+    print(" outputFile       = ", opt.outputFile)
 
     
     iFile = open (opt.inputFile)

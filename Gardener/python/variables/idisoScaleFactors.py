@@ -136,13 +136,13 @@ class IdIsoSFFiller(TreeCloner):
  
  
            
-        print "opts.idScaleFactorsFileMu = ", opts.idScaleFactorsFileMu
-        print "opts.isoTightScaleFactorsFileMu = ", opts.isoTightScaleFactorsFileMu
-        print "opts.isoLooseScaleFactorsFileMu = ", opts.isoLooseScaleFactorsFileMu
-        print "opts.tkSCFileElectron = ", opts.tkSCFileElectron
-        print "opts.idIsoScaleFactorsFileElectron = ", opts.idIsoScaleFactorsFileElectron
-        print "opts.idIsoScaleFactorsFileElectronAlternative = ", opts.idIsoScaleFactorsFileElectronAlternative
-        print "opts.idEleKind = ", opts.idEleKind
+        print("opts.idScaleFactorsFileMu = ", opts.idScaleFactorsFileMu)
+        print("opts.isoTightScaleFactorsFileMu = ", opts.isoTightScaleFactorsFileMu)
+        print("opts.isoLooseScaleFactorsFileMu = ", opts.isoLooseScaleFactorsFileMu)
+        print("opts.tkSCFileElectron = ", opts.tkSCFileElectron)
+        print("opts.idIsoScaleFactorsFileElectron = ", opts.idIsoScaleFactorsFileElectron)
+        print("opts.idIsoScaleFactorsFileElectronAlternative = ", opts.idIsoScaleFactorsFileElectronAlternative)
+        print("opts.idEleKind = ", opts.idEleKind)
         
         file_idScaleFactorsFileMu  = open (opts.idScaleFactorsFileMu)
         file_isoTightScaleFactorsFileMu  = open (opts.isoTightScaleFactorsFileMu)
@@ -160,9 +160,9 @@ class IdIsoSFFiller(TreeCloner):
         if opts.cmssw == "Full2016" :
           for iRun in range(0,len(self.IdMuMinRun)) :
             tag = 'mu_Run'+str(iRun)
-            print 'ID Run: ',iRun, tag
-            print 'DATA: ' , self.IdMuFileData[iRun]
-            print 'MC  : ' , self.IdMuFileMC[iRun] 
+            print('ID Run: ',iRun, tag)
+            print('DATA: ' , self.IdMuFileData[iRun])
+            print('MC  : ' , self.IdMuFileMC[iRun]) 
             self.idIsoScaleFactors[tag+'_DATA'] = [line.rstrip().split()    for line in open(self.IdMuFileData[iRun])   if '#' not in line]
             self.idIsoScaleFactors[tag+'_MC']   = [line.rstrip().split()    for line in open(self.IdMuFileMC[iRun])     if '#' not in line]
             self.idIsoScaleFactors['mu']    = []
@@ -173,9 +173,9 @@ class IdIsoSFFiller(TreeCloner):
         if opts.cmssw == "Full2016":
           for iRun in range(0,len(self.IsoMuMinRun)) :
             tag = 'muTight_Run'+str(iRun)
-            print 'Iso Run: ',iRun, tag
-            print 'DATA: ' , self.IsoMuFileData[iRun]
-            print 'MC  : ' , self.IsoMuFileMC[iRun]
+            print('Iso Run: ',iRun, tag)
+            print('DATA: ' , self.IsoMuFileData[iRun])
+            print('MC  : ' , self.IsoMuFileMC[iRun])
             self.isoScaleFactors[tag+'_DATA'] = [line.rstrip().split()    for line in open(self.IsoMuFileData[iRun])   if '#' not in line]
             self.isoScaleFactors[tag+'_MC']   = [line.rstrip().split()    for line in open(self.IsoMuFileMC[iRun])     if '#' not in line]
         else:
@@ -190,7 +190,7 @@ class IdIsoSFFiller(TreeCloner):
             self.tkMuRootFile.append(self._openRootFile(self.tkMuFile[iRun]))
             self.tkMuGraph.append(self._getRootObj(self.tkMuRootFile[iRun],'ratio_eff_vtx_dr030e030_corr'))
             self.tkMuValues.append( self._convGraph2Vec ( self.tkMuGraph[iRun] )  )
-            print 'tkMu: ',iRun, self.tkMuFile[iRun] , self.tkMuGraph[iRun]
+            print('tkMu: ',iRun, self.tkMuFile[iRun] , self.tkMuGraph[iRun])
         #print self.tkMuValues
 
         self.tkSCElectronRootFile = self._openRootFile(opts.tkSCFileElectron)
@@ -336,7 +336,7 @@ class IdIsoSFFiller(TreeCloner):
         
         # idiso * reco scale factors
         if wantOnlyRecoEff == 2 or wantOnlyRecoEff == 0:
-          if kindLep in self.idIsoScaleFactors.keys() : 
+          if kindLep in list(self.idIsoScaleFactors.keys()) : 
             #print " self.idIsoScaleFactors = ", self.idIsoScaleFactors
             #print " eta,pt = ",eta, ", ", pt
             # get the efficiency
@@ -630,7 +630,7 @@ class IdIsoSFFiller(TreeCloner):
           self.namesOldBranchesToBeModifiedVector.append(  'std_vector_lepton_idisoW' + self.idEleKind + '_Down' )
           self.namesOldBranchesToBeModifiedVector.append(  'std_vector_lepton_idisoW' + self.idEleKind + '_Syst' )
 
-        print self.namesOldBranchesToBeModifiedVector 
+        print(self.namesOldBranchesToBeModifiedVector) 
         self.clone(output,self.namesOldBranchesToBeModifiedVector)
 
 
@@ -673,21 +673,21 @@ class IdIsoSFFiller(TreeCloner):
             
             
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
         savedentries = 0
                 
         # avoid dots to go faster
         itree     = self.itree
         otree     = self.otree
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
 
             ## print event count
             if i > 0 and i%step == 0.:
-              print i,'events processed.'
+              print(i,'events processed.')
 
             bvector_reco.clear()
             bvector_reco_Up.clear()
@@ -714,7 +714,7 @@ class IdIsoSFFiller(TreeCloner):
             if len(self.tkMuFile)>=2  :
               runPeriod = itree.iRunPeriod 
 
-            for iLep in xrange(len(itree.std_vector_lepton_pt)) :
+            for iLep in range(len(itree.std_vector_lepton_pt)) :
              
               pt = itree.std_vector_lepton_pt [iLep]
               eta = itree.std_vector_lepton_eta [iLep]
@@ -781,7 +781,7 @@ class IdIsoSFFiller(TreeCloner):
             savedentries+=1
 
         self.disconnect()
-        print '- Eventloop completed'
-        print '   Saved: ', savedentries, ' events'
+        print('- Eventloop completed')
+        print('   Saved: ', savedentries, ' events')
 
 

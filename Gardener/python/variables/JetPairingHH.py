@@ -52,7 +52,7 @@ class JetPairingHH(TreeCloner):
         self.bWP = opts.bWP
 
     def process(self,**kwargs):
-        print module_name
+        print(module_name)
 
         tree  = kwargs['tree']
         input = kwargs['input']
@@ -69,18 +69,18 @@ class JetPairingHH(TreeCloner):
         self.otree.Branch('W_jets',  W_jets,  'W_jets[2]/I')
 
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries 
+        print('Total number of entries: ',nentries) 
 
         # avoid dots to go faster
         itree     = self.itree
         otree     = self.otree
 
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
-        for i in xrange(nentries):
+        for i in range(nentries):
             itree.GetEntry(i)
             if i > 0 and i%step == 0.:
-                print i,'events processed :: ', nentries
+                print(i,'events processed :: ', nentries)
 
             hpair = [-1,-1]
             wpair = [-1,-1]
@@ -90,12 +90,12 @@ class JetPairingHH(TreeCloner):
             bjets = [(i, bscore) for i, bscore in enumerate(b_scores)
                     if bscore >= bTaggingWPs['deepCSV'][self.bWP]]
 
-            print bjets
+            print(bjets)
 
             if len(bjets) >= 2:
                 # Take the indexes of the two jets with bigger bscore
                 hpair = [j[0] for j in list(sorted(bjets, key=itemgetter(1), reverse=True))[:2]]
-                print hpair
+                print(hpair)
                 
                 if len(jets) >=4:
                     if self.mode == 0:
@@ -110,6 +110,6 @@ class JetPairingHH(TreeCloner):
             otree.Fill()
   
         self.disconnect()
-        print '- Eventloop completed'
+        print('- Eventloop completed')
 
 

@@ -28,7 +28,7 @@ class MHSemiLepVars(Module):
         self.el_mass = 0.000511
         self.mu_mass = 0.106
         self._branch_map = branch_map
-        if not self._branch_map == '': print('MHSemiLepVars: branch_map='+self._branch_map)
+        if not self._branch_map == '': print(('MHSemiLepVars: branch_map='+self._branch_map))
 
     def beginJob(self):
         pass
@@ -113,7 +113,7 @@ class MHSemiLepVars(Module):
           if hasattr(event, 'idx_j1'): self.jet_idx_name = 'idx_j'
           elif hasattr(event, 'HM_idx_j1'): self.jet_idx_name = 'HM_idx_j'
           else: raise ValueError('MHSemiLepVars: input tree has no variable named "idx_j1" or "HM_idx_j1"')
-          print('MHSemiLepVars: jet index string is "'+self.jet_idx_name+'"')
+          print(('MHSemiLepVars: jet index string is "'+self.jet_idx_name+'"'))
 
         jets = Collection(event, 'CleanJet')
         org_jets = Collection(event, 'Jet')
@@ -199,7 +199,7 @@ class MHSemiLepVars(Module):
         self.out.fillBranch('MHlnjj_MTljj_D_PTmet',     self.getVal('mt', 'ljj')/self.MET.Pt())
         self.out.fillBranch('MHlnjj_MTljj_D_Mlmetjj',   self.getVal('mt', 'ljj')/self.LMETJJ.M())
 
-        all_cj = range(len(jets))
+        all_cj = list(range(len(jets)))
         all_cj.remove(idx_j1)
         all_cj.remove(idx_j2)
         if len(all_cj) > 0: self.out.fillBranch('MHlnjj_idx_j3',    all_cj[0])

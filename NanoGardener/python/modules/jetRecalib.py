@@ -33,14 +33,14 @@ class jetRecalib(Module):
         # load libraries for accessing JES scale factors and uncertainties from txt files
         for library in [ "libCondFormatsJetMETObjects", "libPhysicsToolsNanoAODTools" ]:
             if library not in ROOT.gSystem.GetLibraries():
-                print("Load Library '%s'" % library.replace("lib", ""))
+                print(("Load Library '%s'" % library.replace("lib", "")))
                 ROOT.gSystem.Load(library)
 
     def beginJob(self):
-	pass
+        pass
 
     def endJob(self):
-	pass
+        pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
@@ -80,7 +80,7 @@ class jetRecalib(Module):
         
         for jid,jet in enumerate(jets):
             # Apply new correction (this includes undoing previous correction first)
-	    newjet_pt = self.jetReCalibrator.correct(jet,rho)[0]
+            newjet_pt = self.jetReCalibrator.correct(jet,rho)[0]
             # Rewrite new correction factor
             rawFactor_newlist.append(1. - ((jet.pt * (1. - jet.rawFactor))/newjet_pt))
 

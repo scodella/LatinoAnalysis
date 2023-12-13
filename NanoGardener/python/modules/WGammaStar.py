@@ -10,7 +10,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collect
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 if __name__ == '__main__':
-    print '''
+    print('''
 ___________________________________________________________________________________
                     ______     ____
 \          //  //  |_____/    |____|   \|/
@@ -18,7 +18,7 @@ ________________________________________________________________________________
   \//  \ //  //      //___    ||  |-|
    \    \/  //      //____|   ||__| |
 ___________________________________________________________________________________
-'''
+''')
 
 
 class WGammaStarV2(Module):
@@ -29,7 +29,7 @@ class WGammaStarV2(Module):
         self.tmp4V_1 = ROOT.TLorentzVector()
         self.tmp4V_2 = ROOT.TLorentzVector()
     def beginJob(self,histFile=None,histDirName=None):
-	pass
+        pass
     def Daughters(self,p,idx,genParticles, daughters):
         if p.status == 1 or (abs(p.pdgId)==15):
           daughters.append(p)
@@ -39,7 +39,7 @@ class WGammaStarV2(Module):
               self.Daughters(part, i, genParticles, daughters) 
                  
     def printParticle(self, p):
-      print p.pdgId,p.status,p.pt
+      print(p.pdgId,p.status,p.pt)
 
     def findGStarPair (self, leptons):
       # get the charged leptons
@@ -158,27 +158,27 @@ class WGammaStarV2(Module):
         statuses = ['fromG_HP', 'fromZ_ll_inhistory', "fromZ_llll", 'fromZ_ll_decay', 'fromW3l', 'fromG_PS']
         fromHardProcessLeptons = []
         # Photon from hard process takes precedence on Z takes precedence on from W, which takes precedence on from gamma from PS
-	for i,particle  in enumerate(genParticles) :
-	  pdg_Id = abs(particle.pdgId)
-          daughters=[]
-          if pdg_Id == 22 and (particle.statusFlags >> 7 & 1): # hard process
-            # this is out gstar candidate, cleanup everything
-            fromG_HP = True
-            fromG_PS = False
-            fromZ = False
-            fromG_PS = False
-            gstar = None
-            self.Daughters(particle, i, genParticles, daughters)
-            gstar = self.findGStarPair(daughters)
-            if (gstar != None):
-              mom_pdgId = particle.pdgId
-              mom_status = 0
-            #if there was a photon from the hard process in the event, that is the only one we want to look, nothing else matters
-            # otherwise in Zg sample the Z will end up to be the gamma* candidate, but that is not what we want
-            #so if a photon from hard process is aroung, if we don't have a gamma* candidate at this point, we can as well move to next event.
-            break  
+        for i,particle  in enumerate(genParticles) :
+            pdg_Id = abs(particle.pdgId)
+            daughters=[]
+            if pdg_Id == 22 and (particle.statusFlags >> 7 & 1): # hard process
+                # this is out gstar candidate, cleanup everything
+                fromG_HP = True
+                fromG_PS = False
+                fromZ = False
+                fromG_PS = False
+                gstar = None
+                self.Daughters(particle, i, genParticles, daughters)
+                gstar = self.findGStarPair(daughters)
+                if (gstar != None):
+                    mom_pdgId = particle.pdgId
+                    mom_status = 0
+                #if there was a photon from the hard process in the event, that is the only one we want to look, nothing else matters
+                # otherwise in Zg sample the Z will end up to be the gamma* candidate, but that is not what we want
+                #so if a photon from hard process is aroung, if we don't have a gamma* candidate at this point, we can as well move to next event.
+                break  
 
-          if pdg_Id==23 and not fromG_HP:
+            if pdg_Id==23 and not fromG_HP:
               self.Daughters(particle, i, genParticles, daughters)
               #in this case  dughters can be simply two as in Z/gamma*->ll, or 4 in case you have radiation off a lepton
               # Z/gamma*->llgamma* ->llll
@@ -191,7 +191,7 @@ class WGammaStarV2(Module):
                 else:
                   mom_status = 2
 
-          if pdg_Id==24 and not fromG_HP and not fromZ:
+            if pdg_Id==24 and not fromG_HP and not fromZ:
               self.Daughters(particle, i, genParticles, daughters) 
               # if the mom is a W, it we are in terested in W->l nu gamma* -> l nu l+ l- --> 4 daugthers
               if(not (len(daughters)==4)) : 
@@ -202,18 +202,18 @@ class WGammaStarV2(Module):
                 mom_pdgId=particle.pdgId
                 mom_status = 4
 
-          if pdg_Id==22 and (not (particle.statusFlags >> 8 & 1)) and not fromG_HP and not fromZ and not fromW:
-             self.Daughters(particle, i, genParticles, daughters)
-             if(not (len(daughters)==2)) :
-               continue
-             gstar = self.findGStarPair(daughters)
-             if (gstar != None):
-              fromG = True  
-              mom_pdgId=particle.pdgId  
-              mom_status = 5
-          #keep arounf a list of all prompt leptons
-          if (((pdg_Id==11 or pdg_Id==13) and particle.status == 1 ) or pdg_Id==15) and (particle.statusFlags & 1):
-            fromHardProcessLeptons.append(particle)
+            if pdg_Id==22 and (not (particle.statusFlags >> 8 & 1)) and not fromG_HP and not fromZ and not fromW:
+              self.Daughters(particle, i, genParticles, daughters)
+              if(not (len(daughters)==2)) :
+                continue
+              gstar = self.findGStarPair(daughters)
+              if (gstar != None):
+                fromG = True  
+                mom_pdgId=particle.pdgId  
+                mom_status = 5
+            #keep arounf a list of all prompt leptons
+            if (((pdg_Id==11 or pdg_Id==13) and particle.status == 1 ) or pdg_Id==15) and (particle.statusFlags & 1):
+              fromHardProcessLeptons.append(particle)
         
         #if there are not gammaStar from Z, still look through the prompt lepton pairs, as there may be a Z missing in event history, this has precedence on Ws and gamma
         if not fromZ and not fromG_HP:

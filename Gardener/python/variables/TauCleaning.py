@@ -34,9 +34,9 @@ class TauCleaning(TreeCloner):
 
     def checkOptions(self,opts): 
        self.cmssw = opts.cmssw
-       print " cmssw = ", self.cmssw
+       print(" cmssw = ", self.cmssw)
        self.isData = opts.isData
-       print " isData= ", self.isData
+       print(" isData= ", self.isData)
 
        # cleaning options
        self.tauCleaning_minpTLep = 10.
@@ -116,14 +116,14 @@ class TauCleaning(TreeCloner):
         for bname in self.namesNewBranchesVector:
           bvector =  ROOT.std.vector(float) ()
           self.newBranchesVector[bname] = bvector
-        for bname, bvector in self.newBranchesVector.iteritems(): self.otree.Branch(bname,bvector)
+        for bname, bvector in self.newBranchesVector.items(): self.otree.Branch(bname,bvector)
  
         # ... Old Branches: std_vector_tau_
         self.oldBranchesToBeModifiedVector = {}
         for bname in self.namesOldBranchesToBeModifiedVector:
           bvector =  ROOT.std.vector(float) ()
           self.oldBranchesToBeModifiedVector[bname] = bvector
-        for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems(): self.otree.Branch(bname,bvector)
+        for bname, bvector in self.oldBranchesToBeModifiedVector.items(): self.otree.Branch(bname,bvector)
 
         # input tree and output tree
         itree     = self.itree
@@ -131,31 +131,31 @@ class TauCleaning(TreeCloner):
 
         # Loop
         nentries = self.itree.GetEntries()
-        print 'Total number of entries: ',nentries
+        print('Total number of entries: ',nentries)
         savedentries = 0
 
         #----------------------------------------------------------------------------------------------------
-        print '- Starting eventloop'
+        print('- Starting eventloop')
         step = 5000
 
-        for i in xrange(nentries):
+        for i in range(nentries):
 
             itree.GetEntry(i)
 
             if i > 0 and i%step == 0.:
-                print i,'events processed :: ', nentries
+                print(i,'events processed :: ', nentries)
 
             # Clean All vectors
-            for bname, bvector in self.newBranchesVector.iteritems()             : bvector.clear()
-            for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems() : bvector.clear()
+            for bname, bvector in self.newBranchesVector.items()             : bvector.clear()
+            for bname, bvector in self.oldBranchesToBeModifiedVector.items() : bvector.clear()
 
             # Cleaning against Loose leptons (electron/muon)
             goodTaus = []
             tightTag = []
-            for iTau in xrange(len(itree.std_vector_tau_pt)) :
+            for iTau in range(len(itree.std_vector_tau_pt)) :
                isLepton = False;
                if abs(itree.std_vector_tau_eta[iTau]) <= self.tauCleaning_absEta :
-                 for iLep in xrange(len(itree.std_vector_lepton_pt)) :
+                 for iLep in range(len(itree.std_vector_lepton_pt)) :
                    if itree.std_vector_lepton_pt[iLep] < self.tauCleaning_minpTLep:
                      break;
                    if self.tauIsLepton(itree.std_vector_tau_eta[iTau],itree.std_vector_tau_phi[iTau],itree.std_vector_lepton_eta[iLep],itree.std_vector_lepton_phi[iLep]) :
@@ -165,24 +165,24 @@ class TauCleaning(TreeCloner):
                    if itree.std_vector_tau_looseIso_dbeta[iTau]>0 : tightTag.append(1.)
                    else:                                            tightTag.append(0.)
 
-            for bname, bvector in self.oldBranchesToBeModifiedVector.iteritems():
+            for bname, bvector in self.oldBranchesToBeModifiedVector.items():
                 self.changeOrder( bname, bvector, goodTaus )
 
             # Save default tight Tag 
             maxNumTau = 10
             for iTau in range(len(tightTag)) :
-              for bname, bvector in self.newBranchesVector.iteritems() :
+              for bname, bvector in self.newBranchesVector.items() :
                 if ("std_vector_tau_isTight" == bname) : bvector.push_back(tightTag[iTau])
             for remainingTau in range( maxNumTau - len(otree.std_vector_tau_isTight) ) : 
-              for bname, bvector in self.newBranchesVector.iteritems() :
+              for bname, bvector in self.newBranchesVector.items() :
                 if ("std_vector_tau_isTight" == bname) : bvector.push_back(0.)
 
 
             # Add SF (kill Tau) --> rejection of 5% +- 5% of tau
             if not self.isData :
-              for iTau in xrange(len(itree.std_vector_tau_pt)) :
+              for iTau in range(len(itree.std_vector_tau_pt)) :
                 rnd =  ROOT.gRandom.Rndm()
-                for bname, bvector in self.newBranchesVector.iteritems() :
+                for bname, bvector in self.newBranchesVector.items() :
                   if ("std_vector_tau_SF_Up" == bname) : bvector.push_back(1.) 
                   if ("std_vector_tau_SF" == bname) :
                     if rnd > 0.95 : bvector.push_back(0.)
@@ -196,6 +196,6 @@ class TauCleaning(TreeCloner):
             otree.Fill()
 
         self.disconnect()
-        print '- Eventloop completed'
-        print '   Saved: ', savedentries, ' events'
+        print('- Eventloop completed')
+        print('   Saved: ', savedentries, ' events')
 

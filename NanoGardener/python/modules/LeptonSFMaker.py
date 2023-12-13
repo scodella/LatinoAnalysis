@@ -37,11 +37,11 @@ class LeptonSFMaker(Module):
 
         cmssw_base = os.getenv('CMSSW_BASE')
         var = {}
-        execfile(cmssw_base+'/src/'+WP_path, var)
+        exec(compile(open(cmssw_base+'/src/'+WP_path, "rb").read(), cmssw_base+'/src/'+WP_path, 'exec'), var)
         self.ElectronWP = var['ElectronWP']
         self.MuonWP = var['MuonWP']
 
-        print('LeptonSFMaker: making scale factors for analysis of ' + self.cmssw)
+        print(('LeptonSFMaker: making scale factors for analysis of ' + self.cmssw))
 
     def beginJob(self): 
         pass

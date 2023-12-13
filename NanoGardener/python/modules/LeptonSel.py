@@ -35,7 +35,7 @@ class LeptonSel(Module):
         #WP_file = open(WP_path, 'r')
         cmssw_base = os.getenv('CMSSW_BASE') 
         var = {}
-        execfile(cmssw_base+'/src/'+WP_path, var)
+        exec(compile(open(cmssw_base+'/src/'+WP_path, "rb").read(), cmssw_base+'/src/'+WP_path, 'exec'), var)
         self.ElectronWP = var['ElectronWP']
         self.MuonWP = var['MuonWP']
 
@@ -54,7 +54,7 @@ class LeptonSel(Module):
         self.JC_minPtLep = 10.
         self.JC_absEta   = 5.0
 
-        print('LeptonSel: keeping only '+ self.LepFilter + ' lepton(s), and saving only events with at least ' + str(self.nLF) + ' ' + self.LepFilter + ' lepton(s)')
+        print(('LeptonSel: keeping only '+ self.LepFilter + ' lepton(s), and saving only events with at least ' + str(self.nLF) + ' ' + self.LepFilter + ' lepton(s)'))
 
 
     def beginJob(self): 
@@ -75,10 +75,10 @@ class LeptonSel(Module):
         
         for wp in self.ElectronWP[self.cmssw]['TightObjWP']:
            self.out.branch('Lepton_isTightElectron_'+wp, 'I', lenVar='nLepton')
-           print 'LeptonSel: ElecWP -> Lepton_isTightElectron_'+wp 
+           print('LeptonSel: ElecWP -> Lepton_isTightElectron_'+wp) 
         for wp in self.MuonWP[self.cmssw]['TightObjWP']:
            self.out.branch('Lepton_isTightMuon_'+wp, 'I', lenVar='nLepton')
-           print 'LeptonSel: MuWP -> Lepton_isTightMuon_'+wp
+           print('LeptonSel: MuWP -> Lepton_isTightMuon_'+wp)
 
         # Old branches to clean
         self.lepBr_to_clean = Lepton_var   
@@ -227,7 +227,7 @@ class LeptonSel(Module):
         # Cleaning aid
         good_lep_idx = []
         good_vetlep_idx = []
-        good_jet_idx = range(nJet)
+        good_jet_idx = list(range(nJet))
         Clean_counter = 0
 
         if self.doWgS:

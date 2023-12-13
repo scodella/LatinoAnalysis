@@ -11,7 +11,7 @@ import ROOT
 
 
 if __name__ == '__main__':
-    print '''
+    print('''
 #  --------------------------------------------------------------------------------------------------
 #  
 #     _ \                                                                 |                          |                       
@@ -21,7 +21,7 @@ if __name__ == '__main__':
 #                _|     ____/                                                                                                
 #  
 #  --------------------------------------------------------------------------------------------------
-'''    
+''')    
 
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
@@ -41,12 +41,12 @@ if __name__ == '__main__':
     ROOT.gROOT.SetBatch()
 
 
-    print "#   inputFileSamples  =               ", opt.inputFileSamples
-    print "#   outputFileSamples =               ", opt.outputFileSamples
-    print "#   inputFileNuisances  =             ", opt.inputFileNuisances
-    print "#   outputFileNuisances =             ", opt.outputFileNuisances
-    print "#   inputFileCuts  =                  ", opt.inputFileCuts
-    print "#   outputFileCuts =                  ", opt.outputFileCuts
+    print(("#   inputFileSamples  =               ", opt.inputFileSamples))
+    print(("#   outputFileSamples =               ", opt.outputFileSamples))
+    print(("#   inputFileNuisances  =             ", opt.inputFileNuisances))
+    print(("#   outputFileNuisances =             ", opt.outputFileNuisances))
+    print(("#   inputFileCuts  =                  ", opt.inputFileCuts))
+    print(("#   outputFileCuts =                  ", opt.outputFileCuts))
                     
     #                
     # unfold Samples
@@ -84,7 +84,7 @@ if __name__ == '__main__':
         fileOutSamples.write("# \n")
         
 
-        for sampleName, sample in samples.iteritems():
+        for sampleName, sample in list(samples.items()):
           
           fileOutSamples.write("samples[\'" + sampleName + "\'] = { \n") 
 
@@ -154,7 +154,7 @@ if __name__ == '__main__':
         
         #print " nuisances = ", nuisances
          
-        for nuisanceName, nuisance in nuisances.iteritems():
+        for nuisanceName, nuisance in list(nuisances.items()):
           
           fileOutNuisances.write("nuisances[\'" + nuisanceName + "\'] = { \n") 
 
@@ -220,7 +220,7 @@ if __name__ == '__main__':
         
         # now the cuts
 
-        for cutName, cut in cuts.iteritems():
+        for cutName, cut in list(cuts.items()):
           
           fileOutCuts.write("cuts[\'" + cutName + "\'] = ' \\\n") 
 

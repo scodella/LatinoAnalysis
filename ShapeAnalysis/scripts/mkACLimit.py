@@ -34,7 +34,7 @@ def lim_compute():
                else:
                  nJobs=1
                  nPointsJob=nGridPoints[iDim]
-               for iJob in xrange(1,nGridSplit[iDim]+1):
+               for iJob in range(1,nGridSplit[iDim]+1):
                  namePF=''
                  pointPF=''
                  if not nGridSplit[iDim] == 1:
@@ -80,16 +80,16 @@ def lim_harvest():
                  if opt.unblind: LimTypes.append('Obs') 
                  for iLim in LimTypes:
                    srcFiles=[]
-                   for iJob in xrange(1,nGridSplit[iDim]+1): 
+                   for iJob in range(1,nGridSplit[iDim]+1): 
                      allDone=True
                      pidFile = jobDir+'mkACLim__'+opt.tag+'/mkACLim__'+opt.tag+'__'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+'_'+str(iJob)+'__'+iLim+'.jid'
                      if os.path.isfile(pidFile) :
-                       print '--> Job Running : ',pidFile
+                       print(('--> Job Running : ',pidFile))
                        allDone=False
                      srcFile = datacard_dir_ac+'/higgsCombine'+iLim+'_'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+'_'+str(iJob)+'.MultiDimFit.mH125.root'
                      srcFiles.append(srcFile)
                      if not os.path.isfile(srcFile) :
-                       print '--> Missing root file: '+srcFile 
+                       print(('--> Missing root file: '+srcFile)) 
                        allDone=False
                      if allDone :
                        command = 'cd '+datacard_dir_ac+' ; hadd -f higgsCombine'+iLim+'_'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+'.MultiDimFit.mH125.root '
@@ -112,7 +112,7 @@ def lim_plot():
                LimFiles['Exp'] = datacard_dir_ac+'/higgsCombineExp_'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+'.MultiDimFit.mH125.root' 
                if opt.unblind: 
                  LimFiles['Obs'] = datacard_dir_ac+'/higgsCombineObs_'+iScan.replace(":","_")+'_'+iComb+'_'+iVar+'.MultiDimFit.mH125.root'
-               print LimFiles
+               print(LimFiles)
                blind = not opt.unblind
                plot=combPlot(opt.outputDirPlots,blind,False,False,legend['lumiEnrg'])
                plotDic={}
@@ -162,11 +162,11 @@ if __name__ == '__main__':
     hwwtools.loadOptDefaults(parser)
     (opt, args) = parser.parse_args()
 
-    print " outputDirDatacard  = ", opt.outputDirDatacard
-    print " configuration file = ", opt.pycfg
-    print " AC config          = ", opt.accfg
-    print " Combination Cfg    = ", opt.combcfg
-    print " UNBLIND ?          = ", opt.unblind
+    print((" outputDirDatacard  = ", opt.outputDirDatacard))
+    print((" configuration file = ", opt.pycfg))
+    print((" AC config          = ", opt.accfg))
+    print((" Combination Cfg    = ", opt.combcfg))
+    print((" UNBLIND ?          = ", opt.unblind))
 
     opt.outputDirPlots+='_ACLimits'
 
@@ -237,21 +237,21 @@ if __name__ == '__main__':
           if len(acoupling['ScanConfig'][iDim]) == 0 : dim2del.append(iDim)
       for iDim in dim2del : del acoupling['ScanConfig'][iDim] 
 
-    print " Cuts               = " , cutsVal.keys()
-    print " Variables          = " , variables.keys()
+    print((" Cuts               = " , list(cutsVal.keys())))
+    print((" Variables          = " , list(variables.keys())))
     for iDim in ['1D','2D'] :
-      if iDim in acoupling['ScanConfig'] : print ' ', iDim , ' Scans  : '  , acoupling['ScanConfig'][iDim]
+      if iDim in acoupling['ScanConfig'] : print((' ', iDim , ' Scans  : '  , acoupling['ScanConfig'][iDim]))
 
-    print " "
-    print " ----------------------- step = " , opt.step , " ----------------------------"
-    print " "
+    print(" ")
+    print((" ----------------------- step = " , opt.step , " ----------------------------"))
+    print(" ")
     # compute/harvest/plot
 
     if   opt.step == "compute" : lim_compute()
     elif opt.step == "harvest" : lim_harvest()
     elif opt.step == "plot"    : lim_plot()
     else:
-      print "STEP UNKNOWN !!!!!"
+      print("STEP UNKNOWN !!!!!")
     
 
 

@@ -47,11 +47,11 @@ class MetUnclusteredTreeMaker(TreeCloner) :
         if opts.cmssw == 'ICHEP2016' :
           self.unclustered = 'yes'
 
-        print "  cmssw =", self.cmssw
-        print "   kind =", self.kind
-        print " lepton =", self.lepton
-        print " jetresolution =", self.jetresolution
-        print " unclustered =", self.unclustered
+        print("  cmssw =", self.cmssw)
+        print("   kind =", self.kind)
+        print(" lepton =", self.lepton)
+        print(" jetresolution =", self.jetresolution)
+        print(" unclustered =", self.unclustered)
         
 
     def deltaphi(self, phi1, phi2) :
@@ -86,7 +86,7 @@ class MetUnclusteredTreeMaker(TreeCloner) :
         self.connect(tree,input)
 
         nentries = self.itree.GetEntries()
-        print ' - Input entries:', nentries 
+        print(' - Input entries:', nentries) 
         savedentries = 0
 
         # Create branches for otree, the ones that will be modified
@@ -116,10 +116,10 @@ class MetUnclusteredTreeMaker(TreeCloner) :
         itree = self.itree
 
         #-----------------------------------------------------------------------
-        print ' - Starting event loop'
+        print(' - Starting event loop')
         step = 5000
 
-        for i in xrange(nentries) :
+        for i in range(nentries) :
           itree.GetEntry(i)
 
           # 74x ----------------------------------------------------------------
@@ -159,5 +159,5 @@ class MetUnclusteredTreeMaker(TreeCloner) :
           savedentries+=1
           
         self.disconnect()
-        print ' - Event loop completed'
-        print ' - Saved entries:', savedentries
+        print(' - Event loop completed')
+        print(' - Saved entries:', savedentries)

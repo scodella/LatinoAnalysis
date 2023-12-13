@@ -27,7 +27,7 @@ def EFTClone(fIn,hNameIn,hNameOut):
 def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
 
 
-   print '******************* DOING : ',iScan,iCut,iVar
+   print(('******************* DOING : ',iScan,iCut,iVar))
 
    datacard_dir_ac = datacard_dir_sm+'_'+iScan.replace(":","_")
    datacard_eft_ac = datacard_dir_ac+'/eftparam.txt'
@@ -95,10 +95,10 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
        if len(dc.content['header2'][iDesc]) == 6 : MCHisSyst = dc.content['header2'][iDesc][5]
        else: MCHisSyst ='None'
    
-   print DataFile, DataHist
-   print MCFile  , MCHist , MCHisSyst
-   print 'Backgrounds= ',BkgNames
-   print 'Signal     = ',SigName
+   print((DataFile, DataHist))
+   print((MCFile  , MCHist , MCHisSyst))
+   print(('Backgrounds= ',BkgNames))
+   print(('Signal     = ',SigName))
 
    # ... lnN systematics
    if 'lnN' in dc.content['systs']:
@@ -107,7 +107,7 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
      counter = 1
      #print dc.content['systs']
      #print NlnN
-     for systName,systVal in dc.content['systs']['lnN'].items():
+     for systName,systVal in list(dc.content['systs']['lnN'].items()):
        f.write('lnN'+ str(counter) + '_name = ' + systName + '\n')
        # get non-zero names and values
        syst = [[ systVal[i],dc.content['block2']['process'][i] ] for i in range(len(systVal)) if systVal[i] != '-' and 'Higgs' not in dc.content['block2']['process'][i] ]
@@ -242,7 +242,7 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
 
    # AND NOW HISTOGRAMS
    rootFile = os.path.dirname(datacard_eft_ac) + '/' + iCut + '.root' # necessary for EFT framework
-   print 'RootFile  : ',rootFile 
+   print(('RootFile  : ',rootFile)) 
    fOut = ROOT.TFile.Open(rootFile,'RECREATE')
 
    # ... Data
@@ -299,12 +299,12 @@ def DC2EFT(dc,iDim,iScan,iCut,iVar,datacard_dir_sm,datacard_root_sm,inputFile):
    fIn = ROOT.TFile.Open(inputFile,'READ')
 
    rootFile = os.path.dirname(datacard_eft_ac) + '/signal_proc_' + iCut + '.root' # necessary for EFT framework
-   print 'RootFile  : ',rootFile
+   print(('RootFile  : ',rootFile))
    fOut = ROOT.TFile.Open(rootFile,'RECREATE')
    
    fIn.cd(iCut+'/'+iVar+'/'+iScan.replace(":","_")) 
    keyList = ROOT.gDirectory.GetListOfKeys()
-   print keyList
+   print(keyList)
    fOut.cd() 
    for key in keyList:
      obj = key.ReadObj()
@@ -325,7 +325,7 @@ def EFTWorkspace(iDim,iScan,iCut,iVar,datacard_dir_sm):
     command+=' ; mv aC_'+iCut+'.txt '+datacard_dir_ac
     command+=' ; mv '+iCut+'_ws.root '+datacard_dir_ac
     os.system(command)
-    print command
+    print(command)
     # Prepare COMBINE Workspace
     if iDim == '1D' : model = 'par1_TF1_Model'
     if iDim == '2D' : model = 'par1par2_TF2_Model'
@@ -335,13 +335,13 @@ def EFTWorkspace(iDim,iScan,iCut,iVar,datacard_dir_sm):
               --PO channels='+iCut+' --PO poi='+iScan.replace(":",",")+' --PO basepath=.'
     for iOp in iScan.split(":") :
        command+=' --PO range_'+iOp+'='+str(acoupling['operatorRange'][iOp][0])+','+str(acoupling['operatorRange'][iOp][1])
-    print command
+    print(command)
     os.system(command)
 
 
 
 if __name__ == '__main__':
-    print '''
+    print('''
 --------------------------------------------------------------------------------------------------
            ___
    / \    / __|  __ \          |                                 |       \  |         |                
@@ -350,7 +350,7 @@ if __name__ == '__main__':
  |   |_|  \___|  ____/  \__,_| \__| \__,_| \___| \__,_| _|   \__,_|     _|  _| \__,_| _|\_\ \___| _|    
                                                                                 
 --------------------------------------------------------------------------------------------------
-'''
+''')
 
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
@@ -367,14 +367,14 @@ if __name__ == '__main__':
     hwwtools.loadOptDefaults(parser)
     (opt, args) = parser.parse_args()
 
-    print " outputDirDatacard  = ", opt.outputDirDatacard
-    print " AC config          = ", opt.accfg
-    print " Cuts               = ", opt.cutList 
-    print " Variables          = ", opt.varList 
+    print((" outputDirDatacard  = ", opt.outputDirDatacard))
+    print((" AC config          = ", opt.accfg))
+    print((" Cuts               = ", opt.cutList)) 
+    print((" Variables          = ", opt.varList)) 
 
 
     # Set Input file
-    print " inputFile      =          ", opt.inputFile
+    print((" inputFile      =          ", opt.inputFile))
 
 
     # Create Needed dictionnary
@@ -429,7 +429,7 @@ if __name__ == '__main__':
             datacard_dir_ac = datacard_dir_sm+'_'+iScan.replace(":","_")
             command='cd '+datacard_dir_ac+' ; '
             command+='combine aC_ww_0jet_em.root -M MultiDimFit -P '+iScan+' --floatOtherPOIs=0 --algo=grid --points=100 --minimizerStrategy=2 -t -1 --expectSignal=1 '
-            print command
+            print(command)
             #os.system(command) 
 
         if '2D' in acoupling['ScanConfig'] and len(acoupling['ScanConfig']['2D']) > 0 :
@@ -443,7 +443,7 @@ if __name__ == '__main__':
             datacard_dir_ac = datacard_dir_sm+'_'+iScan.replace(":","_")
             command='cd '+datacard_dir_ac+' ; '
             command+='combine aC_ww_0jet_em.root -M MultiDimFit -P '+iScan.split(":")[0]+' -P '+iScan.split(":")[1]+' --floatOtherPOIs=0 --algo=grid --points=1000 --minimizerStrategy=2 -t -1 --expectSignal=1 '
-            print command
+            print(command)
 
 
 

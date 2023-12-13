@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import sys
@@ -46,7 +46,7 @@ def merge(indir, outdir, pname=''):
         outkeys[name] = key
 
     # Convert the dict of keys into a dict of histograms
-    outcont = dict((name, key.ReadObj()) for name, key in outkeys.iteritems())
+    outcont = dict((name, key.ReadObj()) for name, key in outkeys.items())
 
     # Repeat for the input keys
     inkeys = {}
@@ -61,7 +61,7 @@ def merge(indir, outdir, pname=''):
         inkeys[name] = key
 
     # Read input objects and write to output
-    for name, key in inkeys.iteritems():
+    for name, key in inkeys.items():
         obj = key.ReadObj()
 
         if obj.IsA() is tdirectoryfile:

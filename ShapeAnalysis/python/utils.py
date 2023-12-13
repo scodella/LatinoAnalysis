@@ -1,7 +1,7 @@
 def flatten_samples(samples):
     ## flatten the subsamples (create full samples named sample_subsample)
     subsamplesmap = []
-    for sname in samples.keys():
+    for sname in list(samples.keys()):
         sample = samples[sname]
         if 'subsamples' not in sample:
             continue
@@ -19,7 +19,7 @@ def flatten_samples(samples):
 def flatten_cuts(cuts):
     ## flatten the categories (create full cuts named cut_category)
     categoriesmap = []
-    for cname in cuts.keys():
+    for cname in list(cuts.keys()):
         cut = cuts[cname]
         if 'categories' not in cut:
             continue
@@ -36,7 +36,7 @@ def flatten_cuts(cuts):
 
 def update_variables_with_categories(variables, categoriesmap):
     ## variables can have "cuts" specifications
-    for variable in variables.itervalues():
+    for variable in list(variables.values()):
         if 'cuts' not in variable:
             continue
 
@@ -57,7 +57,7 @@ def update_variables_with_categories(variables, categoriesmap):
             cutspec.extend(categories)
 
 def update_nuisances_with_subsamples(nuisances, subsamplesmap):
-    for nuisance in nuisances.itervalues():
+    for nuisance in list(nuisances.values()):
         if 'samples' not in nuisance:
             continue
         
@@ -71,14 +71,14 @@ def update_nuisances_with_subsamples(nuisances, subsamplesmap):
             sconfig = samplespec.pop(sname)
 
             # if a subsample is also in the spec, we won't toucn this any more
-            if len(set(samplespec.iterkeys()) & set(subsamples)) != 0:
+            if len(set(samplespec.keys()) & set(subsamples)) != 0:
                 continue
   
             # otherwise we replace the sample with all the subsamples
             samplespec.update((subsample, sconfig) for subsample in subsamples)
 
 def update_nuisances_with_categories(nuisances, categoriesmap):
-    for nuisance in nuisances.itervalues():
+    for nuisance in list(nuisances.values()):
         if 'cuts' not in nuisance:
             continue
         

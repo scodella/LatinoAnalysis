@@ -28,7 +28,7 @@ class FatJetMassScaler(Module):
         self.rnd = ROOT.TRandom3(12345)
 
         if self.year not in JMS_sf or self.year not in JMR_sf:
-            print("ERROR! No JMS/JMR sf for year ", year)
+            print(("ERROR! No JMS/JMR sf for year ", year))
 
     def beginJob(self):
         pass

@@ -39,9 +39,9 @@ sys.argv.append( '-b' )
 ROOT.gROOT.SetBatch()
 
 print("List of inputs:")
-print("Input rootfile:   {0}".format(opt.inputFile))
-print("Jet bin:          {0}".format(opt.jet_bin))
-print("Output directory: {0}".format(opt.output_dir))
+print(("Input rootfile:   {0}".format(opt.inputFile)))
+print(("Jet bin:          {0}".format(opt.jet_bin)))
+print(("Output directory: {0}".format(opt.output_dir)))
 
 # Assigning inputs to variables
 inputFile  = opt.inputFile 
@@ -253,12 +253,12 @@ for dirs in thelist :
         histos['VV_'+dirs.GetName()].Add(histos[sample.GetName()+dirs.GetName()])
 
   # Summary printout
-  print('----------------------------', dirs.GetName(), '----------------------------')
-  print('Integral of DY is           ', histos['DY_'     + dirs.GetName()].Integral())
-  print('Integral of DY from DATA is ', histos['DYDATA_' + dirs.GetName()].Integral())
-  print('Integral of DATA is   ',       histos['DATA_'   + dirs.GetName()].Integral())
-  print('Integral of all MC is ',       histos['AMC_'    + dirs.GetName()].Integral())
-  print('Integral of VV is ',           histos['VV_'     + dirs.GetName()].Integral())
+  print(('----------------------------', dirs.GetName(), '----------------------------'))
+  print(('Integral of DY is           ', histos['DY_'     + dirs.GetName()].Integral()))
+  print(('Integral of DY from DATA is ', histos['DYDATA_' + dirs.GetName()].Integral()))
+  print(('Integral of DATA is   ',       histos['DATA_'   + dirs.GetName()].Integral()))
+  print(('Integral of all MC is ',       histos['AMC_'    + dirs.GetName()].Integral()))
+  print(('Integral of VV is ',           histos['VV_'     + dirs.GetName()].Integral()))
 
 
 # K_ee = sqrt(N_ee_in_loose / N_mm_in_loose) 
@@ -317,7 +317,7 @@ for dirs in thelist :
 # Filling R histos
 for dirs in thelist :
   if 'out' in dirs.GetName() and not 'df' in dirs.GetName() and not dirs.GetName().startswith('H_') and not 'ww_' in dirs.GetName() and jet_bin in dirs.GetName():
-    print(dirs.GetName())
+    print((dirs.GetName()))
 
     # Prepare lists of scale factors A
     if 'btag' not in dirs.GetName():
@@ -356,7 +356,7 @@ for dirs in thelist :
          
       # R value and uncertainty in DATA
       histos['R_DATA_' + dirs.GetName()].SetBinContent(iBin, R_value(NumDATA, DenDATA))
-      print(NumDATA,DenDATA)
+      print((NumDATA,DenDATA))
       if NumDATA < 0 or DenDATA < 0: 
         histos['R_DATA_' + dirs.GetName()].SetBinContent(iBin, 0)
         histos['R_DATA_' + dirs.GetName()].SetBinError(iBin, 0)
@@ -384,7 +384,7 @@ for dirs in thelist :
       Zdf   = histos['DATA_' + Zdfword].Integral(iBin, lastbin)
       VVdf  = histos['VV_'   + Zdfword].Integral(iBin, lastbin)
 
-      print('R', R, 'k', k, 'Zsf', Zsf, 'Zdf', Zdf, 'VVsf', VVsf, 'VVdf', VVdf)
+      print(('R', R, 'k', k, 'Zsf', Zsf, 'Zdf', Zdf, 'VVsf', VVsf, 'VVdf', VVdf))
 
       # DY estimation in Data from R 
       histos['DATA_fromR_' + dirs.GetName()].SetBinContent(iBin, DataFromR(R, k, Zsf, Zdf, VVsf, VVdf))
@@ -398,10 +398,10 @@ for dirs in thelist :
          histos['R_fromDATAR_' + dirs.GetName()].SetBinError(iBin, R_error(NumDATAR, DenDATA, sqrt(NumDATAR), sqrt(Zsf)))
 
       # Summary printout
-      print('R from DY ESTIM = ', histos['R_fromDATAR_' + dirs.GetName()].GetBinContent(iBin),'Num = ', NumDATAR ,'Den = ', DenDATA)
-      print('R_MC           ',    histos['R_MC_'        + dirs.GetName()].GetBinContent(iBin), ' +/- ', histos['R_MC_'        + dirs.GetName()].GetBinError(iBin))
-      print('R_DATA         ',    histos['R_DATA_'      + dirs.GetName()].GetBinContent(iBin), ' +/- ', histos['R_DATA_'      + dirs.GetName()].GetBinError(iBin))
-      print('R_from DYESTIM ',    histos['R_fromDATAR_' + dirs.GetName()].GetBinContent(iBin), ' +/- ', histos['R_fromDATAR_' + dirs.GetName()].GetBinError(iBin))
+      print(('R from DY ESTIM = ', histos['R_fromDATAR_' + dirs.GetName()].GetBinContent(iBin),'Num = ', NumDATAR ,'Den = ', DenDATA))
+      print(('R_MC           ',    histos['R_MC_'        + dirs.GetName()].GetBinContent(iBin), ' +/- ', histos['R_MC_'        + dirs.GetName()].GetBinError(iBin)))
+      print(('R_DATA         ',    histos['R_DATA_'      + dirs.GetName()].GetBinContent(iBin), ' +/- ', histos['R_DATA_'      + dirs.GetName()].GetBinError(iBin)))
+      print(('R_from DYESTIM ',    histos['R_fromDATAR_' + dirs.GetName()].GetBinContent(iBin), ' +/- ', histos['R_fromDATAR_' + dirs.GetName()].GetBinError(iBin)))
 
 
       # A_H  = N_loose_SR / N_loose_sel
@@ -413,7 +413,7 @@ for dirs in thelist :
 
       # Acceptances (A_H and A_ww) computation
       if 'btag' not in dirs.GetName():
-        print(dirs.GetName())
+        print((dirs.GetName()))
 
         # MC 
         AccDen = histos['DY_'    + dirs.GetName()].Integral(iBin, lastbin)
@@ -444,8 +444,8 @@ for dirs in thelist :
           errors['A_ww_DATA_' + dirs.GetName()].append(R_error(WWNumData, AccDenData, sqrt(WWNumData), sqrt(AccDenData)))
           values['A_ww_DATA_' + dirs.GetName()].append(R_value(WWNumData, AccDenData))
 
-        print('Acceptance for DY in WW CR',dirs.GetName(),'(MC)  ', values['A_ww_MC_'   + dirs.GetName()][iBin-1], WWNum,     AccDen)
-        print('Acceptance for DY in WW CR',dirs.GetName(),'(DATA)', values['A_ww_DATA_' + dirs.GetName()][iBin-1], WWNumData, AccDenData)
+        print(('Acceptance for DY in WW CR',dirs.GetName(),'(MC)  ', values['A_ww_MC_'   + dirs.GetName()][iBin-1], WWNum,     AccDen))
+        print(('Acceptance for DY in WW CR',dirs.GetName(),'(DATA)', values['A_ww_DATA_' + dirs.GetName()][iBin-1], WWNumData, AccDenData))
 
         # MC - Signal region
         if HNum < 0 or AccDen < 0: 
@@ -463,26 +463,26 @@ for dirs in thelist :
           errors['A_H_DATA_' + dirs.GetName()].append(R_error(HNumData, AccDenData, sqrt(HNumData), sqrt(AccDenData)))
           values['A_H_DATA_' + dirs.GetName()].append(R_value(HNumData, AccDenData))
 
-        print('Acceptance for DY in SR', dirs.GetName(), '(MC)  ', values['A_H_MC_'   + dirs.GetName()][iBin-1], HNum,     AccDen)
-        print('Acceptance for DY in SR', dirs.GetName(), '(DATA)', values['A_H_DATA_' + dirs.GetName()][iBin-1], HNumData, AccDenData)
+        print(('Acceptance for DY in SR', dirs.GetName(), '(MC)  ', values['A_H_MC_'   + dirs.GetName()][iBin-1], HNum,     AccDen))
+        print(('Acceptance for DY in SR', dirs.GetName(), '(DATA)', values['A_H_DATA_' + dirs.GetName()][iBin-1], HNumData, AccDenData))
 
     # Summary printout
-    print(dirs.GetName())
-    print('Integral of DY is           ', histos['DY_'         + dirs.GetName()].Integral())
-    print('Integral of DY from DATA is ', histos['DYDATA_'     + dirs.GetName()].Integral())
-    print('Integral of DY from R is    ', histos['DATA_fromR_' + dirs.GetName()].Integral())
+    print((dirs.GetName()))
+    print(('Integral of DY is           ', histos['DY_'         + dirs.GetName()].Integral()))
+    print(('Integral of DY from DATA is ', histos['DYDATA_'     + dirs.GetName()].Integral()))
+    print(('Integral of DY from R is    ', histos['DATA_fromR_' + dirs.GetName()].Integral()))
 
     # All we needed has been computed - Start filling graphs and prepare plots
 
     if 'out' in dirs.GetName() and not 'df' in dirs.GetName() and not dirs.GetName().startswith('H_') and not 'ww_' in dirs.GetName() and 'btag' not in dirs.GetName() and jet_bin in dirs.GetName():
-      print(values['A_ww_MC_'   + dirs.GetName()])
-      print(errors['A_ww_MC_'   + dirs.GetName()])
-      print(values['A_ww_DATA_' + dirs.GetName()])
-      print(errors['A_ww_DATA_' + dirs.GetName()])
-      print(values['A_H_MC_'    + dirs.GetName()])
-      print(errors['A_H_MC_'    + dirs.GetName()])
-      print(values['A_H_DATA_'  + dirs.GetName()])
-      print(errors['A_H_DATA_'  + dirs.GetName()])
+      print((values['A_ww_MC_'   + dirs.GetName()]))
+      print((errors['A_ww_MC_'   + dirs.GetName()]))
+      print((values['A_ww_DATA_' + dirs.GetName()]))
+      print((errors['A_ww_DATA_' + dirs.GetName()]))
+      print((values['A_H_MC_'    + dirs.GetName()]))
+      print((errors['A_H_MC_'    + dirs.GetName()]))
+      print((values['A_H_DATA_'  + dirs.GetName()]))
+      print((errors['A_H_DATA_'  + dirs.GetName()]))
 
       # Prepare acceptances graphs
       graphs['A_ww_MC_' + dirs.GetName()] = TGraphErrors(len(values['A_ww_MC_' + dirs.GetName()]),
