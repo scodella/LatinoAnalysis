@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import json
 import sys
@@ -45,7 +45,6 @@ class DatacardFactory:
               raise RuntimeError('Input file for sample ' + sampleName + ' missing')
         else:
           self._fileIn = ROOT.TFile(inputFile, "READ")
-          ROOT.gROOT.GetListOfFiles().Remove(self._fileIn) #Speed up
 
         # categorize the sample names
         signal_ids = collections.OrderedDict() # id map of alternative_signals + cumulative_signals
@@ -71,17 +70,17 @@ class DatacardFactory:
             background_ids[sampleName] = ibkg
             ibkg += 1
 
-        print(("Number of Signals:             " + str(len(signal_ids))))
-        print(("Number of Alternative Signals: " + str(len(alternative_signals) - 1)))
-        print(("Number of Cumulative Signals:  " + str(len(cumulative_signals))))
-        print(("Number of Backgrounds:         " + str(len(background_ids))))
+        print("Number of Signals:             " + str(len(signal_ids)))
+        print("Number of Alternative Signals: " + str(len(alternative_signals) - 1))
+        print("Number of Cumulative Signals:  " + str(len(cumulative_signals)))
+        print("Number of Backgrounds:         " + str(len(background_ids)))
 
         if not os.path.isdir(outputDirDatacard + "/") :
           os.mkdir(outputDirDatacard + "/")
 
         # loop over cuts. One directory per cut will be created
         for cutName in cuts:
-          print(("cut = ", cutName))
+          print("cut = ", cutName)
           try:
             shutil.rmtree(outputDirDatacard + "/" + cutName)
           except OSError:
@@ -98,18 +97,18 @@ class DatacardFactory:
             for sampleName in idmap:
               if 'removeFromCuts' in structureFile[sampleName] and cutName in structureFile[sampleName]['removeFromCuts']:
                 # remove from the list
-                print((' remove ', sampleName, ' from ', cutName))
+                print(' remove ', sampleName, ' from ', cutName)
               else:
                 snameList.append(sampleName)
 
-          print(("  sampleNames = ", cut_signals + cut_backgrounds))
+          print("  sampleNames = ", cut_signals + cut_backgrounds)
           
           # loop over variables
-          for variableName, variable in list(variables.items()):
+          for variableName, variable in variables.items():
             if 'cuts' in variable and cutName not in variable['cuts']:
               continue
               
-            print(("  variableName = ", variableName))
+            print("  variableName = ", variableName)
             tagNameToAppearInDatacard = cutName
             # e.g.    hww2l2v_13TeV_of0j
             #         to be defined in cuts.py
@@ -147,6 +146,10 @@ class DatacardFactory:
 #                        if not sampleName in killBinSig : killBinSig[sampleName] = []
 #                        killBinSig[sampleName].append(iBin)
 #                        histo.SetBinContent(iBin,0.)
+
+                  if 'stat' in nuisances and 'removeZeros' in nuisances['stat'] and nuisances['stat']['removeZeros']:
+                      self._removeZeroStatUncertainties (histo)                  
+
                   if 'scaleSampleForDatacard' in structure[sampleName]:
                     scaleFactor = 1.
                     if type(structure[sampleName]['scaleSampleForDatacard']) is dict:
@@ -167,7 +170,14 @@ class DatacardFactory:
                 #
                 if 'removeStatUnc' in structureFile[sampleName] and structureFile[sampleName]['removeStatUnc']:
                   self._removeStatUncertainty (histo)
-                 
+
+                if 'scaleStatUnc' in structureFile[sampleName] and structureFile[sampleName]['scaleStatUnc']>0. and structureFile[sampleName]['scaleStatUnc']!=1.:
+                  if histo.GetEntries()>0.:
+                    for iBin in range(1,histo.GetNbinsX()+1):
+                      if histo.GetBinError(iBin)>0.:
+                        scaledError = histo.GetBinError(iBin)/math.sqrt(structureFile[sampleName]['scaleStatUnc'])
+                        histo.SetBinError(iBin, scaledError)
+ 
                 self._outFile.cd()
                 histo.Write()
 
@@ -183,7 +193,7 @@ class DatacardFactory:
 
               processes = signals + cut_backgrounds
              
-              print(("    Alternative signal: " + str(signalName)))
+              print("    Alternative signal: " + str(signalName))
               alternativeSignalName  = str(signalName)
               alternativeSignalTitle = ""
               if alternativeSignalName != "":
@@ -191,7 +201,7 @@ class DatacardFactory:
 
               # start creating the datacard 
               cardPath = outputDirDatacard + "/" + cutName + "/" + variableName  + "/datacard" + alternativeSignalTitle + ".txt"
-              print(('    Writing to ' + cardPath)) 
+              print('    Writing to ' + cardPath) 
               card = open( cardPath ,"w")
 
               print('      headers..')
@@ -259,7 +269,7 @@ class DatacardFactory:
               nuisanceGroups = collections.defaultdict(list)
 
               # add normalization and shape nuisances
-              for nuisanceName, nuisance in list(nuisances.items()):
+              for nuisanceName, nuisance in nuisances.items():
                 if 'type' not in nuisance:
                   raise RuntimeError('Nuisance ' + nuisanceName + ' is missing the type specification')
 
@@ -273,23 +283,15 @@ class DatacardFactory:
 
                 if nuisance['type'] in ['lnN', 'lnU']:
                   # why is adding CMS_ not the default for lnN/lnU? (Y.I. 2019.11.06)
-
                   entryName = nuisance['name']
-                  if 'perRecoBin' in list(nuisance.keys()) and  nuisance['perRecoBin'] == True:
-                    entryName += "_"+cutName
 
                   card.write(entryName.ljust(80-20))
 
                   if 'AsShape' in nuisance and float(nuisance['AsShape']) >= 1.:
-                    print((">>>>>", nuisance['name'], " was derived as a lnN uncertainty but is being treated as a shape"))
+                    print(">>>>>", nuisance['name'], " was derived as a lnN uncertainty but is being treated as a shape")
                     card.write(('shape').ljust(20))
                     for sampleName in processes:
-                      if 'cuts_samples' in nuisance and sampleName in nuisance['cuts_samples'] and cutName not in nuisance['cuts_samples'][sampleName]:
-                        # If the cuts_samples options is there and the sample is inserted in the dictionary
-                        # check if the current cutName is included. Excluded the cuts not in the list
-                        print(("Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName))
-                        card.write(('-').ljust(columndef))
-                      elif ('all' in nuisance and nuisance['all'] == 1) or \
+                      if ('all' in nuisance and nuisance['all'] == 1) or \
                               ('samples' in nuisance and sampleName in nuisance['samples']):
 
                         histo = self._getHisto(cutName, variableName, sampleName)
@@ -352,29 +354,22 @@ class DatacardFactory:
                     entryName = nuisance['name']
                   else:
                     entryName = 'CMS_' + nuisance['name']
-
-                  if 'perRecoBin' in list(nuisance.keys()) and  nuisance['perRecoBin'] == True:
-                    entryName += "_"+cutName
+                  if 'correlatedName' in nuisance: entryName = entryName.replace(nuisance['name'], nuisance['correlatedName'])
 
                   card.write(entryName.ljust(80-20))
 
                   if 'AsLnN' in nuisance and float(nuisance['AsLnN']) >= 1.:
-                    print((">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN"))
+                    print(">>>>>", nuisance['name'], " was derived as a shape uncertainty but is being treated as a lnN")
                     card.write(('lnN').ljust(20))
                     for sampleName in processes:
-                      if 'cuts_samples' in nuisance and sampleName in nuisance['cuts_samples'] and cutName not in nuisance['cuts_samples'][sampleName]:
-                        # If the cuts_samples options is there and the sample is inserted in the dictionary
-                        # check if the current cutName is included. Excluded the cuts not in the list
-                        print(("Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName))
-                        card.write(('-').ljust(columndef))
-                      elif ('all' in nuisance and nuisance['all'] == 1) or \
+                      if ('all' in nuisance and nuisance['all'] == 1) or \
                               ('samples' in nuisance and sampleName in nuisance['samples']):
                         histo = self._getHisto(cutName, variableName, sampleName)
                         histoUp = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Up') 
                         histoDown = self._getHisto(cutName, variableName, sampleName, '_' + nuisance['name'] + 'Down')
 
                         if (not histoUp or not histoDown):
-                          print(('Histogram for nuisance', nuisance['name'], 'on sample', sampleName, 'missing'))
+                          print('Histogram for nuisance', nuisance['name'], 'on sample', sampleName, 'missing')
 
                           if self._skipMissingNuisance:
                             card.write(('-').ljust(columndef)) 
@@ -432,26 +427,15 @@ class DatacardFactory:
                   else:  
                     card.write('shape'.ljust(20))
                     for sampleName in processes:
-                      if 'cuts_samples' in nuisance and sampleName in nuisance['cuts_samples'] and cutName not in nuisance['cuts_samples'][sampleName]:
-                        # If the cuts_samples options is there and the sample is inserted in the dictionary
-                        # check if the current cutName is included. Excluded the cuts not in the list
-                        print(("Removing nuisance ", nuisanceName, " for sample ", sampleName, " from cut ", cutName))
-                        card.write(('-').ljust(columndef))
-                      elif ('all' in nuisance and nuisance ['all'] == 1) or \
+                      if ('all' in nuisance and nuisance ['all'] == 1) or \
                               ('samples' in nuisance and sampleName in nuisance['samples']):
                         # save the nuisance histograms in the root file
                         if ('skipCMS' in list(nuisance.keys())) and nuisance['skipCMS'] == 1:
                           suffixOut = None
                         else:
                           suffixOut = '_CMS_' + nuisance['name']
+                        if 'correlatedName' in nuisance: suffixOut = suffixOut.replace(nuisance['name'], nuisance['correlatedName'])
 
-                        if 'perRecoBin' in list(nuisance.keys()) and  nuisance['perRecoBin'] == True:
-                          if ('skipCMS' in list(nuisance.keys())) and nuisance['skipCMS'] == 1:
-                            suffixOut = "_"+nuisance['name']
-                          else:
-                            suffixOut = '_CMS_' + nuisance['name']
-                          suffixOut += "_"+cutName 
- 
                         symmetrize = 'symmetrize' in nuisance and nuisance['symmetrize']
 
                         saved = self._saveNuisanceHistos(cutName, variableName, sampleName, '_' + nuisance['name'], suffixOut, symmetrize)
@@ -551,7 +535,7 @@ class DatacardFactory:
               # see: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsWG/SWGuideNonStandardCombineUses#Rate_Parameters
               # 'rateParam' has a separate treatment -> it's just a line at the end of the datacard. It defines "free floating" samples
               # I do it here and not before because I want the freee floating parameters at the end of the datacard
-              for nuisance in list(nuisances.values()):
+              for nuisance in nuisances.values():
                 if nuisance['type'] != 'rateParam':
                   continue
 
@@ -605,7 +589,7 @@ class DatacardFactory:
         histoDown = self._getHisto(cutName, variableName, sampleName, suffixIn + 'Down')
 
         if not histoUp or not histoDown:
-          print(('Up/down histogram for', cutName, variableName, sampleName, suffixIn, 'missing'))
+          print('Up/down histogram for', cutName, variableName, sampleName, suffixIn, 'missing')
           if self._skipMissingNuisance:
             return False
           # else let ROOT raise
@@ -651,6 +635,36 @@ class DatacardFactory:
         if suffix:
             shapeName += suffix
 
+        originalShapeName = shapeName.split('/')[-1]
+        if 'SmtEU' in opt.tag:
+            if 'CR' in cutName or 'T2' in sampleName or 'TChipm' in sampleName or 'TSlep' in sampleName:
+                originalShapeName = shapeName.split('/')[-1]
+                shapeName = shapeName.replace('_Smooth', '_')
+
+        if '_Switch' in opt.tag:
+            switchHisto = False
+            if '_SwitchTag' in opt.tag and 'SR' in cutName and '_Tag' in cutName and 'mC-225_mX-1' in sampleName:
+                switchHisto = True
+            if '_SwitchNoTag' in opt.tag and 'SR' in cutName and '_NoTag' in cutName and 'mC-225_mX-1' in sampleName:
+                switchHisto = True
+            if '_SwitchNoJet' in opt.tag and 'SR' in cutName and '_NoJet' in cutName and 'mC-225_mX-1' in sampleName:
+                switchHisto = True
+            if '_SwitchVeto' in opt.tag and 'SR' in cutName and '_Veto' in cutName and 'mC-225_mX-1' in sampleName:
+                switchHisto = True
+            if switchHisto: shapeName = shapeName.replace('mC-225_mX-1', 'mC-250_mX-1')
+
+        if '_SplitSR' in opt.tag:
+            originalShapeName = shapeName.split('/')[-1]
+            if  '_SR' in shapeName:
+                if not self._fileIn.Get(shapeName):
+                    shapeName = shapeName.replace('_SR1_','').replace('_SR2_','').replace('_SR3_','').replace('_SR4_','')
+
+        if '_SplitFlav' in opt.tag:
+            originalShapeName = shapeName.split('/')[-1]
+            if  '__em' in shapeName or '__sf' in shapeName:
+                if not self._fileIn.Get(shapeName):
+                    shapeName = shapeName.replace('__em','').replace('__sf','')
+
         if type(self._fileIn) is dict:
             # by-sample ROOT file
             histo = self._fileIn[sampleName].Get(shapeName)
@@ -658,13 +672,223 @@ class DatacardFactory:
             # Merged single ROOT file
             histo = self._fileIn.Get(shapeName)
 
+        if 'SmtEU' in opt.tag:
+            if 'CR' in cutName or 'T2' in sampleName or 'TChipm' in sampleName or 'TSlep' in sampleName:
+                if '_Smooth' in originalShapeName: histo.SetTitle(originalShapeName); histo.SetName(originalShapeName)
+
+        if '_Switch' in opt.tag:
+            if switchHisto:
+                histo.SetTitle(originalShapeName)
+                histo.SetName(originalShapeName)
+
+        if '_SplitSR' in opt.tag:
+            if originalShapeName!=shapeName.split('/')[-1]:
+                histo.SetTitle(originalShapeName); histo.SetName(originalShapeName)
+
+        if '_SplitFlav' in opt.tag:
+            if originalShapeName!=shapeName.split('/')[-1]:
+                histo.SetTitle(originalShapeName); histo.SetName(originalShapeName)
+
         if not histo:
-            print((shapeName, 'not found'))
+            print(shapeName, 'not found')
+     
+        ### Some dirty patch for SUSY
+
+        # Temporary fix for isrFS Up
+        if suffix:
+            if 'isrFS' in suffix and 'Up' in suffix:
+                histocn = self._fileIn.Get(shapeName.split('_isrFS')[0])
+                histodo = self._fileIn.Get(shapeName.replace('Up','Down'))
+                for ibin in range(1,histo.GetNbinsX()+1):
+                    binContent = histocn.GetBinContent(ibin) - (histodo.GetBinContent(ibin)-histocn.GetBinContent(ibin))
+                    binError   = 0. if histocn.GetBinContent(ibin)==0. else binContent*histocn.GetBinError(ibin)/histocn.GetBinContent(ibin)
+                    histo.SetBinContent(ibin, binContent)
+                    histo.SetBinError(ibin, binError)
+
+        if 'SymTopPt' in opt.tag and suffix:
+            if 'toppt' in suffix and 'Down' in suffix:
+                histocn = self._fileIn.Get(shapeName.split('_toppt')[0])
+                histoup = self._fileIn.Get(shapeName.replace('Down','Up'))
+                for ibin in range(1,histo.GetNbinsX()+1):
+                    binContent = histocn.GetBinContent(ibin) - (histoup.GetBinContent(ibin)-histocn.GetBinContent(ibin))
+                    binError   = 0. if histocn.GetBinContent(ibin)==0. else binContent*histocn.GetBinError(ibin)/histocn.GetBinContent(ibin)
+                    histo.SetBinContent(ibin, binContent)
+                    histo.SetBinError(ibin, binError)
 
         if opt.blindData:
             if 'DATA' in sampleName:
                 histo.Reset()
-      
+
+        #if 'SmtEU' in opt.tag and suffix:
+        #    btagttz = 'ptmissfastsim' in shapeName
+        #    creu = ('_Smooth' not in shapeName and 'CR' in cutName and ('jer' in suffix or 'jes' in suffix or 'uncl' in suffix))
+        #    sgeu = ('_Smooth' not in shapeName and 'SR' in cutName and ('jer' in suffix or 'jes' in suffix or 'uncl' in suffix)) and (('T2tt' in sampleName and '_Veto' not in cutName) or ('TChipm' in sampleName and 'SR1' not in cutName and 'SR2' not in cutName and '_Tag' not in cutName))
+        #    dyeu = ('_Smooth' in shapeName and 'DY' in sampleName and ('jer' in suffix or 'jes' in suffix or 'uncl' in suffix))
+        #    crsg = creu and (('_WZ_' in shapeName and '_WZ_' in cutName) or ('_ttZ_' in shapeName and '_ttZ_' in cutName) or ('_ZZTo4L_' in shapeName and '_ZZ_' in cutName)) 
+        #    if btagttz or sgeu or dyeu or creu:
+        #        histocnname = '%s/%s/histo_%s' % (cutName, variableName, sampleName)
+        #        histocn = self._fileIn.Get(histocnname)
+        #        histoopname = shapeName.replace('Up','Down') if 'Up' in shapeName else shapeName.replace('Down','Up')
+        #        histoop = self._fileIn.Get(histoopname)
+        #        if histocn.Integral()>0.:
+        #            if 'Up' in shapeName and histo.Integral()/histocn.Integral()>3.:
+        #                for ibin in range(1, histo.GetNbinsX()+1):
+        #                    if histocn.GetBinContent(ibin)>0.:
+        #                        if histo.GetBinContent(ibin)/histocn.GetBinContent(ibin)>3.:
+        #                            histo.SetBinContent(ibin, histocn.GetBinContent(ibin))
+        #                    else: histo.SetBinContent(ibin, histocn.GetBinContent(ibin))
+        #        if btagttz or sgeu or (histocn.Integral()>0. and (histo.Integral()/histocn.Integral()>3. or histoop.Integral()/histocn.Integral()>3.)):
+        #            if ('Down' in shapeName and histo.Integral()>histocn.Integral() and histoop.Integral()>histocn.Integral()) or ('Up' in shapeName and histo.Integral()<histocn.Integral() and histoop.Integral()<histocn.Integral()):
+        #                ratioC = histocn.Integral()/histo.Integral()*histocn.Integral()/histo.Integral() if histocn.Integral()/histo.Integral()<3. else histocn.Integral()/histo.Integral()*histocn.Integral()/histoop.Integral() 
+        #                #histo.Scale(ratioC)
+
+        if 'SmtEU' in opt.tag and suffix and 'SmtSw' in opt.tag:
+            if '_Smooth' in suffix:
+                histocnname = '%s/%s/histo_%s' % (cutName, variableName, sampleName)
+                histocn = self._fileIn.Get(histocnname)
+                histoopname = shapeName.replace('Up','Down') if 'Up' in shapeName else shapeName.replace('Down','Up')
+                histoop = self._fileIn.Get(histoopname)
+                for ibin in range(1,histo.GetNbinsX()+1):
+                    binCentral = histocn.GetBinContent(ibin)
+                    binContent = histo.GetBinContent(ibin)
+                    if 'Up'   in suffix and binContent<binCentral: 
+                        binOpposit = histoop.GetBinContent(ibin)
+                        if binOpposit>binCentral: 
+                            histo.SetBinContent(ibin, binOpposit)
+                        else:
+                            minErr = min(abs(binContent-binCentral), abs(binOpposit-binCentral))                     
+                            histo.SetBinContent(ibin, binCentral+minErr)
+                    if 'Down' in suffix and binContent>binCentral: 
+                        binOpposit = histoop.GetBinContent(ibin)
+                        if binOpposit<binCentral:
+                            histo.SetBinContent(ibin, binOpposit)
+                        else:
+                            minErr = min(abs(binContent-binCentral), abs(binOpposit-binCentral))
+                            if minErr>binCentral: minErr = binCentral
+                            histo.SetBinContent(ibin, binCentral-minErr)
+            
+        if '_WWcorr' in opt.tag:
+            if suffix:
+                if 'WWtails' in suffix:
+                    variation = 'Up' if 'Up' in suffix else 'Down'
+                    if '_WWcorrSR' in opt.tag:
+                        histoOutName = shapeName.replace('_SR1_','').replace('_SR2_','').replace('_SR3_','').replace('_SR4_','')
+                        histo.SetName(histoOutName)
+                        histo.SetTitle(histoOutName)
+                    elif '_WWcorrYear' in opt.tag:
+                        histoOutName = shapeName.replace('_2016','').replace('_2017','').replace('_2018','')
+                        histo.SetName(histoOutName)
+                        histo.SetTitle(histoOutName)
+                    else:
+                        histo.SetName('histo_'+sampleName+'_WWtails'+variation)
+                        histo.SetTitle('histo_'+sampleName+'_WWtails'+variation)
+            
+        if '_RmSR4b1' in opt.tag:
+            if 'SR4' in cutName:
+                histo.SetBinContent(1, 0.)
+                histo.SetBinError(1, 0.)
+             
+        if '_LLLT' in opt.tag:
+            if 'SR1_Tag_em' in cutName and 'DATA' in sampleName:
+                tthisto = self._fileIn.Get(shapeName.replace('DATA','ttbar'))
+                for ib in range(4, 8):
+                    ncont = tthisto.GetBinContent(ib)
+                    histo.SetBinContent(ib, ncont)
+                    histo.SetBinError(ib, math.sqrt(ncont))
+ 
+        if '_CRBinned' not in opt.tag:
+            if 'CR' in cutName:
+                histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), 1, histo.GetBinLowEdge(1), histo.GetBinLowEdge(histo.GetNbinsX()+1))
+                errorYield = ROOT.double()
+                histoYield = histo.IntegralAndError(-1,-1,errorYield)
+                if '_CRZ' in opt.tag and histoYield==0 and sampleName=='DATA': histoYield = 1.
+                histoB.SetBinContent(1, histoYield)
+                histoB.SetBinError(1, errorYield)
+                return histoB
+
+        if '_LowNoBinned' in opt.tag:
+            if 'SR' in cutName:
+                histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), histo.GetNbinsX()-4, 0, histo.GetNbinsX()-4)
+                errorYield = ROOT.double()
+                histoYield = histo.IntegralAndError(-1,5,errorYield)
+                histoB.SetBinContent(1, histoYield)
+                histoB.SetBinError(1, errorYield)
+                for ib in range(6, histo.GetNbinsX()+1):
+                    histoB.SetBinContent(ib-4, histo.GetBinContent(ib))
+                    histoB.SetBinError(ib-4, histo.GetBinError(ib))
+                return histoB
+
+        if '_killSigStat' in opt.tag:
+            if 'T2' in sampleName or 'TSlep' in sampleName or 'TChipm' in sampleName:
+                for ib in range(1, histo.GetNbinsX()+1):
+                    histo.SetBinError(ib, histo.GetBinContent(ib)/10.)
+
+        if '_TagNoBinned' in opt.tag:
+            if 'SR' in cutName and '_Tag' in cutName:
+                histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), 1, histo.GetBinLowEdge(1), histo.GetBinLowEdge(histo.GetNbinsX()+1))
+                errorYield = ROOT.double()
+                histoYield = histo.IntegralAndError(-1,-1,errorYield)
+                histoB.SetBinContent(1, histoYield)
+                histoB.SetBinError(1, errorYield)
+                return histoB
+
+        if '_WZAsymm' in opt.tag:
+            if sampleName=='WZ':
+                if suffix:
+                    if 'WZbin' in suffix and 'Up' in suffix:
+                        histocen = self._fileIn.Get(shapeName.split('histo_WZ')[0]+'histo_WZ')
+                        for ibin in range(1,histo.GetNbinsX()+1):
+                            binContent = histocen.GetBinContent(ibin)
+                            binError   = histocen.GetBinError(ibin)
+                            histo.SetBinContent(ibin, binContent)
+                            histo.SetBinError(ibin, binError)
+
+        if '_Simm' in opt.tag or '_WWSimm' in opt.tag or '_WZSimm' in opt.tag:
+
+            if '_Simm' in opt.tag or '_WZSimm' in opt.tag:
+                if sampleName=='WZ' and histo.GetNbinsX()==9:
+                    if suffix:
+                        if 'WZbin' in suffix and 'Down' in suffix:
+                            binContent = histo.GetBinContent(9)
+                            binError   = histo.GetBinError(9)
+                            histo.SetBinContent(9, binContent*1.75)
+                            histo.SetBinError(9, binError*1.75)
+
+            if '_Simm' in opt.tag or '_WWSimm' in opt.tag:
+                if sampleName=='WW' or sampleName=='STtW' or sampleName=='ttbar':
+                    if suffix:
+                        if 'WWshape' in suffix and 'Down' in suffix:
+                            binContent = histo.GetBinContent(6)
+                            binError   = histo.GetBinError(6)
+                            histo.SetBinContent(6, binContent*0.8)
+                            histo.SetBinError(6, binError*0.8)
+                            binContent = histo.GetBinContent(7)
+                            binError   = histo.GetBinError(7)
+                            histo.SetBinContent(7, binContent*0.6)
+                            histo.SetBinError(7, binError*0.6)
+                            for ibin in range(8, 10):
+                                if histo.GetNbinsX()>=ibin:
+                                    binContent = histo.GetBinContent(ibin)
+                                    binError   = histo.GetBinError(ibin)
+                                    histo.SetBinContent(ibin, binContent*0.5)
+                                    histo.SetBinError(ibin, binError*0.5) 
+
+        if '_WWCorr' in opt.tag:
+            if sampleName=='WW' or sampleName=='STtW' or sampleName=='ttbar':
+                wwCorr = 0
+                if suffix:
+                    if 'WWshape' in suffix and 'Up'   in suffix: wwCorr =  1
+                    if 'WWshape' in suffix and 'Down' in suffix: wwCorr = -1
+                wwBinCorr = [ 0.2, 0.4, 0.5, 0.5 ]
+                for ibin in range(6, 10):
+                    binCorr = 1. + wwBinCorr[ibin-6]
+                    if wwCorr==-1: binCorr = 1. #1./(1.-wwBinCorr[ibin-6])
+                    if wwCorr==1: binCorr = (1.+2.*wwBinCorr[ibin-6])/(1.+wwBinCorr[ibin-6])
+                    binContent = histo.GetBinContent(ibin)
+                    binError   = histo.GetBinError(ibin)
+                    histo.SetBinContent(ibin, binContent*binCorr)
+                    histo.SetBinError(ibin, binError*binCorr)
+
         return histo
 
 
@@ -673,7 +897,13 @@ class DatacardFactory:
         for iBin in range(0,histo.GetNbinsX()+2) :
           histo.SetBinError(iBin,0.)
 
-
+    # _____________________________________________________________________________
+    def _removeZeroStatUncertainties(self, histo):
+        if histo.GetEntries()>0.:
+            zeroError = 1.84102*histo.Integral()/histo.GetEntries()
+            for iBin in range(1,histo.GetNbinsX()+1):
+                if histo.GetBinError(iBin)==0.:
+                    histo.SetBinError(iBin, zeroError)
 
 if __name__ == '__main__':
     sys.argv = argv
@@ -701,7 +931,7 @@ if __name__ == '__main__':
     parser.add_option('--cardList'           , dest="cardList"          , help="List of cuts to produce datacards"          , default=[], type='string' , action='callback' , callback=list_maker('cardList',','))
     parser.add_option('--skipMissingNuisance', dest='skipMissingNuisance', help="Don't write nuisance lines when histograms are missing", default=False, action='store_true')
     parser.add_option('--blindData'          , dest='blindData',           help="Force data to be blind"                    , default=False, action='store_true')
- 
+
     # read default parsing options as well
     hwwtools.addOptions(parser)
     hwwtools.loadOptDefaults(parser)
@@ -711,18 +941,18 @@ if __name__ == '__main__':
     ROOT.gROOT.SetBatch()
 
 
-    print((" configuration file = ", opt.pycfg))
+    print(" configuration file = ", opt.pycfg)
     
-    print((" inputFile =                  ", opt.inputFile))
-    print((" outputDirDatacard =          ", opt.outputDirDatacard))
+    print(" inputFile =                  ", opt.inputFile)
+    print(" outputDirDatacard =          ", opt.outputDirDatacard)
  
     if not opt.debug:
       pass
     elif opt.debug == 2:
-      print(('Logging level set to DEBUG (%d)' % opt.debug))
+      print('Logging level set to DEBUG (%d)' % opt.debug)
       logging.basicConfig( level=logging.DEBUG )
     elif opt.debug == 1:
-      print(('Logging level set to INFO (%d)' % opt.debug))
+      print('Logging level set to INFO (%d)' % opt.debug)
       logging.basicConfig( level=logging.INFO )
 
     if opt.nuisancesFile == None :
@@ -790,7 +1020,7 @@ if __name__ == '__main__':
           for iOptim in optim:
             newCuts.append(iCut+'_'+iOptim)
         opt.cardList = newCuts
-        print((opt.cardList))
+        print(opt.cardList)
       except:
         print("No optim dictionary")
       cut2del = []
