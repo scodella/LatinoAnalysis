@@ -742,28 +742,28 @@ if __name__ == '__main__':
     samples = {}
     if os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     ## load the cuts
     cuts = {}
     if os.path.exists(opt.cutsFile) :
       handle = open(opt.cutsFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     ## load the variables
     variables = {}
     if os.path.exists(opt.variablesFile) :
       handle = open(opt.variablesFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     ## load the nuisances
     nuisances = collections.OrderedDict()
     if os.path.exists(opt.nuisancesFile) :
       handle = open(opt.nuisancesFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     import LatinoAnalysis.ShapeAnalysis.utils as utils
@@ -779,7 +779,7 @@ if __name__ == '__main__':
     structure = collections.OrderedDict()
     if os.path.exists(opt.structureFile) :
       handle = open(opt.structureFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     ## command-line cuts restrictions
