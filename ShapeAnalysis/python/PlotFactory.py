@@ -1214,7 +1214,7 @@ class PlotFactory:
             #               iPeriod = 3 means: 7 TeV + 8 TeV
             #               iPeriod = 7 means: 7 TeV + 8 TeV + 13 TeV 
             #               iPeriod = 0 means: free form (uses lumi_sqrtS)
-            iPeriod = 4
+            iPeriod = 4 if 'lumi' not in list(legend.keys()) or 'sqrt' not in list(legend.keys()) else -1
             iPos  = 0
             CMS_lumi.CMS_lumi(tcanvas, iPeriod, iPos)    
 

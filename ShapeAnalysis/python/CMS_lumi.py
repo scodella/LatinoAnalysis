@@ -90,7 +90,10 @@ def CMS_lumi(pad,  iPeriod,  iPosX ):
         lumiText += "8 TeV"
     elif ( iPeriod==0 ):
         lumiText += lumi_sqrtS
-            
+    elif ( iPeriod==-1 ):
+        lumiText += lumi_13TeV
+        lumiText += lumi_sqrtS
+
     print(lumiText)
 
     latex = rt.TLatex()
