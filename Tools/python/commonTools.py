@@ -182,7 +182,8 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
       elif 'cern' in os.uname()[1] : 
         if not '/eos/' in  inputDir and '/store/' in inputDir:
            Dir = '/eos/cms/' + inputDir
-        else:                          
+        else:               
+           absPath=True # Needed for ctrl files in /eos/user 30/07/2024
            Dir = inputDir
         if '/eos/cms/' in inputDir:
            absPath=True

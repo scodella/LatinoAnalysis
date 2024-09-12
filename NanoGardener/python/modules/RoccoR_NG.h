@@ -1,7 +1,9 @@
 #ifndef ElectroWeakAnalysis_RoccoR_NG_H
 #define ElectroWeakAnalysis_RoccoR_NG_H
 
-#include <boost/math/special_functions/erf.hpp>
+// EL9
+//#include <boost/math/special_functions/erf.hpp>
+#include "erf.hpp"
 
 struct CrystalBall_NG{
     static const double pi;

@@ -84,6 +84,9 @@ if __name__ == '__main__':
 
     parser.add_option('--NoPreliminary', dest='NoPreliminary', help='Remove preliminary status in plots' , action='store_true', default=False) 
     parser.add_option('--RemoveAllMC', dest='RemoveAllMC', help='Remove all MC in legend' , action='store_true', default=False) 
+    parser.add_option('--mergeBins', dest='mergeBins', help='Merge bins' , action='store_true', default=False)
+    parser.add_option('--paperStyle', dest='paperStyle', help='Use paper style' , action='store_true', default=False)
+    parser.add_option('--addCutLabels', dest='addCutLabels', help='addCutLabels' , action='store_true', default=False)
 
     # read default parsing options as well
     hwwtools.addOptions(parser)
@@ -119,7 +122,10 @@ if __name__ == '__main__':
     print(("         nuisanceVariations  =", opt.nuisanceVariations))
     print(("                  plotFancy  =", opt.plotFancy))
     print(("              NoPreliminary  =", opt.NoPreliminary))   
-    print(("                RemoveAllMC  =", opt.RemoveAllMC))   
+    print(("                RemoveAllMC  =", opt.RemoveAllMC))  
+    print(("                  mergeBins  =", opt.mergeBins))
+    print(("                 paperStyle  =", opt.paperStyle))
+    print(("               addCutLabels  =", opt.addCutLabels))
     print("")
 
     opt.scaleToPlot = float(opt.scaleToPlot)
@@ -190,6 +196,11 @@ if __name__ == '__main__':
     
     factory._removeAllMC = opt.RemoveAllMC
 
+    factory._mergeBins = opt.mergeBins
+
+    factory._paperStyle = opt.paperStyle
+
+    factory._addCutLabels = opt.addCutLabels
 
     #samples = {}
     samples = OrderedDict()

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import json
 import sys
@@ -16,6 +16,7 @@ import traceback
 from array import array
 from collections import OrderedDict
 import math
+import ctypes
 
 #import os.path
 
@@ -126,10 +127,20 @@ class LawnMower:
            if sampleName == "DATA" and factory._getDataFromCombine:
              datagraph = fileIn.Get(folder_fit_name + "/" + self._cut + "/data")
              histo = ROOT.TH1D('histo_DATA', 'histo_DATA', datagraph.GetN(), 0, datagraph.GetN())
+             for nbin in range(datagraph.GetN()):
+                 xP, yP = ctypes.c_double(), ctypes.c_double()
+                 datagraph.GetPoint(nbin, xP, yP)
+                 if yP.value>template_histogram.GetBinContent(nbin+1): break # Tails have been merged
+             if nbin+1<template_histogram.GetNbinsX():
+                 dataEdges = []
+                 for ib in range(nbin+1): dataEdges.append(template_histogram.GetBinLowEdge(ib+1))
+                 dataEdges.append(template_histogram.GetBinLowEdge(template_histogram.GetNbinsX()+1))
+                 template_histogram2 = ROOT.TH1D('histo_DATA', 'histo_DATA', nbin+1, array('d',dataEdges))
+                 template_histogram = template_histogram2
              for point in range(datagraph.GetN()):
-               xP, yP = ROOT.double(), ROOT.double()
+               xP, yP = ctypes.c_double(), ctypes.c_double() 
                datagraph.GetPoint(point, xP, yP)
-               histo.SetBinContent(point+1, yP)
+               histo.SetBinContent(point+1, yP.value)
                histo.SetBinError(point+1, datagraph.GetErrorY(point))
              histo = self._ChangeBin(histo, template_histogram)
              histo.Write() 
@@ -196,6 +207,8 @@ class LawnMower:
                histo.SetName  ('histo_' + cardName)
                histo.SetTitle ('histo_' + cardName)
                histo.Scale(0.0) #I think this needs to be here, to actually scale the hist to 0?
+               if (template_histogram != 0) :
+                   histo = self._ChangeBin(histo, template_histogram)
                histo.Write()  
                
                copied_from_original = True
@@ -415,7 +428,7 @@ if __name__ == '__main__':
     samples = OrderedDict()
     if os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     factory._samples = samples
@@ -429,9 +442,9 @@ if __name__ == '__main__':
     elif os.path.exists(opt.structureFile) :
       cuts = {}
       cuthandle = open('cuts.py','r')
-      exec(cuthandle)
+      exec(cuthandle.read())
       handle = open(opt.structureFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     factory._structure = structure

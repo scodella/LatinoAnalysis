@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import json
 import sys
@@ -11,6 +11,8 @@ import logging
 import collections
 import os.path
 import shutil
+import ctypes
+from array import array
 
 # Common Tools & batch
 from LatinoAnalysis.Tools.commonTools import *
@@ -665,6 +667,52 @@ class DatacardFactory:
                 if not self._fileIn.Get(shapeName):
                     shapeName = shapeName.replace('__em','').replace('__sf','')
 
+        if '_SplitMT2tails' in opt.tag:
+            originalShapeName = shapeName.split('/')[-1]
+            if  ('__top' in shapeName or '__WW' in shapeName) and 'WWtails' in shapeName:
+                if not self._fileIn.Get(shapeName):
+                    shapeName = shapeName.replace('__top','').replace('__WW','')
+
+        if '_SplitWWPhi' in opt.tag:
+            originalShapeName = shapeName.split('/')[-1]
+            if  ('__WZ' in shapeName or '__WW' in shapeName) and 'WWphi' in shapeName:
+                if not self._fileIn.Get(shapeName):
+                    shapeName = shapeName.replace('__WZ','').replace('__WW','')
+
+        if '_mt2sr4' in opt.tag:
+            if 'MT2sr4_' in shapeName and suffix:
+                if 'SR4' in cutName and 'CR' not in cutName:
+                    if sampleName=='WW' or sampleName=='STtW' or sampleName=='ttbar':
+                        wScale = [ 0.77529412, 0.93035294, 1.1629412,  1.9640784, 1. ]
+                        if 'try2' in opt.tag:
+                            wScale = [ 0.87500000, 0.87500000, 1.0, 1.75, 1. ]
+                        elif 'try3' in opt.tag:
+                            p1, p2 = 6.88128e-01, 1.40882e-02
+                            wScale = [ p1+p2*10., p1+p2*30., p1+p2*50., p1+p2*70., 1. ]
+                        elif 'try4' in opt.tag:
+                            p1, p2 = 7.18917e-01, 1.22253e-02
+                            wScale = [ p1+p2*10., p1+p2*30., p1+p2*50., p1+p2*70., p1+p2*90. ]
+                        elif 'try5' in opt.tag:
+                            p1, p2 = 5.34238e-01, 1.97895e-02 
+                            wScale = [ p1+p2*10., p1+p2*30., p1+p2*50., p1+p2*70., 1. ]
+                        elif 'try6' in opt.tag:
+                            p1, p2 = 5.71156e-01, 1.75253e-02
+                            wScale = [ p1+p2*10., p1+p2*30., p1+p2*50., p1+p2*70., p1+p2*90. ]
+                        histocnname = '%s/%s/histo_%s' % (cutName, variableName, sampleName)
+                        histocn = self._fileIn.Get(histocnname)
+                        for ibin in range(5):
+                            if 'Up' in shapeName:
+                                binC, binE = histocn.GetBinContent(ibin+1), histocn.GetBinError(ibin+1)
+                                histocn.SetBinContent(ibin+1, binC*wScale[ibin])
+                                histocn.SetBinError(ibin+1, binE*wScale[ibin])
+                            elif 'Down' in shapeName and '_mt2sr4symm' in opt.tag:
+                                binC, binE = histocn.GetBinContent(ibin+1), histocn.GetBinError(ibin+1)
+                                histocn.SetBinContent(ibin+1, binC*(2.-wScale[ibin]))
+                                histocn.SetBinError(ibin+1, binE*(2.-wScale[ibin]))
+                        histocn.SetName(shapeName)
+                        histocn.SetTitle(shapeName)
+                        return histocn
+
         if type(self._fileIn) is dict:
             # by-sample ROOT file
             histo = self._fileIn[sampleName].Get(shapeName)
@@ -715,6 +763,14 @@ class DatacardFactory:
                     histo.SetBinContent(ibin, binContent)
                     histo.SetBinError(ibin, binError)
 
+        if '_HighStat' in opt.tag or '_HighLumi' in opt.tag:
+            if 'DATA' not in sampleName:
+                increaseFactor = 1000. if '_HighStat' in opt.tag else 3000./138.
+                for ibin in range(1,histo.GetNbinsX()+1):
+                    binContent, binError = increaseFactor*histo.GetBinContent(ibin), increaseFactor*histo.GetBinError(ibin)
+                    histo.SetBinContent(ibin, binContent)
+                    histo.SetBinError(ibin, binError)
+
         if opt.blindData:
             if 'DATA' in sampleName:
                 histo.Reset()
@@ -741,6 +797,11 @@ class DatacardFactory:
         #            if ('Down' in shapeName and histo.Integral()>histocn.Integral() and histoop.Integral()>histocn.Integral()) or ('Up' in shapeName and histo.Integral()<histocn.Integral() and histoop.Integral()<histocn.Integral()):
         #                ratioC = histocn.Integral()/histo.Integral()*histocn.Integral()/histo.Integral() if histocn.Integral()/histo.Integral()<3. else histocn.Integral()/histo.Integral()*histocn.Integral()/histoop.Integral() 
         #                #histo.Scale(ratioC)
+
+        if '_KillTagSig' in opt.tag:
+            if '_Tag' in cutName:
+                if 'TChipm' in sampleName or 'TSlep' in sampleName:
+                    histo.Reset()        
 
         if 'SmtEU' in opt.tag and suffix and 'SmtSw' in opt.tag:
             if '_Smooth' in suffix:
@@ -769,7 +830,7 @@ class DatacardFactory:
             
         if '_WWcorr' in opt.tag:
             if suffix:
-                if 'WWtails' in suffix:
+                if 'WWtails' in suffix or 'WWshape' in suffix:
                     variation = 'Up' if 'Up' in suffix else 'Down'
                     if '_WWcorrSR' in opt.tag:
                         histoOutName = shapeName.replace('_SR1_','').replace('_SR2_','').replace('_SR3_','').replace('_SR4_','')
@@ -779,9 +840,12 @@ class DatacardFactory:
                         histoOutName = shapeName.replace('_2016','').replace('_2017','').replace('_2018','')
                         histo.SetName(histoOutName)
                         histo.SetTitle(histoOutName)
-                    else:
+                    elif 'WWtails' in suffix:
                         histo.SetName('histo_'+sampleName+'_WWtails'+variation)
                         histo.SetTitle('histo_'+sampleName+'_WWtails'+variation)
+                    else:
+                        histo.SetName('histo_'+sampleName+'_WWshape'+variation)
+                        histo.SetTitle('histo_'+sampleName+'_WWshape'+variation)
             
         if '_RmSR4b1' in opt.tag:
             if 'SR4' in cutName:
@@ -795,27 +859,49 @@ class DatacardFactory:
                     ncont = tthisto.GetBinContent(ib)
                     histo.SetBinContent(ib, ncont)
                     histo.SetBinError(ib, math.sqrt(ncont))
- 
+
+        if '_KillMCStat' in opt.tag:
+            if 'DATA' not in sampleName:
+                for ib in range(1, histo.GetNbinsX()+1):
+                    statErr = histo.GetBinError(ib)/10000.
+                    histo.SetBinError(ib, statErr) 
+
         if '_CRBinned' not in opt.tag:
             if 'CR' in cutName:
+                firstBinForIntegral = 2 if ('_RmSR4b1CR' in opt.tag and 'CR4' in cutName) else -1
                 histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), 1, histo.GetBinLowEdge(1), histo.GetBinLowEdge(histo.GetNbinsX()+1))
-                errorYield = ROOT.double()
-                histoYield = histo.IntegralAndError(-1,-1,errorYield)
+                errorYield = ctypes.c_double()
+                histoYield = histo.IntegralAndError(firstBinForIntegral,-1,errorYield)
                 if '_CRZ' in opt.tag and histoYield==0 and sampleName=='DATA': histoYield = 1.
                 histoB.SetBinContent(1, histoYield)
-                histoB.SetBinError(1, errorYield)
+                histoB.SetBinError(1, errorYield.value)
+                if 'DATA' in sampleName and histoB.Integral()==0.: 
+                    print('No events in ', cutName, histoYield)
                 return histoB
 
         if '_LowNoBinned' in opt.tag:
             if 'SR' in cutName:
                 histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), histo.GetNbinsX()-4, 0, histo.GetNbinsX()-4)
-                errorYield = ROOT.double()
+                errorYield = ctypes.c_double()
                 histoYield = histo.IntegralAndError(-1,5,errorYield)
                 histoB.SetBinContent(1, histoYield)
-                histoB.SetBinError(1, errorYield)
+                histoB.SetBinError(1, errorYield.value)
                 for ib in range(6, histo.GetNbinsX()+1):
                     histoB.SetBinContent(ib-4, histo.GetBinContent(ib))
                     histoB.SetBinError(ib-4, histo.GetBinError(ib))
+                return histoB
+
+        if '_LowSR4NoBinned' in opt.tag or '_BulkSR4NoBinned' in opt.tag:
+            if 'SR4' in cutName and 'CR' not in cutName:
+                lastBinSummed = 5 if '_BulkSR4NoBinned' in opt.tag else 4
+                histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), histo.GetNbinsX()-lastBinSummed+1, 0, histo.GetNbinsX()-lastBinSummed+1)
+                errorYield = ctypes.c_double()
+                histoYield = histo.IntegralAndError(-1,lastBinSummed,errorYield)
+                histoB.SetBinContent(1, histoYield)
+                histoB.SetBinError(1, errorYield.value)
+                for ib in range(lastBinSummed+1, histo.GetNbinsX()+1):
+                    histoB.SetBinContent(ib-lastBinSummed+1, histo.GetBinContent(ib))
+                    histoB.SetBinError(ib-lastBinSummed+1, histo.GetBinError(ib))
                 return histoB
 
         if '_killSigStat' in opt.tag:
@@ -826,10 +912,43 @@ class DatacardFactory:
         if '_TagNoBinned' in opt.tag:
             if 'SR' in cutName and '_Tag' in cutName:
                 histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), 1, histo.GetBinLowEdge(1), histo.GetBinLowEdge(histo.GetNbinsX()+1))
-                errorYield = ROOT.double()
+                errorYield = ctypes.c_double()
                 histoYield = histo.IntegralAndError(-1,-1,errorYield)
                 histoB.SetBinContent(1, histoYield)
-                histoB.SetBinError(1, errorYield)
+                histoB.SetBinError(1, errorYield.value)
+                return histoB
+
+        if '_SwitchLast4emtag' in opt.tag:
+            if 'SR4_Tag_em' in cutName and 'DATA' in sampleName:
+                histo.SetBinContent(histo.GetNbinsX(),0)
+                histo.SetBinError(histo.GetNbinsX(),0)
+                histo.SetBinContent(histo.GetNbinsX()-1,1)
+                histo.SetBinError(histo.GetNbinsX()-1,1)
+
+        if '_TagTailsNoBinned' in opt.tag:
+            if 'SR' in cutName and ('_Tag' in cutName or '_TagTailsNoBinnedBoth' in opt.tag):
+                lastBinTail = 7
+                mt2llOptim = [ 0, 20, 40, 60, 80, 100, 160, 220 ]
+                if '_TagTailsNoBinnedKillLast' in opt.tag and 'DATA' in sampleName and 'SR4_Tag_em' in cutName: 
+                    histo.SetBinContent(histo.GetNbinsX(),0)
+                    histo.SetBinError(histo.GetNbinsX(),0)
+                elif '_TagTailsNoBinned8' in opt.tag:
+                    lastBinTail = 8
+                    mt2llOptim = [ 0, 20, 40, 60, 80, 100, 160, 240, 500 ]
+                elif '_TagTailsNoBinned9' in opt.tag:
+                    lastBinTail = 9
+                    mt2llOptim = [ 0, 20, 40, 60, 80, 100, 160, 240, 370, 500 ]
+                    if '_TagTailsNoBinned9KillLast' in opt.tag and 'DATA' in sampleName and 'SR4_Tag_em' in cutName:
+                        histo.SetBinContent(histo.GetNbinsX(),0)
+                        histo.SetBinError(histo.GetNbinsX(),0)
+                histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), lastBinTail, array('d',mt2llOptim))
+                for ibin in range(1, lastBinTail):
+                    histoB.SetBinContent(ibin, histo.GetBinContent(ibin))
+                    histoB.SetBinError(ibin, histo.GetBinError(ibin))
+                errorYield = ctypes.c_double()
+                histoYield = histo.IntegralAndError(lastBinTail,-1,errorYield)
+                histoB.SetBinContent(lastBinTail, histoYield)
+                histoB.SetBinError(lastBinTail, errorYield.value)
                 return histoB
 
         if '_WZAsymm' in opt.tag:
@@ -972,28 +1091,28 @@ if __name__ == '__main__':
     samples = {}
     if os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     ## load the cuts
     cuts = {}
     if os.path.exists(opt.cutsFile) :
       handle = open(opt.cutsFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     ## load the variables
     variables = {}
     if os.path.exists(opt.variablesFile) :
       handle = open(opt.variablesFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     ## load the nuisances
     nuisances = collections.OrderedDict()
     if os.path.exists(opt.nuisancesFile) :
       handle = open(opt.nuisancesFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     import LatinoAnalysis.ShapeAnalysis.utils as utils
@@ -1009,7 +1128,7 @@ if __name__ == '__main__':
     structure = collections.OrderedDict()
     if os.path.exists(opt.structureFile) :
       handle = open(opt.structureFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     ## command-line cuts restrictions

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys, re, os, os.path, math, copy
 from optparse import OptionParser
 from collections import OrderedDict

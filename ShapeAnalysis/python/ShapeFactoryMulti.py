@@ -1140,6 +1140,12 @@ class ShapeFactory:
           cnew[indices] = cref[indices] * 1.e-4
       # If ref does not have the same sign in each bin -> Not clear how to proceed; variation could be genuine on top of 0 yield bin in ref
 
+      # to replace root_numpy
+      if histoNew.GetDimension() == 1:
+          ShapeFactory._array2hist(cnew, histoNew)
+      else:
+          print('ShapeFactoryMulti warning: _fixNegativeBinAndError not working for dim>1 in EL9')
+
       return changed
 
     # _____________________________________________________________________________
@@ -1166,6 +1172,7 @@ class ShapeFactory:
 
       # to replace root_numpy
       if histogram_to_be_fixed.GetDimension() == 1:
+          ShapeFactory._array2hist(cont, histogram_to_be_fixed, include_overflow=True)
           ShapeFactory._array2sumw2(sumw2, histogram_to_be_fixed)
       else:
           print('ShapeFactoryMulti warning: _fixNegativeBinAndError not working for dim>1 in EL9')

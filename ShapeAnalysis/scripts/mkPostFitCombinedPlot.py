@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import json
 import sys
@@ -21,8 +21,8 @@ import math
 import shutil
 
 import numpy
-import root_numpy
-
+#import root_numpy
+import ctypes
 
 
 # ----------------------------------------------------- LawnMower --------------------------------------
@@ -216,7 +216,7 @@ class LawnMower:
           legend = {}
           if os.path.exists(self._plotFile) :
             handle = open(self._plotFile,'r')
-            exec(handle)
+            exec(handle.read())
             handle.close()
    
    
@@ -234,12 +234,14 @@ class LawnMower:
                     print(("missing histo: histo_" + sampleName))
           
           
+          
           #Final histogram -> get MC errors
           histo_sum = hStackTotal.GetStack().Last()
           err_up = numpy.sqrt(numpy.array(histo_sum.GetSumw2())[1:-1]) # GetSumw2 -> array of sum squares of weights
           err_do = numpy.sqrt(numpy.array(histo_sum.GetSumw2())[1:-1]) # GetSumw2 -> array of sum squares of weights
           
-          nominal = root_numpy.hist2array(histo_sum, copy=False)
+
+          nominal = numpy.hist2array(histo_sum, copy=False)
           
           # err_rel_up = err_up / nom 
           # err_rel_do = err_do / nom 
@@ -272,9 +274,9 @@ class LawnMower:
           for cardName in cuts:
             datagraph = fitFile.Get("/".join(["shapes_prefit", cardName, "data"]))
             for point in range(datagraph.GetN()):
-              xP, yP = ROOT.double(), ROOT.double()
+              xP, yP = ctypes.c_double(), ctypes.c_double()
               datagraph.GetPoint(point, xP, yP)
-              total_data.SetBinContent(point+1, total_data.GetBinContent(point+1)+yP)
+              total_data.SetBinContent(point+1, total_data.GetBinContent(point+1)+yP.value)
               total_data.SetBinError(point+1, math.sqrt(total_data.GetBinContent(point+1))) # Will be fixed in PlotFactory       
           fitFile.Close()
           self._outFile.cd ( self._cutName + "/" + self._variable )
@@ -426,7 +428,45 @@ class LawnMower:
 def foo_callback(option, opt, value, parser):
   setattr(parser.values, option.dest, value.split(','))
        
+"""
+# root_numpy
+@staticmethod
+def _array(arr, copy=True):
+    return np.array(arr)
 
+@staticmethod
+def _hist2array(histo, include_overflow=False, copy=True, return_edges=False):
+    if 'TH1' in histo.ClassName():
+        if include_overflow:
+            y = histo.GetArray()
+            y.reshape((histo.GetNbinsX()+2,))
+        else:
+            auxh = ROOT.TH1D('aux','aux',histo.GetNbinsX(),0,histo.GetNbinsX())
+            for ib in range(1,histo.GetNbinsX()+1):
+                auxh.SetBinContent(ib-1,histo.GetBinContent(ib))
+            y = auxh.GetArray()
+            y.reshape((auxh.GetNbinsX(),))
+        return PlotFactory._array(y, copy)
+    elif 'TH2' in histo.ClassName():
+        aList = []
+        ibin, fbin = 1, histo.GetNbinsX()
+        if include_overflow:
+            ibin, fbin = 0, histo.GetNbinsX()+1
+        for bx in range(ibin, fbin+1):
+            nby = histo.GetNbinsY() if include_overflow else histo.GetNbinsY()-2
+            byOff = 0 if include_overflow else 1
+            auxh = ROOT.TH1D('aux'+str(bx),'aux'+str(bx),nby,0,nby)
+            for by in range(0, nby+2): auxh.SetBinContent(by,histo.GetBinContent(bx,by+byOff))
+            y = auxh.GetArray()
+            y.reshape((auxh.GetNbinsX()+2,))
+            aList.append(np.array(y))
+        return np.array(aList)
+
+@staticmethod
+def _array2hist(array, hist, errors=None):
+    for ib in range(1, hist.GetNbinsX()+1):
+        hist.SetBinContent(ib,array[ib-1])
+"""
 
 if __name__ == '__main__':
     sys.argv = argv

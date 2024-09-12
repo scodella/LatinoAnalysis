@@ -17,7 +17,7 @@ import math
 import numpy as np
 #import root_numpy as rnp
 import re
-
+import ctypes
 
 # ----------------------------------------------------- PlotFactory --------------------------------------
 
@@ -139,9 +139,28 @@ class PlotFactory:
           fileIn = ROOT.TFile(inputFile, "READ")
           if btvReview: fileInBTV = ROOT.TFile(inputFile.replace('ObjectReview','NoBTVObjectReview').replace('_SM','_Backgrounds'), "READ")
 
+        # Merge CRs with mergeBins
+        skipCRs, mergeCRs = [], {}
+        if self._mergeBins:
+            for cutName in self._cuts:
+                for variableName, variable in list(self._variables.items()):
+                    if 'cuts' not in variable or cutName in variable['cuts']:
+                        histoData = fileIn.Get('/'.join([cutName,variableName,'histo_DATA']))
+                        regionToMerge = False
+                        if histoData==None: regionToMerge = True
+                        elif histoData.Integral()==0.: regionToMerge = True
+                        if regionToMerge:
+                            cutMerge = cutName.replace('CR3','CR4') if 'CR3' in cutName else cutName.replace('CR4','CR3')
+                            if cutMerge!=cutName: 
+                                skipCRs.append(cutName)
+                                mergeCRs[cutMerge] = [ cutName, variableName ]
+
         #---- save one TCanvas for every cut and every variable
         for cutName in self._cuts :
           print(("cut =", cutName))
+          if cutName in skipCRs:
+              print('   skipping cut', cutName, 'with no data')
+              continue
           for variableName, variable in list(self._variables.items()):
             if 'cuts' in variable and cutName not in variable['cuts']:
               continue
@@ -287,9 +306,23 @@ class PlotFactory:
                     thsBackgroundBTV.Add(fileInBTV.Get(shapeName)) 
               print((' --> ', histo))
               print(('new_histo_' + sampleName + '_' + cutName + '_' + variableName))
+              if self._mergeBins and 'CR' in cutName:
+                  histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), 1, histo.GetBinLowEdge(1), histo.GetBinLowEdge(histo.GetNbinsX()+1))
+                  errorYield = ctypes.c_double()
+                  histoYield = histo.IntegralAndError(-1,-1,errorYield)
+                  if cutName not in mergeCRs:
+                      histoB.SetBinContent(1, histoYield)
+                      histoB.SetBinError(1, errorYield.value)
+                  else:
+                      histoM = fileIn.Get(mergeCRs[cutName][0]+"/"+mergeCRs[cutName][1]+'/histo_' + sampleName)
+                      errorYieldM = ctypes.c_double()
+                      histoYieldM = histoM.IntegralAndError(-1,-1,errorYieldM)
+                      histoB.SetBinContent(1, histoYield+histoYieldM)
+                      histoB.SetBinError(1, math.sqrt(errorYield.value*errorYield.value+errorYieldM.value*errorYieldM.value))
+                  histo = histoB
               histos[sampleName] = histo.Clone('new_histo_' + sampleName + '_' + cutName + '_' + variableName)
               
-              #print "     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX()
+              #print("     -> sampleName = ", sampleName, " --> ", histos[sampleName].GetTitle(), " --> ", histos[sampleName].GetName(), " --> ", histos[sampleName].GetNbinsX())
               #for iBinAmassiro in range(1, histos[sampleName].GetNbinsX()+1):
                  #print " i = ", iBinAmassiro, " [" , sampleName, " ==> ", histos[sampleName].GetBinContent(iBinAmassiro)
 
@@ -422,12 +455,11 @@ class PlotFactory:
                   nexpected += histos[sampleName].Integral(1,histos[sampleName].GetNbinsX())   # it was (-1, -1) in the past, correct now
                   if variable['divideByBinWidth'] == 1:
                     histos[sampleName].Scale(1,"width")
-
                   thsBackground.Add(histos[sampleName])
                   #print " adding to background: ", sampleName
 
                 # handle 'stat' nuisance to create the bin-by-bin list of nuisances
-                # "massage" the list of nuisances accordingly
+                # "imassage" the list of nuisances accordingly
                 for nuisanceName, nuisance in list(nuisances.items()):         
                   if 'cuts' in nuisance and cutName not in nuisance['cuts']:
                     continue
@@ -461,7 +493,7 @@ class PlotFactory:
                         mynuisances[nuisanceName] = nuisances[nuisanceName]
  
                 nuisanceHistos = ({}, {})
-                 
+
                 for nuisanceName, nuisance in list(mynuisances.items()):
                   # is this nuisance to be considered for this background?
                   if 'samples' in nuisance:
@@ -507,8 +539,22 @@ class PlotFactory:
                         histoVar = fileIn[sampleName].Get(shapeNameVar)
                       else:
                         histoVar = fileIn.Get(shapeNameVar)
-  
+                        if histoVar==None: histoVar = fileIn.Get(shapeNameVar.replace('Smooth',''))
                       if histoVar != None :
+                        if self._mergeBins and 'CR' in cutName:
+                          histoVarB = ROOT.TH1D(histoVar.GetName(), histoVar.GetTitle(), 1, histoVar.GetBinLowEdge(1), histoVar.GetBinLowEdge(histoVar.GetNbinsX()+1))
+                          errorYield = ctypes.c_double()
+                          histoYield = histoVar.IntegralAndError(-1,-1,errorYield)
+                          if cutName not in mergeCRs:
+                            histoVarB.SetBinContent(1, histoYield)
+                            histoVarB.SetBinError(1, errorYield.value)
+                          else:
+                            histoVarM = fileIn.Get(mergeCRs[cutName][0]+"/"+mergeCRs[cutName][1]+'/'+shapeNameVar.split('/')[-1])
+                            errorYieldM = ctypes.c_double()
+                            histoYieldM = histoVarM.IntegralAndError(-1,-1,errorYieldM)
+                            histoVarB.SetBinContent(1, histoYield+histoYieldM)
+                            histoVarB.SetBinError(1, math.sqrt(errorYield.value*errorYield.value+errorYieldM.value*errorYieldM.value))
+                          histoVar = histoVarB
                         nuisanceHistos[ivar][nuisanceName] = histoVar
                       elif not self._SkipMissingNuisance :
                         print((" This is bad, the nuisance ", nuisanceName, " is missing! You need to add it, maybe some jobs crashed?"))
@@ -517,8 +563,7 @@ class PlotFactory:
                         # if you had self._SkipMissingNuisance set to true, put the variation the same as the nominal
                         histoVar = histo.Clone(shapeNameVar.replace('/', '__'))
                         nuisanceHistos[ivar][nuisanceName] = histoVar
-                        
-
+   
                 for ivar, nuisances_vy in enumerate([nuisances_vy_up, nuisances_vy_do]):
                   for nuisanceName, nuisance in list(mynuisances.items()):
                     try:
@@ -542,7 +587,7 @@ class PlotFactory:
     
                       if variable["divideByBinWidth"] == 1:
                         histoVar.Scale(1., "width")
-                    
+ 
                     try:
                       vy = nuisances_vy[nuisanceName]
                     except KeyError:
@@ -566,7 +611,7 @@ class PlotFactory:
 
             if self._nuisanceVariations and len(list(mynuisances.keys()))==0: continue
 
-            # set the colors for the groups of samples
+            print('set the colors for the groups of samples')
             for sampleNameGroup, sampleConfiguration in list(groupPlot.items()):
               if sampleNameGroup in list(histos_grouped.keys()) :
                 histos_grouped[sampleNameGroup].SetLineColor(self._getColor(sampleConfiguration['color']))
@@ -678,16 +723,33 @@ class PlotFactory:
             ## Default: --postFit 0 --> No additional line is drawn
             ## ----------------------------------------------------
 
-            ## --postFit 1 --> line is prefit
+            ## --postFit 1 --> line is prefit'
             if self._postFit == 'p':
                 tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC 
-                if self._showDataVsBkgOnly : 
+                if self._showDataVsBkgOnly :
                     histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_background_prefit')
                 else:           
                     histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_prefit')
+                if self._mergeBins and 'CR' in cutName:
+                    histoPFB = ROOT.TH1D(histoPF.GetName(), histoPF.GetTitle(), 1, histoPF.GetBinLowEdge(1), histoPF.GetBinLowEdge(histoPF.GetNbinsX()+1))
+                    errorYieldPF = ctypes.c_double()
+                    histoYieldPF = histoPF.IntegralAndError(-1,-1,errorYieldPF)
+                    if cutName not in mergeCRs:
+                        histoPFB.SetBinContent(1, histoYieldPF)
+                        histoPFB.SetBinError(1, errorYieldPF.value)
+                    else:
+                        if self._showDataVsBkgOnly :
+                            histoPFM = fileIn.Get(mergeCRs[cutName][0]+"/"+mergeCRs[cutName][1]+'/histo_total_background_prefit')
+                        else:
+                            histoPFM = fileIn.Get(mergeCRs[cutName][0]+"/"+mergeCRs[cutName][1]+'/histo_total_prefit')
+                        errorYieldPFM = ctypes.c_double()
+                        histoYieldPFM = histoPFM.IntegralAndError(-1,-1,errorYieldPFM)
+                        histoPFB.SetBinContent(1, histoYieldPF+histoYieldPFM)
+                        histoPFB.SetBinError(1, math.sqrt(errorYieldPF.value*errorYieldPF.value+errorYieldPFM.value*errorYieldPFM.value))
+                    histoPF = histoPFB
             ## --postFit 2 --> line is (S+B) postfit
             if self._postFit == 's':
-                tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC             
+                tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC 
                 histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_postfit_s')
             ## --postFit 3 --> line is B-only postfit
             if self._postFit == 'b':
@@ -739,7 +801,7 @@ class PlotFactory:
                   tgrDataMinusMC.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin] , tgrData_evy_up[iBin] )
             
             
-            #
+            print('#')
             # if there is an histogram called 'histo_total'
             # it means that post-fit plots are provided, 
             # and we can neglect about the nuisances as "quadrature sum" here
@@ -756,12 +818,26 @@ class PlotFactory:
                 histo_total = None
             else:
               histo_total = fileIn.Get(special_shapeName)
+              if self._mergeBins and 'CR' in cutName:
+                histo_totalB = ROOT.TH1D(histo_total.GetName(), histo_total.GetTitle(), 1, histo_total.GetBinLowEdge(1), histo_total.GetBinLowEdge(histo_total.GetNbinsX()+1))                       
+                errorYieldB = ctypes.c_double()
+                histoYieldB = histo_total.IntegralAndError(-1,-1,errorYieldB)
+                if cutName not in mergeCRs:
+                    histo_totalB.SetBinContent(1, histoYieldB)
+                    histo_totalB.SetBinError(1, errorYieldB.value)
+                else:
+                    histo_totalBM = fileIn.Get(special_shapeName.replace(variableName,mergeCRs[cutName][1]).replace(cutName,mergeCRs[cutName][0]))
+                    errorYieldBM = ctypes.c_double()
+                    histoYieldBM = histo_totalBM.IntegralAndError(-1,-1,errorYieldBM)
+                    histo_totalB.SetBinContent(1, histoYieldB+histoYieldBM)
+                    histo_totalB.SetBinError(1, math.sqrt(errorYieldB.value*errorYieldB.value+errorYieldBM.value*errorYieldBM.value))
+                histo_total = histo_totalB
 
             if variable['divideByBinWidth'] == 1 and histo_total != None:
               histo_total.Scale(1,"width")
             print(('--> histo_total = ', histo_total))
             
-            #                                  if there is "histo_total" there is no need of explicit nuisances
+            #                              if there is "histo_total" there is no need of explicit nuisances
             if len(list(mynuisances.keys())) != 0 or histo_total!= None:
               tgrMC = ROOT.TGraphAsymmErrors()
               tgrMCup = ROOT.TGraphAsymmErrors()
@@ -1062,11 +1138,36 @@ class PlotFactory:
                 if plotdef['isData'] == 1 :
                   histos[sampleName].Draw("p same")
 
+            minLegendOffset, maxLegendOffset, rightLegendOffset = 0., 0., 0.
+            if self._paperStyle:
+                minLegendOffset, rightLegendOffset = -0.10, 0.10
+                if '_Tag' in cutName: minLegendOffset += 0.06
+                elif '_NoTag' in cutName: minLegendOffset += 0.03
+            if self._addCutLabels:
+                if self._paperStyle: minLegendOffset -= 0.04
+                else: minLegendOffset -= 0.07
+                maxLegendOffset = -0.07
+                cutNameLabel = ''
+                if 'SR1' in cutName: cutNameLabel = '160\le\\text{p}_{T}^{miss}<220\\text{ GeV, '
+                if 'SR2' in cutName: cutNameLabel = '220\le\\text{p}_{T}^{miss}<280\\text{ GeV, '
+                if 'SR3' in cutName: cutNameLabel = '280\le\\text{p}_{T}^{miss}<380\\text{ GeV, '
+                if 'SR4' in cutName: cutNameLabel = '\\text{p}_{T}^{miss}\ge380\\text{ GeV, '
+                if 'Veto' in cutName: cutNameLabel += '0tag '
+                if '_Tag' in cutName: cutNameLabel += 'tags '
+                if '_NoJet' in cutName: cutNameLabel += '0jet '
+                if '_NoTag' in cutName: cutNameLabel += 'jets, 0tag '
+                if '_sf' in cutName: cutNameLabel += '(ee+}\mu\mu\\text{ channels)}'
+                if '_em' in cutName: cutNameLabel += '(e}\mu\\text{ channel)}'
+                cutLabel = ROOT.TLatex()
+                cutLabel.SetTextSize(0.045)
+                cutLabel.SetTextFont(42)
+
             #---- the Legend
-            tlegend = ROOT.TLegend(0.20, 0.65, 0.80, 0.88)
+            tlegend = ROOT.TLegend(0.20, 0.65+minLegendOffset, 0.80+rightLegendOffset, 0.88+maxLegendOffset)
             tlegend.SetFillColor(0)
             tlegend.SetTextFont(42)
-            tlegend.SetTextSize(0.035)
+            if self._paperStyle: tlegend.SetTextSize(0.045)
+            else: tlegend.SetTextSize(0.035)
             tlegend.SetLineColor(0)
             tlegend.SetShadowColor(0)
             reversedSampleNames = list(self._samples)
@@ -1302,6 +1403,7 @@ class PlotFactory:
                         frameDistro.GetYaxis().SetTitle("Events / bin")
 
             #frameDistro.GetYaxis().SetRangeUser( 0, maxYused )
+            if minYused==0.: minYused = 0.00001
             frameDistro.GetYaxis().SetRangeUser( min(0.001, minYused), maxYused )
 
 
@@ -1354,6 +1456,7 @@ class PlotFactory:
                     histoPF.SetLineColor(632+4)
                     histoPF.SetLineStyle(4)
                     postfitName = 'Fit b'
+                if self._paperStyle: histoPF.SetLineColor(self._getColor('#92dadd'))
                 histoPF.Draw("hist same")
                 if self._showIntegralLegend == 0 :
                     tlegend.AddEntry(histoPF, postfitName , "L")
@@ -1400,6 +1503,8 @@ class PlotFactory:
                 legExtra.SetTextFont(62)
                 legExtra.DrawLatexNDC(0.85,0.8,self._extraLegend)
 
+            if self._addCutLabels: cutLabel.DrawLatexNDC(0.21,0.84,cutNameLabel)
+
             CMS_lumi.CMS_lumi(tcanvasRatio, iPeriod, iPos)    
 
             # draw back all the axes            
@@ -1430,10 +1535,11 @@ class PlotFactory:
               frameRatio.GetXaxis().SetTitle(variable['xaxis'])
             else :
               frameRatio.GetXaxis().SetTitle(variableName)
-            frameRatio.GetYaxis().SetTitle("Data/Expected")
+            #frameRatio.GetYaxis().SetTitle("Data/Expected")
+            frameRatio.GetYaxis().SetTitle("#frac{Data}{SM exp.}")
             #frameRatio.GetYaxis().SetTitle("Data/MC")
             if not self._nuisanceVariations:
-              frameRatio.GetYaxis().SetRangeUser( 0.0, 2.0 )
+              frameRatio.GetYaxis().SetRangeUser( 0.001, 1.999 )
               #frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
               if btvReview: frameRatio.GetYaxis().SetRangeUser( 0.75, 1.25 )
             else:
@@ -1449,7 +1555,7 @@ class PlotFactory:
                   if abs(tgrMCOverMCstat.GetErrorYlow(iBin))>yRange:  yRange = abs(tgrMCOverMCstat.GetErrorYlow(iBin))
                 if yRange>0.3: yRange = 0.3
               frameRatio.GetYaxis().SetRangeUser( 1.-2*yRange, 1+2*yRange )
-            self.Pad2TAxis(frameRatio)
+            self.Pad2TAxis(frameRatio, 0.5*0.72/(1.-0.72))
             #                               if there is "histo_total" there is no need of explicit nuisances
             if len(list(mynuisances.keys())) != 0 or histo_total!= None:
               if not self._nuisanceVariations:
@@ -1529,8 +1635,8 @@ class PlotFactory:
                     tlegendRatio.Draw("same")
             
             
-            for samplesToRatioGrName, samplesGrToRatio in list(tgrRatioList.items()) :
-              samplesGrToRatio.Draw("P")
+            #for samplesToRatioGrName, samplesGrToRatio in list(tgrRatioList.items()) :
+            #  samplesGrToRatio.Draw("P")
 
             
             oneLine2 = ROOT.TLine(frameRatio.GetXaxis().GetXmin(), 1,  frameRatio.GetXaxis().GetXmax(), 1);
@@ -1550,7 +1656,7 @@ class PlotFactory:
                 if self._plotLog:
                     # log Y axis
                     #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
-                    frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
+                    frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio*1.001, maxYused/1000), self._maxLogCratio * maxYused )
                     pad1.SetLogy(True)
                     self._saveCanvas(tcanvasRatio, self._outputDirPlots + "/log_" + canvasRatioNameTemplate + self._FigNamePF, imageOnly=self._plotLinear)
                     pad1.SetLogy(False)
@@ -2426,7 +2532,8 @@ class PlotFactory:
                       weight_X_frameRatio.GetXaxis().SetTitle(variable['xaxis'])
                     else :
                       weight_X_frameRatio.GetXaxis().SetTitle(variableName)
-                    weight_X_frameRatio.GetYaxis().SetTitle("Data/Expected")
+                    #weight_X_frameRatio.GetYaxis().SetTitle("Data/Expected")
+                    weight_X_frameRatio.GetYaxis().SetTitle("#frac{Data}{SM exp.}")
                     weight_X_frameRatio.GetYaxis().SetRangeUser( 0.5, 1.5 )
                     self.Pad2TAxis(weight_X_frameRatio)
                     
@@ -2721,25 +2828,26 @@ class PlotFactory:
 
    # _____________________________________________________________________________
    # --- squared sum
-    def Pad2TAxis(self, hist):
+    def Pad2TAxis(self, hist, scale=1.):
          xaxis = hist.GetXaxis()
          xaxis.SetLabelFont ( 42)
          xaxis.SetLabelOffset( 0.025)
-         xaxis.SetLabelSize ( 0.1)
+         xaxis.SetLabelSize ( 0.1*scale)
          xaxis.SetNdivisions ( 505)
          xaxis.SetTitleFont ( 42)
          xaxis.SetTitleOffset( 1.35)   
-         xaxis.SetTitleSize ( 0.11)
+         xaxis.SetTitleSize ( 0.11*scale)
        
          yaxis = hist.GetYaxis()
          yaxis.CenterTitle ( )
          yaxis.SetLabelFont ( 42)
          yaxis.SetLabelOffset( 0.02)
-         yaxis.SetLabelSize ( 0.1)
+         yaxis.SetLabelSize ( 0.1*scale)
          yaxis.SetNdivisions ( 505)
          yaxis.SetTitleFont ( 42)
-         yaxis.SetTitleOffset( .6)
-         yaxis.SetTitleSize ( 0.11)
+         if '#frac' in yaxis.GetTitle(): yaxis.SetTitleOffset( .5)
+         else: yaxis.SetTitleOffset( .6)
+         yaxis.SetTitleSize ( 0.11*scale)
  
  
  
@@ -2902,10 +3010,10 @@ class PlotFactory:
                 y = histo.GetArray()
                 y.reshape((histo.GetNbinsX()+2,))
             else:
-                auxh = ROOT.TH1D('aux','aux',histo.GetNbinsX()-2,0,histo.GetNbinsX()-2)
-                for ib in range(1,histo.GetNbinsX()+1): auxh.SetBinContent(ib-1,histo.GetBinContent(ib))                                                                                                                
+                auxh = ROOT.TH1D('aux','aux',histo.GetNbinsX(),0,histo.GetNbinsX())
+                for ib in range(1,histo.GetNbinsX()+1): auxh.SetBinContent(ib-1,histo.GetBinContent(ib))
                 y = auxh.GetArray()
-                y.reshape((auxh.GetNbinsX()+2,))
+                y.reshape((auxh.GetNbinsX(),))
             return PlotFactory._array(y, copy) 
         elif 'TH2' in histo.ClassName():
             aList = []
@@ -2926,6 +3034,5 @@ class PlotFactory:
     def _array2hist(array, hist, errors=None):                                                                                                                                                                              
         for ib in range(1, hist.GetNbinsX()+1):
             hist.SetBinContent(ib,array[ib-1])
-
 
 
