@@ -43,7 +43,7 @@ class vNLOEWKcorrectionWeightProducer(Module):
         self.graph_w_kfact   = ROOT.TGraph(self.cmssw_base+'/src/LatinoAnalysis/Gardener/python/data/ewk/kewk_w_for_python.txt');
         
         self.sample_type = sample_type
-        print(" sample_type = " , sample_type)
+        print((" sample_type = " , sample_type))
 
 
     def open_root(self, path):

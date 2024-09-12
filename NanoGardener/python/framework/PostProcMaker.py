@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys, re, os, os.path, math, copy
 import string
 import subprocess
@@ -33,10 +33,10 @@ class PostProcMaker():
      self._aaaXrootd = 'root://xrootd-cms.infn.it/'
 
      self._haddnano  = 'PhysicsTools/NanoAODTools/scripts/haddnano.py'
-     if '/usr/lib64/python2.7/site-packages' not in sys.path:
-       sys.path.append('/usr/lib64/python2.7/site-packages')
-       import gfal2
-     self.ctx = gfal2.creat_context()
+     #if '/usr/lib64/python2.7/site-packages' not in sys.path:
+     #  sys.path.append('/usr/lib64/python2.7/site-packages')
+     #  import gfal2
+     ##EL9 self.ctx = gfal2.creat_context()
  
      # root tree prefix
      self._treeFilePrefix= 'nanoLatino_'
@@ -98,14 +98,14 @@ class PostProcMaker():
      proc=subprocess.Popen(cmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
      out, err = proc.communicate()
      # No Proxy at all ?
-     if 'Proxy not found' in err :
+     if 'Proxy not found' in err.decode() :
        print('WARNING: No GRID proxy -> Get one first with:')
        print('voms-proxy-init -voms cms -rfc --valid 168:0')
        exit()
      # More than 24h ?
      timeLeft = 0
-     for line in out.split("\n"):
-       if 'timeleft' in line : timeLeft = int(line.split(':')[1])
+     for line in out.decode().split("\n"):
+         if 'timeleft' in line : timeLeft = int(line.split(':')[1])
 
      if timeLeft < 24 :
        print('WARNING: Your proxy is only valid for ',str(timeLeft),' hours -> Renew it with:')
@@ -143,7 +143,8 @@ class PostProcMaker():
      prodFile=self._cmsswBasedir+'/src/'+self._Productions[iProd]['samples']
      if os.path.exists(prodFile):
        handle = open(prodFile,'r')
-       exec(handle)
+       Samples = {}
+       exec(handle.read())
        self._Samples     = Samples
        handle.close()
      keys2del = []
@@ -192,7 +193,8 @@ class PostProcMaker():
      # fileCmd .... Exec
      proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
      out, err = proc.communicate()
-     FileExistList=string.split(out)
+
+     FileExistList= out.decode().split() #string.split(out)
      # Now Check
      toSkip=[]
      if not self._redo :
@@ -412,7 +414,7 @@ class PostProcMaker():
            rmGarbageCmd = 'rm '+outFile+' ; rm '+ os.path.basename(iFile).replace('.root','_Skim.root')
            # Interactive
            if   self._jobMode == 'Interactive' :
-             command = 'cd '+wDir+' ; cp '+self._cmsswBasedir+'/src/'+self._haddnano+' . ; '+preBash+' python '+pyFile \
+             command = 'cd '+wDir+' ; cp '+self._cmsswBasedir+'/src/'+self._haddnano+' . ; '+preBash+' python3 '+pyFile \
                       +' ; ls -l ; '+stageOutCmd+' ; '+rmGarbageCmd
              if not self._pretend : os.system(command)
              else                 : print(command)
@@ -426,7 +428,7 @@ class PostProcMaker():
                self._jobs.Add(iStep,iTarget,rmGarbageCmd)
            elif self._jobMode == 'Crab':
              self._crab.AddInputFile(pyFile)
-             self._crab.AddCommand(iStep,iTarget,'python '+os.path.basename(pyFile))
+             self._crab.AddCommand(iStep,iTarget,'python3 '+os.path.basename(pyFile))
              self._crab.AddJobOutputFile(iStep,iTarget,outFile)
              # TMP FIX to garbage command because of not working PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import
              #rmGarbageCmd = 'rm '+outFile#+' ; rm '+ os.path.basename(iFile).replace('.root','_Skim.root')
@@ -506,7 +508,7 @@ class PostProcMaker():
      fPy = open(fPyName,'a')
 
      # Common Header
-     fPy.write('#!/usr/bin/env python \n')
+     fPy.write('#!/usr/bin/env python3 \n')
      fPy.write('import os, sys \n')
      fPy.write('import subprocess\n')
      fPy.write('import shutil\n')

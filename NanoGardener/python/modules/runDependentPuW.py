@@ -39,7 +39,8 @@ class runDependentPuW(Module):
             self.fixLargeWeights = False #AR: it seems to crash with it, to be deugged
             self.autoPU=True
             ROOT.gROOT.cd()
-            self.myh=self.targeth['hist'][0].Clone("autoPU")
+            histoNameFlag = PUWeight_cfg.split('/')[-1].replace('PUWeight', '').replace('_cfg.py', '')
+            self.myh=self.targeth['hist'][0].Clone("autoPU"+histoNameFlag)
             self.myh.Reset()
         self.name = self.PUWeightCfg['name']
         self.norm = self.PUWeightCfg['norm']
@@ -55,7 +56,7 @@ class runDependentPuW(Module):
         #Load it via ROOT ACLIC. NB: this creates the object file in the CMSSW directory,
         #causing problems if many jobs are working from the same CMSSW directory
         except Exception as e:
-            print("Could not load module via python, trying via ROOT", e)
+            print(("Could not load module via python, trying via ROOT", e))
             if "/WeightCalculatorFromHistogram_cc.so" not in ROOT.gSystem.GetLibraries():
                 print("Load C++ Worker")
                 ROOT.gROOT.ProcessLine(".L %s/src/PhysicsTools/NanoAODTools/src/WeightCalculatorFromHistogram.cc++" % os.environ['CMSSW_BASE'])
@@ -64,7 +65,7 @@ class runDependentPuW(Module):
     def loadHisto(self,filename,hname):
         tf = ROOT.TFile.Open(filename)
         hist = tf.Get(hname)
-        hist.SetDirectory(None)
+        hist.SetDirectory(0) #EL9 (None)
         tf.Close()
         return hist
 
@@ -78,7 +79,7 @@ class runDependentPuW(Module):
            self.myh.Reset()
            print("Computing PU profile for this file")
            ROOT.gROOT.cd()
-           inputFile.Get("Events").Project("autoPU",self.nvtxVar)#doitfrom inputFile
+           inputFile.Get("Events").Project(self.myh.GetName(),self.nvtxVar)#doitfrom inputFile
            if outputFile : 
              outputFile.cd()
              self.myh.Write()    

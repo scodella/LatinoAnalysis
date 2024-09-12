@@ -27,18 +27,18 @@ class FakeWeight():
     def _getRootObj(self,d,name):
         o = d.Get(name)
         if not o.__nonzero__():
-            print('Object '+name+' doesn\'t exist in '+d.GetName(), ' BE CAREFUL!')
+            print(('Object '+name+' doesn\'t exist in '+d.GetName(), ' BE CAREFUL!'))
         return o
 
     def __init__ (self,cmssw,eleWPDic,muWPDic,WPType,eleWP,muWP):
         print("-------- Fake Weight init() ---------")
-        print(eleWP,muWP)
+        print((eleWP,muWP))
 
         cmssw_base = os.getenv('CMSSW_BASE')
 
         self.eleDir = eleWPDic[cmssw][WPType][eleWP]['fakeW']
         self.muDir  = muWPDic[cmssw][WPType][muWP]['fakeW']
-        print(self.eleDir , self.muDir)
+        print((self.eleDir , self.muDir))
 
         # Root Files
 
@@ -437,8 +437,8 @@ class LeptonFakeWMaker(Module):
         self.cmssw = cmssw     
         cmssw_base = os.getenv('CMSSW_BASE')
         self.WPdic = cmssw_base+'/src/'+WPdic
-        print(" cmssw = ", self.cmssw)
-        print(" WPDic = ", self.WPdic)   
+        print((" cmssw = ", self.cmssw))
+        print((" WPDic = ", self.WPdic))   
         if os.path.exists(self.WPdic) :
           handle = open(self.WPdic,'r')
           exec(handle)
@@ -462,7 +462,7 @@ class LeptonFakeWMaker(Module):
             print('ERROR: no TightObjWP in Ele/Mu WPDic')
             exit()
         else:
-          print('ERROR: no CMSSW version ('+self.cmssw+') in Ele/Mu WPDic')
+          print(('ERROR: no CMSSW version ('+self.cmssw+') in Ele/Mu WPDic'))
           exit()
 
     def beginJob(self):
@@ -497,7 +497,7 @@ class LeptonFakeWMaker(Module):
             
         for iTag in self.FakeWeights:
           for iVarExt in fakeVarExt : 
-            print('Creating  : ','fakeW_'+iTag+iVarExt)
+            print(('Creating  : ','fakeW_'+iTag+iVarExt))
             self.out.branch('fakeW_'+iTag+iVarExt,'F')            
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):

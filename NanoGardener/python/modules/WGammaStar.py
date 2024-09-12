@@ -39,7 +39,7 @@ class WGammaStarV2(Module):
               self.Daughters(part, i, genParticles, daughters) 
                  
     def printParticle(self, p):
-      print(p.pdgId,p.status,p.pt)
+      print((p.pdgId,p.status,p.pt))
 
     def findGStarPair (self, leptons):
       # get the charged leptons

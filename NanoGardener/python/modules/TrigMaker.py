@@ -92,13 +92,18 @@ class TrigMaker(Module):
         self.TM_GlEff = {}
         #self.TM_trkSFMu = {}
         self.TM_runInt  = {}
+        self.firstPeriod = 999
         for RunP in self.Trigger[self.cmssw]:
            #self.TM_trkSFMu[RunP] = deepcopy(self.Trigger[self.cmssw][RunP]['trkSFMu'])
+           if RunP<self.firstPeriod: self.firstPeriod = RunP
            self.TM_trig[RunP]    = {}
            self.TM_LegEff[RunP]  = {}
            self.TM_DZEff[RunP]   = {}
            self.TM_GlEff[RunP] = {}
-           self.TM_runInt[RunP]  = {'b': self.Trigger[self.cmssw][RunP]['begin'], 'e': self.Trigger[self.cmssw][RunP]['end']}
+           if 'runList' in self.Trigger[self.cmssw][RunP]:
+               self.TM_runInt[RunP]  = {'l': self.Trigger[self.cmssw][RunP]['runList'] }
+           else: 
+               self.TM_runInt[RunP]  = {'b': self.Trigger[self.cmssw][RunP]['begin'], 'e': self.Trigger[self.cmssw][RunP]['end']}
            for Tname in self.Trigger[self.cmssw][RunP][self.typeStr]:
               self.TM_trig[RunP][Tname] = []
               for HLT in self.Trigger[self.cmssw][RunP][self.typeStr][Tname]:
@@ -151,14 +156,17 @@ class TrigMaker(Module):
     def _run_period(self, run, event_seed=None):
         if self.isData:
            for RunP in self.TM_runInt:
-              if run >= self.TM_runInt[RunP]['b'] and run <= self.TM_runInt[RunP]['e']: return RunP
+              if 'l' in list(self.TM_runInt[RunP].keys()):
+                  if run in self.TM_runInt[RunP]['l']: return RunP
+              else:
+                  if run >= self.TM_runInt[RunP]['b'] and run <= self.TM_runInt[RunP]['e']: return RunP
         else: 
          toss_a_coin = get_rndm(event_seed)
          for iPeriod in range(1,len(self.RunFrac)) :
            if toss_a_coin >= self.RunFrac[iPeriod-1] and toss_a_coin < self.RunFrac[iPeriod]:
-              return iPeriod
+              return iPeriod+self.firstPeriod-1
            if toss_a_coin == 1.0:
-              return len(self.RunFrac)-1
+              return len(self.RunFrac)-1+self.firstPeriod-1
         print("Run Period undefined")
         return -1 
 
@@ -190,7 +198,7 @@ class TrigMaker(Module):
            raise ValueError('_over_under can only operate on leptons, pdgI = ' + str(pdgId) + ', pt = ' + str(pt) + ', eta = ' + str(eta))
 
     def _get_DZEff(self,run_p,trigName,nvtxIn,pt1In,pt2In):
-      DZeff = 1. 
+      DZeff, DZeff_err = 1., 0. 
       nvtx = nvtxIn
       pt1 = pt1In
       pt2 = pt2In
@@ -284,20 +292,10 @@ class TrigMaker(Module):
         eff_dbl = [0., 0., 0.]
         eff_sgl = [0., 0., 0.]
         eff_evt = [0., 0., 0.]
-        eff_evt_alt = [0., 0., 0.]
-
         for i in range(3): 
            eff_dbl[i] = (eff[4][i]*eff[3][i] + eff[2][i]*eff[5][i] - eff[3][i]*eff[2][i])*eff_gl[2][i]*eff_dz[i]
-           eff_sgl[i] = eff[0][i]*eff_gl[0][i]+eff[1][i]*eff_gl[1][i]-eff[0][i]*eff[1][i]*eff_gl[0][i]*eff_gl[1][i]
-
-           # This formula was derived using the only assumption that an electron/muon firing a leg at high pT also fires the legs at lower pT
-           eff_evt[i] = eff_dbl[i] + eff[0][i]*eff_gl[0][i]*(1 - eff[5][i]*eff_gl[2][i]) + eff[1][i]*eff_gl[1][i]*(1 - eff[4][i]*eff_gl[2][i])
-
-           # This alternative formula was derived using a different approach based on Bayes theorem. A closure test with the formula above showed an excellent agreement.
-           # if eff_dbl==0. replace with a small number to avoid the last term in the formula to explode
-           if eff_dbl[i]==0. : eff_dbl[i] = 0.0001
-           eff_evt_alt[i] = eff_dbl[i] + eff_sgl[i] - eff[5][i]*eff_gl[2][i]*eff[0][i]*eff_gl[0][i] - eff[4][i]*eff_gl[2][i]*eff[1][i]*eff_gl[1][i]*( 1 - eff[5][i]*eff_gl[2][i]*eff[0][i]*eff_gl[0][i]/eff_dbl[i] )
-
+           eff_sgl[i] =  eff[0][i]*eff_gl[0][i]+eff[1][i]*eff_gl[1][i]-eff[0][i]*eff[1][i]*eff_gl[0][i]*eff_gl[1][i]
+           eff_evt[i] = eff_sgl[i] + eff_dbl[i] - eff_sgl[i]*eff_dbl[i] 
         #print eff_dbl , eff_evt        
 
         eff_tl = eff[2][0]*eff[5][0]*eff_gl[2][0]*eff_dz[0] #eff_dz
@@ -356,7 +354,7 @@ class TrigMaker(Module):
 
         Trig_em[0] = Trig_em[1] or Trig_em[2] or Trig_em[3] or Trig_em[4] or Trig_em[5]
 
-        return eff_evt, eff_evt_alt, eff_evt_v, Trig_em 
+        return eff_evt, eff_evt_v, Trig_em 
 
 
     def _get_w1l(self, pdgId1, pt1, eta1, run_p, event_seed=None):
@@ -472,10 +470,13 @@ class TrigMaker(Module):
     def _get_trigDec(self, run_p, event):
         dec = {}
         for Tname in self.TM_trig[run_p]:
-           temp_dec = 0
-           for bit in self.TM_trig[run_p][Tname]:
-              if eval(bit) == 1: temp_dec = 1
-           dec[Tname] = temp_dec
+           if self.isFastSim:
+               dec[Tname] = 1
+           else:
+               temp_dec = 0
+               for bit in self.TM_trig[run_p][Tname]:
+                   if eval(bit) == 1: temp_dec = 1
+               dec[Tname] = temp_dec
         return dec
 
     def _dPhi(self,phi1,phi2):
@@ -539,27 +540,24 @@ class TrigMaker(Module):
            phi.append(lep_col[iLep]['phi'])
 
         EMTF  = self._get_EMTFbug_veto(pdgId, pt, eta, phi, run_p)
+        trig_dec = self._get_trigDec(run_p, event)        
+ 
+        # Fill DATA branches
+        for name in self.NewVar['I']: 
+            if 'Trigger_sngEl' in name: self.out.fillBranch(name, trig_dec['SingleEle']) 
+            elif 'Trigger_sngMu' in name: self.out.fillBranch(name,  trig_dec['SingleMu']) 
+            elif 'Trigger_dblEl' in name: self.out.fillBranch(name, trig_dec['DoubleEle']) 
+            elif 'Trigger_dblMu' in name: self.out.fillBranch(name,  trig_dec['DoubleMu']) 
+            elif 'Trigger_ElMu' in name: self.out.fillBranch(name,      trig_dec['EleMu']) 
+            elif 'run_period' in name and not self.keepRunP: self.out.fillBranch(name, run_p) 
+            elif 'EMTFbug_veto' in name : self.out.fillBranch(name, EMTF)
 
-        if not self.isFastSim: 
-
-            trig_dec = self._get_trigDec(run_p, event)
-
-            # Fill DATA branches
-            for name in self.NewVar['I']: 
-                if 'Trigger_sngEl' in name: self.out.fillBranch(name, trig_dec['SingleEle']) 
-                elif 'Trigger_sngMu' in name: self.out.fillBranch(name,  trig_dec['SingleMu']) 
-                elif 'Trigger_dblEl' in name: self.out.fillBranch(name, trig_dec['DoubleEle']) 
-                elif 'Trigger_dblMu' in name: self.out.fillBranch(name,  trig_dec['DoubleMu']) 
-                elif 'Trigger_ElMu' in name: self.out.fillBranch(name,      trig_dec['EleMu']) 
-                elif 'run_period' in name and not self.keepRunP: self.out.fillBranch(name, run_p) 
-                elif 'EMTFbug_veto' in name : self.out.fillBranch(name, EMTF)
-
-            #self.out.fillBranch('Trigger_sngMu',  trig_dec['SingleMu']) 
-            #self.out.fillBranch('Trigger_dblEl', trig_dec['DoubleEle']) 
-            #self.out.fillBranch('Trigger_dblMu',  trig_dec['DoubleMu']) 
-            #self.out.fillBranch('Trigger_ElMu' ,     trig_dec['EleMu']) 
-            #if not self.keepRunP: self.out.fillBranch('run_period', run_p) 
-            #self.out.fillBranch('EMTFbug_veto', EMTF)
+        #self.out.fillBranch('Trigger_sngMu',  trig_dec['SingleMu']) 
+        #self.out.fillBranch('Trigger_dblEl', trig_dec['DoubleEle']) 
+        #self.out.fillBranch('Trigger_dblMu',  trig_dec['DoubleMu']) 
+        #self.out.fillBranch('Trigger_ElMu' ,     trig_dec['EleMu']) 
+        #if not self.keepRunP: self.out.fillBranch('run_period', run_p) 
+        #self.out.fillBranch('EMTFbug_veto', EMTF)
  
         # Stop here if not MC 
         if self.isData: return True
@@ -594,7 +592,7 @@ class TrigMaker(Module):
            #eff_dict['TriggerEffWeight_ElMu']  = temp_evt_v[4]
  
         if nLep > 1:
-           temp_evt, temp_evt_alt, temp_evt_v, Trig_em = self._get_w(pdgId[0], pt[0], eta[0], pdgId[1], pt[1], eta[1], nvtx, run_p, evt)
+           temp_evt, temp_evt_v, Trig_em = self._get_w(pdgId[0], pt[0], eta[0], pdgId[1], pt[1], eta[1], nvtx, run_p, evt)
            for name in self.NewVar['F']:
                if 'TriggerEffWeight' in name:
                    if '_2l' in name:
@@ -606,12 +604,7 @@ class TrigMaker(Module):
                    elif '_dblEl' in name: eff_dict[name] = temp_evt_v[2]
                    elif '_dblMu' in name: eff_dict[name] = temp_evt_v[3]
                    elif '_ElMu' in name: eff_dict[name]  = temp_evt_v[4]
-               elif 'TriggerAltEffWeight' in name:
-                   if '_2l' in name:
-                       if '_2l_d' in name: eff_dict[name] = temp_evt_alt[1]
-                       elif '_2l_u' in name: eff_dict[name] = temp_evt_alt[2]
-                       else: eff_dict[name] = temp_evt_alt[0]
- 
+
            #eff_dict['TriggerEffWeight_2l']   = temp_evt[0]
            #eff_dict['TriggerEffWeight_2l_d'] = temp_evt[1]
            #eff_dict['TriggerEffWeight_2l_u'] = temp_evt[2]

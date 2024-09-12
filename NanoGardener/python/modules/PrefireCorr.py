@@ -23,12 +23,13 @@ class PrefCorr(Module):
 
     def open_root(self, path):
         r_file = ROOT.TFile.Open(path)
-        if not r_file.__nonzero__() or not r_file.IsOpen(): raise NameError('File ' + path + ' not open')
+        #if not r_file.__nonzero__() or not r_file.IsOpen(): raise NameError('File ' + path + ' not open')
+        if not r_file.IsOpen(): raise NameError('File ' + path + ' not open')
         return r_file
 
     def get_root_obj(self, root_file, obj_name):
         r_obj = root_file.Get(obj_name)
-        if not r_obj.__nonzero__(): raise NameError('Root Object ' + obj_name + ' not found')
+        #if not r_obj.__nonzero__(): raise NameError('Root Object ' + obj_name + ' not found')
         return r_obj
 
     def beginJob(self):

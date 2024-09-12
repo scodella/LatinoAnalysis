@@ -56,25 +56,24 @@ class LeptonMaker(Module):
            if re.match('\AElectron_', bname):  self.electron_var[bname] = tree.arrayReader(bname)
            if re.match('\AMuon_', bname):      self.muon_var[bname] = tree.arrayReader(bname)
            if re.match('\AJet_', bname):       self.jet_var[bname] = tree.arrayReader(bname)
-
-        self.nElectron = tree.valueReader('nElectron')
-        self.nMuon = tree.valueReader('nMuon')
-        self.nJet = tree.valueReader('nJet')
+        self.nElectron = tree.nElectron #EL9 tree.valueReader('nElectron')
+        self.nMuon = tree.nMuon #EL9 tree.valueReader('nMuon')
+        self.nJet = tree.nJet #EL9 tree.valueReader('nJet')
         self._ttreereaderversion = tree._ttreereaderversion # self._ttreereaderversion must be set AFTER all calls to tree.valueReader or tree.arrayReader
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
-        if event._tree._ttreereaderversion > self._ttreereaderversion: # do this check at every event, as other modules might have read further branches
+        #EL9 if event._tree._ttreereaderversion > self._ttreereaderversion: # do this check at every event, as other modules might have read further branches
+        if event.nElectron+event.nMuon>=2:
             self.initReaders(event._tree)
         # do NOT access other branches in python between the check/call to initReaders and the call to C++ worker code
         
         #--- Set vars
         nEl = int(self.nElectron)
         nMu = int(self.nMuon)
-        nJt = int(self.nJet)
+        nJt = event.nJet #int(self.nJet)
         nLep = nMu + nEl
-
         if nLep < len(self.min_lep_pt): return False
 
         lep_dict = {}

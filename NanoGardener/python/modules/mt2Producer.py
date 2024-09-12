@@ -180,7 +180,7 @@ class mt2Producer(Module):
 
         if self.metType=='type1pf':
 
-            hasNewUENames = hasattr(event, 'MET_T1_pt_unclustEnUp') or hasattr(event, 'METFixEE2017_T1_pt_unclustEnUp')
+            hasNewUENames = hasattr(event, 'MET_T1_pt_unclustEnUp') # EL9 (pre-UL): or hasattr(event, 'METFixEE2017_T1_pt_unclustEnUp')
 
             if 'unclust' in self.metSystematic and not hasNewUENames:
                 metBranch='MET'
@@ -189,7 +189,7 @@ class mt2Producer(Module):
             else:
                 metBranch = 'MET_T1' 
 
-            if hasattr(event, 'METFixEE2017_T1_pt'): metBranch = metBranch.replace('MET', 'METFixEE2017') 
+            # EL9 (pre-UL): if hasattr(event, 'METFixEE2017_T1_pt'): metBranch = metBranch.replace('MET', 'METFixEE2017') 
 
             metSystem = '_'+self.metSystematic.replace('Smear' , '') 
             if metSystem == '_jer' or metSystem=='_nom' : metSystem = ''

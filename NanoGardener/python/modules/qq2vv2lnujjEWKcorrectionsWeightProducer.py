@@ -36,7 +36,7 @@ class qq2vv2lnujjEWKcorrectionsWeightProducer(Module):
         #self.type_mass = {
         #    'ww': = [80.385, 80.385]
         #}
-        print(" sample_type = " , sample_type)
+        print((" sample_type = " , sample_type))
         self.mass_dict = {
             #pdgId: mass[GeV],
             1: 0.0047,

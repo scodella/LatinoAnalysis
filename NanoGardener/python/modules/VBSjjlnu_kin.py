@@ -153,7 +153,7 @@ class VBSjjlnu_kin(Module):
             vec.SetPtEtaPhiM(pt, eta, phi, mass)
             # check if different from the previous one
             if self.debug:
-                print("Jet index: ", jetindex, "> pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass)
+                print(("Jet index: ", jetindex, "> pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass))
             jets.append(vec)
             coll_ids.append(jetindex)
         return jets, coll_ids

@@ -52,7 +52,7 @@ class vvNLOEWKcorrectionWeightProducer(Module):
 
         self.sample_type = sample_type
 
-        print(" sample_type = " , sample_type)
+        print((" sample_type = " , sample_type))
 
       
     def beginJob(self):

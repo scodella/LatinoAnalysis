@@ -1,5 +1,355 @@
 Trigger = {
 
+# ---------------------------- Full2016v8 ---------------------------------
+
+#   ------------------------------
+#    runPeriod| from run | to run
+#   ----------+----------+--------
+#        1    |   273158 | 277420  -> 16.802739097 /fb    (Run B->E: no DZ filters on e-mu + HIPM problem)
+#        2    |     |              ->  1.063261220 /fb    (Run F: no DZ filters on e-mu + HIPM problem)
+#                   +---> [277932, 277934, 277981, 277991, 277992, 278017, 278018, 278167, 278175, 278193, 278239, 278240] 
+#        3    |     |              ->  1.655228036 /fb    (Run F: DZ filters on e-mu + HIPM problem)
+#                   +---> [278273, 278274, 278288, 278289, 278290, 278308, 278309, 278310, 278315, 278345, 278346, 278349, 278366, 278406, 278509, 278761, 278770, 278806, 278807]
+#        4    |     |              ->  0.418771191 /fb     (Run F: DZ filters on e-mu )
+#                   +---> [278769, 278801, 278802, 278803, 278804, 278805, 278808]                           
+#        5    |  278820  | 281612  ->  7.653261227 /fb  
+#        6    |  281613  | 284044  ->  8.740119304 /fb
+#        7    |  10% of period 6 to accomodate different L1 seeds (prescale in some lumi sections)
+
+#    Total lumi: 36.333380074 /fb 
+#    (brilcalc lumi --normtag /cvmfs/cms-bril.cern.ch/cms-lumi-pog/Normtags/normtag_PHYSICS.json -u /fb -i work/cms/HWWRun2/UL/CMSSW_10_6_20/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt)
+
+
+
+     'Full2016v8HIPM'   : {
+
+                          # Run B->E: no DZ filters on e-mu + HIPM problem
+                          1  :  { 'begin' : 273158 , 'end' : 277420 , 'lumi' : 16.802739097 ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2016v6/muon/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_BCDEF_efficiency.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2016v6/muon/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'SingleMu'          : 'Full2016v6/muon/SingleMu_IsoMu24orIsoTkMu24_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v6/muon/DoubleMu_IsoMu23_l1pt20_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'MuEleLegLowPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2016v6/muon/DoubleIsoMu17Mu8_IsoMu8leg_Run2016BCDEF_RunLt278273_PTvsETA.txt' ,
+                                              } ,
+                                  'DZEff'  :  { 
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
+                                                'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
+                                                'MuEle'     : { 'value'   : [1.0   ,0.0] } ,
+                                                'EleMu'     : { 'value'   : [1.0   ,0.0] } ,
+                                              } ,
+                                  'GlEff'  :  { 'DoubleEle' : [1.0  ,0.   ],
+                                                'DoubleMu'  : [1.0  ,0.   ],
+                                                'MuEle'     : [1.0  ,0.   ],
+                                                'EleMu'     : [1.0  ,0.   ],
+                                                'SingleEle' : [1.0  ,0.   ],
+                                                'SingleMu'  : [1.0  ,0.   ],
+                                              } ,
+                                  'EMTFBug':  True ,
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
+                                  'DATA'   :  {
+                                                'EleMu'     : [  'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [  'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+       
+                                },
+
+                            # Run F: no DZ filters on e-mu + HIPM problem
+                            2:  { 'runList' : 	[277932, 277934, 277981, 277991, 277992, 278017, 278018, 278167, 278175, 278193, 278239, 278240] , 
+                                  'lumi' : 1.063261220 ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2016v6/muon/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_BCDEF_efficiency.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2016v6/muon/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'SingleMu'          : 'Full2016v6/muon/SingleMu_IsoMu24orIsoTkMu24_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v6/muon/DoubleMu_IsoMu23_l1pt20_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'MuEleLegLowPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2016v6/muon/DoubleIsoMu17Mu8_IsoMu8leg_Run2016BCDEF_RunLt278273_PTvsETA.txt' ,
+                                              } ,
+                                  'DZEff'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
+                                                'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
+                                                'MuEle'     : { 'value'   : [1.0   ,0.0] } ,
+                                                'EleMu'     : { 'value'   : [1.0   ,0.0] } ,
+                                              } ,
+                                  'GlEff'  :  { 'DoubleEle' : [1.0  ,0.   ],
+                                                'DoubleMu'  : [1.0  ,0.   ],
+                                                'MuEle'     : [1.0  ,0.   ],
+                                                'EleMu'     : [1.0  ,0.   ],
+                                                'SingleEle' : [1.0  ,0.   ],
+                                                'SingleMu'  : [1.0  ,0.   ],
+                                              } ,
+                                  'EMTFBug':  True ,
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
+                                  'DATA'   :  {
+                                                'EleMu'     : [  'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [  'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL', 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+
+                                },
+
+
+                            # Run F: DZ filters on e-mu + HIPM problem
+                            3:  { 'runList' :  [278273, 278274, 278288, 278289, 278290, 278308, 278309, 278310, 278315, 278345, 278346, 278349, 278366, 278406, 278509, 278761, 278770, 278806, 278807] ,
+                                  'lumi' : 1.655228036 ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2016v6/muon/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_BCDEF_efficiency.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2016v6/muon/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'SingleMu'          : 'Full2016v6/muon/SingleMu_IsoMu24orIsoTkMu24_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v6/muon/DoubleMu_IsoMu23_l1pt20_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'MuEleLegLowPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2016v6/muon/DoubleMu_IsoMu12_Run2016FGH_RunGe278273_PTvsETA_HWW.txt' ,
+                                              } ,
+                                  'DZEff'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
+                                                'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v6/DZEff_me_mva.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v6/DZEff_em_mva.txt' } ,
+                                              } ,
+                                  'GlEff'  :  { 'DoubleEle' : [1.0  ,0.   ],
+                                                'DoubleMu'  : [1.0  ,0.   ],
+                                                'MuEle'     : [1.0  ,0.   ],
+                                                'EleMu'     : [1.0  ,0.   ],
+                                                'SingleEle' : [1.0  ,0.   ],
+                                                'SingleMu'  : [1.0  ,0.   ],
+                                              } ,
+                                  'EMTFBug':  False ,
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
+                                  'DATA'   :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+                                },
+
+    
+                          } ,
+
+
+     'Full2016v8noHIPM' : {
+                            # Run F: DZ filters on e-mu 
+                            4:  { 'runList' : [278769, 278801, 278802, 278803, 278804, 278805, 278808] ,
+                                  'lumi' : 0.418771191 ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2016v6/muon/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_BCDEF_efficiency.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2016v6/muon/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'SingleMu'          : 'Full2016v6/muon/SingleMu_IsoMu24orIsoTkMu24_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v6/muon/DoubleMu_IsoMu23_l1pt20_Run2016BCDEF_PTvsETA_HWW.txt' ,
+                                                'MuEleLegLowPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2016v6/muon/DoubleMu_IsoMu12_Run2016FGH_RunGe278273_PTvsETA_HWW.txt' ,
+                                              } ,
+                                  'DZEff'  :  {
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
+                                                'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v6/DZEff_me_mva.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v6/DZEff_em_mva.txt' } ,
+                                              } ,
+                                  'GlEff'  :  { 'DoubleEle' : [1.0  ,0.   ],
+                                                'DoubleMu'  : [1.0  ,0.   ],
+                                                'MuEle'     : [1.0  ,0.   ],
+                                                'EleMu'     : [1.0  ,0.   ],
+                                                'SingleEle' : [1.0  ,0.   ],
+                                                'SingleMu'  : [1.0  ,0.   ],
+                                              } ,
+                                  'EMTFBug':  False ,
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
+                                  'DATA'   :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+                                },  
+ 
+
+
+                          # No change of trigger, same as period 4
+                          # END of HIP problem -> Muon ID/ISO SF change
+                          #    Run2016G |   278820 | 280385
+                          #    Run2016H |   280919 |
+                          5  :  { 'begin' : 278820 , 'end' : 281612 , 'lumi' : 7.653261227  ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2016v6/muon/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_GH_efficiency.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2016v6/muon/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016GH_PTvsETA_HWW.txt' ,
+                                                'SingleMu'          : 'Full2016v6/muon/SingleMu_IsoMu24orIsoTkMu24_Run2016GH_PTvsETA_HWW.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v6/muon/DoubleMu_IsoMu23_l1pt20_Run2016GH_PTvsETA_HWW.txt' ,
+                                                'MuEleLegLowPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2016v6/muon/DoubleMu_IsoMu12_Run2016FGH_RunGe278273_PTvsETA_HWW.txt' ,
+                                              } ,
+                                  'DZEff'  :  { 
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
+                                                'DoubleMu'  : { 'value'   : [1.0   ,0.0] } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v6/DZEff_me_mva.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v6/DZEff_em_mva.txt' } ,
+                                              } ,
+                                  'GlEff'  :  { 'DoubleEle' : [1.0  ,0.   ],
+                                                'DoubleMu'  : [1.0  ,0.   ],
+                                                'MuEle'     : [1.0  ,0.   ],
+                                                'EleMu'     : [1.0  ,0.   ],
+                                                'SingleEle' : [1.0  ,0.   ],
+                                                'SingleMu'  : [1.0  ,0.   ],
+                                              } ,
+                                  'EMTFBug':  False ,
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
+                                  'DATA'   :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+                                },
+                          # Run>=281613: Switch to DZ version of Double Mu triggersA : Lumi 8.740119304 - 0.8740119304  = 7.866107374 (to accomodate space for pseudo period 7)
+                          6  :  { 'begin' : 281613 , 'end' : 284042 , 'lumi' : 7.866107374  ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2016v6/muon/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_GH_efficiency.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2016v6/muon/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016GH_PTvsETA_HWW.txt' ,
+                                                'SingleMu'          : 'Full2016v6/muon/SingleMu_IsoMu24orIsoTkMu24_Run2016GH_PTvsETA_HWW.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v6/muon/DoubleMu_IsoMu23_l1pt20_Run2016GH_PTvsETA_HWW.txt' ,
+                                                'MuEleLegLowPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2016v6/muon/DoubleMu_IsoMu12_Run2016FGH_RunGe278273_PTvsETA_HWW.txt' ,
+                                              } ,
+                                  'DZEff'  :  { 
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2016v6/DZEff_mm.txt' } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v6/DZEff_me_mva.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v6/DZEff_em_mva.txt' } ,
+                                              } ,
+                                  'GlEff'  :  { 'DoubleEle' : [1.0  ,0.   ],
+                                                'DoubleMu'  : [1.0  ,0.   ],
+                                                'MuEle'     : [1.0  ,0.   ],
+                                                'EleMu'     : [1.0  ,0.   ],
+                                                'SingleEle' : [1.0  ,0.   ],
+                                                'SingleMu'  : [1.0  ,0.   ],
+                                              } ,
+                                  'EMTFBug':  False , 
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
+                                  'DATA'   :  { 
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+
+                                }, 
+                          # Run>=281613: Switch to DZ version of Double Mu triggers ... Few LS where HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL is seeded by L1_Mu23_EG10 
+                          # Attributed to last run as a trick to switch to the lower efficiency
+                          7  :  { 'begin' : 284043 , 'end' : 284044 , 'lumi' : 0.8740119304  ,
+                                  'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'DoubleEleLegLowPt' : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'SingleEle'         : 'Full2016v6/mvaWP90/HLT_Ele27_WPTight_Gsf_OR_Ele25_eta2p1_WPTight_Legacy2016.txt' ,
+                                                'DoubleMuLegHigPt'  : 'Full2016v6/muon/Mu17_Mu8_leg1_pt_eta_Iso_nominal2016_GH_efficiency.txt' ,
+                                                'DoubleMuLegLowPt'  : 'Full2016v6/muon/DoubleMu_IsoMu8orIsoTkMu8leg_Run2016GH_PTvsETA_HWW.txt' ,
+                                                'SingleMu'          : 'Full2016v6/muon/SingleMu_IsoMu24orIsoTkMu24_Run2016GH_PTvsETA_HWW.txt' ,
+                                                'MuEleLegHigPt'     : 'Full2016v6/muon/DoubleMu_IsoMu23_l1pt23_Run2016GH_PTvsETA_HWW.txt' ,
+                                                'MuEleLegLowPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegLowPt_Legacy2016.txt' ,
+                                                'EleMuLegHigPt'     : 'Full2016v6/mvaWP90/HLT_DoubleEleLegHigPt_Legacy2016.txt' ,
+                                                'EleMuLegLowPt'     : 'Full2016v6/muon/DoubleMu_IsoMu12_Run2016FGH_RunGe278273_PTvsETA_HWW.txt' ,
+                                              } ,
+                                  'DZEff'  :  { 
+                                                'DoubleEle' : { 'nvtx'    : 'Full2016v6/DZEff_ee_mva.txt' } ,
+                                                'DoubleMu'  : { 'nvtx'    : 'Full2016v6/DZEff_mm.txt' } ,
+                                                'MuEle'     : { 'nvtx'    : 'Full2016v6/DZEff_me_mva.txt' } ,
+                                                'EleMu'     : { 'nvtx'    : 'Full2016v6/DZEff_em_mva.txt' } ,
+                                              } ,
+                                  'GlEff'  :  { 'DoubleEle' : [1.0  ,0.   ],
+                                                'DoubleMu'  : [1.0  ,0.   ],
+                                                'MuEle'     : [1.0  ,0.   ],
+                                                'EleMu'     : [1.0  ,0.   ],
+                                                'SingleEle' : [1.0  ,0.   ],
+                                                'SingleMu'  : [1.0  ,0.   ],
+                                              } ,
+                                  'EMTFBug':  False ,
+                                  #'trkSFMu':  [ 1.00 , 1.00 , 1.00 ] , # tracker SF_muons [ cent , up , down ] --> Moved to ID/Iso code
+                                  'DATA'   :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+                                  'MC'     :  {
+                                                'EleMu'     : [ 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'DoubleMu'  : [ 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ'] ,
+                                                'SingleMu'  : [ 'HLT_IsoTkMu24', 'HLT_IsoMu24'] ,
+                                                'DoubleEle' : [ 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'] ,
+                                                'SingleEle' : [ 'HLT_Ele27_WPTight_Gsf' , 'HLT_Ele25_eta2p1_WPTight_Gsf'] ,
+                                              } ,
+
+                                },
+                         },
+
+
 # ---------------------------- Full2017v8 ---------------------------------
 
 
@@ -237,13 +587,12 @@ Trigger = {
 
                        },   
 
-
 # --------------------------- Full2018v8 ---------------------------------
 
    # Full 2018 lumi --> 59.832475339
 
         'Full2018v8'  :  {
-                          # Full 2018
+                          # Full 2018 
                           1  :  { 'begin' : 315252 , 'end' : 325175 , 'lumi' : 59.832475339 ,
                                   'LegEff' :  { 'DoubleEleLegHigPt' : 'Full2018v6/mvaWP90/Ele23_Ele12_leg1_pt_eta_efficiency_withSys_Run2018.txt',
                                                 'DoubleEleLegLowPt' : 'Full2018v6/mvaWP90/Ele23_Ele12_leg2_pt_eta_efficiency_withSys_Run2018.txt',
@@ -2702,10 +3051,15 @@ Trigger = {
 
 Trigger['Full2016v4'] = Trigger['Full2016v2'] 
 Trigger['Full2016v5'] = Trigger['Full2016v2'] 
-Trigger['Full2016v5_mh'] = Trigger['Full2016v2'] 
+Trigger['Full2016v5_mh'] = Trigger['Full2016v2']  
 Trigger['Full2017v4'] = Trigger['Full2017v2'] 
 #Trigger['Full2017v2LP19'] = Trigger['Full2017v2'] 
 Trigger['Full2018v4'] = Trigger['Full2018'] 
+
+Trigger['Full2016v8'] = {}
+for runPeriod in [ 'HIPM', 'noHIPM' ]:
+    for trigPeriod in Trigger['Full2016v8'+runPeriod]:
+        Trigger['Full2016v8'][trigPeriod] = Trigger['Full2016v8'+runPeriod][trigPeriod]
 
 # Set v6 to V5
 
@@ -2717,9 +3071,6 @@ NewVar_MC_dict = {
          'TriggerEffWeight_2l',
          'TriggerEffWeight_2l_u',
          'TriggerEffWeight_2l_d',
-         'TriggerAltEffWeight_2l',
-         'TriggerAltEffWeight_2l_u',
-         'TriggerAltEffWeight_2l_d',
          'TriggerEffWeight_3l',
          'TriggerEffWeight_3l_u',
          'TriggerEffWeight_3l_d',

@@ -34,7 +34,7 @@ class RunAssigner(Module):
 
         self.RunFrac = []
         lumi = 0.
-        for RunCfg in self.TriggerCfg.values():
+        for RunCfg in list(self.TriggerCfg.values()):
             lumi += RunCfg['lumi']
             self.RunFrac.append(lumi)
 

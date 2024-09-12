@@ -25,10 +25,10 @@ class TriggerPrescalesMaker(Module):
     def endJob(self):
         for trigger in self.missingRuns:
             for run in self.missingRuns[trigger]:
-                print('TriggerPrescalesMaker: run', run, 'not found in prescale dictionary for trigger path', trigger)
+                print(('TriggerPrescalesMaker: run', run, 'not found in prescale dictionary for trigger path', trigger))
         for trigger in self.badLumiBlocks:
             for run in self.badLumiBlocks[trigger]:
-                print('TriggerPrescalesMaker: run', run, 'has not prescale information for trigger path', trigger)
+                print(('TriggerPrescalesMaker: run', run, 'has not prescale information for trigger path', trigger))
 
     ###
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):

@@ -1,5 +1,4 @@
-
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 from pprint import pprint
@@ -7,13 +6,28 @@ from pprint import pprint
 ## --------------------------------- Some predefined sequence Chains -----------------------------------------
 
 # Import samples and cuts configuration for VBSjjlnu analysis
-exec(open(os.getenv("CMSSW_BASE") + "/src/LatinoAnalysis/NanoGardener/python/framework/samples/VBSjjlnu_samples.py"))
+exec(open(os.getenv("CMSSW_BASE") + "/src/LatinoAnalysis/NanoGardener/python/framework/samples/VBSjjlnu_samples.py").read())
 # ... and samples for HM (2l2nu + jjlnu) analysis
-exec(open(os.getenv("CMSSW_BASE") + "/src/LatinoAnalysis/NanoGardener/python/framework/samples/HMjjlnu_samples.py"))
+exec(open(os.getenv("CMSSW_BASE") + "/src/LatinoAnalysis/NanoGardener/python/framework/samples/HMjjlnu_samples.py").read())
 # List of DY samples
 allDY = ['DYJetsToLL_M-5to50-LO', 'DYJetsToLL_M-10to50-LO', 'DYJetsToLL_M-10to50-LO_ext1', 'DYJetsToLL_M-10to50-LO_ext2', 'DYJetsToLL_M-10to50-LO_newpmx', 'DYJetsToLL_M-10to50', 'DYJetsToLL_M-10to50_ext1', 'DYJetsToLL_M-50-LO', 'DYJetsToLL_M-50-LO_ext1', 'DYJetsToLL_M-50-LO_ext2', 'DYJetsToLL_M-50', 'DYJetsToLL_M-50_ext1', 'DYJetsToLL_M-50_ext2', 'DYJetsToLL_M-50_newpmx', 'DYJetsToLL_M-50-UEup', 'DYJetsToLL_M-50-UEdo', 'DYJetsToLL_M-50-PSup', 'DYJetsToLL_M-50-PSdo', 'DYJetsToLL_M-4to50_HT-100to200', 'DYJetsToLL_M-4to50_HT-100to200_ext1', 'DYJetsToLL_M-4to50_HT-100to200_newpmx', 'DYJetsToLL_M-4to50_HT-200to400', 'DYJetsToLL_M-4to50_HT-200to400_ext1', 'DYJetsToLL_M-4to50_HT-200to400_newpmx', 'DYJetsToLL_M-4to50_HT-400to600', 'DYJetsToLL_M-4to50_HT-400to600_ext1', 'DYJetsToLL_M-4to50_HT-600toInf', 'DYJetsToLL_M-4to50_HT-600toInf_ext1', 'DYJetsToLL_M-5to50_HT-70to100', 'DYJetsToLL_M-5to50_HT-100to200', 'DYJetsToLL_M-5to50_HT-100to200_ext1', 'DYJetsToLL_M-5to50_HT-200to400', 'DYJetsToLL_M-5to50_HT-200to400_ext1', 'DYJetsToLL_M-5to50_HT-400to600', 'DYJetsToLL_M-5to50_HT-400to600_ext1', 'DYJetsToLL_M-5to50_HT-600toinf_ext1', 'DYJetsToLL_M-5to50_HT-600toinf', 'DYJetsToLL_M-50_HT-70to100', 'DYJetsToLL_M-50_HT-100to200', 'DYJetsToLL_M-50_HT-100to200_ext1', 'DYJetsToLL_M-50_HT-100to200_newpmx', 'DYJetsToLL_M-50_HT-200to400', 'DYJetsToLL_M-50_HT-200to400_ext1', 'DYJetsToLL_M-50_HT-400to600', 'DYJetsToLL_M-50_HT-400to600_ext1', 'DYJetsToLL_M-50_HT-400to600_ext2', 'DYJetsToLL_M-50_HT-400to600_newpmx', 'DYJetsToLL_M-50_HT-600to800', 'DYJetsToLL_M-50_HT-800to1200', 'DYJetsToLL_M-50_HT-1200to2500', 'DYJetsToLL_M-50_HT-2500toinf', 'DYJetsToLL_M-50_HT-2500toInf']
 # ... and samples and for MonoHjjlnu analysis
-exec(open(os.getenv("CMSSW_BASE") + "/src/LatinoAnalysis/NanoGardener/python/framework/samples/MonoHjjlnu_samples.py"))
+exec(open(os.getenv("CMSSW_BASE") + "/src/LatinoAnalysis/NanoGardener/python/framework/samples/MonoHjjlnu_samples.py").read())
+# List of SUSY samples
+exec(open(os.getenv("CMSSW_BASE") + "/src/LatinoAnalysis/NanoGardener/python/framework/samples/susy_samples.py").read())
+susyFakeLeptonSamples    = [ 'SingleElectron_'+runPer+'_HIPM_UL2016-v2' for runPer in [ 'Run2016B-ver2', 'Run2016C', 'Run2016D', 'Run2016E', 'Run2016F' ] ]
+susyFakeLeptonSamples.extend('SingleMuon_'    +runPer+'_HIPM_UL2016-v2' for runPer in [ 'Run2016B-ver2', 'Run2016C', 'Run2016D', 'Run2016E', 'Run2016F' ] )
+susyFakeLeptonSamples.extend('JetHT_'         +runPer+'_HIPM_UL2016-v2' for runPer in [ 'Run2016B-ver2', 'Run2016C', 'Run2016D', 'Run2016E', 'Run2016F' ] )
+susyFakeLeptonSamples.extend('SingleElectron_'+runPer+'_UL2016-v1' for runPer in [ 'Run2016F', 'Run2016G', 'Run2016H' ] )
+susyFakeLeptonSamples.extend('SingleMuon_'    +runPer+'_UL2016-v1' for runPer in [ 'Run2016F', 'Run2016G', 'Run2016H' ] )
+susyFakeLeptonSamples.extend('JetHT_'         +runPer+'_UL2016-v1' for runPer in [ 'Run2016F', 'Run2016G', 'Run2016H' ] )
+susyFakeLeptonSamples.extend('SingleElectron_'+runPer+'-UL2017_MiniAODv2_NanoAODv9-v1' for runPer in [ 'Run2017B', 'Run2017C', 'Run2017D', 'Run2017E', 'Run2017F' ] )
+susyFakeLeptonSamples.extend('SingleMuon_'    +runPer+'-UL2017_MiniAODv2_NanoAODv9-v1' for runPer in [ 'Run2017B', 'Run2017C', 'Run2017D', 'Run2017E', 'Run2017F' ] )
+susyFakeLeptonSamples.extend('JetHT_'         +runPer+'-UL2017_MiniAODv2_NanoAODv9-v1' for runPer in [ 'Run2017B', 'Run2017C', 'Run2017D', 'Run2017E', 'Run2017F' ] )
+susyFakeLeptonSamples.extend('EGamma_'        +runPer+'-UL2018_MiniAODv2_NanoAODv9-v1' for runPer in [ 'Run2018A', 'Run2018B', 'Run2018C' ] )
+susyFakeLeptonSamples.extend('SingleMuon_'    +runPer+'-UL2018_MiniAODv2_NanoAODv9-v1' for runPer in [ 'Run2018D' ] )
+susyFakeLeptonSamples.extend( [ 'EGamma_Run2018D-UL2018_MiniAODv2_NanoAODv9-v3', 'SingleMuon_Run2018A-UL2018_MiniAODv2_NanoAODv9-v2', 'SingleMuon_Run2018B-UL2018_MiniAODv2_NanoAODv9_GT36-v1', 'SingleMuon_Run2018C-UL2018_MiniAODv2_NanoAODv9_GT36-v1' ] )
+susyFakeLeptonSamples.extend( [ 'JetHT_Run2018A-UL2018_MiniAODv2_NanoAODv9-v2', 'JetHT_Run2018B-UL2018_MiniAODv2_NanoAODv9-v1', 'JetHT_Run2018C-UL2018_MiniAODv2_NanoAODv9_GT36-v1', 'JetHT_Run2018D-UL2018_MiniAODv2_NanoAODv9-v2' ] )
 
 # -------------------------------------------- HERE WE GO ----------------------------------------------------
 
@@ -731,6 +745,111 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
                   },
 
+  'MCSusy2016' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy',#'CleanJetCut',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'MCSusy2016v6loose' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','JMEUncertMC2016',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'MCSusy2016v8' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker', 'lepSelSusy',  'JMEUncertMC' ,
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'MCSusyCorr2016v8HIPM' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorrUL16HIPM','btagPerJetDeepCSVWPs','btagPerJetDeepJetWPs',
+                                     'rochesterMC','trigMC','LeptonSFSusy','puW','puWUL16','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
+                },
+
+  'MCSusyCorr2016v8noHIPM' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorrUL16noHIPM','btagPerJetDeepCSVWPs','btagPerJetDeepJetWPs',
+                                     'rochesterMC','trigMC','LeptonSFSusy','puW','puWUL16','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
+                },
+
+  'MCSusySyst2016v8' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs','btagPerEventDeepJetWPs'
+                                   ],
+                },
+
+
+
+
+  'MCSusy2016FS' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy',#'CleanJetCut',
+                                  #'leptonMaker','lepSelSusy','JECupdate2016FS','jetSel',#'CleanJetCut',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'FSSusy2016v6loose' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','JMEUncertFS2016',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'FSSusy2016v8' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker', 'lepSelSusy' , 'trigFS' ,
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'SFSusy2016v6loose' : {
+                 'isChain'    : True  ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'subTargets' : ['leptonMaker','lepSelSusySF','PromptParticlesGenVars','GenLeptonMatch'],
+                },
+
+  'SFSusy2016DYv6loose' : {
+                 'isChain'    : True  ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'selection'  : '"((nElectron>1) || (nMuon>1))"' ,
+                 'subTargets' : ['leptonMaker','lepSelSusySF'],
+                },
+
   'MCl1loose2016v7_jetIDtest' :  {
                   'isChain'    : True  ,
                   'do4MC'      : True  ,
@@ -738,8 +857,7 @@ Steps = {
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom_looseJetID_noPUID', 'CorrFatJetMC', 'CleanFatJet',
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty', 'DressedLeptons','EFTGen'],
-                  },
-
+},
 
   # FIXME: check btagPerJet2016, btagPerEvent
   # FIXME: Cfg 'trigMC','LeptonSF','puW'
@@ -790,13 +908,118 @@ Steps = {
                                      'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ],
                 },
 
+  'MCCorr2016Susy' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016','btagPerEvent2016',
+                                     'rochesterMC','trigMC','LeptonSFSusy','puW',#'l2Kin', 'l3Kin', 'l4Kin','formulasMC'
+                                     ],
+                },
+
+  'MCCorr2016SusyFS' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PrefCorr2016','btagPerJet2016FS','btagPerEvent2016FS',#'EmbeddingVeto',  
+                                     'rochesterMC','trigFS','LeptonSFSusyFS','puW',#'l2Kin', 'l3Kin', 'l4Kin','formulasMC'
+                                     ],
+                },
+
+  'MCCorr2016Susyv6' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2016',
+                                     'btagPerJet2016','btagPerEvent2016','btagPerEvent2016Pt25','btagPerEvent2016Pt30',
+                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSFSusy','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK'
+                                   ],
+                },
+
+  'MCCorr2016SusyFSv6' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PrefCorr2016',
+                                     'btagPerJet2016FS','btagPerEvent2016FS','btagPerEvent2016FSPt25','btagPerEvent2016FSPt30',
+                                     'rochesterMC','trigFS','trigFS_Cut','LeptonSFSusyFS','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK'],
+                },
+
+
+  'MCSusyCorr2016v6loose' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2016','btagPerJet2016',
+                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSFSusy','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
+                },
+
+  'MCSusySyst2016v6loose' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVM',#'btagPerEvent2016','btagPerEvent2016Pt25','btagPerEvent2016Pt30'
+                                   ],
+                },
+
+  'FSSusyCorr2016v6loose' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PrefCorr2016','btagPerJet2016FS',
+                                     'rochesterMC','trigFS','trigFS_Cut','LeptonSFSusyFS','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK'],
+                },
+
+  'FSSusyCorr2016v8HIPM' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'selection'  : '"(run_period<=3)"' ,
+                     'subTargets' : ['JMEUncertFS2016HIPM', 'PrefCorrUL16HIPM', 'btagPerJetDeepCSVWPsFS2016HIPM', 'btagPerJetDeepJetWPsFS2016HIPM',
+                                     'rochesterMC', 'LeptonSFSusy', 'puW', 'puWUL16', 'EmbeddingVeto' ],
+                },
+
+  'FSSusyCorr2016v8noHIPM' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'selection'  : '"(run_period>=4)"' ,
+                     'subTargets' : ['JMEUncertFS2016noHIPM', 'PrefCorrUL16noHIPM', 'btagPerJetDeepCSVWPsFS2016noHIPM', 'btagPerJetDeepJetWPsFS2016noHIPM',
+                                     'rochesterMC', 'LeptonSFSusy', 'puW', 'puWUL16', 'EmbeddingVeto' ],
+                },
+
+  'FSSusySyst2016v6loose' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEvent2016FS','btagPerEvent2016FSPt25','btagPerEvent2016FSPt30'
+                                   ],
+                },
+
+  'FSSusySyst2016v8HIPM' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader', 'jetSelSusy', 'btagPerEventDeepCSVWPsFS2016HIPM', 'btagPerEventDeepJetWPsFS2016HIPM'],
+                },
+
+  'FSSusySyst2016v8noHIPM' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader', 'jetSelSusy', 'btagPerEventDeepCSVWPsFS2016noHIPM', 'btagPerEventDeepJetWPsFS2016noHIPM'],
+                },
+
   'MCTRGFixv7' : { 
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
                      'do4Data'    : False ,
                      'subTargets' : ['trigMCKeepRun', 'formulasMC' , 'EFTGen' , 'JJHEFT' ] ,
-                 } ,  
-
+					 } ,  
 
   'MCCorr2016_hmumu' : {
                      'isChain'    : True  ,
@@ -904,7 +1127,100 @@ Steps = {
                                   'PromptParticlesGenVars','GenVar','GenLeptonMatch', 'HiggsGenVars', 'TopGenVars', 'wwNLL','WGammaStar', 'ggHTheoryUncertainty', 'qqHTheoryUncertainty','DressedLeptons','EFTGen'],
                   },
 
+  'MCSusy2017' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','METFixEEMC2017','lepSelSusy','jetSelSusy',#'CleanJetCut',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
 
+  'MCSusy2017v6loose' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','METFixEEMC2017',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'MCSusy2017v8' :  { 
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker', 'lepSelSusy',  'JMEUncertMC' ,
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'xytest5nojme' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker', 'lepSelSusy',#  'JMEUncertMC' ,
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'MCSusy2017FS' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','METFixEEFS2017','lepSelSusy','jetSelSusy',#'CleanJetCut',
+                                  #'leptonMaker','lepSelSusy','JECupdate2017FS','jetSel',#'CleanJetCut',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'FSSusy2017v6loose' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','METFixEEFS2017',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'FSSusy2017v8' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker', 'lepSelSusy' , 'trigFS' ,
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'FSSusy2017v8short2EL9' : {
+          'isChain'    : True  ,
+          'do4MC'      : True  ,
+          'do4Data'    : False ,
+          'selection'  : '"((nElectron+nMuon)>1)"' ,
+          'subTargets' : ['leptonMaker', 'lepSelSusy']
+          },
+
+  'SFSusy2017v6loose' : {
+                 'isChain'    : True  ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'subTargets' : ['leptonMaker','lepSelSusySF','PromptParticlesGenVars','GenLeptonMatch'],
+                },
+
+  'SFSusy2017DYv6loose' : {
+                 'isChain'    : True  ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'selection'  : '"((nElectron>1) || (nMuon>1))"' ,
+                 'subTargets' : ['leptonMaker','lepSelSusySF'],
+                },
+ 
   'MCCorr2017' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
@@ -940,6 +1256,112 @@ Steps = {
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto',
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','HiggsGenVars','qqHTheoryUncertainty',
                                      'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ]
+                },
+
+  'MCCorr2017Susy' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2017','btagPerJet2017','btagPerEvent2017',#'EmbeddingVeto', 
+                                     'rochesterMC','trigMC','LeptonSFSusy','puW',#'l2Kin', 'l3Kin', 'l4Kin','formulasMC'
+                                     ],
+                },
+
+  'MCCorr2017SusyFS' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PrefCorr2017','btagPerJet2017FS','btagPerEvent2017FS',#'EmbeddingVeto',  
+                                     'rochesterMC','trigFS','LeptonSFSusyFS','puW',#'l2Kin', 'l3Kin', 'l4Kin','formulasMC'
+                                     ],
+                },
+
+  'MCCorr2017Susyv6' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2017',
+                                     'btagPerJet2017','btagPerEvent2017','btagPerEvent2017Pt25','btagPerEvent2017Pt30',
+                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSFSusy','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK' ],
+                },
+
+  'MCCorr2017SusyFSv6' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PrefCorr2017',
+                                     'btagPerJet2017FS','btagPerEvent2017FS','btagPerEvent2017FSPt25','btagPerEvent2017FSPt30',
+                                     'rochesterMC','trigFS','trigFS_Cut','LeptonSFSusyFS','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK' ],
+                },
+
+
+  'MCSusyCorr2017v6loose' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorr2017','btagPerJet2017',
+                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSFSusy','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
+                },
+
+  'MCSusySyst2017v6loose' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader','jetSelSusy', 'btagPerEventDeepCSVM',#'btagPerEvent2017','btagPerEvent2017Pt25','btagPerEvent2017Pt30'
+                                   ],
+                },
+
+  'MCSusyCorr2017v8' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','PrefCorrUL17','btagPerJetDeepCSVWPs',
+                                     'rochesterMC','trigMC','LeptonSFSusy','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
+                },
+
+  'MCSusySyst2017v8' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs',
+                                   ],
+                },
+
+  'FSSusyCorr2017v6loose' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PrefCorr2017','btagPerJet2017FS',
+                                     'rochesterMC','trigFS','trigFS_Cut','LeptonSFSusyFS','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK' ],
+                },
+
+  'FSSusyCorr2017v8' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'selection'  : '"(run_period>=0)"' ,
+                     'subTargets' : ['JMEUncertFS', 'PrefCorrUL17', 'btagPerJetDeepCSVWPsFS', 'btagPerJetDeepJetWPsFS', 
+                                     'rochesterMC', 'LeptonSFSusy', 'puW', 'EmbeddingVeto' ],
+                },
+
+  'FSSusySyst2017v6loose' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEvent2017FS','btagPerEvent2017FSPt25','btagPerEvent2017FSPt30'
+                                   ],
+                },
+
+  'FSSusySyst2017v8' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader', 'jetSelSusy', 'btagPerEventDeepCSVWPsFS', 'btagPerEventDeepJetWPsFS'],
                 },
 
   'MCCorr2017LP19' : {
@@ -1009,7 +1431,82 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetMC', 'CleanFatJet','l2Kin','baseW','l2tightOR2018v7','JJHEFT'],
                   },
 
+  'MCSusy2018' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy',#'CleanJetCut',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
 
+  'MCSusy2018v6loose' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','JMEUncertMC2018',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'MCSusy2018v8' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker', 'lepSelSusy',  'JMEUncertMC' ,
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+
+  'MCSusy2018FS' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy',#'CleanJetCut',
+                                  #'leptonMaker','lepSelSusy','JECupdate2018FS','jetSel',#'CleanJetCut',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'FSSusy2018v6loose' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','JMEUncertFS2018',
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'FSSusy2018v8' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker', 'lepSelSusy' , 'trigFS' ,
+                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  ],
+                },
+
+  'SFSusy2018v6loose' : {
+                 'isChain'    : True  ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'subTargets' : ['leptonMaker','lepSelSusySF','PromptParticlesGenVars','GenLeptonMatch'],
+                },
+
+  'SFSusy2018DYv6loose' : {
+                 'isChain'    : True  ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'selection'  : '"((nElectron>1) || (nMuon>1))"' ,
+                 'subTargets' : ['leptonMaker','lepSelSusySF'],
+                },
 
   'MCCorr2018' : {
                      'isChain'    : True  ,
@@ -1018,6 +1515,7 @@ Steps = {
                      'subTargets' : ['baseW','btagPerJet2018',
                                      'rochesterMC','trigMC','LeptonSF','puW','l2Kin', 'l3Kin', 'l4Kin','formulasMC','EmbeddingVeto'],
                 },
+
   # copied but still missing the MonoH triggers -> will be patched later
   'MCCorr2018v5' : {
                      'isChain'    : True  ,
@@ -1046,6 +1544,110 @@ Steps = {
                                      'wwNLOEWK','wwNLOEWK2','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK','qqHTheoryUncertainty',  
                                      'CorrFatJetMC', 'CleanFatJet', 'BoostedWtagSF' ]
                 },
+
+  'MCCorr2018Susy' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','btagPerJet2018','btagPerEvent2018',#'EmbeddingVeto', 
+                                     'rochesterMC','trigMC','LeptonSFSusy','puW',#'l2Kin', 'l3Kin', 'l4Kin','formulasMC'
+                                     ],
+                },
+
+  'MCCorr2018SusyFS' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['btagPerJet2018FS','btagPerEvent2018FS',#'EmbeddingVeto',  
+                                     'rochesterMC','trigFS','LeptonSFSusyFS','puW',#'l2Kin', 'l3Kin', 'l4Kin','formulasMC'
+                                     ],
+                },
+
+  'MCCorr2018Susyv6' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','btagPerJet2018','btagPerEvent2018','btagPerEvent2018Pt25','btagPerEvent2018Pt30',
+                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSFSusy','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK' ],
+                },
+
+  'MCCorr2018SusyFSv6' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['btagPerJet2018FS','btagPerEvent2018FS','btagPerEvent2018FSPt25','btagPerEvent2018FSPt30',
+                                     'rochesterMC','trigFS','trigFS_Cut','LeptonSFSusyFS','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK' ],
+                },
+
+  'MCSusyCorr2018v6loose' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','btagPerJet2018',
+                                     'rochesterMC','trigMC','trigMC_Cut','LeptonSFSusy','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
+                },
+
+  'MCSusySyst2018v6loose' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVM',#'btagPerEvent2018','btagPerEvent2018Pt25','btagPerEvent2018Pt30'
+                                   ],
+                },
+
+  'MCSusyCorr2018v8' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['baseW','btagPerJetDeepCSVWPs',
+                                     'rochesterMC','trigMC','LeptonSFSusy','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK','wNLOEWK','ZZGen' ],
+                },
+
+  'MCSusySyst2018v8' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEventDeepCSVWPs'
+                                   ],
+                },
+
+  'FSSusyCorr2018v6loose' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['btagPerJet2018FS',
+                                     'rochesterMC','trigFS','trigFS_Cut','LeptonSFSusyFS','puW','EmbeddingVeto',
+                                     'wwNLOEWK','wzNLOEWK','zzNLOEWK','zNLOEWK', 'wNLOEWK' ],
+                },
+
+  'FSSusyCorr2018v8' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'selection'  : '"(run_period>=0)"' ,
+                     'subTargets' : ['JMEUncertFS', 'btagPerJetDeepCSVWPsFS', 'btagPerJetDeepJetWPsFS',
+                                     'rochesterMC', 'LeptonSFSusy', 'puW', 'EmbeddingVeto' ],
+                },
+
+  'FSSusySyst2018v6loose' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader','jetSelSusy','btagPerEvent2018FS','btagPerEvent2018FSPt25','btagPerEvent2018FSPt30'
+                                   ],
+                },
+
+  'FSSusySyst2018v8' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'subTargets' : ['PtCorrReader', 'jetSelSusy', 'btagPerEventDeepCSVWPsFS', 'btagPerEventDeepJetWPsFS'],
+                },
+
 
   'MCCorr2018v7fixJER' : {
                      'isChain'    : True  ,
@@ -1083,7 +1685,8 @@ Steps = {
                   'selection'  : '"(nElectron>=2 || nMuon>=2) && (Sum$(Muon_pt > 10 && abs(Muon_eta)<2.4) >1 || Sum$(Electron_pt > 10 && abs(Electron_eta)<2.5) >1)"' , 
                   'subTargets' : ['RunPeriodMC','puW','baseW'] ,
                   'onlySample' : [ 
-                                  'DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2','DYJetsToLL_M-50-LO',
+                                  'DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2','DYJetsToLL_M-50-LO','DYJetsToLL_M-50',
+                                  'DYJetsToLL_M-50_LO', 
                                  ] ,
               }, 
 
@@ -1094,6 +1697,7 @@ Steps = {
                   'selection'  : '"(nElectron>=2 || nMuon>=2) && (Sum$(Muon_pt > 10 && abs(Muon_eta)<2.4) >1 || Sum$(Electron_pt > 10 && abs(Electron_eta)<2.5) >1)"' ,
                   'subTargets' : ['RunPeriodDATA'] ,
                   'onlySample' : [
+                                  # ------ v6 -------
                                   # Run2016 v6
                                   'SingleElectron_Run2016B-Nano25Oct2019_ver2-v1',
                                   'SingleElectron_Run2016C-Nano25Oct2019-v1',      
@@ -1128,7 +1732,47 @@ Steps = {
                                   'SingleMuon_Run2018A-Nano25Oct2019-v1',      
                                   'SingleMuon_Run2018B-Nano25Oct2019-v1',      
                                   'SingleMuon_Run2018C-Nano25Oct2019-v1',      
-                                  'SingleMuon_Run2018D-Nano25Oct2019_ver2-v1'
+                                  'SingleMuon_Run2018D-Nano25Oct2019_ver2-v1',
+                                  # --------- UL: nAODv8 ------
+                                  # Run2016 v8
+                                  'SingleElectron_Run2016B-ver1_HIPM_UL2016-v1',
+                                  'SingleElectron_Run2016B-ver2_HIPM_UL2016-v1',
+                                  'SingleElectron_Run2016C-UL2016-v1',
+                                  'SingleElectron_Run2016D-UL2016-v1',
+                                  'SingleElectron_Run2016E-UL2016-v1',
+                                  'SingleElectron_Run2016F-UL2016-v2',
+                                  'SingleElectron_Run2016F-HIPM_UL2016-v1',
+                                  'SingleElectron_Run2016G_UL2016-v1',
+                                  'SingleElectron_Run2016H_UL2016-v1',
+                                  'SingleMuon_Run2016B-ver1_HIPM_UL2016-v1',
+                                  'SingleMuon_Run2016B-ver2_HIPM_UL2016-v1',
+                                  'SingleMuon_Run2016C-UL2016-v1',
+                                  'SingleMuon_Run2016D-UL2016-v1',
+                                  'SingleMuon_Run2016E-UL2016-v1',
+                                  'SingleMuon_Run2016F-UL2016-v2',
+                                  'SingleMuon_Run2016F-HIPM_UL2016-v1',
+                                  'SingleMuon_Run2016G_UL2016-v1',
+                                  'SingleMuon_Run2016H_UL2016-v1',
+                                  # Run2017 v8
+                                  'SingleElectron_Run2017B-UL2017-v1',
+                                  'SingleElectron_Run2017C-UL2017-v1',
+                                  'SingleElectron_Run2017D-UL2017-v1',
+                                  'SingleElectron_Run2017E-UL2017-v1',
+                                  'SingleElectron_Run2017F-UL2017-v1',
+                                  'SingleMuon_Run2017B-UL2017-v1',
+                                  'SingleMuon_Run2017C-UL2017-v1',
+                                  'SingleMuon_Run2017D-UL2017-v1',
+                                  'SingleMuon_Run2017E-UL2017-v2',
+                                  'SingleMuon_Run2017F-UL2017-v2',
+                                  # Run2018 v8
+                                  'EGamma_Run2018A-UL2018-v1',
+                                  'EGamma_Run2018B-UL2018-v1',
+                                  'EGamma_Run2018C-UL2018-v1',
+                                  'EGamma_Run2018D-UL2018-v1',
+                                  'SingleMuon_Run2018A-UL2018-v1',
+                                  'SingleMuon_Run2018B-UL2018-v1',
+                                  'SingleMuon_Run2018C-UL2018-v1',
+                                  'SingleMuon_Run2018D-UL2018-v1', 
                                  ] ,
 
               }, 
@@ -1140,7 +1784,8 @@ Steps = {
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.addTnpTree' ,
                   'declare'  : 'TnPMu = lambda : addTnpTree(int("RPLME_YEAR"),"Muon")', 
                   'module'   : 'TnPMu()', 
-                  'onlySample' : ['DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2','DYJetsToLL_M-50-LO',
+                  'onlySample' : ['DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2','DYJetsToLL_M-50-LO','DYJetsToLL_M-50',
+                                  'DYJetsToLL_M-50_LO', 
                                   # Run2016 v6
                                   'SingleMuon_Run2016B-Nano25Oct2019_ver2-v1',
                                   'SingleMuon_Run2016C-Nano25Oct2019-v1',
@@ -1159,7 +1804,29 @@ Steps = {
                                   'SingleMuon_Run2018A-Nano25Oct2019-v1',
                                   'SingleMuon_Run2018B-Nano25Oct2019-v1',
                                   'SingleMuon_Run2018C-Nano25Oct2019-v1',
-                                  'SingleMuon_Run2018D-Nano25Oct2019_ver2-v1'
+                                  'SingleMuon_Run2018D-Nano25Oct2019_ver2-v1',
+                                  # --------- UL: nAODv8 ------
+                                  # Run2016 v8
+                                  'SingleMuon_Run2016B-ver1_HIPM_UL2016-v1',
+                                  'SingleMuon_Run2016B-ver2_HIPM_UL2016-v1',
+                                  'SingleMuon_Run2016C-UL2016-v1',
+                                  'SingleMuon_Run2016D-UL2016-v1',
+                                  'SingleMuon_Run2016E-UL2016-v1',
+                                  'SingleMuon_Run2016F-UL2016-v2',
+                                  'SingleMuon_Run2016F-HIPM_UL2016-v1',
+                                  'SingleMuon_Run2016G_UL2016-v1',
+                                  'SingleMuon_Run2016H_UL2016-v1',
+                                  # Run2017 v8
+                                  'SingleMuon_Run2017B-UL2017-v1',
+                                  'SingleMuon_Run2017C-UL2017-v1',
+                                  'SingleMuon_Run2017D-UL2017-v1',
+                                  'SingleMuon_Run2017E-UL2017-v2',
+                                  'SingleMuon_Run2017F-UL2017-v2',
+                                  # Run2018 v8
+                                  'SingleMuon_Run2018A-UL2018-v1',
+                                  'SingleMuon_Run2018B-UL2018-v1',
+                                  'SingleMuon_Run2018C-UL2018-v1',
+                                  'SingleMuon_Run2018D-UL2018-v1',
                                  ] ,
 
                  },
@@ -1171,7 +1838,8 @@ Steps = {
                   'import'   : 'LatinoAnalysis.NanoGardener.modules.addTnpTree' ,
                   'declare'  : 'TnPEle = lambda : addTnpTree(int("RPLME_YEAR"),"Electron")',
                   'module'   : 'TnPEle()', 
-                  'onlySample' : ['DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2','DYJetsToLL_M-50-LO',
+                  'onlySample' : ['DYJetsToLL_M-50-LO_ext1','DYJetsToLL_M-50_ext1','DYJetsToLL_M-50_ext2','DYJetsToLL_M-50-LO','DYJetsToLL_M-50',
+                                  'DYJetsToLL_M-50_LO', 
                                   # Run2016 v6
                                   'SingleElectron_Run2016B-Nano25Oct2019_ver2-v1',
                                   'SingleElectron_Run2016C-Nano25Oct2019-v1',
@@ -1191,6 +1859,28 @@ Steps = {
                                   'EGamma_Run2018B-Nano25Oct2019-v1',
                                   'EGamma_Run2018C-Nano25Oct2019-v1',
                                   'EGamma_Run2018D-Nano25Oct2019_ver2-v1',
+                                  # --------- UL: nAODv8 ------
+                                  # Run2016 v8
+                                  'SingleElectron_Run2016B-ver1_HIPM_UL2016-v1',
+                                  'SingleElectron_Run2016B-ver2_HIPM_UL2016-v1',
+                                  'SingleElectron_Run2016C-UL2016-v1',
+                                  'SingleElectron_Run2016D-UL2016-v1',
+                                  'SingleElectron_Run2016E-UL2016-v1',
+                                  'SingleElectron_Run2016F-UL2016-v2',
+                                  'SingleElectron_Run2016F-HIPM_UL2016-v1',
+                                  'SingleElectron_Run2016G_UL2016-v1',
+                                  'SingleElectron_Run2016H_UL2016-v1',
+                                  # Run2017 v8
+                                  'SingleElectron_Run2017B-UL2017-v1',
+                                  'SingleElectron_Run2017C-UL2017-v1',
+                                  'SingleElectron_Run2017D-UL2017-v1',
+                                  'SingleElectron_Run2017E-UL2017-v1',
+                                  'SingleElectron_Run2017F-UL2017-v1',
+                                  # Run2018 v8
+                                  'EGamma_Run2018A-UL2018-v1',
+                                  'EGamma_Run2018B-UL2018-v1',
+                                  'EGamma_Run2018C-UL2018-v1',
+                                  'EGamma_Run2018D-UL2018-v1',
                                  ] ,
 
                  },
@@ -1388,7 +2078,9 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True  ,
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
-                  'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
+                  'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData', 'formulasDATA'
+                                  ],
                 },
 
   'DATAl1loose2016v5': {
@@ -1407,6 +2099,36 @@ Steps = {
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetData','CleanFatJet','rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData','MHTrigData','MHSwitch', 'formulasDATA'],
                  },
+    
+  'DATASusy2016': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData','btagPerEvent2016Data' ###,'formulasDATA'
+                                  ],
+                },
+    
+  'DATASusy2016v6': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData','btagPerEvent2016Data','btagPerEvent2016DataPt25','btagPerEvent2016DataPt30' ###,'formulasDATA'
+                                  ],
+                },
+
+  'DATALatino2016v6': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelLatino','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData','btagPerEvent2016Data','btagPerEvent2016DataPt25','btagPerEvent2016DataPt30' ###,'formulasDATA'
+                                  ],
+                },
 
   'DATAl1loose2016v7': {
                   'isChain'    : True  ,
@@ -1415,6 +2137,17 @@ Steps = {
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetData','CleanFatJet','rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                  },
+
+  'DATASusy2016v8': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData', 'btagPerEventDeepCSVWPsData'
+                                  ],
+                },
+
 
   'DATAl1loose2017': {
                   'isChain'    : True  ,
@@ -1455,6 +2188,46 @@ Steps = {
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetData','CleanFatJet', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                 },
+    
+  'DATASusy2017': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData', 'btagPerEvent2017Data' ###,'formulasDATA'
+                                  ],
+                },
+    
+  'DATASusy2017v6': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData','btagPerEvent2017Data','btagPerEvent2017DataPt25','btagPerEvent2017DataPt30' ###,'formulasDATA'
+                                  ],
+                },
+
+  'DATALatino2017v6': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelLatino','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData','btagPerEvent2017Data','btagPerEvent2017DataPt25','btagPerEvent2017DataPt30' ###,'formulasDATA'
+                                  ], 
+                },
+
+  'DATASusy2017v8': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData', 'btagPerEventDeepCSVWPsData'
+                                  ],
+                },
 
 
 # 'DATAl1loose2017': {
@@ -1488,6 +2261,7 @@ Steps = {
                   'subTargets' : ['leptonMaker','lepSel','jetSel','CleanJetCut', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                 },
 
+
   'DATAl1loose2018v5': {
                   'isChain'    : True  ,
                   'do4MC'      : False ,
@@ -1512,6 +2286,48 @@ Steps = {
                   'selection'  : '"((nElectron+nMuon)>0)"' ,
                   'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetData','CleanFatJet', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],
                 },
+                                
+  'DATASusy2018': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData', 'btagPerEvent2018Data' ###,'formulasDATA'
+                                  ],
+                },
+                                
+  'DATASusy2018v6': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData','btagPerEvent2018Data','btagPerEvent2018DataPt25','btagPerEvent2018DataPt30' ###,'formulasDATA'
+                                  ],
+                },
+
+  'DATALatino2018v6': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelLatino','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData','btagPerEvent2018Data','btagPerEvent2018DataPt25','btagPerEvent2018DataPt30' ###,'formulasDATA'
+                                  ],
+                },
+
+
+  'DATASusy2018v8': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker','lepSelSusy','jetSelSusy','rochesterDATA' , ###'l2Kin', 'l3Kin', 'l4Kin',
+                                  'trigData', 'btagPerEventDeepCSVWPsData'
+                                  ],
+                },
+
 
 
   'jetSelfix': {
@@ -1520,14 +2336,6 @@ Steps = {
                   'do4Data'    : True  , 
                   'subTargets' : ['jetSel','l2Kin', 'l3Kin', 'l4Kin']
                },
-
-  'trigFix' : {
-                     'isChain'    : True  ,
-                     'do4MC'      : True  ,
-                     'do4Data'    : False ,
-                     'subTargets' : ['trigMC','formulasMC']
-                },
-
 
 ## ------- WgStar DATA:
 
@@ -1710,7 +2518,7 @@ Steps = {
                                   'whadJetSel', 'wlepMaker', 'wwNLL', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi',
                                   'l2Kin', 'MHSemiLepVars', 'MHSemiLepMVA'],
 
-                  'onlySample' : vbsjjlnu_samples_mc  + SemiLepHighMassSamples_2017 + MonoHjjlnu_samples_2017,
+                  'onlySample' : vbsjjlnu_samples_mc  + SemiLepHighMassSamples_2017 + MonoHjjlnu_samples_2017,#vbsjjlnu_samples_signal
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
                    },
 
@@ -1731,10 +2539,10 @@ Steps = {
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
                   'selection'  : CombJJLNu_preselections["2018"]["MC"],
-                  'subTargets' :  ['VBSjjlnu_pairing', 'VBSjjlnu_kin',
+                  'subTargets' :  ['VBSjjlnu_pairing', 'VBSjjlnu_kin', 
                                   'whadJetSel', 'wlepMaker', 'wwNLL', 'HMlnjjVars', 'HMDNNProdSemi', 'HMDNNNeutSemi',
                                   'l2Kin', 'MHSemiLepVars', 'MHSemiLepMVA'],
-                  'onlySample' : vbsjjlnu_samples_mc + SemiLepHighMassSamples_2018 + MonoHjjlnu_samples_2018,
+                  'onlySample' : vbsjjlnu_samples_mc + SemiLepHighMassSamples_2018 + MonoHjjlnu_samples_2018,#vbsjjlnu_samples_signal
                   'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/removeHLT.txt'
                    },
 
@@ -2317,7 +3125,7 @@ Steps = {
                                   'DYJetsToLL_M-10to50ext3','DYJetsToLL_M-50-LO',
                                   'DYJetsToLL_M-50-LO-ext1','DYJetsToLL_M-10to50-LO',
                                   'DYJetsToTT_MuEle_M-50','DYJetsToLL_M-50_ext2',
-                                  'DYJetsToLL_M-10to50-LO_ext1',
+                                  'DYJetsToLL_M-10to50-LO-ext1',
                                   'DYJetsToLL_M-10to50', 'DYJetsToLL_M-10to50_ext1',
                                    # ... Low Mass HT
                                   'DYJetsToLL_M-4to50_HT-100to200',
@@ -2339,7 +3147,7 @@ Steps = {
                                   'DYJetsToLL_M-50_HT-600to800',
                                   'DYJetsToLL_M-50_HT-800to1200',
                                   'DYJetsToLL_M-50_HT-1200to2500',
-                                  'DYJetsToLL_M-50_HT-2500toInf',
+                                  'DYJetsToLL_M-50_HT-2500toinf',
 
                                   'DYJetsToLL_M-5to50_HT-70to100', 
                                   'DYJetsToLL_M-5to50_HT-100to200',
@@ -2349,7 +3157,7 @@ Steps = {
                                   'DYJetsToLL_M-5to50_HT-400to600',
                                   'DYJetsToLL_M-5to50_HT-400to600_ext1',
                                   'DYJetsToLL_M-5to50_HT-600toinf_ext1',
-                                  'DYJetsToLL_M-5to50_HT-600toInf',
+                                  'DYJetsToLL_M-5to50_HT-600toinf',
                                                         
                                   ]
                   } ,
@@ -2527,6 +3335,102 @@ Steps = {
                   'module'     : 'leptonSel()' ,
                },
 
+   'lepSelLatino': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSel' ,
+                  'declare'    : 'leptonSel = lambda : LeptonSel("RPLME_CMSSW", "Loose", 2)' ,
+                  'module'     : 'leptonSel()' ,
+               },
+
+   'lepSelSusy': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSel' ,
+                  'declare'    : 'leptonSel = lambda : LeptonSel("RPLME_CMSSW", "Loose", 2, "LatinoAnalysis/NanoGardener/python/data/LeptonSelSUSY_cfg.py")' ,
+                  'module'     : 'leptonSel()' ,
+               },
+
+   'lepSelSusySF': {
+                    'isChain'    : False ,
+                    'do4MC'      : True  ,
+                    'do4Data'    : True  ,
+                    'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSel' ,
+                    'declare'    : 'leptonSel = lambda : LeptonSel("RPLME_CMSSW", "Loose", 0, "LatinoAnalysis/NanoGardener/python/data/LeptonSelSUSY_cfg.py")' ,
+                    'module'     : 'leptonSel()' ,
+               },
+
+   'SFSusyDY'  : {
+                 'isChain'    : True  ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'selection'  : '"((nElectron>1) || (nMuon>1))"' ,
+                 'subTargets' : ['leptonMaker','lepSelSusySF'],
+                 'onlySample' : [ 'DYJetsToLL_M-50-LO' ],
+                },
+
+   'SFSusyTT'  : {
+                 'isChain'    : True  ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'selection'  : '"((nElectron+nMuon)>1)"' ,
+                 'subTargets' : ['leptonMaker','lepSelSusySF'],
+                 'onlySample' : [ 'TTJets_DiLept' ], #, 'TTJets_SingleLeptFromTbar', 'TTJets_SingleLeptFromT' ],
+                },
+
+   'SFSusySig' : {
+                 'isChain'    : True  ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'selection'  : '"((nElectron+nMuon)>0)"' ,
+                 'subTargets' : ['leptonMaker','lepSelSusySF'],
+                 'onlySample' : [ 'T2tt_mStop-525_mLSP-350', 'T2tt_mStop-525_mLSP-438', 'TChipmSlepSnu_mC-1150_mX-1', 'TChipmSlepSnu_mC-900_mX-475', 'TChipmSlepSnu_mC1-100to800', 'TChipmSlepSnu_mC1-825to1500', 'T2tt_mStop-150to250' , 'T2tt_mStop-250to350', 'T2tt_mStop-350to400', 'T2tt_mStop-400to825' ],
+                },
+
+   'MCSusyFakeLepton' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"(MET_pt<20. && (nElectron+nMuon)>=1)"' ,
+                  'subTargets' : ['leptonMaker', 'lepSelSusyFake', 'selSusyFake', 'jetSelSusy' ],
+                  'onlySample' : [ 'DYJetsToLL_M-10to50-LO', 'DYJetsToLL_M-50-LO', 'WJetsToLNu-LO', 'TTToSemiLeptonic', 'TTTo2L2Nu' ],
+                },
+
+   'MCSusyFakeLeptonWeight' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"nLepton==1"' ,
+                  'subTargets' :  [ 'baseW', 'RunPeriodMC', 'btagPerJetDeepCSVWPs', 'LeptonSFSusy', 'puW', 'btagPerEventDeepCSVWPs' ],
+                },
+
+   'DATASusyFakeLepton' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"(MET_pt<20. && (nElectron+nMuon)>=1)"' ,
+                  'subTargets' : ['leptonMaker', 'lepSelSusyFake', 'jetSelSusy', 'btagPerEventDeepCSVWPsData' ],
+                  'onlySample' : susyFakeLeptonSamples 
+                },
+
+   'lepSelSusyFake': {
+                    'isChain'    : False ,
+                    'do4MC'      : True  ,
+                    'do4Data'    : True  ,
+                    'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSel' ,
+                    'declare'    : 'leptonSel = lambda : LeptonSel("RPLME_CMSSW", "Loose", 1, "LatinoAnalysis/NanoGardener/python/data/LeptonSelSUSY_cfg.py")' ,
+                    'module'     : 'leptonSel()' ,
+               },
+
+   'selSusyFake' : {
+                    'isChain'    : False ,
+                    'do4MC'      : True  ,
+                    'do4Data'    : True  ,
+                    'selection'  : '"nLepton==1"' ,
+               },
+
    'WgSSel' : {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
@@ -2544,6 +3448,15 @@ Steps = {
                   # jetid=2,pujetid='loose',minpt=15.0,maxeta=4.7,jetColl="CleanJet"
                   'declare'    : 'jetSel = lambda : JetSel(2,"medium",15.0,4.7,"CleanJet")' ,
                   'module'     : 'jetSel()' ,
+               },         
+
+   'jetSelSusy'  : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.JetSel' ,
+                  'declare'    : 'jetSelSusy = lambda : JetSel(2,"loose",20.0,2.5,"CleanJet","RPLME_YEAR")' ,
+                  'module'     : 'jetSelSusy()' ,
                },
 
    'jetSelCustom' : {
@@ -2631,6 +3544,34 @@ Steps = {
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.SusyGenVarsProducer' ,
                   'module'     : 'SusyGenVarsProducer()' ,
+                  'onlySample' : susy_samples,
+               },  
+
+   'susyMT2recoNomin': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : True ,
+                  'selection'  : '"(run_period>=0)"' ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.mt2Producer' ,
+                  'module'     : 'mt2Producer(analysisRegion="",  metKind="reco", metSystematic="nom", filterRegion="region")' ,
+               },  
+
+   'susyMT2fastNomin': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"(run_period>=0)"' ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.mt2Producer' ,
+                  'module'     : 'mt2Producer(analysisRegion="",  metKind="fast", metSystematic="nom", filterRegion="region")' ,
+               }, 
+
+   'susyMT2genmNomin': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"(run_period>=0)"' ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.mt2Producer' ,
+                  'module'     : 'mt2Producer(analysisRegion="",  metKind="gen",  metSystematic="nom", filterRegion="region")' ,
                },
 
 ## EFT JJH->WW->2l2nu
@@ -2656,7 +3597,14 @@ Steps = {
                     'do4MC'      : True  ,
                     'do4Data'    : True  ,
                     'import'     : 'LatinoAnalysis.NanoGardener.modules.JJH_EFTVars' ,
-                    'declare'    : 'JJHEFT_ElepTup = lambda : JJH_EFTVars(branch_map="ElepTup")',
+                 },
+    
+  'DATAl1loose2018v7': {
+                  'isChain'    : True  ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'selection'  : '"((nElectron+nMuon)>0)"' ,
+                  'subTargets' : ['leptonMaker','lepSel','jetSelCustom','CorrFatJetData','CleanFatJet', 'rochesterDATA' , 'l2Kin', 'l3Kin', 'l4Kin','trigData', 'formulasDATA'],                'declare'    : 'JJHEFT_ElepTup = lambda : JJH_EFTVars(branch_map="ElepTup")',
                     'module'     : 'JJHEFT_ElepTup()',
                  },
   
@@ -2782,54 +3730,32 @@ Steps = {
                  'module'     : 'prefCorr2017()',
                },
 
-  # BTagPerf
-  'ptrelObj' : { 'isChain'    : False ,
-                 'do4MC'      : True ,
-                 'do4Data'    : True  ,
-                 'import'     : 'LatinoAnalysis.NanoGardener.modules.PtRelObjectsMaker' ,
-                 'module'     : 'PtRelObjectsMaker()',
-               },
-
-  'JMEUncertMC' : {
-                   'isChain'    : False ,
-                   'do4MC'      : True ,
-                   'do4Data'    : False ,
-                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
-                   'declare'    : 'jetmetCorrectorMC = createJMECorrector(isMC=True, dataYear="RPLME_YEAR", jesUncert="Total", isFastSim=False)',
-                   'module'     : 'jetmetCorrectorMC()',
-                 },
-
-  'btvperfMC' :  {
-                  'isChain'    : True  ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False ,
-                  'selection'  : '"(nMuon>0)"' ,
-                  'subTargets' : ['ptrelObj', 'JMEUncertMC' ],
-                 },
-
-  'btvperfWeights' :  {
-                  'isChain'    : True  ,
-                  'do4MC'      : True  ,
-                  'do4Data'    : False ,
-                  'subTargets' : ['baseW', 'RunPeriodMC', 'puW' ],
-                 },
-
-  'trigPrescales' : { 
+  'PrefCorrUL16HIPM' : {
                  'isChain'    : False ,
-                 'do4MC'      : False ,
-                 'do4Data'    : True  ,
-                 'import'     : 'LatinoAnalysis.NanoGardener.modules.TriggerPrescalesMaker' ,
-                 'declare'    : 'trigPrescales = lambda : TriggerPrescalesMaker(TriggerPrescalesPath="LatinoAnalysis/NanoGardener/python/data/trigger/TriggerPrescales_RPLME_YEAR.py")',
-                 'module'     : 'trigPrescales()',
+                 'do4MC'      : True ,
+                 'do4Data'    : False  ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.PrefireCorr' ,
+                 'declare'    : 'prefCorrUL16HIPM = lambda : PrefCorr(jetroot="L1PrefiringMaps.root", jetmapname="L1prefiring_jetptvseta_UL2016preVFP", photonroot="L1PrefiringMaps.root", photonmapname="L1prefiring_photonptvseta_UL2016preVFP", UseEMpT=0)',
+                 'module'     : 'prefCorrUL16HIPM()',
                },
 
-  'btvperfData' :  {
-                  'isChain'    : True  ,
-                  'do4MC'      : False  ,
-                  'do4Data'    : True ,
-                  'selection'  : '"(nMuon>0)"' ,
-                  'subTargets' : ['ptrelObj', 'trigPrescales' ],
-                 },
+  'PrefCorrUL16noHIPM' : {
+                 'isChain'    : False ,
+                 'do4MC'      : True ,
+                 'do4Data'    : False  ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.PrefireCorr' ,
+                 'declare'    : 'prefCorrUL16noHIPM = lambda : PrefCorr(jetroot="L1PrefiringMaps.root", jetmapname="L1prefiring_jetptvseta_UL2016postVFP", photonroot="L1PrefiringMaps.root", photonmapname="L1prefiring_photonptvseta_UL2016postVFP", UseEMpT=0)',
+                 'module'     : 'prefCorrUL16noHIPM()',
+               },
+
+  'PrefCorrUL17' : {
+                 'isChain'    : False ,
+                 'do4MC'      : True ,
+                 'do4Data'    : False  ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.PrefireCorr' ,
+                 'declare'    : 'prefCorrUL17 = lambda : PrefCorr(jetroot="L1PrefiringMaps.root", jetmapname="L1prefiring_jetptvseta_UL2017BtoF", photonroot="L1PrefiringMaps.root", photonmapname="L1prefiring_photonptvseta_UL2017BtoF", UseEMpT=0)',
+                 'module'     : 'prefCorrUL17()',
+               },
 
   'trigData' : { 'isChain'    : False ,
                  'do4MC'      : False ,
@@ -2838,7 +3764,6 @@ Steps = {
                  'declare'    : 'trigData = lambda : TrigMaker("RPLME_CMSSW",isData=True,keepRunP=False)',
                  'module'     : 'trigData()',
                },
-
  
   'trigMC'   : { 'isChain'    : False ,
                  'do4MC'      : True  ,
@@ -2853,6 +3778,22 @@ Steps = {
                  'do4Data'    : False ,
                  'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
                  'declare'    : 'CBtrigMC = lambda : TrigMaker("RPLME_CMSSW",isData=False,keepRunP=True,cfg_path="LatinoAnalysis/NanoGardener/python/data/TrigMaker_CutBased_cfg.py")',
+                 'module'     : 'CBtrigMC()',
+               },
+ 
+  'trigFS'   : { 'isChain'    : False ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
+                 'declare'    : 'trigMC = lambda : TrigMaker("RPLME_CMSSW",isData=False,keepRunP=False,isFastSim=True)',
+                 'module'     : 'trigMC()',
+             },
+
+  'trigFS_Cut'   : { 'isChain'    : False ,
+                 'do4MC'      : True  ,
+                 'do4Data'    : False ,
+                 'import'     : 'LatinoAnalysis.NanoGardener.modules.TrigMaker' ,
+                 'declare'    : 'CBtrigMC = lambda : TrigMaker("RPLME_CMSSW",isData=False,keepRunP=True,cfg_path="LatinoAnalysis/NanoGardener/python/data/TrigMaker_CutBased_cfg.py",isFastSim=True)',
                  'module'     : 'CBtrigMC()',
                },
 
@@ -2907,9 +3848,6 @@ Steps = {
                  'module'     : 'trigMCKR_MupTdo()',
                },
 
-
-
-
 ## ------- MODULES: JEC
 
   'JECupdateMC2017': {
@@ -2919,7 +3857,168 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.jetRecalib' ,
                   'declare'    : 'jetRecalib2017MC = lambda : jetRecalib(globalTag="Fall17_17Nov2017_V32_MC", jetCollections=["CleanJet"], metCollections=["MET"])',
                   'module'     : 'jetRecalib2017MC()',
-                 },    
+                 }, 
+ 
+  # Old style, to be deleted when UL is fully done
+
+  'JMEUncertMC2016' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                  'declare'    : 'jetmetCorrectorMC2016 = createJMECorrector(isMC=True, dataYear=2016, jesUncert="Total")',
+                  'module'     : 'jetmetCorrectorMC2016()',
+                 },   
+ 
+  'JMEUncertFS2016' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                  'declare'    : 'jetmetCorrectorFS2016 = createJMECorrector(isMC=True, dataYear=2016, jesUncert="Total", redojec=True, isFastSim=True)',
+                  'module'     : 'jetmetCorrectorFS2016()',
+                 }, 
+
+  'METFixEEMC2017' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                  'declare'    : 'jetmetCorrectorEEMC2017 = createJMECorrector(isMC=True, dataYear=2017, runPeriod="", metBranchName="METFixEE2017")',
+                  'module'     : 'jetmetCorrectorEEMC2017()',
+                 }, 
+
+  'METFixEEFS2017' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                  'declare'    : 'jetmetCorrectorEEFS2017 = createJMECorrector(isMC=True, dataYear=2017, runPeriod="", metBranchName="METFixEE2017", isFastSim=True)',
+                  'module'     : 'jetmetCorrectorEEFS2017()',
+                 },  
+ 
+  'JMEUncertMC2018' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                  'declare'    : 'jetmetCorrectorMC2018 = createJMECorrector(isMC=True, dataYear=2018, jesUncert="Total")',
+                  'module'     : 'jetmetCorrectorMC2018()',
+                 },   
+ 
+  'JMEUncertFS2018' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                  'declare'    : 'jetmetCorrectorFS2018 = createJMECorrector(isMC=True, dataYear=2018, jesUncert="Total", redojec=True, isFastSim=True)',
+                  'module'     : 'jetmetCorrectorFS2018()',
+                 }, 
+
+  # End old style
+
+  'JMEUncertMC' : {
+                   'isChain'    : False ,
+                   'do4MC'      : True ,
+                   'do4Data'    : False ,
+                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                   'declare'    : 'jetmetCorrectorMC = createJMECorrector(isMC=True, dataYear="RPLME_YEAR", jesUncert="Total", isFastSim=False)',
+                   'module'     : 'jetmetCorrectorMC()',
+                 },
+
+  'JMEUncertFS' : {
+                   'isChain'    : False , 
+                   'do4MC'      : True ,
+                   'do4Data'    : False ,
+                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                   'declare'    : 'jetmetCorrectorFS = createJMECorrector(isMC=True, dataYear="RPLME_YEAR", jesUncert="Total", isFastSim=True)',
+                   'module'     : 'jetmetCorrectorFS()',
+                  },
+
+  'JMEUncertFS2016HIPM' : {
+                   'isChain'    : False ,
+                   'do4MC'      : True ,
+                   'do4MC'      : True ,
+                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                   'declare'    : 'jetmetCorrectorFS = createJMECorrector(isMC=True, dataYear="UL2016_preVFP", jesUncert="Total", isFastSim=True)',
+                   'module'     : 'jetmetCorrectorFS()',
+                  },
+
+  'JMEUncertFS2016noHIPM' : {
+                   'isChain'    : False ,
+                   'do4MC'      : True ,
+                   'do4Data'    : False ,
+                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                   'declare'    : 'jetmetCorrectorFS = createJMECorrector(isMC=True, dataYear="UL2016", jesUncert="Total", isFastSim=True)',
+                   'module'     : 'jetmetCorrectorFS()',
+                  },
+
+  'PtCorrReader' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.PtCorrReader', 
+                  'declare'    : 'ptcorr_SYSTVAR = lambda : PtCorrReader(Coll="CleanJet", CorrSrc="SYSTVAR")', 
+                  'module'     : 'ptcorr_SYSTVAR()',
+                 }, 
+
+  # Old style, to be deleted when UL is fully done
+
+  #'METFixEEDATA2017' : {
+  #                'isChain'    : False ,
+  #                'do4MC'      : False ,
+  #                'do4Data'    : True ,
+  #                'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+  #                'declare'    : 'jetmetCorrectorEEDATA2017 = createJMECorrector(isMC=False, dataYear=2017, runPeriod="RPLME_PERIOD", metBranchName="METFixEE2017")',
+  #                'module'     : 'jetmetCorrectorEEDATA2017()',
+  #               }, 
+
+  'METFixEEDATA2017B' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                  'declare'    : 'jetmetCorrectorEEDATA2017B = createJMECorrector(isMC=False, dataYear=2017, runPeriod="B", metBranchName="METFixEE2017")',
+                  'module'     : 'jetmetCorrectorEEDATA2017B()',
+                 }, 
+
+  'METFixEEDATA2017C' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                  'declare'    : 'jetmetCorrectorEEDATA2017C = createJMECorrector(isMC=False, dataYear=2017, runPeriod="C", metBranchName="METFixEE2017")',
+                  'module'     : 'jetmetCorrectorEEDATA2017C()',
+                 }, 
+
+  'METFixEEDATA2017D' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                  'declare'    : 'jetmetCorrectorEEDATA2017D = createJMECorrector(isMC=False, dataYear=2017, runPeriod="D", metBranchName="METFixEE2017")',
+                  'module'     : 'jetmetCorrectorEEDATA2017D()',
+                 }, 
+
+  'METFixEEDATA2017E' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                  'declare'    : 'jetmetCorrectorEEDATA2017E = createJMECorrector(isMC=False, dataYear=2017, runPeriod="E", metBranchName="METFixEE2017")',
+                  'module'     : 'jetmetCorrectorEEDATA2017E()',
+                 }, 
+
+  'METFixEEDATA2017F' : {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2' ,
+                  'declare'    : 'jetmetCorrectorEEDATA2017F = createJMECorrector(isMC=False, dataYear=2017, runPeriod="F", metBranchName="METFixEE2017")',
+                  'module'     : 'jetmetCorrectorEEDATA2017F()',
+                 },  
+
+  # End old style
 
   'JECupdateDATA2017': {
                   'isChain'    : False ,
@@ -2927,7 +4026,7 @@ Steps = {
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.jetRecalib' ,
                   'module'     : 'jetRecalib2017RPLME_RUN()', ### <--- TODO
-                 }, 
+                 },   
 
 # Check HEM15/16 ISSUE for 2018
 
@@ -3042,6 +4141,7 @@ Steps = {
                   'do4Data'    : False  ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.Grafter' ,
                   'module'     : 'Grafter(["baseW/F=RPLME_baseW","Xsec/F=RPLME_XSection"])',
+                  'excludeSample' : susy_samples,
                },  
 
   'btagPerJet2016': {
@@ -3050,6 +4150,15 @@ Steps = {
                   'do4Data'    : False  ,
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
                   'declare'    : 'btagSFProducer2016 = lambda : btagSFProducer(era="Legacy2016", algo="deepcsv")',
+                  'module'     : 'btagSFProducer2016()',
+                 },  
+
+  'btagPerJet2016FS': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'declare'    : 'btagSFProducer2016 = lambda : btagSFProducer(era="Legacy2016", algo="deepcsv", doFastSim=True)',
                   'module'     : 'btagSFProducer2016()',
                  },
 
@@ -3060,6 +4169,15 @@ Steps = {
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
                   'declare'    : 'btagSFProducer2017 = lambda : btagSFProducer(era="2017", algo="deepcsv")',
                   'module'     : 'btagSFProducer2017()',
+                 }, 
+
+  'btagPerJet2017FS': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'declare'    : 'btagSFProducer2017 = lambda : btagSFProducer(era="2017", algo="deepcsv", doFastSim=True)',
+                  'module'     : 'btagSFProducer2017()',
                  },               
 
   'btagPerJet2018': {
@@ -3069,18 +4187,254 @@ Steps = {
                   'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
                   'declare'    : 'btagSFProducer2018 = lambda : btagSFProducer(era="2018", algo="deepcsv")',
                   'module'     : 'btagSFProducer2018()',
-                 },
+                 },               
 
-  'btagPerEvent': {
+  'btagPerJet2018FS': {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'declare'    : 'btagSFProducer2018 = lambda : btagSFProducer(era="2018", algo="deepcsv", doFastSim=True)',
+                  'module'     : 'btagSFProducer2018()',
+                 },
+
+  'btagPerJetDeepCSVWPs': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'declare'    : 'btagSFProducerDeepCSVWPs = lambda : btagSFProducer(era="RPLME_YEAR", algo="deepcsv", doFastSim=False, addCorrelations=True, selectedWPs=["L", "M", "T"])',
+                  'module'     : 'btagSFProducerDeepCSVWPs()',
+                 },
+
+  'btagPerJetDeepJetWPs': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'declare'    : 'btagSFProducerDeepJetWPs = lambda : btagSFProducer(era="RPLME_YEAR", algo="deepjet", doFastSim=False, addCorrelations=True, selectedWPs=["L", "M", "T"])',
+                  'module'     : 'btagSFProducerDeepJetWPs()',
+                 },
+
+  'btagPerJetDeepCSVWPsFS': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'declare'    : 'btagSFProducerDeepCSVWPs = lambda : btagSFProducer(era="RPLME_YEAR", algo="deepcsv", doFastSim=True,  addCorrelations=True, selectedWPs=["L", "M", "T"])',
+                  'module'     : 'btagSFProducerDeepCSVWPs()',
+                 },
+
+  'btagPerJetDeepJetWPsFS': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'declare'    : 'btagSFProducerDeepJetWPs = lambda : btagSFProducer(era="RPLME_YEAR", algo="deepjet", doFastSim=True,  addCorrelations=True, selectedWPs=["L", "M", "T"])',
+                  'module'     : 'btagSFProducerDeepJetWPs()',
+                 },
+
+  'btagPerJetDeepCSVWPsFS2016HIPM': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'declare'    : 'btagSFProducerDeepCSVWPs = lambda : btagSFProducer(era="UL2016_preVFP", algo="deepcsv", doFastSim=True,  addCorrelations=True, selectedWPs=["L", "M", "T"])',
+                  'module'     : 'btagSFProducerDeepCSVWPs()',
+                 },
+
+  'btagPerJetDeepJetWPsFS2016HIPM': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'declare'    : 'btagSFProducerDeepJetWPs = lambda : btagSFProducer(era="UL2016_preVFP", algo="deepjet", doFastSim=True,  addCorrelations=True, selectedWPs=["L", "M", "T"])',
+                  'module'     : 'btagSFProducerDeepJetWPs()',
+                 },
+
+  'btagPerJetDeepCSVWPsFS2016noHIPM': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'declare'    : 'btagSFProducerDeepCSVWPs = lambda : btagSFProducer(era="UL2016", algo="deepcsv", doFastSim=True,  addCorrelations=True, selectedWPs=["L", "M", "T"])',
+                  'module'     : 'btagSFProducerDeepCSVWPs()',
+                 },
+
+  'btagPerJetDeepJetWPsFS2016noHIPM': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer' ,
+                  'declare'    : 'btagSFProducerDeepJetWPs = lambda : btagSFProducer(era="UL2016", algo="deepjet", doFastSim=True,  addCorrelations=True, selectedWPs=["L", "M", "T"])',
+                  'module'     : 'btagSFProducerDeepJetWPs()',
+                 },
+
+  ### Old style, to be removed after transition to UL complete
+  'btagPerEvent2016': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
                   'declare'    : '',
-                  'module'     : 'BTagEventWeightProducer()',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="btagDeepB", bTagWP="2016M", bTagMethod="1c", bTagPtCut="20")',
+                },
+
+  'btagPerEvent2016FS': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="btagDeepB", bTagWP="2016M", bTagMethod="1c", bTagPtCut="20", dataType="fastsim")',
+                },
+
+  'btagPerEvent2016Data': {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="btagDeepB", bTagWP="2016M", bTagMethod="1c", bTagPtCut="20", dataType="data")',
+                },
+
+  'btagPerEvent2017': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="btagDeepB", bTagWP="2017M", bTagMethod="1c", bTagPtCut="20")',
+                },
+
+  'btagPerEvent2017FS': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="btagDeepB", bTagWP="2017M", bTagMethod="1c", bTagPtCut="20", dataType="fastsim")',
+                },
+
+  'btagPerEvent2017Data': {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="btagDeepB", bTagWP="2017M", bTagMethod="1c", bTagPtCut="20", dataType="data")',
         
                 },
 
+  'btagPerEvent2018': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="btagDeepB", bTagWP="2018M", bTagMethod="1c", bTagPtCut="20")',
+                },
+
+  'btagPerEvent2018FS': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="btagDeepB", bTagWP="2018M", bTagMethod="1c", bTagPtCut="20", dataType="fastsim")',
+                },
+
+  'btagPerEvent2018Data': {
+                  'isChain'    : False ,
+                  'do4MC'      : False ,
+                  'do4Data'    : True  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="btagDeepB", bTagWP="2018M", bTagMethod="1c", bTagPtCut="20", dataType="data")',
+                },
+  # End old style
+
+  'btagPerEventDeepCSVWPs': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  #'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="deepcsv", bTagEra="RPLME_YEAR", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="mc")',
+                },
+
+  'btagPerEventDeepJetWPs': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  #'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="deepjet", bTagEra="RPLME_YEAR", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="mc")',
+                },
+
+  'btagPerEventDeepCSVWPsFS': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  #'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="deepcsv", bTagEra="RPLME_YEAR", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="fastsim")',
+                },
+
+  'btagPerEventDeepJetWPsFS': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  #'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="deepjet", bTagEra="RPLME_YEAR", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="fastsim")',
+                },
+
+  'btagPerEventDeepCSVWPsFS2016HIPM': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  #'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="deepcsv", bTagEra="UL2016_preVFP", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="fastsim")',
+                },
+
+  'btagPerEventDeepJetWPsFS2016HIPM': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  #'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="deepjet", bTagEra="UL2016_preVFP", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="fastsim")',
+                },
+
+  'btagPerEventDeepCSVWPsFS2016noHIPM': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  #'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="deepcsv", bTagEra="UL2016", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="fastsim")',
+                },
+
+  'btagPerEventDeepJetWPsFS2016noHIPM': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  #'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="deepjet", bTagEra="UL2016", bTagWPs=["L", "M", "T"], bTagMethod="1c", bTagSyst=["", "_correlated", "_uncorrelated"], bTagPtCuts=["20", "25", "30"], dataType="fastsim")',
+                },
+
+  # For v6loose beckward compatibility
+  'btagPerEventDeepCSVM': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.BTagEventWeightProducer' ,
+                  'declare'    : '',
+                  'module'     : 'BTagEventWeightProducer(bTagAlgo="deepcsv", bTagEra="RPLME_YEAR", bTagWPs=["M"], bTagMethod="1c", bTagPtCuts=["20", "25", "30"], dataType="mc")',
+                },
 
   'LeptonSF' : {
                   'isChain'    : False ,
@@ -3121,6 +4475,24 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSFMaker' ,
                   'declare'    : 'LeptonSF_MupTdo = lambda : LeptonSFMaker("RPLME_CMSSW", branch_map="MupTdo")',
                   'module'     : 'LeptonSF_MupTdo()',
+                },
+
+  'LeptonSFSusy' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSFMaker' ,
+                  'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW", "LatinoAnalysis/NanoGardener/python/data/LeptonSelSUSY_cfg.py")',
+                  'module'     : 'LeptonSF()',
+                },
+
+  'LeptonSFSusyFS' : {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False  ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.LeptonSFMaker' ,
+                  'declare'    : 'LeptonSF = lambda : LeptonSFMaker("RPLME_CMSSW", "LatinoAnalysis/NanoGardener/python/data/LeptonSelSUSY_cfg.py", "", True)',
+                  'module'     : 'LeptonSF()',
                 },
 
   'JetSF': {
@@ -3211,8 +4583,15 @@ Steps = {
                   'declare'    : 'puWeight = lambda : runDependentPuW("RPLME_CMSSW")',
                   'module'     : 'puWeight()', 
              } , 
-
-
+   
+  'puWUL16': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.runDependentPuW' ,
+                  'declare'    : 'puWeightUL16 = lambda : runDependentPuW(cmssw="RPLME_CMSSW", PUWeight_cfg="LatinoAnalysis/NanoGardener/python/data/PUWeight_UL16_cfg.py")',
+                  'module'     : 'puWeightUL16()',
+             } ,
 
 
   'puW2016': {
@@ -3234,13 +4613,24 @@ Steps = {
                   'module'     : 'puWeightProducer("auto",pufile_data2017,"pu_mc","pileup",verbose=False)',
   },
 
-   'susyW': {
+  'susyW': {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.SusyWeightsProducer' ,
                   'module'     : 'SusyWeightsProducer("RPLME_CMSSW", "RPLME_SOURCEDIR")' ,
-             },
+                },
+
+  'ZZGen': {
+                  'isChain'    : False ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'import'     : 'LatinoAnalysis.NanoGardener.modules.ZZGenVarsProducer' ,
+                  'module'     : 'ZZGenVarsProducer()' ,
+                  #'onlySample' : ['ggZZ4e', 'ggZZ4m', 'ggZZ4t', 'ggZZ2e2m', 'ggZZ2e2t', 'ggZZ2m2t', 'ggZZ2e2n', 'ggZZ2m2n', 'ZZTo4L_ext1', 'ZZTo4L_ext2', 'ZZTo4L_newpmx', 'ZZTo2L2Nu', 'ZZTo2L2Nu_ext1', 'ZZTo2L2Nu_ext2', 'GluGluHToZZTo4L_M125'],
+                  'onlySample' : ['ZZTo4L_ext1', 'ZZTo4L_ext2', 'ZZTo4L_newpmx', 'ZZTo2L2Nu', 'ZZTo2L2Nu_ext1', 'ZZTo2L2Nu_ext2'],
+               },
+  
 
 ## ------- MODULES: Embedding
 
@@ -3343,7 +4733,7 @@ Steps = {
                   'do4MC'      : True ,
                   'do4Data'    : False ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,RPLME_YEAR)',
+                  'declare'    : 'rochesterMC = lambda : rochester_corr(False,"RPLME_YEAR")',
                   'module'     : 'rochesterMC()',
               },
 
@@ -3352,7 +4742,7 @@ Steps = {
                   'do4MC'      : False ,
                   'do4Data'    : True ,
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.rochester_corrections',
-                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,RPLME_YEAR)',
+                  'declare'    : 'rochesterDATA = lambda : rochester_corr(True,"RPLME_YEAR")',
                   'module'     : 'rochesterDATA()',
               },
 
@@ -5582,7 +6972,7 @@ Steps = {
                   'isChain'    : False ,
                   'do4MC'      : True  ,
                   'do4Data'    : True  ,
-                  'SizeMax'    : 5e9 ,
+                  'SizeMax'    : 1e9 ,
                  #'bigSamples' : ['DYJetsToLL_M-50','DY2JetsToLL','ZZTo2L2Q','DYJetsToLL_M-50-LO',
                  #                'DYJetsToLL_M-50-LO-ext1',
                  #                'WZTo2L2Q','TTToSemiLepton','TTToSemiLeptonic','TTTo2L2Nu_ext1','TTJetsDiLep-LO-ext1','TTTo2L2Nu',
@@ -5635,12 +7025,165 @@ Steps = {
                                        },
                             },
                },
-
-
-
 }
+
+# Copy versions
+Steps['MCSusy2016v6']    = Steps['MCSusy2016']
+Steps['MCSusy2016FSv6']  = Steps['MCSusy2016FS']
+Steps['MCSusy2017v6']    = Steps['MCSusy2017']
+Steps['MCSusy2017FSv6']  = Steps['MCSusy2017FS']
+Steps['MCSusy2018v6']    = Steps['MCSusy2018']
+Steps['MCSusy2018FSv6']  = Steps['MCSusy2018FS']
+
+# METFixEEDATA2017
+for dataperiod in [ 'B', 'C', 'D', 'E', 'F' ] :
+    Steps['DATASusy2017'+dataperiod+'v6'] = { }
+    for key in Steps['DATASusy2017v6']:
+        if key!='subTargets':
+            Steps['DATASusy2017'+dataperiod+'v6'][key] = Steps['DATASusy2017v6'][key]
+        else:
+            Steps['DATASusy2017'+dataperiod+'v6']['subTargets'] = [ ]
+            for subtarget in Steps['DATASusy2017v6']['subTargets']:
+                Steps['DATASusy2017'+dataperiod+'v6']['subTargets'].append(subtarget)
+            Steps['DATASusy2017'+dataperiod+'v6']['subTargets'].insert(1, 'METFixEEDATA2017'+dataperiod)
+
+for dataperiod in [ 'B', 'C', 'D', 'E', 'F' ] :
+    Steps['DATALatino2017'+dataperiod+'v6'] = { }
+    for key in Steps['DATALatino2017v6']:
+        if key!='subTargets':
+            Steps['DATALatino2017'+dataperiod+'v6'][key] = Steps['DATALatino2017v6'][key]
+        else:
+            Steps['DATALatino2017'+dataperiod+'v6']['subTargets'] = [ ]
+            for subtarget in Steps['DATALatino2017v6']['subTargets']:
+                Steps['DATALatino2017'+dataperiod+'v6']['subTargets'].append(subtarget)
+            Steps['DATALatino2017'+dataperiod+'v6']['subTargets'].insert(1, 'METFixEEDATA2017'+dataperiod)
+
+# btagPerEvent 
+
+## Old style. To be removed after transition to UL
+##for datatype in [ '', 'FS', 'Data' ] :
+#    for year in [ '2016', '2017', '2018' ] : 
+#        for ptcut in [ '25', '30' ] :
+#	        Steps['btagPerEvent'+year+datatype+'Pt'+ptcut] = { }
+#            for key in Steps['btagPerEvent'+year+datatype]: 
+#                Steps['btagPerEvent'+year+datatype+'Pt'+ptcut][key] = Steps['btagPerEvent'+year+datatype][key]
+#                Steps['btagPerEvent'+year+datatype+'Pt'+ptcut]['module'] = Steps['btagPerEvent'+year+datatype]['module'].replace('bTagPtCut="20"', 'bTagPtCut="'+ptcut+'"') 
+## end old style to be removed
+
+for datatype in [ 'FS', 'Data' ] :
+    
+    Steps['btagPerEventDeepCSVWPs'+datatype] = { }
+    for key in Steps['btagPerEventDeepCSVWPs']:
+        Steps['btagPerEventDeepCSVWPs'+datatype][key] = Steps['btagPerEventDeepCSVWPs'][key]
+    if datatype=='FS':
+        Steps['btagPerEventDeepCSVWPs'+datatype]['module'] = Steps['btagPerEventDeepCSVWPs'+datatype]['module'].replace('dataType="mc"', 'dataType="fastsim"')
+    elif datatype=='Data':
+        Steps['btagPerEventDeepCSVWPs'+datatype]['do4MC'] = False
+        Steps['btagPerEventDeepCSVWPs'+datatype]['do4Data'] = True
+        Steps['btagPerEventDeepCSVWPs'+datatype]['module'] = Steps['btagPerEventDeepCSVWPs'+datatype]['module'].replace('dataType="mc"', 'dataType="data"')
+
+    if datatype=='FS':
+
+        Steps['btagPerJetDeepCSVWPs'+datatype] = { }
+        for key in Steps['btagPerJetDeepCSVWPs']:
+            Steps['btagPerJetDeepCSVWPs'+datatype][key] = Steps['btagPerJetDeepCSVWPs'][key]
+        Steps['btagPerJetDeepCSVWPs'+datatype]['declare'] = Steps['btagPerJetDeepCSVWPs'+datatype]['declare'].replace('btagSFProducerWPs =', 'btagSFProducerWPs'+datatype+' =') 
+        Steps['btagPerJetDeepCSVWPs'+datatype]['declare'] = Steps['btagPerJetDeepCSVWPs'+datatype]['declare'].replace('doFastSim=False', 'doFastSim=True')
+        Steps['btagPerJetDeepCSVWPs'+datatype]['module'] = Steps['btagPerJetDeepCSVWPs'+datatype]['module'].replace('btagSFProducerWPs()', 'btagSFProducerWPs'+datatype+'()')
+
+# mt2Producer regions
+
+mt2CRs = [ 'SameSign', 'Fake', 'WZ', 'WZtoWW', 'ttZ', 'ZZ' ]
+
+mt2regions = [ x for x in mt2CRs ]
+mt2regions.extend([ 'ctrl'+x for x in mt2CRs ])
+mt2regions.extend([ 'reco', 'fast' ])
+
+for region in mt2CRs: 
+
+    Steps['susyMT2'+region+'Nomin']     = { }
+    Steps['susyMT2ctrl'+region+'Nomin'] = { }
+
+    for key in Steps['susyMT2recoNomin']:
+        Steps['susyMT2'+region+'Nomin'][key]     = Steps['susyMT2recoNomin'][key]  
+        Steps['susyMT2ctrl'+region+'Nomin'][key] = Steps['susyMT2recoNomin'][key]
+
+    Steps['susyMT2'+region+'Nomin']['module'] = Steps['susyMT2recoNomin']['module'].replace('analysisRegion=""', 'analysisRegion="'+region+'"')
+    Steps['susyMT2ctrl'+region+'Nomin']['module'] = Steps['susyMT2'+region+'Nomin']['module'].replace('filterRegion="region"', 'filterRegion="control"')
+   
+# JES, JER, MET variations
+
+for treesyst in ['nom',  'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', 'unclustEnUp', 'jerDown', 'jerUp', 'jesTotalSmearDown', 'jesTotalSmearUp', 'unclustEnSmearDown', 'unclustEnSmearUp' ]:
+
+  treesystname = treesyst.replace('Total', '').replace('unclustEn', 'MET').upper().replace('UP', 'Up').replace('DOWN', 'Do')
+  treesystname = treesystname.replace('NOM', 'Nomin').replace('JESSMEAR', 'SJS').replace('METSMEAR', 'SMT')
+  if treesystname=='JER': treesystname = 'Smear'
+  
+  if treesyst in [ 'nom', 'jesTotalDown', 'jesTotalUp', 'jerDown', 'jerUp' ]:
+
+    Steps['PtCorr'+treesystname] = { } 
+    for key in Steps['PtCorrReader']:
+      Steps['PtCorr'+treesystname][key] = Steps['PtCorrReader'][key]
+    Steps['PtCorr'+treesystname]['declare'] = Steps['PtCorrReader']['declare'].replace('SYSTVAR', treesyst)
+    Steps['PtCorr'+treesystname]['module'] = Steps['PtCorrReader']['module'].replace('SYSTVAR', treesyst)
+    for ver_step in ['v6loose','v8']:
+      for year in [ '2016', '2016HIPM', '2016noHIPM', '2017', '2018' ]:
+        for datatype in [ 'MC', 'FS' ]:
+          if 'HIPM' in year and ver_step=='v6loose': continue
+          if 'HIPM' in year and datatype=='MC': continue
+          if year=='2016' and datatype=='FS': continue
+
+          yearver = year+ver_step
+          if yearver=='2016HIPMv8':   yearver = '2016v8HIPM'
+          if yearver=='2016noHIPMv8': yearver = '2016v8noHIPM'
+
+          Steps[datatype+'Susy'+treesystname+yearver] = { } 
+          for key in Steps[datatype+'SusySyst'+yearver]:
+            if key!='subTargets':
+              Steps[datatype+'Susy'+treesystname+yearver][key] = Steps[datatype+'SusySyst'+yearver][key]
+            else: 
+              Steps[datatype+'Susy'+treesystname+yearver][key] = [ 'PtCorr'+treesystname if x=='PtCorrReader' else x for x in Steps[datatype+'SusySyst'+yearver][key] ]
+
+  if treesyst!='nom': # or treesyst!='T1': #TO BE COMPLETED WHEN MT2 PRODUCER IS UPDATED 
+
+    for region in mt2regions: 
+
+      addfilter = '' if (treesyst=='jer' or region not in [ 'reco', 'fast' ]) else 'syst'
+    
+      Steps['susyMT2'+region+treesystname] = { }
+      for key in Steps['susyMT2'+region+'Nomin']:
+        Steps['susyMT2'+region+treesystname][key] = Steps['susyMT2'+region+'Nomin'][key] 
+      Steps['susyMT2'+region+treesystname]['module'] = Steps['susyMT2'+region+'Nomin']['module'].replace('metSystematic="nom", filterRegion="', 'metSystematic="'+treesyst+'", filterRegion="'+addfilter)   
+
+  Steps['susyMT2ctrl'+treesystname] = {
+      'isChain'    : True  ,
+      'do4MC'      : True  ,
+      'do4Data'    : False ,
+      'subTargets' : [ 'susyMT2ctrl'+x+treesystname for x in mt2CRs ],
+    }
+  if treesyst=='nom': 
+    Steps['susyMT2ctrl'+treesystname]['do4Data'] = True
+
+susyMT2StepList = [ ]
+for step in Steps:
+    if 'susyMT2' in step:
+        susyMT2StepList.append(step)
+for step in susyMT2StepList:
+    puppiMT2StepName = step.replace('susyMT2', 'puppiMT2')
+    Steps[puppiMT2StepName] = { }
+    for key in Steps[step]:
+        Steps[puppiMT2StepName][key] = Steps[step][key]
+    if 'module' in Steps[puppiMT2StepName]:
+        Steps[puppiMT2StepName]['module'] = Steps[puppiMT2StepName]['module'].replace('mt2Producer(', 'mt2Producer(metType="puppi", ')
+    else:
+        targetList = [ ]
+        for target in Steps[puppiMT2StepName]['subTargets']:
+            targetList.append(target.replace('susyMT2', 'puppiMT2'))
+        Steps[puppiMT2StepName]['subTargets'] = targetList
+
+#
+
 Steps.update(addJESchainMembers())
-Steps.update(addJERchainMembers())
 Steps.update(addMETchainMembers())
 Steps.update(addSystChainMembers_CombJJLNu())
 

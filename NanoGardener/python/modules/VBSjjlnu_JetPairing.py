@@ -195,14 +195,14 @@ class VBSjjlnu_JetPairing(Module):
                 if not bool(puid & (1 << 0)): 
                     passcut = False
                     if self.debug: 
-                        print("Jet removed for PUID in horn index: ", jetindex, " CUT > pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass)
+                        print(("Jet removed for PUID in horn index: ", jetindex, " CUT > pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass))
                        
             if not passcut : continue
             
             vec = TLorentzVector()
             vec.SetPtEtaPhiM(pt, eta, phi, mass)
             if self.debug:
-                print("Jet index: ", jetindex, "> pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass)
+                print(("Jet index: ", jetindex, "> pt:", pt ," eta:", eta, " phi:", phi, " mass:", mass))
             jets.append(vec)
             coll_ids.append(jetindex)
         return jets, coll_ids
@@ -214,10 +214,10 @@ class VBSjjlnu_JetPairing(Module):
             algorithm in pairing_strategies_resolved map.
         '''
         (tag1, algo1), (tag2, algo2) = pairing_strategies_resolved[mode]
-        if self.debug: print("Association: ", tag1, algo1.__name__, tag2, algo2.__name__)
+        if self.debug: print(("Association: ", tag1, algo1.__name__, tag2, algo2.__name__))
 
         if algo1.__name__ in cache:
-            if self.debug: print("using cache for algo: ", algo1.__name__, algo1)
+            if self.debug: print(("using cache for algo: ", algo1.__name__, algo1))
             V1, remain_jets = cache[algo1.__name__]
         else:
             # Apply first algo
@@ -234,7 +234,7 @@ class VBSjjlnu_JetPairing(Module):
         V2_cleanjets = [good_jets_ids[ij] for ij in V2]
 
         if self.debug:
-            print(mode , "> ", tag1, V1_cleanjets, " | ", tag2, V2_cleanjets)
+            print((mode , "> ", tag1, V1_cleanjets, " | ", tag2, V2_cleanjets))
 
         self.out.fillBranch("{}_jets_{}".format(tag1,mode), V1_cleanjets)
         self.out.fillBranch("{}_jets_{}".format(tag2,mode), V2_cleanjets)

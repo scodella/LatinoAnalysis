@@ -17,9 +17,14 @@ Sites = {
               'lsCmd'       : 'ls' ,
               'mkDir'       : True ,
               'xrootdPath'  : 'root://eoscms.cern.ch/' ,
-            #  'treeBaseDir' : '/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/' ,
-              'treeBaseDir' : '/eos/cms/store/group/phys_btag/performance/Nano/' ,
-            #   'treeBaseDir' : '/eos/cms/store/group/phys_smp/VJets_NLO_VBSanalyses/', 
+              #'treeBaseDir' : '/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/' 
+              #'treeBaseDir' : '/eos/cms/store/user/scodella/SUSY/Nano/' ,
+              #'treeBaseDir' : '/eos/user/p/pmatorra/Work/Nano' ,
+              #      'treeBaseDir' : '/eos/home-p/pmatorra/Work/Nano' ,
+              #'treeBaseDir' : '/eos/cms/store/caf/user/scodella/BTV/Nano/' ,
+              'treeBaseDir' : '/eos/cms/store/group/phys_susy/Chargino/Nano/' ,
+              #'sourceDir'   : '/eos/user/s/scodella/SUSY/Nano/' ,
+              #'sourceDir'   : '/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/' ,
               'batchQueues' : ['8nh','1nd','2nd','1nw'],
               'slc_ver'     : 7
            } ,
@@ -27,7 +32,7 @@ Sites = {
   'sdfarm' : {
               'lsCmd'       : 'ls' ,
               'mkDir'       : False ,
-	            'xrootdPath'  : 'root://cms-xrdr.private.lo:2094/',
+	      'xrootdPath'  : 'root://cms-xrdr.private.lo:2094/',
               'treeBaseDir' : '/xrootd/store/user/jhchoi/Latino/HWWNano/',
              } ,
               #'lsCmd'       : 'xrdfs cms-xrdr.sdfarm.kr ls' ,

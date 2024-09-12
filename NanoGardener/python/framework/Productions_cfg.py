@@ -570,6 +570,80 @@ Productions = {
                        'year'    : '2018' ,
                    },
 
+#################################### nAODv8 UL DATA  ##############################################
+
+ # -------- 2016 DATA UL2016 nAODv8: Full2016v8
+ 'Run2016_106X_nAODv8_HIPM_Full2016v8': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_UL2016_HIPM_nAODv8.py' ,
+                       'cmssw'   : 'Full2016v8HIPM',
+                       'year'    : 'UL2016_preVFP' ,
+                   },
+
+ 'Run2016_106X_nAODv8_noHIPM_Full2016v8': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_UL2016_noHIPM_nAODv8.py' ,
+                       'cmssw'   : 'Full2016v8noHIPM',
+                       'year'    : 'UL2016' ,
+                   },
+
+ # -------- 2016 DATA UL2016 nAODv9: Full2016v8
+
+ 'Run2016_106X_nAODv9_HIPM_Full2016v8': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_UL2016_HIPM_nAODv9.py' ,
+                       'cmssw'   : 'Full2016v8HIPM',
+                       'year'    : 'UL2016_preVFP' ,
+                   },
+
+ 'Run2016_106X_nAODv9_noHIPM_Full2016v8': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2016_UL2016_noHIPM_nAODv9.py' ,
+                       'cmssw'   : 'Full2016v8noHIPM',
+                       'year'    : 'UL2016' ,
+                   },
+
+
+ # -------- 2017 DATA UL2017 nAODv8: Full2017v8
+ 'Run2017_106X_nAODv8_Full2017v8': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2017_106X_nAODv8.py' ,
+                       'cmssw'   : 'Full2017v8',
+                       'year'    : 'UL2017' ,
+                   },
+
+# -------- 2017 DATA UL2017 nAODv9: Full2017v8
+ 'Run2017_106X_nAODv9_Full2017v8': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2017_106X_nAODv9.py' ,
+                       'cmssw'   : 'Full2017v8',
+                       'year'    : 'UL2017' ,
+                   },
+
+ # -------- 2018 DATA UL2018 nAODv8: Full2018v8
+ 'Run2018_106X_nAODv8_Full2018v8': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2018_106X_nAODv8.py' ,
+                       'cmssw'   : 'Full2018v8',
+                       'year'    : 'UL2018' ,
+                   },
+
+ # -------- 2018 DATA UL2018 nAODv9: Full2018v8
+ 'Run2018_106X_nAODv9_Full2018v8': {
+                       'isData'  : True ,
+                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2018_106X_nAODv9.py' ,
+                       'cmssw'   : 'Full2018v8',
+                       'year'    : 'UL2018' ,
+                   },
+
 #################################### nAODv6 MC ##############################################
 
  # -------- 2016 MC 102X nAODv7: Full2016v7
@@ -661,54 +735,86 @@ Productions = {
                        'year'    : '2018' ,
                       },
 
-#################################### nAODv7 EMBEDDING ##############################################
+#################################### nAODv8/nAODv9 MC ##############################################
 
- 'Embedding2016_102X_nAODv7_Full2016v7' : {
-                       'isData'  : True ,
-                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"  % os.environ["CMSSW_BASE"]',
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Embed2016_nAODv7.py' ,
-                       'cmssw'   : 'Full2016v7',
-                       'year'    : '2016' ,
-                      },
-
- 'Embedding2017_102X_nAODv7_Full2017v7' : {
-                       'isData'  : True ,
-                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt"  % os.environ["CMSSW_BASE"]',
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Embed2017_nAODv7.py' ,
-                       'cmssw'   : 'Full2017v7',
-                       'year'    : '2017' ,
-                      },
-
- 'Embedding2018_102X_nAODv7_Full2018v7' : {
-                       'isData'  : True ,
-                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Embed2018_nAODv7.py' ,
-                       'cmssw'   : 'Full2018v7',
-                       'year'    : '2018' ,
-                      },
-
-#################################### nAODv9 BTagPerf ##############################################
-
- 'Summer20UL17_106X_nAODv9_Full2017v8' : {
+ # -------- 2016 MC 106X nAODv8: Full2016v8
+ 'Summer20UL16_106X_nAODv8_HIPM_Full2016v8': {
                        'isData'  : False ,
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL17_btv_106X_nAODv9.py',
-                       'cmssw'   : 'Full2017v8',
-                       'year'    : 'UL2017' ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16preVPF_susy_106X_nAODv8.py' ,
+                       'cmssw'   : 'Full2016v8HIPM' ,
+                       'year'    : 'UL2016_preVFP' ,
+ #                      'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
                        'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
                        'YRver'   : ['YR4','13TeV'] ,
                    },
 
- 'Run2017_106X_nAODv9_Full2017v8': {
-                       'isData'  : True ,
-                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt"  % os.environ["CMSSW_BASE"]',
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2017_btv_106X_nAODv9.py' ,
-                       'cmssw'   : 'Full2017v8',
-                       'year'    : 'UL2017' ,
+ 'Summer20UL16_106X_nAODv8_noHIPM_Full2016v8': {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16postVPF_susy_106X_nAODv8.py' ,
+                       'cmssw'   : 'Full2016v8noHIPM' ,
+                       'year'    : 'UL2016' ,
+ #                      'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
                    },
 
+ # -------- 2016 MC 106X nAODv9: Full2016v8
+ 'Summer20UL16_106X_nAODv9_HIPM_Full2016v8': {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16preVFP_susy_106X_nAODv9.py' ,
+                       'cmssw'   : 'Full2016v8HIPM' ,
+                       'year'    : 'UL2016_preVFP' ,
+ #                      'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+
+ 'Summer20UL16_106X_nAODv9_noHIPM_Full2016v8': {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL16postVFP_susy_106X_nAODv9.py' ,
+                       'cmssw'   : 'Full2016v8noHIPM' ,
+                       'year'    : 'UL2016' ,
+ #                      'JESGT'   : 'Summer16_07Aug2017_V11_MC' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+
+ # -------- 2017 MC UL
+ 'Summer20UL17_106X_nAODv8_Full2017v8' : {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL17_susy_106X_nAODv8.py',
+                       'cmssw'   : 'Full2017v8',
+                       'year'    : 'UL2017' ,
+ #                      'JESGT'   : 'Fall17_17Nov2017_V32_MC' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+
+ # -------- 2017 MC UL
+ 'Summer20UL17_106X_nAODv9_Full2017v8' : {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL17_susy_106X_nAODv9.py',
+                       'cmssw'   : 'Full2017v8',
+                       'year'    : 'UL2017' ,
+ #                      'JESGT'   : 'Fall17_17Nov2017_V32_MC' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+ 
+ # -------- 2018 MC UL
+ 'Summer20UL18_106X_nAODv8_Full2018v8' : {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL18_susy_106X_nAODv8.py',
+                       'cmssw'   : 'Full2018v8',
+                       'year'    : 'UL2018' ,
+ #                      'JESGT'   : 'Autumn18_V19_MC',
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+ # -------- 2018 MC UL
  'Summer20UL18_106X_nAODv9_Full2018v8' : {
                        'isData'  : False ,
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL18_btv_106X_nAODv9.py',
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Summer20UL18_susy_106X_nAODv9.py',
                        'cmssw'   : 'Full2018v8',
                        'year'    : 'UL2018' ,
  #                      'JESGT'   : 'Autumn18_V19_MC',
@@ -716,14 +822,34 @@ Productions = {
                        'YRver'   : ['YR4','13TeV'] ,
                    },
 
- 'Run2018_106X_nAODv9_Full2018v8': {
-                       'isData'  : True ,
-                       'jsonFile'   : '"%s/src/LatinoAnalysis/NanoGardener/python/data/certification/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"  % os.environ["CMSSW_BASE"]',
-                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Run2018_btv_106X_nAODv9.py' ,
-                       'cmssw'   : 'Full2018v8',
-                       'year'    : 'UL2018' ,
+#################################### nAODv9 UL FS ##############################################
+
+ 'Spring21UL16FS_106X_nAODv9_Full2016v8': {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Spring21UL16FS_106X_nAODv9.py' ,
+                       'cmssw'   : 'Full2016v8' ,
+                       'year'    : 'UL2016' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
                    },
 
+ 'Spring21UL17FS_106X_nAODv9_Full2017v8': {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Spring21UL17FS_106X_nAODv9.py' ,
+                       'cmssw'   : 'Full2017v8' ,
+                       'year'    : 'UL2017' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
+
+ 'Spring21UL18FS_106X_nAODv9_Full2018v8': {
+                       'isData'  : False ,
+                       'samples' : 'LatinoAnalysis/NanoGardener/python/framework/samples/Spring21UL18FS_106X_nAODv9.py' ,
+                       'cmssw'   : 'Full2018v8' ,
+                       'year'    : 'UL2018' ,
+                       'xsFile'  : 'LatinoAnalysis/NanoGardener/python/framework/samples/samplesCrossSections2018.py' ,
+                       'YRver'   : ['YR4','13TeV'] ,
+                   },
 
 }
 
