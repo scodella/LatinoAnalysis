@@ -763,6 +763,24 @@ class DatacardFactory:
                     histo.SetBinContent(ibin, binContent)
                     histo.SetBinError(ibin, binError)
 
+        if '_SymWWPhi' in opt.tag and suffix: 
+            if 'WWphi' in suffix and 'Down' in suffix:  
+                histocn = self._fileIn.Get(shapeName.split('_WWphi')[0])    
+                histoup = self._fileIn.Get(shapeName.replace('Down','Up')) 
+                for ibin in range(1,histo.GetNbinsX()+1):   
+                    binContent = histocn.GetBinContent(ibin) - (histoup.GetBinContent(ibin)-histocn.GetBinContent(ibin))
+                    binError   = 0. if histocn.GetBinContent(ibin)==0. else binContent*histocn.GetBinError(ibin)/histocn.GetBinContent(ibin)        
+                    histo.SetBinContent(ibin, binContent)     
+                    histo.SetBinError(ibin, binError)    
+
+        if '_NormWWPhi' in opt.tag and suffix:  
+            if 'WWphi' in suffix and ('Up' in suffix or 'Down' in suffix): 
+                histocn = self._fileIn.Get(shapeName.split('_WWphi')[0])
+                cnint  = histocn.Integral(-1,-1)
+                sysint = histo.Integral(-1,-1)
+                if sysint>0.:
+                    histo.Scale(cnint/sysint)  
+
         if '_HighStat' in opt.tag or '_HighLumi' in opt.tag:
             if 'DATA' not in sampleName:
                 increaseFactor = 1000. if '_HighStat' in opt.tag else 3000./138.
