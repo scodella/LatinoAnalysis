@@ -22,6 +22,7 @@ Samples['TChipmSlepSnu_mC1-825to1500']    = {'srmPrefix': 'srm://srm01.ifca.es:8
 #### TChipmWW
 
 Samples['TChipmWW_WWTo2LNu_mC1-100to700'] = {'srmPrefix': 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL18FS_106X_nAODv9/TChipmWW_WWTo2LNu_mC1-100to700/']}
+Samples['TChipmWW_WWTo2LNu_mC1-100to450'] = {'srmPrefix': 'gsiftp://eoscmsftp.cern.ch//eos/cms/', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL18FS_106X_nAODv9/TChipmWW_WWTo2LNu_mC1-100to450/']}
 
 #### TSlepSlep
 

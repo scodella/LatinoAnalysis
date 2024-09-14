@@ -1198,6 +1198,14 @@ Steps = {
                                   ],
                 },
 
+  'FSSusy2017v8short2' :  {
+                  'isChain'    : True  ,
+                  'do4MC'      : True  ,
+                  'do4Data'    : False ,
+                  'selection'  : '"((nElectron+nMuon)>1)"' ,
+                  'subTargets' : ['leptonMaker', 'lepSelSusy'],
+                },
+
   'SFSusy2017v6loose' : {
                  'isChain'    : True  ,
                  'do4MC'      : True  ,

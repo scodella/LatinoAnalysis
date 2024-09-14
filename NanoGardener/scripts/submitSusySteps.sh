@@ -31,7 +31,7 @@ isAllDone () {
         return 1
     fi
 
-    if [[ $1 == 'hadd' || $1 == 'corr' || $1 == 'swgt' ]] ; then
+    if [[ $1 == 'hadd' || $1 == 'corr' || $1 == *'swgt' ]] ; then
         # This is treaky
         if [[ "$datasetsToExclude" == *"-T "* ]] ; then
             echo Will not proceed with submission for $2 step $4: option -T not supported by this script for the required step
@@ -180,7 +180,7 @@ for prod in 16 16HIPM 16noHIPM 17 18 ; do
                 else
                     year=$prod
                     if [ $prod == '16' ]; then
-                        periods=('HIPM' 'noHIPM') 
+                        periods=('HIPM') 
                     else
                         periods=("")
                     fi

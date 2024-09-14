@@ -635,10 +635,23 @@ class DatacardFactory:
         if suffix:
             shapeName += suffix
 
+        originalShapeName = shapeName.split('/')[-1]
         if 'SmtEU' in opt.tag:
             if 'CR' in cutName or 'T2' in sampleName or 'TChipm' in sampleName or 'TSlep' in sampleName:
                 originalShapeName = shapeName.split('/')[-1]
                 shapeName = shapeName.replace('_Smooth', '_')
+
+        if '_Switch' in opt.tag:
+            switchHisto = False
+            if '_SwitchTag' in opt.tag and 'SR' in cutName and '_Tag' in cutName and 'mC-125_mX-1' in sampleName:
+                switchHisto = True
+            if '_SwitchNoTag' in opt.tag and 'SR' in cutName and '_NoTag' in cutName and 'mC-125_mX-1' in sampleName:
+                switchHisto = True
+            if '_SwitchNoJet' in opt.tag and 'SR' in cutName and '_NoJet' in cutName and 'mC-125_mX-1' in sampleName:
+                switchHisto = True
+            if '_SwitchVeto' in opt.tag and 'SR' in cutName and '_Veto' in cutName and 'mC-125_mX-1' in sampleName:
+                switchHisto = True
+            if switchHisto: shapeName = shapeName.replace('mC-125_mX-1', 'mC-100_mX-1') 
 
         if '_SplitSR' in opt.tag:
             originalShapeName = shapeName.split('/')[-1]
@@ -659,9 +672,30 @@ class DatacardFactory:
             # Merged single ROOT file
             histo = self._fileIn.Get(shapeName)
 
+        if '_KillBin' in opt.tag:
+            if 'T2' in sampleName or 'TChipm' in sampleName or 'TSlep' in sampleName:
+                if '_KillBinNoJet6' in opt.tag:
+                    if 'NoJet' in cutName:
+                        histo.SetBinContent(6,0.)
+                        histo.SetBinError(6,0.)
+
+        if ('EventEven' in opt.tag or 'EventOdd' in opt.tag) and suffix and histo.Integral()==0.:
+            if 'T2' in sampleName or 'TChipm' in sampleName or 'TSlep' in sampleName:
+                histocn = self._fileIn.Get(shapeName.split(sampleName)[0]+sampleName)
+                if histocn.Integral()!=0.:
+                    for ibin in range(1, histo.GetNbinsX()+1):
+                        if not histocn.GetBinContent(ibin)==0:
+                            print '######ZERO', cutName, shapeName, str(ibin), str(histocn.GetBinContent(ibin) * 0.0001)
+                            histo.SetBinContent(ibin, histocn.GetBinContent(ibin) * 0.0001) 
+
         if 'SmtEU' in opt.tag:
             if 'CR' in cutName or 'T2' in sampleName or 'TChipm' in sampleName or 'TSlep' in sampleName:
                 if '_Smooth' in originalShapeName: histo.SetTitle(originalShapeName); histo.SetName(originalShapeName)
+
+        if '_Switch' in opt.tag:
+            if switchHisto:
+                histo.SetTitle(originalShapeName)
+                histo.SetName(originalShapeName)
 
         if '_SplitSR' in opt.tag:
             if originalShapeName!=shapeName.split('/')[-1]:
@@ -800,10 +834,30 @@ class DatacardFactory:
                     histoB.SetBinError(ib-4, histo.GetBinError(ib))
                 return histoB
 
-        if '_killSigStat' in opt.tag:
+        if '_killSigStat100' in opt.tag:
             if 'T2' in sampleName or 'TSlep' in sampleName or 'TChipm' in sampleName:
                 for ib in range(1, histo.GetNbinsX()+1):
-                    histo.SetBinError(ib, histo.GetBinContent(ib)/10.)
+                    histo.SetBinError(ib, histo.GetBinContent(ib)/100.)
+
+        if '_SigStatF' in opt.tag:
+            if 'T2' in sampleName or 'TSlep' in sampleName or 'TChipm' in sampleName:
+                redF = 1.
+                if '_SigStatF2R'   in opt.tag: redF =   2.
+                if '_SigStatF3R'   in opt.tag: redF =   3.
+                if '_SigStatF4R'   in opt.tag: redF =   4.
+                if '_SigStatF5R'   in opt.tag: redF =   5.
+                if '_SigStatF6R'   in opt.tag: redF =   6.
+                if '_SigStatF7R'   in opt.tag: redF =   7.
+                if '_SigStatF8R'   in opt.tag: redF =   8.
+                if '_SigStatF9R'   in opt.tag: redF =   9.
+                if '_SigStatF10R'  in opt.tag: redF =  10.
+                if '_SigStatF25R'  in opt.tag: redF =  25.
+                if '_SigStatF50R'  in opt.tag: redF =  50.
+                if '_SigStatF100R' in opt.tag: redF = 100.
+                if redF>1.:
+                    for ib in range(1, histo.GetNbinsX()+1):
+                        statErr = histo.GetBinError(ib)/math.sqrt(redF)
+                        histo.SetBinError(ib, statErr)
 
         if '_TagNoBinned' in opt.tag:
             if 'SR' in cutName and '_Tag' in cutName:
