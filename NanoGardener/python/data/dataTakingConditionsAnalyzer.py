@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os
 import sys
 import ROOT
@@ -32,31 +32,40 @@ yearsInfos  = { 'UL2016' : { 'Run' : 'Run2', 'runs' : [ 272007, 284044 ], 'numPi
                              'jsonFile'    : WebCAF+'Collisions22/Cert_Collisions2022_355100_362760_Golden.json',
                              'pileupFile'  : '/afs/cern.ch/user/s/smitra/public/xBTV/pileup_JSON.txt',
                              'normtagFile' : '/afs/cern.ch/user/l/lumipro/public/Normtags/normtag_BRIL.json' },
+                '2023'   : { 'Run' : 'Run3', 'runs' : [ 366442, 370790 ], 'numPileupBins' : '100',
+                             'jsonFile'    : WebCAF+'Collisions23/Cert_Collisions2023_366442_370790_Golden.json',
+                             'pileupFile'  : WebCAF+'Collisions23/PileUp/BCD/pileup_JSON.txt',
+                             'normtagFile' : '/afs/cern.ch/user/l/lumipro/public/Normtags/normtag_BRIL.json' },
                }
 
 runPeriods = { '2016' : { '2016B'   : [ 272007,   275376 ],
                           '2016C'   : [ 275657,   276283 ],
-	                  '2016D'   : [ 276315,   276811 ],
+	                      '2016D'   : [ 276315,   276811 ],
                           '2016E'   : [ 276831,	  277420 ],
                           '2016F'   : [ 277772,   278808 ],
                           '2016G'   : [ 278820,   280385 ],
                           '2016H'   : [ 280919,	  284044 ], }, 
                '2022' : { '2022CD'  : [ 355794,   359021 ],
                           '2022EFG' : [ 359022,   362760 ], },
+               '2023' : { '2023B'   : [ 366365,   367079 ],
+                          '2023C'   : [ 367080,   369802 ], 
+                          '2023BC'  : [ 366365,   369802 ],
+                          '2023D'   : [ 369803,   372415 ], },
               }
 runPeriods['UL2016'] = runPeriods['2016']
 runPeriods['UL2018'] = { '2018A'   : [ 315252 , 319076 ], '2018B' : [ 319077 , 325175 ] }
 
 def brilcalcSetup():
 
-    brilcalcSetupList = [ 'export LD_LIBRARY_PATH=/afs/cern.ch/cms/lumi/brilconda-1.1.7/root/lib' ]
-    brilcalcSetupList.append('export PYTHONPATH=/afs/cern.ch/cms/lumi/brilconda-1.1.7/root/lib')
-    brilcalcSetupList.append('export PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH')
-    brilcalcSetupList.append('export ROOTSYS=/afs/cern.ch/cms/lumi/brilconda-1.1.7/root')
-    brilcalcSetupList.append('export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.1.7/bin:$PATH')
-    brilcalcSetupList.append('pip uninstall brilws -y')
-    brilcalcSetupList.append('pip install --install-option="--prefix=$HOME/.local" brilws')
-    return ' ; '.join(brilcalcSetupList)
+    return 'source /cvmfs/cms-bril.cern.ch/cms-lumi-pog/brilws-docker/brilws-env'
+    #brilcalcSetupList = [ 'export LD_LIBRARY_PATH=/afs/cern.ch/cms/lumi/brilconda-1.1.7/root/lib' ]
+    #brilcalcSetupList.append('export PYTHONPATH=/afs/cern.ch/cms/lumi/brilconda-1.1.7/root/lib')
+    #brilcalcSetupList.append('export PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH')
+    #brilcalcSetupList.append('export ROOTSYS=/afs/cern.ch/cms/lumi/brilconda-1.1.7/root')
+    #brilcalcSetupList.append('export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.1.7/bin:$PATH')
+    #brilcalcSetupList.append('pip uninstall brilws -y')
+    #brilcalcSetupList.append('pip install --install-option="--prefix=$HOME/.local" brilws')
+    #return ' ; '.join(brilcalcSetupList)
 
 def loadJSON(jsonFile):
 
@@ -159,7 +168,7 @@ if __name__ == '__main__':
                         brilcalcCommand.append('cat '+opt.outputDir+'/Prescales/Prescales_'+period+'_'+hltPath+'_*.csv > '+opt.outputDir+'/Prescales/Prescales_'+period+'_'+hltPath+'.csv')
                         brilcalcCommand.append('rm -f '+opt.outputDir+'/Prescales/Prescales_'+period+'_'+hltPath+'_*.csv')
 
-                        os.system(' ; '.join(brilcalcCommand))
+                        os.system('\n'.join(brilcalcCommand))
 
                     if opt.saveJSON or opt.mergePS:
 
@@ -215,14 +224,19 @@ if __name__ == '__main__':
                         for hltPath in opt.hltPaths.split('-'):
                             brilcalcCommand.append(brilcalcBaseCommand+' --hltpath "'+hltPath+'_v*" > '+opt.outputDir+'/Luminosity/Luminosity_'+hltPath+'_'+period+'.txt')
 
-                    os.system(' ; '.join(brilcalcCommand))
+                    os.system('\n'.join(brilcalcCommand))
 
                 elif 'pileup' in opt.action.lower() or 'pu' in opt.action.lower():
 
                     os.system('mkdir -p '+opt.outputDir+'/Pileup')
 
+                    pileupJSON = yearInfos['pileupFile']
+                    if 'http' in pileupJSON:
+                        pileupJSON = './'+yearInfos['pileupFile'].split('/')[-1]
+                        os.system('wget '+yearInfos['pileupFile'])
+
                     for xSec in minBiasXsec[yearInfos['Run']]:
-                        os.system('pileupCalc.py -i temporary_'+period+'.json --inputLumiJSON ' + yearInfos['pileupFile'] + ' --calcMode true --minBiasXsec ' + minBiasXsec[yearInfos['Run']][xSec] + ' --maxPileupBin ' + yearInfos['numPileupBins'] + ' --numPileupBins ' + yearInfos['numPileupBins'] + ' --pileupHistName ' + xSec + ' ' + opt.outputDir + '/Pileup/' + period+'_'+xSec+'.root')
+                        os.system('pileupCalc.py -i temporary_'+period+'.json --inputLumiJSON ' + pileupJSON + ' --calcMode true --minBiasXsec ' + minBiasXsec[yearInfos['Run']][xSec] + ' --maxPileupBin ' + yearInfos['numPileupBins'] + ' --numPileupBins ' + yearInfos['numPileupBins'] + ' --pileupHistName ' + xSec + ' ' + opt.outputDir + '/Pileup/' + period+'_'+xSec+'.root')
 
                     os.system('hadd -f -k '+opt.outputDir+'/Pileup/'+period+'.root'+' '+opt.outputDir+'/Pileup/'+period+'_*.root; rm '+opt.outputDir+'/Pileup/'+period+'_*.root')
  
