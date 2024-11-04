@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import json
 import sys
@@ -415,7 +415,7 @@ if __name__ == '__main__':
     samples = OrderedDict()
     if os.path.exists(opt.samplesFile) :
       handle = open(opt.samplesFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     factory._samples = samples
@@ -429,9 +429,9 @@ if __name__ == '__main__':
     elif os.path.exists(opt.structureFile) :
       cuts = {}
       cuthandle = open('cuts.py','r')
-      exec(cuthandle)
+      exec(cuthandle.read())
       handle = open(opt.structureFile,'r')
-      exec(handle)
+      exec(handle.read())
       handle.close()
 
     factory._structure = structure
