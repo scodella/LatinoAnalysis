@@ -831,7 +831,8 @@ Steps = {
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>1)"' ,
                   'subTargets' : ['leptonMaker', 'lepSelSusy' , 'trigFS' ,
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  # 250729 patch: 'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  'PromptParticlesGenVars','GenLeptonMatch','TopGenVars'
                                   ],
                 },
 
@@ -983,6 +984,14 @@ Steps = {
                                      'rochesterMC', 'LeptonSFSusy', 'puW', 'puWUL16', 'EmbeddingVeto' ],
                 },
 
+  'JMEUncertUL16FSV3HIPM' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'selection'  : '"(run_period<=3)"' ,
+                     'subTargets' : ['JMEUncertFS2016HIPM'],
+                },
+
   'FSSusyCorr2016v8noHIPM' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
@@ -990,6 +999,14 @@ Steps = {
                      'selection'  : '"(run_period>=4)"' ,
                      'subTargets' : ['JMEUncertFS2016noHIPM', 'PrefCorrUL16noHIPM', 'btagPerJetDeepCSVWPsFS2016noHIPM', 'btagPerJetDeepJetWPsFS2016noHIPM',
                                      'rochesterMC', 'LeptonSFSusy', 'puW', 'puWUL16', 'EmbeddingVeto' ],
+                },
+
+  'JMEUncertUL16FSV3noHIPM' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'selection'  : '"(run_period>=4)"',
+                     'subTargets' : [ 'JMEUncertFS2016noHIPM' ],
                 },
 
   'FSSusySyst2016v6loose' : {
@@ -1194,7 +1211,8 @@ Steps = {
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>1)"' ,
                   'subTargets' : ['leptonMaker', 'lepSelSusy' , 'trigFS' ,
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  # 250729 patch: 'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  'PromptParticlesGenVars','GenLeptonMatch','TopGenVars'
                                   ],
                 },
 
@@ -1349,6 +1367,14 @@ Steps = {
                                      'rochesterMC', 'LeptonSFSusy', 'puW', 'EmbeddingVeto' ],
                 },
 
+  'JMEUncertUL17FSV3' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'selection'  : '"(run_period>=0)"' ,
+                     'subTargets' : ['JMEUncertFS'],
+                },
+
   'FSSusySyst2017v6loose' : {
                      'isChain'    : True  ,
                      'do4MC'      : True  ,
@@ -1489,7 +1515,8 @@ Steps = {
                   'do4Data'    : False ,
                   'selection'  : '"((nElectron+nMuon)>1)"' ,
                   'subTargets' : ['leptonMaker', 'lepSelSusy' , 'trigFS' ,
-                                  'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  # 250729 patch: 'PromptParticlesGenVars','GenVar','GenLeptonMatch','TopGenVars'
+                                  'PromptParticlesGenVars','GenLeptonMatch','TopGenVars'
                                   ],
                 },
 
@@ -1631,6 +1658,14 @@ Steps = {
                      'selection'  : '"(run_period>=0)"' ,
                      'subTargets' : ['JMEUncertFS', 'btagPerJetDeepCSVWPsFS', 'btagPerJetDeepJetWPsFS',
                                      'rochesterMC', 'LeptonSFSusy', 'puW', 'EmbeddingVeto' ],
+                },
+
+  'JMEUncertUL18FSV3' : {
+                     'isChain'    : True  ,
+                     'do4MC'      : True  ,
+                     'do4Data'    : False ,
+                     'selection'  : '"(run_period>=0)"' ,
+                     'subTargets' : ['JMEUncertFS'],
                 },
 
   'FSSusySyst2018v6loose' : {
@@ -7094,9 +7129,11 @@ for datatype in [ 'FS', 'Data' ] :
 # mt2Producer regions
 
 mt2CRs = [ 'SameSign', 'Fake', 'WZ', 'WZtoWW', 'ttZ', 'ZZ' ]
+mt2CRFSs = [ 'WZ', 'ttZ', 'ZZ' ]
 
 mt2regions = [ x for x in mt2CRs ]
 mt2regions.extend([ 'ctrl'+x for x in mt2CRs ])
+mt2regions.extend([ 'crfs'+x for x in mt2CRFSs ])
 mt2regions.extend([ 'reco', 'fast' ])
 
 for region in mt2CRs: 
@@ -7111,6 +7148,15 @@ for region in mt2CRs:
     Steps['susyMT2'+region+'Nomin']['module'] = Steps['susyMT2recoNomin']['module'].replace('analysisRegion=""', 'analysisRegion="'+region+'"')
     Steps['susyMT2ctrl'+region+'Nomin']['module'] = Steps['susyMT2'+region+'Nomin']['module'].replace('filterRegion="region"', 'filterRegion="control"')
    
+for region in mt2CRFSs:
+
+    Steps['susyMT2crfs'+region+'Nomin'] = { }
+
+    for key in Steps['susyMT2fastNomin']:
+        Steps['susyMT2crfs'+region+'Nomin'][key] = Steps['susyMT2fastNomin'][key]
+
+    Steps['susyMT2crfs'+region+'Nomin']['module'] = Steps['susyMT2fastNomin']['module'].replace('analysisRegion=""', 'analysisRegion="'+region+'"').replace('filterRegion="region"', 'filterRegion="multilepton"')
+
 # JES, JER, MET variations
 
 for treesyst in ['nom',  'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', 'unclustEnUp', 'jerDown', 'jerUp', 'jesTotalSmearDown', 'jesTotalSmearUp', 'unclustEnSmearDown', 'unclustEnSmearUp' ]:
@@ -7163,6 +7209,13 @@ for treesyst in ['nom',  'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', '
     }
   if treesyst=='nom': 
     Steps['susyMT2ctrl'+treesystname]['do4Data'] = True
+  Steps['susyMT2crfs'+treesystname] = {
+      'isChain'    : True  ,
+      'do4MC'      : True  ,
+      'do4Data'    : False ,
+      'selection'  : '"(run_period>=0)"' ,
+      'subTargets' : [ 'susyMT2crfs'+x+treesystname for x in mt2CRFSs ],
+    }
 
 susyMT2StepList = [ ]
 for step in Steps:

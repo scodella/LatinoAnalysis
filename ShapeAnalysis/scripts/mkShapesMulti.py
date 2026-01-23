@@ -546,6 +546,11 @@ if __name__ == '__main__':
                 else: print('Warning: cannot make two extreme nuisances at the time!')
         if extremeNuisance!='': 
             outFile = ROOT.TFile.Open(finalpath, 'update')
+            recoOutDir = '/'.join([ x for x in finalpath.replace('Fast','FastReco').split('/') if '.root' not in x and x!='Samples' ])
+            recoOutFileName = '_'.join([ 'plots', recoOutDir.split('/')[-1], opt.sigset+'.root' ]) 
+            os.system('mkdir -p '+recoOutDir)
+            recoOutFile = ROOT.TFile.Open(recoOutDir+'/'+recoOutFileName, 'recreate')
+            ShapeFactory.postprocess_nuisance_fasttoreco(extremeNuisance, cuts, variables, nuisances, outFile, recoOutFile)
             ShapeFactory.postprocess_nuisance_average(extremeNuisance, cuts, variables, nuisances, outFile)
             outFile.Close()
 

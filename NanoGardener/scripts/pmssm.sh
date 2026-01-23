@@ -1,0 +1,1 @@
+/afs/cern.ch/user/s/scodella/work/SUSY/CMSSW_10_6_28/src/LatinoAnalysis/NanoGardener/scripts/pmssm.sh

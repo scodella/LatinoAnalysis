@@ -68,19 +68,29 @@ class SusyGenVarsProducer(Module):
         pass
 
     def getCrossSectionUncertainty(self, susyProcess, isusyMass, variation):
-    
-        if 'uncertainty'+variation not in SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]: variation = ''
-        xsUnc = SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['uncertainty'+variation]
+
+        ssusyMass = isusyMass if 'PMSSM' in susyProcess else str(isusyMass)
+
+        if 'uncertainty'+variation not in SUSYCrossSections[susyProcess]['massPoints'][ssusyMass]: variation = ''
+        xsUnc = SUSYCrossSections[susyProcess]['massPoints'][ssusyMass]['uncertainty'+variation]
 
         if '%' not in xsUnc: 
             return float(xsUnc)
         else:
             xsUnc = xsUnc.replace('%', '')
-            return float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value'])*float(xsUnc)/100.
+            return float(SUSYCrossSections[susyProcess]['massPoints'][ssusyMass]['value'])*float(xsUnc)/100.
         
     def getCrossSection(self, susyProcess, susyModel, susyMass):
 
         convBR = float(SUSYCrossSections[susyProcess]['susyModels'][susyModel])
+
+        if susyProcess=='PMSSM':
+
+            susyXsec = float(SUSYCrossSections[susyProcess]['massPoints'][susyModel]['value'])
+
+            return [ convBR*susyXsec,
+                     convBR*(susyXsec+self.getCrossSectionUncertainty(susyProcess, susyModel, 'Up')),
+                     convBR*(susyXsec-self.getCrossSectionUncertainty(susyProcess, susyModel, 'Down')) ]
         
         isusyMass = int(susyMass)
         

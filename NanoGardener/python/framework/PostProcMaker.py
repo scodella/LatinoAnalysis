@@ -191,10 +191,19 @@ class PostProcMaker():
        else                           : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
 
      # fileCmd .... Exec
-     proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
-     out, err = proc.communicate()
-
-     FileExistList= out.decode().split() #string.split(out)
+     if len(FileList)<3000:
+         proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+         out, err = proc.communicate()
+         FileExistList= out.decode().split() #string.split(out)
+     else:
+         FileExistList=[]
+         for ip in range(25):
+             proc=subprocess.Popen(fileCmd.replace('__part*.root','__part'+str(ip)+'*.root'), stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+             out, err = proc.communicate()
+             for pfile in out.decode().split():
+                 if pfile not in FileExistList:
+                     FileExistList.append(pfile)
+             #FileExistList+=out.decode().split()
      # Now Check
      toSkip=[]
      if not self._redo :
@@ -262,7 +271,7 @@ class PostProcMaker():
        print(out)
        print(err)
        exit()
-     FileList=string.split(out)
+     FileList= out.decode().split() #string.split(out)
      return FileList
 
    def getFilesFromPath(self,paths,srmprefix):
@@ -402,7 +411,11 @@ class PostProcMaker():
          if iTarget in targetList :
            # Create python
            if JOB_DIR_SPLIT :
-             pyFile=jDir+'/'+iSample+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
+             subDirExtra=''
+             if len(targetList)>1000:
+                 jobpart=int(iTarget.split('part')[1].split('.')[0].split('____')[0])
+                 subDirExtra += '/sub'+str(int(jobpart/1000))
+             pyFile=jDir+'/'+iSample+subDirExtra+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
            else:
              pyFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
            if os.path.isfile(pyFile) : os.system('rm '+pyFile)
@@ -951,7 +964,7 @@ class PostProcMaker():
 
      if   self._jobMode == 'Batch' and not self._pretend : 
          if self._LocalSite=='ifca' or self._LocalSite=='cloud': self._jobs.Sub(self._batchQueue)
-         else: self._jobs.Sub()	
+         else: self._jobs.Sub(self._batchQueue)	
      elif self._jobMode == 'Crab':
         self._crab.mkCrabCfg()
         if not self._pretend : self._crab.Sub()

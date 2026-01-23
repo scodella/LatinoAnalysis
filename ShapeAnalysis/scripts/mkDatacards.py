@@ -589,7 +589,7 @@ class DatacardFactory:
     def _saveNuisanceHistos(self, cutName, variableName, sampleName, suffixIn, suffixOut = None, symmetrize = False):
         histoUp = self._getHisto(cutName, variableName, sampleName, suffixIn + 'Up')
         histoDown = self._getHisto(cutName, variableName, sampleName, suffixIn + 'Down')
-
+        
         if not histoUp or not histoDown:
           print('Up/down histogram for', cutName, variableName, sampleName, suffixIn, 'missing')
           if self._skipMissingNuisance:
@@ -674,8 +674,8 @@ class DatacardFactory:
                     shapeName = shapeName.replace('__top','').replace('__WW','')
 
         if '_SplitWWPhi' in opt.tag:
-            originalShapeName = shapeName.split('/')[-1]
             if  ('__WZ' in shapeName or '__WW' in shapeName) and 'WWphi' in shapeName:
+                originalShapeName = shapeName.split('/')[-1]
                 if not self._fileIn.Get(shapeName):
                     shapeName = shapeName.replace('__WZ','').replace('__WW','')
 
@@ -713,6 +713,19 @@ class DatacardFactory:
                         histocn.SetTitle(shapeName)
                         return histocn
 
+        if '_CRBinned' not in opt.tag:
+            if 'CR34_' in shapeName: shapeName = shapeName.replace('CR34_', 'CR3_').replace('SR34/', 'SR3/')
+            if 'CR43_' in shapeName: shapeName = shapeName.replace('CR43_', 'CR4_').replace('SR43/', 'SR4/')
+
+        if ('FastJEC' in opt.tag or 'FastRecoJEC' in opt.tag) and '_JEUV' in opt.tag:
+            if 'T2tt' in sampleName or 'T2bW' in sampleName or 'TChipm' in sampleName or 'TSlepSlep' in sampleName:
+                if suffix:
+                    if 'jesTotal' in suffix:
+                        for jeu in [ 'V2', 'V3' ]:
+                            if '_JEU'+jeu in opt.tag:
+                                shapeName = shapeName.replace('jesTotal', 'jesTotal'+jeu)
+                                print('###################', shapeName)
+
         if type(self._fileIn) is dict:
             # by-sample ROOT file
             histo = self._fileIn[sampleName].Get(shapeName)
@@ -723,6 +736,11 @@ class DatacardFactory:
         if 'SmtEU' in opt.tag:
             if 'CR' in cutName or 'T2' in sampleName or 'TChipm' in sampleName or 'TSlep' in sampleName:
                 if '_Smooth' in originalShapeName: histo.SetTitle(originalShapeName); histo.SetName(originalShapeName)
+
+        if 'FastJEC' in opt.tag and '_JEUV' in opt.tag:
+            if 'T2' in sampleName or 'TChipm' in sampleName or 'TSlep' in sampleName:
+                if 'jesTotal' in originalShapeName:
+                    histo.SetTitle(originalShapeName); histo.SetName(originalShapeName)
 
         if '_Switch' in opt.tag:
             if switchHisto:
@@ -781,9 +799,9 @@ class DatacardFactory:
                 if sysint>0.:
                     histo.Scale(cnint/sysint)  
 
-        if '_HighStat' in opt.tag or '_HighLumi' in opt.tag:
+        if '_HighStat' in opt.tag or '_HighLumi' in opt.tag or '_LumiB' in opt.tag:
             if 'DATA' not in sampleName:
-                increaseFactor = 1000. if '_HighStat' in opt.tag else 3000./138.
+                increaseFactor = 1000. if '_HighStat' in opt.tag else 3000./138. if '_HighLumi' in opt.tag else 36./138.
                 for ibin in range(1,histo.GetNbinsX()+1):
                     binContent, binError = increaseFactor*histo.GetBinContent(ibin), increaseFactor*histo.GetBinError(ibin)
                     histo.SetBinContent(ibin, binContent)
@@ -890,11 +908,17 @@ class DatacardFactory:
                 histoB = ROOT.TH1D(histo.GetName(), histo.GetTitle(), 1, histo.GetBinLowEdge(1), histo.GetBinLowEdge(histo.GetNbinsX()+1))
                 errorYield = ctypes.c_double()
                 histoYield = histo.IntegralAndError(firstBinForIntegral,-1,errorYield)
-                if '_CRZ' in opt.tag and histoYield==0 and sampleName=='DATA': histoYield = 1.
+                mergedError = errorYield.value
+                if 'CR34_' in cutName or 'CR43_' in cutName:    
+                    shapeToAddName = shapeName.replace('CR3_','CR4_').replace('SR3','SR4') if 'CR34_' in cutName else shapeName.replace('CR4_','CR3_').replace('SR4','SR3') 
+                    shapeToAdd = self._fileIn.Get(shapeToAddName)  
+                    errorYieldToAdd = ctypes.c_double()
+                    histoYieldToAdd = shapeToAdd.IntegralAndError(firstBinForIntegral,-1,errorYieldToAdd)
+                    histoYield += histoYieldToAdd
+                    mergedError = math.sqrt(errorYield.value*errorYield.value + errorYieldToAdd.value*errorYieldToAdd.value)
                 histoB.SetBinContent(1, histoYield)
-                histoB.SetBinError(1, errorYield.value)
-                if 'DATA' in sampleName and histoB.Integral()==0.: 
-                    print('No events in ', cutName, histoYield)
+                histoB.SetBinError(1, mergedError)
+                #if 'DATA' in sampleName and histoB.Integral()==0.: print('No events in ', cutName, histoYield)
                 return histoB
 
         if '_LowNoBinned' in opt.tag:

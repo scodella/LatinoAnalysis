@@ -99,7 +99,7 @@ class batchJobs :
      SCRAMARCH=os.environ["SCRAM_ARCH"]
      for jName in self.jobsList:
        if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
-         subDirExtra = '/' + jName.split('__')[3] 
+         subDirExtra = '/' + jName.split('__')[3]+self.extraSplit(len(self.jobsList), jName)
          if not os.path.exists(self.subDir+subDirExtra) : os.system('mkdir -p '+self.subDir+subDirExtra)
        else:
          subDirExtra =''
@@ -226,10 +226,16 @@ class batchJobs :
      if "hercules" in hostName:
        os.system('cp $X509_USER_PROXY /gwpool/users/'+os.environ["USER"]+'/.proxy')
 
+   def extraSplit(self, nJobs, jName):
+       if nJobs>1000:
+           jobpart=int(jName.split('part')[1].split('.')[0].split('____')[0])
+           return '/sub'+str(int(jobpart/1000))
+       return ''
+
    def Add (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
      if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
-       subDirExtra = '/' + jName.split('__')[3]
+       subDirExtra = '/' + jName.split('__')[3]+self.extraSplit(len(self.jobsDic[iStep]), jName)
      else:
        subDirExtra =''
      #print 'Adding to ',self.subDir+'/'+jName  
@@ -240,7 +246,7 @@ class batchJobs :
    def AddSing (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
      if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
-       subDirExtra = '/' + jName.split('__')[3]
+       subDirExtra = '/' + jName.split('__')[3]+self.extraSplit(len(self.jobsDic[iStep]), jName)
      else:
        subDirExtra =''
      #print 'Adding to ',self.subDir+'/'+jName  
@@ -252,7 +258,7 @@ class batchJobs :
    def Add2All (self,command):
      for jName in self.jobsList:
        if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
-         subDirExtra = '/' + jName.split('__')[3] 
+         subDirExtra = '/' + jName.split('__')[3]+self.extraSplit(len(self.jobsList), jName) 
        else:
          subDirExtra =''
        jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','a')
@@ -264,7 +270,7 @@ class batchJobs :
      #os.system('cd '+self.subDir)
      for jName in self.jobsList:
        if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
-         subDirExtra = '/' + jName.split('__')[3]
+         subDirExtra = '/' + jName.split('__')[3]+self.extraSplit(len(self.jobsList), jName)
        else:
          subDirExtra =''
        pFile = open(self.subDir+subDirExtra+'/'+jName+'.py','a')
@@ -274,7 +280,7 @@ class batchJobs :
    def AddPy2Sh(self):
      for jName in self.jobsList: 
        if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
-         subDirExtra = '/' + jName.split('__')[3]
+         subDirExtra = '/' + jName.split('__')[3]+self.extraSplit(len(self.jobsList), jName)
        else:
          subDirExtra =''
        jFile = open(self.subDir+subDirExtra+'/'+jName+'.sh','a')
@@ -285,7 +291,7 @@ class batchJobs :
    def AddPy (self,iStep,iTarget,command):
      jName= self.jobsDic[iStep][iTarget]
      if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
-       subDirExtra = '/' + jName.split('__')[3]
+       subDirExtra = '/' + jName.split('__')[3]+self.extraSplit(len(self.jobsDic[iStep]), jName)
      else:
        subDirExtra =''
      print('Adding to ',self.subDir+subDirExtra+'/'+jName)
@@ -296,7 +302,7 @@ class batchJobs :
    def GetPyName (self,iStep,iTarget) :
      jName= self.jobsDic[iStep][iTarget]
      if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
-       subDirExtra = '/' + jName.split('__')[3]
+       subDirExtra = '/' + jName.split('__')[3]+self.extraSplit(len(self.jobsDic[iStep]), jName)
      else:
        subDirExtra =''
      return self.subDir+subDirExtra+'/'+jName+'.py' 
@@ -323,7 +329,7 @@ class batchJobs :
 
      for jName in self.jobsList:
        if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
-         subDirExtra = '/' + jName.split('__')[3]
+         subDirExtra = '/' + jName.split('__')[3]+self.extraSplit(len(self.jobsList), jName)
        else:
          subDirExtra =''
        os.system('cd '+self.subDir+subDirExtra)
@@ -460,12 +466,15 @@ class batchJobs :
          jds += 'accounting_group = '+CONDOR_ACCOUNTING_GROUP+'\n'
        jds += '+JobFlavour = "'+queue+'"\n'
        jds += 'queue JName in (\n'
+       njobs = 0
        for jName in self.jobsList:
          if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
-           subDirExtra = '/' + jName.split('__')[3] 
+           subDirExtra = '/' + jName.split('__')[3]+self.extraSplit(len(self.jobsList), jName)
          else:
            subDirExtra = '' 
          jds += self.subDir+subDirExtra+'/'+jName + '\n'
+         njobs += 1
+         if njobs>=6000: break
        jds += ')\n'
        proc = subprocess.Popen(['condor_submit'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
        out, err = proc.communicate(jds.encode())
@@ -506,7 +515,7 @@ class batchJobs :
      
      jName= self.jobsDic[iStep][iTarget]
      if JOB_DIR_SPLIT and self.JOB_DIR_SPLIT_READY :
-         subDirExtra = '/' + jName.split('__')[3]
+         subDirExtra = '/' + jName.split('__')[3]+self.extraSplit(len(self.jobsDic[iStep]), jName)
      else:
          subDirExtra =''
      #print 'Adding to ',self.subDir+'/'+jName  

@@ -72,12 +72,12 @@ class mt2Producer(Module):
 
         if self.metKind=='fast': # and not self.isSystematic:
 
-            self.out.branch("ptmiss_reco",      "F")
-            self.out.branch("ptmiss_phi_reco",  "F")
-            self.out.branch("mt2ll_reco",       "F")
-            self.out.branch("ptmiss_gen",       "F")
-            self.out.branch("ptmiss_phi_gen",   "F")
-            self.out.branch("mt2ll_gen",        "F")
+            self.out.branch("ptmiss"+self.suffix+"_reco",      "F")
+            self.out.branch("ptmiss_phi"+self.suffix+"_reco",  "F")
+            self.out.branch("mt2ll"+self.suffix+"_reco",       "F")
+            self.out.branch("ptmiss"+self.suffix+"_gen",       "F")
+            self.out.branch("ptmiss_phi"+self.suffix+"_gen",   "F")
+            self.out.branch("mt2ll"+self.suffix+"_gen",        "F")
 
     ###    
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -177,6 +177,8 @@ class mt2Producer(Module):
             if nLooseLeptons==2 and leptons[lepLoose[0]].pdgId*leptons[lepLoose[1]].pdgId<0: return False
  
         ptmissvec3 = ROOT.TVector3()
+        ptmissgenvec3 = ROOT.TVector3()
+        ptmissgenvec3.SetPtEtaPhi(event.GenMET_pt, 0., event.GenMET_phi)
 
         if self.metType=='type1pf':
 
@@ -405,6 +407,7 @@ class mt2Producer(Module):
                     elif W3==-1 : W3 = iLep
                     if iLep in Lost:
                         ptmissvec3 += lepVect[iLep].Vect()
+                        ptmissgenvec3 += lepVect[iLep].Vect()
                 else:
                     if W0==-1 : W0 = iLep
                     elif W1==-1 : W1 = iLep
@@ -443,22 +446,31 @@ class mt2Producer(Module):
 
         if self.metKind=='fast' or self.metKind=='gen':
 
-            ptmissgenvec = ROOT.TLorentzVector()
-            ptmissgenvec.SetPtEtaPhiM(event.GenMET_pt, 0., event.GenMET_phi, 0.)
+            if ptmiss>0.:
+
+                ptmissgenvec = ROOT.TLorentzVector()
+                #ptmissgenvec.SetPtEtaPhiM(event.GenMET_pt, 0., event.GenMET_phi, 0.)
+                ptmissgenvec.SetPtEtaPhiM(ptmissgenvec3.Pt(), 0., ptmissgenvec3.Phi(), 0.)
             
-            ptmiss_gen = ptmissgenvec.Pt()
-            ptmiss_gen_phi = ptmissgenvec.Phi()
-            mt2ll_gen = self.computeMT2(lepVect[0], lepVect[1], ptmissgenvec)
+                ptmiss_gen = ptmissgenvec.Pt()
+                ptmiss_gen_phi = ptmissgenvec.Phi()
+                mt2ll_gen = self.computeMT2(lepVect[0], lepVect[1], ptmissgenvec)
+
+            else: 
+
+                ptmiss_gen = -1.
+                ptmiss_gen_phi = -1.
+                mt2ll_gen = -1.
 
             if self.metKind=='fast':
 
                 #if not self.isSystematic:
-                self.out.fillBranch("ptmiss_reco",     ptmiss)
-                self.out.fillBranch("ptmiss_phi_reco", ptmiss_phi)
-                self.out.fillBranch("mt2ll_reco",      mt2ll)
-                self.out.fillBranch("ptmiss_gen",      ptmiss_gen)
-                self.out.fillBranch("ptmiss_phi_gen",  ptmiss_gen_phi)
-                self.out.fillBranch("mt2ll_gen",       mt2ll_gen)
+                self.out.fillBranch("ptmiss"+self.suffix+"_reco",     ptmiss)
+                self.out.fillBranch("ptmiss_phi"+self.suffix+"_reco", ptmiss_phi)
+                self.out.fillBranch("mt2ll"+self.suffix+"_reco",      mt2ll)
+                self.out.fillBranch("ptmiss"+self.suffix+"_gen",      ptmiss_gen)
+                self.out.fillBranch("ptmiss_phi"+self.suffix+"_gen",  ptmiss_gen_phi)
+                self.out.fillBranch("mt2ll"+self.suffix+"_gen",       mt2ll_gen)
 
                 ptmiss = (ptmiss + ptmiss_gen)/2.
                 mt2ll = (mt2ll + mt2ll_gen)/2.

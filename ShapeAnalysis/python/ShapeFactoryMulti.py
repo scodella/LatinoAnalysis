@@ -1334,7 +1334,8 @@ class ShapeFactory:
         return False
 
       try:
-        f = ROOT.TFile.Open(path)
+        print('root://eoscms.cern.ch/'+path)
+        f = ROOT.TFile.Open('root://eoscms.cern.ch/'+path)
         if not f or f.IsZombie():
           return False
       finally:
@@ -1716,6 +1717,46 @@ class ShapeFactory:
                   if ShapeFactory._fixNegativeBin(outputsHistoUp, nominal): outputsHistoUp.Write()
                   if twosided:
                     if ShapeFactory._fixNegativeBin(outputsHistoDown, nominal): outputsHistoDown.Write()
+
+    @staticmethod
+    def postprocess_nuisance_fasttoreco(extremeNuisance, cuts, variables, nuisances, outFile, recoOutFile):
+
+      extrames = nuisances[extremeNuisance]['extremes']
+
+      for cut in cuts:
+        if extrames[0] not in cut and extrames[1] not in cut:
+          print(('postprocess_nuisance_average error:', cut, 'is not an extreme'))
+          exit()
+        if extrames[0] in cut:
+
+          cutName = cut.replace(extrames[0], '')
+          recoOutFile.mkdir(cutName)
+
+          for variableExt0 in variables:
+            if 'cuts' not in variables[variableExt0] or cut in variables[variableExt0]['cuts']:
+
+              variable = variableExt0.replace(extrames[0], '')
+              recoOutFile.mkdir(cutName+'/'+variable)
+              recoOutFile.cd(cutName+'/'+variable)
+
+              for sample in nuisances[extremeNuisance]['samples']:
+
+                histoCentralName = 'histo_'+sample
+                histoCentral = outFile.Get(cutName+extrames[0]+'/'+variableExt0+'/'+histoCentralName)
+                histoCentral.SetName(histoCentralName); histoCentral.SetTitle(histoCentralName)
+                histoCentral.Write()
+
+                for nuisance in nuisances:
+                  if nuisance!=extremeNuisance:
+                    if 'type' in nuisances[nuisance] and nuisances[nuisance]['type']=='shape':
+                      if 'cuts' not in nuisances[nuisance] or cut in nuisances[nuisance]['cuts']:
+                        if sample in nuisances[nuisance]['samples']:
+                          for variation in [ 'Up', 'Down' ]:
+                            histoSystName = 'histo_'+sample+'_'+nuisances[nuisance]['name']+variation
+                            histoSyst = outFile.Get(cutName+extrames[0]+'/'+variableExt0+'/'+histoSystName)
+                            histoSyst.SetName(histoSystName); histoSyst.SetTitle(histoSystName)
+                            histoSyst.Write()
+
 
     @staticmethod
     def postprocess_nuisance_average(extremeNuisance, cuts, variables, nuisances, outFile):
