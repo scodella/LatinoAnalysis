@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dasgoclient -query="instance=prod/global dataset=/${2}*/${1}*/NANOAODSIM" > ttt.txt
+dasgoclient -query="instance=prod/global dataset=/${2}*/${1}*slhaFix*/NANOAODSIM" > ttt.txt
 
 while read line; do
     echo $line

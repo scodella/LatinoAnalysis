@@ -1,7 +1,7 @@
  
 SUSYISRCorrections = {
                                    
-    'strong' : { 'susyPromptParticles' : [ '1000005', '1000006', '2000005', '2000006' ],
+    'strong' : { 'susyPromptParticles' : [ '1000005', '1000006', '2000005', '2000006', '9999999' ],
                  'version' : { 'Ana2016Dec'    : { 'production' : [ 'Full2016v4', 'Full2016v6', 'Full2016v6', 'Full2016v7', 'Full2016v8HIPM', 'Full2016v8noHIPM', 'Full2016v8' ], 
                                                    'observable' : 'njetISR',
                                                    'correction' : { '0' :  '1.000',

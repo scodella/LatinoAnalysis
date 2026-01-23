@@ -1,6 +1,7 @@
 #!/bin/bash
 
-if [[ $HOST == 'lxplus'* ]] ; then
+#if [[ $HOST == 'lxplus'* ]] ; then
+if [[ $PWD == *'cern'* ]] ; then
     #baseOutputDirectory='/eos/cms/store/user/scodella/SUSY/Nano/'
     #baseOutputDirectory='/eos/cms/store/caf/user/scodella/BTV/Nano/'
     baseOutputDirectory='/eos/cms/store/group/phys_susy/Chargino/Nano/'
@@ -99,7 +100,7 @@ submitJobs () {
         isAllDone $step $2 $3 $4
         allDone=$?
         if [ "$allDone" == "0" ] ; then
-            ./mkPostProc.py -p $2 -i $3 -s $4 -b -Q $queue $datasetsToExclude
+            ./mkPostProc.py -p $2 -i $3 -s $4 -b -Q $queue $datasetsToExclude -T pMSSM_set2prompt1,pMSSM_set2prompt2,pMSSM_set1LL,pMSSM_set2LL1,pMSSM_set2LL2
         elif [ "$allDone" == "1" ] ; then
             echo Nothing to submit for $2 step $4 from $3
         fi
@@ -279,14 +280,14 @@ for prod in 16 16HIPM 16noHIPM 17 18 ; do
                     for period in "${periods[@]}"; do
 
                         for met in fastSmear fastSMTUp fastSMTDo recoSmear genmNomin ; do
-                            submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyNomin20${year}v8${period} susyMT2$met
+                            submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyNomin20${year}v8${period} susyMT2$met
                         done
 
-                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJESUp20${year}v8${period} susyMT2fastSJSUp
-                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJESDo20${year}v8${period} susyMT2fastSJSDo
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyJESUp20${year}v8${period} susyMT2fastSJSUp
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyJESDo20${year}v8${period} susyMT2fastSJSDo
 
-                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJERUp20${year}v8${period} susyMT2fastJERUp
-                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__hadd__FSSusyJERDo20${year}v8${period} susyMT2fastJERDo
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyJERUp20${year}v8${period} susyMT2fastJERUp
+                        submitJobs $step Spring21UL${year}FS_106X_${naod}_Full20${year}v8 ${sigPreDir}FSSusy20${year}v8__FSSusyCorr20${year}v8${period}__FSSusyJERDo20${year}v8${period} susyMT2fastJERDo
 
                     done
 

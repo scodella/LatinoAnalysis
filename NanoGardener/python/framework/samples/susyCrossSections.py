@@ -2,6 +2,13 @@
 
 SUSYCrossSections = {
 
+    ## pMSSM
+    'pMSSM' : {  'susyModels' : { 'pMSSM' : '1.',
+                                  },
+                 'massPoints' : { 'pMSSM' : { 'value' : '1.' , 'uncertainty' : '50.00%' },
+                                  },
+               },
+
     ## stop/sbottom cross section with squarks and gluinos decoupled
     ##    https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVstopsbottom
     ##    NNLO_approx + NNLL (10-April-2018)

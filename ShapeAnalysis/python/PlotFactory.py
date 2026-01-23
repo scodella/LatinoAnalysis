@@ -158,6 +158,7 @@ class PlotFactory:
         #---- save one TCanvas for every cut and every variable
         for cutName in self._cuts :
           print "cut =", cutName
+          if cutName in skipCRs: continue
           for variableName, variable in self._variables.iteritems():
             if 'cuts' in variable and cutName not in variable['cuts']:
               continue
@@ -696,6 +697,7 @@ class PlotFactory:
                 up_is_up = (up > tgrMC_vy)
                 dup2 = np.square(up - tgrMC_vy)
                 ddo2 = np.square(do - tgrMC_vy)
+                if 'toppt' in nuisanceName and 'SearchRegion' in self._tag: ddo2 = np.square(tgrMC_vy - up)
                 nuisances_err2_up += np.where(up_is_up, dup2, ddo2)
                 nuisances_err2_do += np.where(up_is_up, ddo2, dup2)
               else:
@@ -713,6 +715,11 @@ class PlotFactory:
 
             tgrData       = ROOT.TGraphAsymmErrors(thsBackground.GetStack().Last().GetNbinsX())
             for iBin in range(0, len(tgrData_vx)) : 
+              if 'SearchRegion' in self._tag:
+                  if nuisances_err_up[iBin]/tgrData_vy[iBin]<0.15:
+                      rr = (1.535-0.25/0.7*nuisances_err_up[iBin]/tgrData_vy[iBin])
+                      nuisances_err_up[iBin] *= rr
+                      nuisances_err_do[iBin] *= rr
               tgrData.SetPoint     (iBin, tgrData_vx[iBin], tgrData_vy[iBin])
               tgrData.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], tgrData_evy_do[iBin], tgrData_evy_up[iBin])
             
@@ -724,7 +731,8 @@ class PlotFactory:
 
             ## --postFit 1 --> line is prefit
             if self._postFit == 'p':
-                tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC 
+                tgrDataOverPF = tgrData.Clone("tgrDataOverPF")    # use this for ratio with Post-Fit MC
+                tgrMCOverPF = tgrData.Clone("tgrMCOverPF")    # use this for ratio with Post-Fit MC 
                 if self._showDataVsBkgOnly : 
                     histoPF = fileIn.Get(cutName+"/"+variableName+'/histo_total_background_prefit')
                 else:           
@@ -769,6 +777,7 @@ class PlotFactory:
               if self._postFit == 'p' or self._postFit == 's' or  self._postFit == 'b':
                   tgrDataOverPF.SetPoint(iBin, tgrData_vx[iBin], self.Ratio(tgrData_vy[iBin] , histoPF.GetBinContent(iBin+1)) )
                   tgrDataOverPF.SetPointError(iBin, tgrData_evx[iBin], tgrData_evx[iBin], self.Ratio(tgrData_evy_do[iBin], histoPF.GetBinContent(iBin+1)) , self.Ratio(tgrData_evy_up[iBin], last.GetBinContent(iBin+1)) )
+                  tgrMCOverPF.SetPoint(iBin, tgrData_vx[iBin], self.Ratio(histoPF.GetBinContent(iBin+1), last.GetBinContent(iBin+1)) )
                   print "Pre-fit ratio: " + str(self.Ratio(tgrData_vy[iBin] , histoPF.GetBinContent(iBin+1)))
                   print "Post-fit ratio: " + str(self.Ratio(tgrData_vy[iBin] , last.GetBinContent(iBin+1)))
                   print iBin
@@ -1143,29 +1152,95 @@ class PlotFactory:
                 if '_Tag' in cutName: minLegendOffset += 0.06 
                 elif '_NoTag' in cutName: minLegendOffset += 0.03
             if self._addCutLabels:
+                srLabelStyle = 3
                 if self._paperStyle: minLegendOffset -= 0.04
                 else: minLegendOffset -= 0.07
                 maxLegendOffset = -0.07
                 cutNameLabel = ''
-                if 'SR1' in cutName: cutNameLabel = '160\le\\text{p}_{T}^{miss}<220\\text{ GeV, '
-                if 'SR2' in cutName: cutNameLabel = '220\le\\text{p}_{T}^{miss}<280\\text{ GeV, '
-                if 'SR3' in cutName: cutNameLabel = '280\le\\text{p}_{T}^{miss}<380\\text{ GeV, '
-                if 'SR4' in cutName: cutNameLabel = '\\text{p}_{T}^{miss}\ge380\\text{ GeV, '   
-                if 'Veto' in cutName: cutNameLabel += '0tag '
-                if '_Tag' in cutName: cutNameLabel += 'tags '
-                if '_NoJet' in cutName: cutNameLabel += '0jet '
-                if '_NoTag' in cutName: cutNameLabel += 'jets, 0tag '
-                if '_sf' in cutName: cutNameLabel += '(ee+}\mu\mu\\text{ channels)}'
-                if '_em' in cutName: cutNameLabel += '(e}\mu\\text{ channel)}'
+                pTmiss = 'p_{\\text{T}}^{\\text{miss}}'
+                if 'VR1' in cutName: cutNameLabel = '100<'+pTmiss+'<140\\text{ GeV, '
+                if 'SR1' in cutName or 'CR1' in cutName: cutNameLabel = '160<'+pTmiss+'<220\\text{ GeV, '
+                if 'SR2' in cutName or 'CR2' in cutName: cutNameLabel = '220<'+pTmiss+'<280\\text{ GeV, '
+                if 'SR3' in cutName or 'CR3' in cutName: cutNameLabel = '280<'+pTmiss+'<380\\text{ GeV, '
+                if 'SR4' in cutName or 'CR4' in cutName: cutNameLabel = pTmiss+'>380\\text{ GeV, '  
+                if cutName in mergeCRs: cutNameLabel = pTmiss+'>280\\text{ GeV, '
+                srNameLabel = '\\text{'+cutName.split('_')[0]+'}'
+                if 'Veto' in cutName: 
+                    cutNameLabel += '0tag '
+                    srNameLabel += '_{\\text{0tag}}'
+                if '_Tag' in cutName: 
+                    cutNameLabel += 'tags '
+                    srNameLabel += '_{\\text{tags}}'
+                if '_NoJet' in cutName: 
+                    cutNameLabel += '0jet, 0tag '
+                    srNameLabel += '_{\\text{0tag}}^{\\text{0jet}}'
+                if '_NoTag' in cutName: 
+                    cutNameLabel += 'jets, 0tag '
+                    srNameLabel += '_{\\text{0tag}}^{\\text{jets}}'
+                if 'Stop' in self._tag and ('SR3' in cutName or 'SR4' in cutName):
+                    srNameLabel += '^{\\text{ISR}}'
+                if 'SearchRegion' in self._tag: srNameLabel = '\\text{Baseline selection} '
+                if 'WZtoWW' in self._tag: 
+                    #srNameLabel = '\\text{WZ} \\to \\text{WW CR  } ' '#font[12]{l}
+                    srNameLabel = '\\text{WZ}\\rightarrow 3l1\\nu\\text{, }l\\rightarrow\\nu\\text{  CR    }'
+                    #srNameLabel = '#text{WZ}#rightarrow 3#font[12]{l}1#nu#text{, }#font[12]{l}#rightarrow#nu#text{  CR   }'
+                    if 'ptmiss-100' in cutName: srNameLabel += pTmiss+'>100\\text{ GeV}'
+                    if 'ptmiss-160' in cutName: srNameLabel += pTmiss+'>160\\text{ GeV}'
+                if srLabelStyle<=1:
+                    if '_sf' in cutName: cutNameLabel += '(ee+}\mu\mu\\text{ channels)}'
+                    if '_em' in cutName: cutNameLabel += '(e}\mu\\text{ channel)}'
+                else:
+                    cutNameLabel += '}'
+                    if '_sf' in cutName: srNameLabel += '\\text{  ee+}\mu\mu\\text{ channels}'
+                    if '_em' in cutName: srNameLabel += '\\text{  e}\mu\\text{ channel}'
+                if '_ZZ' in cutName: cutNameLabel += ', ZZ CR}'
+                if '_WZ' in cutName: cutNameLabel += ', WZ CR}'
+                if '_ttZ' in cutName: cutNameLabel += ', ttZ CR}'
                 cutLabel = ROOT.TLatex()
                 cutLabel.SetTextSize(0.045)
                 cutLabel.SetTextFont(42)
+                srLabel = ROOT.TLatex()
+                srLabel.SetTextSize(0.045)
+                srLabel.SetTextFont(42)
 
             #---- the Legend
-            tlegend = ROOT.TLegend(0.20, 0.65+minLegendOffset, 0.80+rightLegendOffset, 0.88+maxLegendOffset)
+            nLegendColumns = 2
+            legendBottomLeft = 0.65+minLegendOffset
+            legendTopRight = 0.88+maxLegendOffset
+            if self._paperStyle:
+                nLegendColumns = 2 if self._showIntegralLegend else 3
+                shiftScale = 2./6. if nLegendColumns==4 else 1./6. 
+                highScale = 2./3. if nLegendColumns==3 else 1./2. if nLegendColumns==4 else 1.
+                if self._addCutLabels and srLabelStyle==3: highScale *= 1.17
+                legendBottomLeft += shiftScale*(0.88+maxLegendOffset-0.65-minLegendOffset)
+                legendTopRight = legendBottomLeft + highScale*(0.88+maxLegendOffset-0.65-minLegendOffset)
+                if 'Chargino' in self._tag:
+                    if '_NoTag' in cutName:
+                        legendBottomLeft -= 0.025
+                        legendTopRight -= 0.005
+                elif 'Stop' in self._tag:
+                    if '_Tag' in cutName:
+                        legendBottomLeft -= 0.05
+                        legendTopRight -= 0.01
+            tlegend = ROOT.TLegend(0.20, legendBottomLeft, 0.80+rightLegendOffset, legendTopRight)
             tlegend.SetFillColor(0)
             tlegend.SetTextFont(42)
-            if self._paperStyle: tlegend.SetTextSize(0.045)
+            if self._paperStyle: 
+                tlegend.SetTextSize(0.045)
+                if 'Chargino' in self._tag: 
+                    legendBottomLeft -= 0.005
+                    if '_NoTag' in cutName: legendBottomLeft -= 0.003
+                elif 'Stop' in self._tag: 
+                    if '_Tag' in cutName: legendBottomLeft -= 0.02
+                    elif '_Veto' in cutName: legendBottomLeft -= 0.013
+                slegendYOffset = -1./6.*(0.88+maxLegendOffset-0.65-minLegendOffset)
+                nSignalLegendColumns = nLegendColumns
+                slegend = ROOT.TLegend(0.20, legendBottomLeft+slegendYOffset, (0.80+rightLegendOffset), legendBottomLeft)
+                slegend.SetFillColor(0)
+                slegend.SetTextFont(42)
+                slegend.SetTextSize(0.045)
+                slegend.SetLineColor(0)
+                slegend.SetShadowColor(0)
             else: tlegend.SetTextSize(0.035)
             tlegend.SetLineColor(0)
             tlegend.SetShadowColor(0)
@@ -1227,14 +1302,21 @@ class PlotFactory:
                       tlegend.AddEntry(histos[sampleName], sampleName + " [" +  str(round(nevents,1)) + "]", "EPL")
             
             else :
-              for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
+              import collections # inv
+              for sampleNameGroup, sampleConfiguration in collections.OrderedDict(reversed(groupPlot.items())).iteritems():
+              #for sampleNameGroup, sampleConfiguration in groupPlot.iteritems():
                 if 'samples' in variable and len(set(sampleConfiguration['samples']) & set(variable['samples'])) == 0:
                   continue
                 if 'removeFromCuts' in sampleConfiguration and cutName in sampleConfiguration['removeFromCuts']:
                   continue
-  
+ 
+                #if 'VR1' in cutName and sampleConfiguration['isSignal']>0: continue
+
                 if self._showIntegralLegend == 0 :
-                  tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
+                    if self._paperStyle and sampleConfiguration['isSignal']:
+                      slegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "PL")
+                    else:
+                      tlegend.AddEntry(histos_grouped[sampleNameGroup], sampleConfiguration['nameHR'], "F")
                 else :
                   if variable["divideByBinWidth"] == 1:
                     nevents = histos_grouped[sampleNameGroup].Integral(1,histos_grouped[sampleNameGroup].GetNbinsX(),"width")
@@ -1279,14 +1361,20 @@ class PlotFactory:
             if not self._removeAllMC :
               #                     if there is "histo_total" there is no need of explicit nuisances
               if len(mynuisances.keys()) != 0 or histo_total!= None:
+                  #allMCLegend = "All MC"
+                  allMCLegend = "SM total unc." #"All MC"
+                  #allMCLegend = "SM uncertainty" #"All MC"
                   if self._showIntegralLegend == 0 :
-                      tlegend.AddEntry(tgrMC, "All MC", "F")
+                      tlegend.AddEntry(tgrMC, allMCLegend, "F2")
                   else :
                       print " nexpected  = ", nexpected
-                      tlegend.AddEntry(tgrMC, "All MC [" + str(round(nexpected,1)) + "]", "F")
-             
-            tlegend.SetNColumns(2)
+                      tlegend.AddEntry(tgrMC, allMCLegend+" [" + str(round(nexpected,1)) + "]", "F")
+            
+            tlegend.SetNColumns(nLegendColumns)
             tlegend.Draw()
+            if self._paperStyle:
+                slegend.SetNColumns(nSignalLegendColumns)
+                slegend.Draw()
             
             #change the CMS_lumi variables (see CMS_lumi.py)
             import LatinoAnalysis.ShapeAnalysis.CMS_lumi as CMS_lumi
@@ -1294,7 +1382,9 @@ class PlotFactory:
             CMS_lumi.lumi_8TeV = "18.3 fb^{-1}"
             CMS_lumi.lumi_13TeV = "100 fb^{-1}"
             CMS_lumi.writeExtraText = 1
-            CMS_lumi.extraText = "Preliminary"
+            #CMS_lumi.extraText = "Preliminary"
+            #CMS_lumi.extraText = "Work in progress"
+            CMS_lumi.extraText = ""
             if not self._preliminary :
               CMS_lumi.extraText = ""
             CMS_lumi.relPosX = 0.12
@@ -1321,6 +1411,9 @@ class PlotFactory:
             print "- draw tlegend"
             #---- the Legend (end)
             tlegend.Draw()
+            if self._paperStyle:
+                slegend.SetNColumns(nSignalLegendColumns)
+                slegend.Draw()
 
 
             frame.GetYaxis().SetRangeUser( 0, maxYused )
@@ -1375,7 +1468,9 @@ class PlotFactory:
             # setup axis names
             # New proposal (following https://twiki.cern.ch/twiki/bin/viewauth/CMS/Internal/PubGuidelines)
             # Set xaxis label if needed. Format should be variable name, followed by (units) or [units] if needed
-            if 'xaxis' in variable.keys() : 
+            if 'xaxis' in variable.keys() :
+                if 'XX{m}_{T2}' in variable['xaxis']:
+                    variable['xaxis'] = 'm_{\\text{T2}}(\\ell\\ell) \\text{[GeV]}'
                 frameDistro.GetXaxis().SetTitle(variable['xaxis'])
                 
             # If yaxis is set, we want to override normal conventions
@@ -1444,7 +1539,8 @@ class PlotFactory:
                 if self._postFit == 'p':
                     histoPF.SetLineColor(9)
                     histoPF.SetLineStyle(2)
-                    postfitName = 'Pre-fit'
+                    #postfitName = 'Pre-fit'
+                    postfitName = 'SM exp. pre-fit'
                 elif self._postFit == 's':
                     histoPF.SetLineColor(632+2)
                     histoPF.SetLineStyle(3)
@@ -1453,7 +1549,9 @@ class PlotFactory:
                     histoPF.SetLineColor(632+4)
                     histoPF.SetLineStyle(4)
                     postfitName = 'Fit b'
-                if self._paperStyle: histoPF.SetLineColor(self._getColor('#92dadd'))
+                if self._paperStyle: 
+                    #histoPF.SetLineColor(self._getColor('92dadd'))
+                    histoPF.SetLineColor(9)
                 histoPF.Draw("hist same")
                 if self._showIntegralLegend == 0 :
                     tlegend.AddEntry(histoPF, postfitName , "L")
@@ -1483,6 +1581,9 @@ class PlotFactory:
               tgrData.Draw("P0")
     
             tlegend.Draw()
+            if self._paperStyle:
+                slegend.SetNColumns(nSignalLegendColumns)
+                slegend.Draw()
             #if 'lumi' in legend.keys() and 'sqrt' not in legend.keys():
               #flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['lumi'])
               #flag_lumi.Draw()
@@ -1500,7 +1601,14 @@ class PlotFactory:
                 legExtra.SetTextFont(62)
                 legExtra.DrawLatexNDC(0.85,0.8,self._extraLegend)
 
-            if self._addCutLabels: cutLabel.DrawLatexNDC(0.21,0.84,cutNameLabel)
+            if self._addCutLabels:
+                if srLabelStyle==0:
+                    cutLabel.DrawLatexNDC(0.21,0.84,cutNameLabel)
+                elif srLabelStyle==3:
+                    srLabel.DrawLatexNDC(0.21,0.835+1./6.*maxLegendOffset,srNameLabel)
+                else:
+                    srLabel.DrawLatexNDC(0.21,0.835,srNameLabel)
+                    cutLabel.DrawLatexNDC(0.21,0.835+5./6.*maxLegendOffset,cutNameLabel)
 
             CMS_lumi.CMS_lumi(tcanvasRatio, iPeriod, iPos)    
 
@@ -1612,6 +1720,8 @@ class PlotFactory:
                     if 'total' in sampleName:
                         tgrDataOverPF.SetMarkerColor(plot[sampleName]['color'])
                         tgrDataOverPF.SetLineColor(plot[sampleName]['color'])
+                        tgrMCOverPF.SetMarkerColor(plot[sampleName]['color'])
+                        tgrMCOverPF.SetLineColor(plot[sampleName]['color'])
                         # tgrDataOverPF.SetMarkerColor(2)
                         # tgrDataOverPF.SetLineColor(2)
                         totalInSamples = True
@@ -1626,11 +1736,27 @@ class PlotFactory:
                     ratioHisto.SetLineStyle(histoPF.GetLineStyle())
                     ratioHisto.SetLineWidth(histoPF.GetLineWidth())
                     ratioHisto.SetLineColor(histoPF.GetLineColor())
-                    ratioHisto.Draw("same")
+                    #ratioHisto.Draw("same") # line
+                    tgrDataOverPF.SetMarkerStyle(25)
+                    tgrDataOverPF.SetMarkerColor(histoPF.GetLineColor())
+                    tgrDataOverPF.SetLineColor(histoPF.GetLineColor())
+                    #tgrDataOverPF.Draw("P0") # points
+                    binEdgesMC = [ ]
+                    for ipoint in range(tgrMCOverPF.GetN()):
+                        binEdgesMC.append(tgrMCOverPF.GetX()[ipoint]-tgrMCOverPF.GetErrorX(ipoint))
+                    binEdgesMC.append(tgrMCOverPF.GetX()[tgrMCOverPF.GetN()-1]+tgrMCOverPF.GetErrorX(tgrMCOverPF.GetN()-1))
+                    ratioHistoMC = ROOT.TH1F('tgrMCOverPF', '', len(binEdgesMC)-1, array('d',binEdgesMC))
+                    for ipoint in range(tgrMCOverPF.GetN()):
+                        ratioHistoMC.SetBinContent(ipoint+1, tgrMCOverPF.GetY()[ipoint])
+                    ratioHistoMC.SetLineStyle(histoPF.GetLineStyle())
+                    ratioHistoMC.SetLineWidth(histoPF.GetLineWidth())
+                    ratioHistoMC.SetLineColor(histoPF.GetLineColor())
+                    ratioHistoMC.Draw("same") # Corrinne
                 else: 
                     tgrDataOverPF.Draw("PE,same")
-                    tlegendRatio.Draw("same")
-            
+                    tlegendRatio.Draw("same") 
+
+            tgrDataOverMC.Draw("P0")
             
             #for samplesToRatioGrName, samplesGrToRatio in tgrRatioList.iteritems() :
             #  samplesGrToRatio.Draw("P")
@@ -1651,7 +1777,20 @@ class PlotFactory:
                 if self._plotLog:
                     # log Y axis
                     #frameDistro.GetYaxis().SetRangeUser( max(self._minLogCratio, maxYused/1000), self._maxLogCratio * maxYused )
-                    frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio*1.001, maxYused/1000), self._maxLogCratio * maxYused )
+                    maxYadjust = 1
+                    if self._paperStyle:
+                        if 'Chargino' in self._tag: 
+                            if '_NoTag' in canvasRatioNameTemplate: maxYadjust *= 25
+                            if 'SR2' in canvasRatioNameTemplate: maxYadjust *= 0.5
+                        elif 'Stop' in self._tag:
+                            maxYadjust = 10.
+                            if 'SR1' in canvasRatioNameTemplate: maxYadjust *= 5
+                            if 'SR3' in canvasRatioNameTemplate: maxYadjust *= 0.5
+                            if 'SR4' in canvasRatioNameTemplate: maxYadjust *= 0.25
+                        elif 'SearchRegion' in self._tag:
+                            self._minLogCratio = 1.
+                            maxYadjust = 5.
+                    frameDistro.GetYaxis().SetRangeUser( min(self._minLogCratio*1.001, maxYused/1000), self._maxLogCratio * maxYused * maxYadjust )
                     pad1.SetLogy(True)                           
                     self._saveCanvas(tcanvasRatio, self._outputDirPlots + "/log_" + canvasRatioNameTemplate + self._FigNamePF, imageOnly=self._plotLinear)
                     pad1.SetLogy(False)
@@ -1769,6 +1908,9 @@ class PlotFactory:
               tgrData.Draw("P0")
     
             tlegend.Draw()
+            if self._paperStyle:
+                slegend.SetNColumns(nSignalLegendColumns)
+                slegend.Draw()
             #if 'lumi' in legend.keys() and 'sqrt' not in legend.keys():
               #flag_lumi = ROOT.TLatex (minXused + (maxXused-minXused)*3./4., 0 + (maxYused-0)*3.9/4., legend['lumi'])
               #flag_lumi.Draw()
@@ -2494,6 +2636,9 @@ class PlotFactory:
                       #print "            -------------------------> here data "
                
                     tlegend.Draw()
+                    if self._paperStyle:
+                        slegend.SetNColumns(nSignalLegendColumns)
+                        slegend.Draw()
               
                     CMS_lumi.CMS_lumi(weight_X_tcanvasRatio, iPeriod, iPos)    
             
@@ -2715,6 +2860,9 @@ class PlotFactory:
               frameNorm.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
 
               tlegend.Draw()
+              if self._paperStyle:
+                  slegend.SetNColumns(nSignalLegendColumns)
+                  slegend.Draw()
               self._saveCanvas(tcanvasSigVsBkg, self._outputDirPlots + "/" + 'cSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF, imageOnly=True)
          
  
@@ -2779,6 +2927,9 @@ class PlotFactory:
               frameNormTHstack.GetYaxis().SetRangeUser(0, 1.8*maxY_normalized)
 
               tlegend.Draw()
+              if self._paperStyle:
+                  slegend.SetNColumns(nSignalLegendColumns)
+                  slegend.Draw()
               self._saveCanvas(tcanvasSigVsBkgTHstack, self._outputDirPlots + "/" + 'ccTHstackSigVsBkg_' + cutName + "_" + variableName + self._FigNamePF, imageOnly=True)
          
 

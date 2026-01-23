@@ -6,19 +6,28 @@ import ROOT as rt
 #   Updated by:   Dinko Ferencek (Rutgers)
 #
 
-cmsText     = "CMS";
-cmsTextFont = 61  
+styleKind='paper'
+if styleKind=='paper':
+    cmsText     = "CMS";
+    cmsTextFont = 61  
+else:
+    cmsText     = "Private work (CMS data/simulation)";
+    cmsTextFont = 42
 
 writeExtraText = True
 extraText      = "Preliminary"
 extraTextFont  = 52 
 
-#lumiTextSize     = 0.6
-lumiTextSize     = 0.9
+if styleKind=='AN':
+    lumiTextSize     = 0.74
+else:
+    lumiTextSize     = 0.9
 lumiTextOffset   = -0.1 #0.2
 
-#cmsTextSize      = 0.75
-cmsTextSize      = 0.95
+if styleKind=='paper':
+    cmsTextSize      = 0.74
+else:
+    cmsTextSize      = 0.95
 cmsTextOffset    = 0.1
 
 relPosX    = 0.045

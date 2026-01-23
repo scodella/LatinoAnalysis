@@ -1,5 +1,6 @@
 import ROOT
 import math
+import numpy
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
@@ -37,6 +38,8 @@ class SusyGenVarsProducer(Module):
         self.out.branch("XsecDown",      "F")
         self.out.branch("ptISR",         "F")
         self.out.branch("njetISR",       "F")
+        self.out.branch("pMSSMid1",      "I")
+        self.out.branch("pMSSMid2",      "I")
 
         if self.susyModelIsSet==False :
 
@@ -63,24 +66,49 @@ class SusyGenVarsProducer(Module):
             if self.susyProcess!='' and self.susyProcess!='Slepton' :
                 self.susyModelIsSet = True
 
+        if self.susyProcess=='pMSSM' or self.susyModelIsSet==False :
+            self.pMSSMModelList = [ key.GetName() for key in inputTree.GetListOfBranches() if 'GenModel_pMSSM_MCMC' in key.GetName() ]
+            # Binning into arrays for THnSparse
+            bins = numpy.intc([600, 144855, 175])
+            lowedges = numpy.float64([0.5, 0.5, -0.5])
+            upedges = numpy.float64([600.5, 144855.5, 174.5])
+            self.pMSSMCount = ROOT.THnSparseD("pMSSMCount","pMSSMCount",3,bins,lowedges,upedges)
+            self.pMSSMCount.Sumw2()
+
     ###    
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        pass
+
+        if self.susyProcess=='pMSSM':
+            print("EEE", outputFile.GetName())
+            #outputFile = ROOT.TFile.Open(outputFileName, "recreate")
+            outputFile.cd()
+            self.pMSSMCount.Write()
+            #outputFile.Close()
 
     def getCrossSectionUncertainty(self, susyProcess, isusyMass, variation):
-    
-        if 'uncertainty'+variation not in SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]: variation = ''
-        xsUnc = SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['uncertainty'+variation]
+   
+        ssusyMass = isusyMass if 'pMSSM' in susyProcess else str(isusyMass)
+ 
+        if 'uncertainty'+variation not in SUSYCrossSections[susyProcess]['massPoints'][ssusyMass]: variation = ''
+        xsUnc = SUSYCrossSections[susyProcess]['massPoints'][ssusyMass]['uncertainty'+variation]
 
         if '%' not in xsUnc: 
             return float(xsUnc)
         else:
             xsUnc = xsUnc.replace('%', '')
-            return float(SUSYCrossSections[susyProcess]['massPoints'][str(isusyMass)]['value'])*float(xsUnc)/100.
+            return float(SUSYCrossSections[susyProcess]['massPoints'][ssusyMass]['value'])*float(xsUnc)/100.
         
     def getCrossSection(self, susyProcess, susyModel, susyMass):
 
         convBR = float(SUSYCrossSections[susyProcess]['susyModels'][susyModel])
+
+        if susyProcess=='pMSSM':
+
+            susyXsec = float(SUSYCrossSections[susyProcess]['massPoints'][susyModel]['value'])
+
+            return [ convBR*susyXsec,
+                     convBR*(susyXsec+self.getCrossSectionUncertainty(susyProcess, susyModel, 'Up')),
+                     convBR*(susyXsec-self.getCrossSectionUncertainty(susyProcess, susyModel, 'Down')) ]
         
         isusyMass = int(susyMass)
         
@@ -149,6 +177,25 @@ class SusyGenVarsProducer(Module):
         xSecUncert   = -1.
         ptISR        = -1.
         njetISR      =  0.
+        pMSSMid1     =  0 
+        pMSSMid2     =  0
+
+        if self.susyProcess=='pMSSM' or self.susyModelIsSet==False:
+
+            for pMSSMModel in self.pMSSMModelList:
+                if getattr(event, pMSSMModel):
+                    pMSSMid1 = int(pMSSMModel.split('_')[3])
+                    pMSSMid2 = int(pMSSMModel.split('_')[4].replace('.slha',''))
+                    break
+
+            if pMSSMid1>0:
+                coordinates = numpy.float64([ pMSSMid1, pMSSMid2, 0 ])
+                self.pMSSMCount.Fill(coordinates, 1.)
+
+            if pMSSMid1>0 and self.susyModelIsSet==False:
+                self.susyProcess = 'pMSSM'
+                self.susyModel = 'pMSSM'
+                self.susyModelIsSet = True
 
         nSusyParticles = 0
         susyParticle1 = ROOT.TLorentzVector()
@@ -271,6 +318,9 @@ class SusyGenVarsProducer(Module):
                     if matched==False:
                         njetISR += 1
 
+        if self.susyProcess=='pMSSM':
+            if (event.nMuon+event.nElectron)<2: return False
+
         self.out.fillBranch("susyIDprompt",  idPrompt)
         self.out.fillBranch("susyMprompt",   massPrompt)
         self.out.fillBranch("susyMstop",     massStop)
@@ -282,6 +332,8 @@ class SusyGenVarsProducer(Module):
         self.out.fillBranch("XsecDown",      xSectionDown)
         self.out.fillBranch("ptISR",         ptISR)
         self.out.fillBranch("njetISR",       njetISR)
-            
+        self.out.fillBranch("pMSSMid1",      pMSSMid1)
+        self.out.fillBranch("pMSSMid2",      pMSSMid2)
+
         return True
  

@@ -35,4 +35,23 @@ Samples['TTJets_DiLept'] = {'srmPrefix' : 'srm://srm01.ifca.es:8444/srm/managerv
 Samples['TTJets_SingleLeptFromTbar'] = {'srmPrefix' : 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL16FS_106X_nAODv9/TTJets_SingleLeptFromTbar'] }
 Samples['TTJets_SingleLeptFromT'] = {'srmPrefix' : 'srm://srm01.ifca.es:8444/srm/managerv2?SFN=/cms', 'paths' : ['/store/group/phys_susy/Chargino/Nano/Spring21UL16FS_106X_nAODv9/TTJets_SingleLeptFromT'] }
 
+#### pMSSM
+
+Samples['pMSSM_set1LL']            = {'nanoAOD': '/PMSSM_set_1_LL_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
+Samples['pMSSM_set1prompt1']       = {'nanoAOD': '/PMSSM_set_1_prompt_1_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
+Samples['pMSSM_set1prompt2']       = {'nanoAOD': '/PMSSM_set_1_prompt_2_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
+Samples['pMSSM_set1prompt3']       = {'nanoAOD': '/PMSSM_set_1_prompt_3_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
+Samples['pMSSM_set2LL1']           = {'nanoAOD': '/PMSSM_set_2_LL_1_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17-v3/NANOAODSIM'}    
+Samples['pMSSM_set2LL2']           = {'nanoAOD': '/PMSSM_set_2_LL_2_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17-v5/NANOAODSIM'}
+Samples['pMSSM_set2prompt1']       = {'nanoAOD': '/PMSSM_set_2_prompt_1_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17-v2/NANOAODSIM'}
+Samples['pMSSM_set2prompt2']       = {'nanoAOD': '/PMSSM_set_2_prompt_2_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17-v3/NANOAODSIM'}
+
+Samples['pMSSM_set1LL_ext1'] = {'nanoAOD': '/PMSSM_set_1_LL_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17_ext1-v3/NANOAODSIM' } # : 293.24 GB
+Samples['pMSSM_set1prompt1_ext1'] = {'nanoAOD': '/PMSSM_set_1_prompt_1_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17_ext1-v2/NANOAODSIM' } # : 1.8 TB
+Samples['pMSSM_set1prompt2_ext1'] = {'nanoAOD': '/PMSSM_set_1_prompt_2_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17_ext1-v2/NANOAODSIM' } # : 1.4 TB
+Samples['pMSSM_set1prompt3_ext1'] = {'nanoAOD': '/PMSSM_set_1_prompt_3_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17_ext1-v2/NANOAODSIM' } # : 1.7 TB
+Samples['pMSSM_set2LL1_ext1'] = {'nanoAOD': '/PMSSM_set_2_LL_1_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17_ext1-v2/NANOAODSIM' } # : 1.7 TB
+Samples['pMSSM_set2LL2_ext1'] = {'nanoAOD': '/PMSSM_set_2_LL_2_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17_ext1-v2/NANOAODSIM' } # : 1.6 TB
+Samples['pMSSM_set2prompt1_ext1'] = {'nanoAOD': '/PMSSM_set_2_prompt_1_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17_ext1-v2/NANOAODSIM' } # : 1.2 TB
+Samples['pMSSM_set2prompt2_ext1'] = {'nanoAOD': '/PMSSM_set_2_prompt_2_TuneCP2_13TeV-pythia8/RunIISummer20UL16NanoAODv9-FSMiniUL16_NANOv9_FSUL16_106X_mcRun2_asymptotic_v17_ext1-v2/NANOAODSIM' } # : 1.6 TB
 

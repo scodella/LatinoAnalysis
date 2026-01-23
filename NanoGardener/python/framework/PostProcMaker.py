@@ -190,11 +190,21 @@ class PostProcMaker():
      else:
        if not '__part' in FileList[0] : fileCmd += self._treeFilePrefix+iSample+'.root'
        else                           : fileCmd += self._treeFilePrefix+iSample+'__part*.root'
-
+     
      # fileCmd .... Exec
-     proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
-     out, err = proc.communicate()
-     FileExistList=string.split(out)
+     if len(FileList)<7000:
+         proc=subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+         out, err = proc.communicate()
+         FileExistList=string.split(out)
+     else:
+         FileExistList=[]
+         for ip in range(26):
+             proc=subprocess.Popen(fileCmd.replace('__part*.root','__part'+str(ip)+'*.root'), stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+             out, err = proc.communicate()
+             for pfile in string.split(out):
+                 if pfile not in FileExistList:
+                     FileExistList.append(pfile)
+             #FileExistList+=string.split(out)
      # Now Check
      toSkip=[]
      if not self._redo :
@@ -413,7 +423,11 @@ class PostProcMaker():
          if iTarget in targetList :
            # Create python
            if JOB_DIR_SPLIT :
-             pyFile=jDir+'/'+iSample+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
+             subDirExtra=''  
+             if len(targetList)>1000:
+                 jobpart=int(iTarget.split('part')[1].split('.')[0])
+                 subDirExtra += '/sub'+str(int(jobpart/1000))  
+             pyFile=jDir+'/'+iSample+subDirExtra+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
            else:
              pyFile=jDir+'/NanoGardening__'+iProd+'__'+iStep+'__'+iTarget+bpostFix+'.py'
            if os.path.isfile(pyFile) : os.system('rm '+pyFile)
@@ -824,11 +838,13 @@ class PostProcMaker():
          if not self._iniStep == 'Prod':
            #... if no hadd before -> Prod:
            if not 'hadd' in self._sourceDir:
-             FileOriList = self.getFilesFromSource(iSample)
+             print("S")
+             FileOriList = FileInList #self.getFilesFromSource(iSample)
+             print("W")
 
              if not len(FileInList) == len(FileOriList):
                print 'WARNING: HADD not possible, missing files in _sourceDir for iSample ',iSample,' --> SKIPPING IT !!!'
-               continue
+               #continue
            else:
              print 'ERROR: HADD CASE not implemented: hadd on top of hadd !'
              exit()

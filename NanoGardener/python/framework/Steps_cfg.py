@@ -3543,6 +3543,7 @@ Steps = {
                   'import'     : 'LatinoAnalysis.NanoGardener.modules.SusyGenVarsProducer' ,
                   'module'     : 'SusyGenVarsProducer()' ,
                   'onlySample' : susy_samples,
+                  'outputbranchsel': os.getenv('CMSSW_BASE') + '/src/LatinoAnalysis/NanoGardener/python/data/dropgenmodel.txt'
                },  
 
    'susyMT2recoNomin': {
@@ -7089,9 +7090,11 @@ for datatype in [ 'FS', 'Data' ] :
 # mt2Producer regions
 
 mt2CRs = [ 'SameSign', 'Fake', 'WZ', 'WZtoWW', 'ttZ', 'ZZ' ]
+mt2CRFSs = [ 'WZ', 'ttZ', 'ZZ' ]
 
 mt2regions = [ x for x in mt2CRs ]
 mt2regions.extend([ 'ctrl'+x for x in mt2CRs ])
+mt2regions.extend([ 'crfs'+x for x in mt2CRFSs ])
 mt2regions.extend([ 'reco', 'fast' ])
 
 for region in mt2CRs: 
@@ -7105,7 +7108,16 @@ for region in mt2CRs:
 
     Steps['susyMT2'+region+'Nomin']['module'] = Steps['susyMT2recoNomin']['module'].replace('analysisRegion=""', 'analysisRegion="'+region+'"')
     Steps['susyMT2ctrl'+region+'Nomin']['module'] = Steps['susyMT2'+region+'Nomin']['module'].replace('filterRegion="region"', 'filterRegion="control"')
-   
+  
+for region in mt2CRFSs:
+
+    Steps['susyMT2crfs'+region+'Nomin'] = { }
+
+    for key in Steps['susyMT2fastNomin']:
+        Steps['susyMT2crfs'+region+'Nomin'][key] = Steps['susyMT2fastNomin'][key]
+
+    Steps['susyMT2crfs'+region+'Nomin']['module'] = Steps['susyMT2fastNomin']['module'].replace('analysisRegion=""', 'analysisRegion="'+region+'"').replace('filterRegion="region"', 'filterRegion="multilepton"')
+
 # JES, JER, MET variations
 
 for treesyst in ['nom',  'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', 'unclustEnUp', 'jerDown', 'jerUp', 'jesTotalSmearDown', 'jesTotalSmearUp', 'unclustEnSmearDown', 'unclustEnSmearUp' ]:
@@ -7158,6 +7170,12 @@ for treesyst in ['nom',  'jer', 'jesTotalDown', 'jesTotalUp', 'unclustEnDown', '
     }
   if treesyst=='nom': 
     Steps['susyMT2ctrl'+treesystname]['do4Data'] = True
+  Steps['susyMT2crfs'+treesystname] = {
+      'isChain'    : True  ,
+      'do4MC'      : True  ,
+      'do4Data'    : False ,
+      'subTargets' : [ 'susyMT2crfs'+x+treesystname for x in mt2CRFSs ],
+    }
 
 susyMT2StepList = [ ]
 for step in Steps:

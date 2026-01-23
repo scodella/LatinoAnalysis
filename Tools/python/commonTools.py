@@ -260,7 +260,19 @@ def getSampleFiles(inputDir,Sample,absPath=False,rooFilePrefix='latino_',FromPos
       Files   = string.split(out)
     if len(Files) == 0 and not FromPostProc :
       print 'ERROR: No files found for sample ',Sample,' in directory ',Dir
-      exit() 
+      exit()
+    if len(Files) == 0 :
+      Files = []
+      for ll in range(25):
+          fileCmd = lsCmd+Dir+'/'+rooFilePrefix+Sample+'__part'+str(ll)+'*.root'
+          if 'root://' in inputDir:
+              fileCmd = lsCmd+Dir+'/ | grep '+rooFilePrefix+Sample+'__part'+str(ll)+' | grep root'
+          proc    = subprocess.Popen(fileCmd, stderr = subprocess.PIPE,stdout = subprocess.PIPE, shell = True)
+          out,err = proc.communicate()
+          for pfile in out.decode().split():
+              if pfile not in Files:
+                  Files.append(pfile)
+          #Files   += out.decode().split()
     FileTarget = []
     for iFile in Files:
       if absPath :
